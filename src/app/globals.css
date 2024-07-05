@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.chart {
+    width: 100%;
+    height: 100px;
+}
+
+.chart-heading {
+    width: 100%;
+    border-bottom: 1px solid #aea6a66e;
+}
+
+.active-tab {
+    background-color: #3dbdf0;
+    font-weight: 600;
+    font-size: 18px;
+    color: black;
+}
+
+.inactive-tab {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.button {
+    background-color: #3dbdf0;
+    min-width: 115px;
+    color: black
+}
+
+.button:hover {
+    background-color: #bfdbfe;
+}
+
+.tabs {
+    position: fixed;
+    right: 0px;
+    left: 255px;
+    top: 72px;
+    z-index: 999 !important;
+}
+
+.header {
+    background-color: #bfdbfe;
+    color: black;
+}
+
+.navbar {
+    background-color: #bfdbfe;
+    color: black;
+    font-weight: 500;
+}
+
+.nav-link:hover,
+.nav-link-active:hover {
+    background-color: #3dbdf0;
+}
+
+.nav-active-link {
+    background-color: #3dbdf0;
+}
+
+.table-cell {
+
+}
+
+.table-row {}
+
+.table-header-row {}
+
+.table-header,.table-cell {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: center;
+    height: 40px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* #650f8f #b144d6--purple 
+bg-blue-200 #3dbdf0 --skyblue
+*/
