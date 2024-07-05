@@ -13,6 +13,16 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        sky: {
+          500: '#87CEEB', // Replace with your sky color hex code
+        },
+      },
+      borderColor: {
+        sky: {
+          500: '#87CEEB', // Same color as defined in colors.sky.500
+        },
+      },
     },
   },
   plugins: [],
