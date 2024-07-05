@@ -6,11 +6,6 @@ import { useRouter } from 'next/navigation';
 
 
 const Page: React.FC = () => {
-  const router = useRouter();
-  const handleCreateClick = () => {
-    router.push('/createUser');
-  };
-
   return (
       <Users/>
   );

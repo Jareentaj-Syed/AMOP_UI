@@ -267,27 +267,27 @@ const TenantInfo: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <label className="block text-gray-700">Partner</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                     <div>
                         <label className="block text-gray-700">Sub-Partner</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                     <div>
                         <label className="block text-gray-700">Carrier</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                     <div>
                         <label className="block text-gray-700">Service Provider</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                     <div>
                         <label className="block text-gray-700">Customers</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                     <div>
                         <label className="block text-gray-700">Group/Single</label>
-                        <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+                        <input type="text" className="input" />
                     </div>
                 </div>
             </div>

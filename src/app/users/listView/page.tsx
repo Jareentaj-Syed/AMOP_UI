@@ -77,7 +77,7 @@ const ListView: React.FC = () => {
     <div className="container mx-auto p-4">
       {data.length > 0 && (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-blue-100">
               <tr>
                 <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.NO</th>

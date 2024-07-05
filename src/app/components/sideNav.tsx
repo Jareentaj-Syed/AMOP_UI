@@ -23,17 +23,14 @@ const SideNav: React.FC = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 w-64 h-screen p-4 flex flex-col z-99 navbar">
-      <div className="mb-6">
-        <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={50} className="object-contain" />
-      </div>
+    <div className="navbar p-4">
       <ul className="space-y-4">
         {navItems.map((item) => (
           <li key={item.href}>
             <Link
               href={item.href}
               className={`flex items-center space-x-2 p-2 rounded-md nav-link ${
-                currentPath === item.href || (item.href === '/' && (currentPath === '/' || currentPath === '/createUser'))
+                currentPath === item.href || (item.href === '/' && (currentPath === '/' || currentPath === '/users/createUser'))
                   ? 'nav-active-link'
                   : ''
               }`}

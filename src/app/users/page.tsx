@@ -15,25 +15,25 @@ const Page: React.FC = () => {
   return (
     <div className="flex min-h-screen">
       <div className="flex-1 flex flex-col">
-          <main className="p-4 flex-1">
-            <ChartsPage />
-            <div className="flex mb-4">
-    <button
-      className="flex items-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
-      onClick={handleCreateClick}
-    >
-      <PlusIcon className="h-5 w-5 text-black-500 mr-2" />
-      Create
-    </button>
-    <button
-      className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
-      onClick={handleCreateClick}
-    >
-      Export
-    </button>
-  </div>
-            <ListView />
-          </main>
+        <main className="p-2 flex-1">
+          <ChartsPage />
+          <div className="flex">
+            <button
+              className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+              onClick={handleCreateClick}
+            >
+              <PlusIcon className="h-5 w-5 text-black-500 mr-2" />
+              Create
+            </button>
+            <button
+              className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
+              onClick={handleCreateClick}
+            >
+              Export
+            </button>
+          </div>
+          <ListView />
+        </main>
       </div>
     </div>
   );

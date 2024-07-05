@@ -9,7 +9,7 @@ const ChartsPage: React.FC = () => {
   const migratedUsers = 340;
 
   return (
-    <div className="p-6">
+    <div className="p-2">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {/* Total Users Card */}
         <div className="bg-white p-4 rounded-lg shadow-md flex items-center">

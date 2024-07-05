@@ -18,16 +18,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} min-h-screen grid`} style={{ gridTemplateRows: 'auto 1fr', gridTemplateColumns: '16rem 1fr' }}>
-        <header className="fixed top-0 left-64 right-0 h-16 z-50 bg-white">
+      <body className={`${inter.className} min-h-screen grid`}>
+        <div className="fixed top-0 left-0 right-0 z-50 bg-white">
           <Header />
-        </header>
-        <aside className="row-start-2 col-start-1 pt-16">
-          <SideNav />
-        </aside>
-        <main className="row-start-2 col-start-2 pt-14 overflow-auto">
-          {children}
-        </main>
+        </div>
+        <div className="flex mt-[70px]">
+          <div className="w-[20%]">
+            <SideNav />
+
+          </div>
+          <div className="children-components overflow-auto">
+            {children}
+          </div>
+        </div>
+
       </body>
     </html>
   );

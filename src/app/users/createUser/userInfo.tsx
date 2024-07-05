@@ -11,39 +11,39 @@ const UserInfo: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-gray-700">Partner</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">First Name</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Last Name</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Username</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Email ID</label>
-            <input type="email" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="email" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Mobile No</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Role</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Password</label>
-            <input type="password" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="password" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Phone</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
         </div>
       </div>
@@ -53,47 +53,47 @@ const UserInfo: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-gray-700">Notifications Enable</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Business Name</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Locale</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Time Zone</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Address Line 1</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Apt/Suite</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">City</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Address Line 2</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Zip</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">State</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
           <div>
             <label className="block text-gray-700">Country</label>
-            <input type="text" className="w-full p-2 border border-gray-300 rounded mt-1" />
+            <input type="text" className="input" />
           </div>
         </div>
       </div>

@@ -37,7 +37,7 @@ const PartnerInfo: React.FC = () => {
             </label>
             <input
               type="text"
-              className={`w-full p-2 border border-gray-300 rounded mt-1 focus:border-sky-500 ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
+              className={`input focus:border-sky-500 ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
               onFocus={() => handleFocus('partnerName')}
               onBlur={handleBlur}
             />
@@ -48,7 +48,7 @@ const PartnerInfo: React.FC = () => {
             </label>
             <input
               type="text"
-              className={`w-full p-2 border border-gray-300 rounded mt-1 focus:border-sky-500 ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
+              className={`input focus:border-sky-500 ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
               onFocus={() => handleFocus('subPartnerName')}
               onBlur={handleBlur}
             />
@@ -59,7 +59,7 @@ const PartnerInfo: React.FC = () => {
             </label>
             <input
               type="text"
-              className={`w-full p-2 border border-gray-300 rounded mt-1 focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
+              className={`input focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
               onFocus={() => handleFocus('emailIds')}
               onBlur={handleBlur}
             />
@@ -69,7 +69,7 @@ const PartnerInfo: React.FC = () => {
               Environment
             </label>
             <select
-              className={`w-full p-2 border border-gray-300 rounded mt-1 focus:border-sky-500 ${activeElement === 'environment' ? 'border-sky-500' : ''}`}
+              className={`input focus:border-sky-500 ${activeElement === 'environment' ? 'border-sky-500' : ''}`}
               onFocus={() => handleFocus('environment')}
               onBlur={handleBlur}
             >
@@ -84,7 +84,7 @@ const PartnerInfo: React.FC = () => {
             </label>
             <input
               type="file"
-              className={`w-full p-2 border border-gray-300 rounded mt-1 focus:border-sky-500 ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
+              className={`input focus:border-sky-500 ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
               accept=".png, .jpg"
               onChange={handleLogoUpload}
               onFocus={() => handleFocus('partnerLogo')}
