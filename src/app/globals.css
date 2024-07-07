@@ -39,7 +39,6 @@
     right: 0px;
     left:17%;
     top: 70px;
-    z-index: 999 !important;
 }
 
 .header {
@@ -120,6 +119,9 @@
 
 .custom-table {
     max-height: 500px;
+}
+.logo{
+    margin-left: 20px;
 }
 
 /* #650f8f #b144d6--purple 

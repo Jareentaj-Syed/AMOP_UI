@@ -120,14 +120,14 @@ const CarrierInfo: React.FC = () => {
                           <td key={i} className="py-2 px-4 border-b border-gray-300 text-center table-cell">
                             <div className='flex space-x-2'>
                               <button
-                                className={`${apiState[index] === 'enable' ? 'bg-green-500' : 'bg-red-500'
+                                className={`${apiState[index] === 'enable' ? 'bg-blue-500' : 'bg-gray-500'
                                   } text-white px-2 py-1 rounded`}
                                 onClick={() => handleApiStateChange(index, 'enable')}
                               >
                                 Enable
                               </button>
                               <button
-                                className={`${apiState[index] === 'disable' ? 'bg-green-500' : 'bg-red-500'
+                                className={`${apiState[index] === 'disable' ? 'bg-blue-500' : 'bg-gray-500'
                                   } text-white px-2 py-1 rounded`}
                                 onClick={() => handleApiStateChange(index, 'disable')}
                               >

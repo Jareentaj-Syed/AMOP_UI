@@ -29,7 +29,7 @@ const SideNav: React.FC = () => {
           <li key={item.href}>
             <Link
               href={item.href}
-              className={`flex items-center space-x-2 p-2 rounded-md nav-link ${
+              className={`flex items-center space-x-2 pt-2 pb-2 pl-2 rounded-md nav-link ${
                 currentPath === item.href || (item.href === '/' && (currentPath === '/' || currentPath === '/users/createUser'))
                   ? 'nav-active-link'
                   : ''

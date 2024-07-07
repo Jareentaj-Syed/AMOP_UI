@@ -11,6 +11,10 @@ const APIInfo = dynamic(() => import('./api_info'));
 const CreateUser: React.FC = () => {
   const [activeTab, setActiveTab] = useState('partnerInfo');
 
+  const switchToCarrierInfoTab = () => {
+    setActiveTab('carrierInfo');
+  };
+
   return (
     <div className="">
       <div className="bg-white shadow-md mb-4 z-99 gap-4 tabs">
@@ -30,11 +34,11 @@ const CreateUser: React.FC = () => {
           className={`p-4 ${activeTab === 'apiInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('apiInfo')}
         >
-          API Info
+          Amop API Info
         </button>
       </div>
       <div className="bg-white p-4 mt-16">
-        {activeTab === 'partnerInfo' && <PartnerInfo />}
+        {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'carrierInfo' && <CarrierInfo />}
         {activeTab === 'apiInfo' && <APIInfo />}
       </div>
