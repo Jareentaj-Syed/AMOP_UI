@@ -1,4 +1,5 @@
 "use client";
+import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select from 'react-select';
 
@@ -10,6 +11,19 @@ interface ExcelData {
         };
     };
 }
+
+const partners = [
+    "Altawork",
+    "Go Tech",
+    "Go Tech Mobility",
+    "Titanium",
+    "Live U ",
+    "Spectrotcl ",
+    "Vast ",
+    "Dynalink ",
+    "For2Fi",
+    "Fuse Cloud"
+  ];
 
 const data: ExcelData = {
     "M2M": {
@@ -65,12 +79,12 @@ const data: ExcelData = {
             ]
         }
     },
-    "Optimzation": {
+    "Optimization": {
         "Module": [
-            "Optimzation"
+            "Optimization"
         ],
         "Feature": {
-            "Optimzation": [
+            "Optimization": [
                 "Optimize",
                 "Export"]
         }
@@ -125,7 +139,7 @@ const data: ExcelData = {
                 "Create DL/DA Order",
                 "Update LIDB Order",
                 "Update Line Options",
-                "Update SMS Setting"
+                "Update SMS Settings"
             ],
             "Bulk Change": [
                 "Archive"
@@ -211,7 +225,7 @@ const data: ExcelData = {
             ]
         }
     },
-    "Setting": {
+    "Settings": {
         "Module": [
             "Provider Charge Mapping",
             "Application Settings",
@@ -263,34 +277,72 @@ const TenantInfo: React.FC = () => {
     return (
         <div>
             <div>
-                <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Tenant Info</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label className="block text-gray-700">Partner</label>
-                        <input type="text" className="input" />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Sub-Partner</label>
-                        <input type="text" className="input" />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Carrier</label>
-                        <input type="text" className="input" />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Service Provider</label>
-                        <input type="text" className="input" />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Customers</label>
-                        <input type="text" className="input" />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Group/Single</label>
-                        <input type="text" className="input" />
-                    </div>
-                </div>
-            </div>
+    <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Tenant Info</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+            <label className="block text-gray-700">Partner</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                {partners.map((partner, index) => (
+                    <option key={index} value={partner.toLowerCase().replace(/\s+/g, '-')}>
+                        {partner}
+                    </option>
+                ))}
+            </select>
+        </div>
+        <div>
+            <label className="block text-gray-700">Sub-Partner</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                <option value="subpartner1">Sub-Partner 1</option>
+                <option value="subpartner2">Sub-Partner 2</option>
+                {/* Add more options as needed */}
+            </select>
+        </div>
+        <div>
+            <label className="block text-gray-700">Carrier</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                <option value="carrier1">Carrier 1</option>
+                <option value="carrier2">Carrier 2</option>
+                {/* Add more options as needed */}
+            </select>
+        </div>
+        <div>
+            <label className="block text-gray-700">Service Provider</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                <option value="provider1">Service Provider 1</option>
+                <option value="provider2">Service Provider 2</option>
+                {/* Add more options as needed */}
+            </select>
+        </div>
+        <div>
+            <label className="block text-gray-700">Group</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+        <div>
+            <label className="block text-gray-700">Customers</label>
+            <select
+                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                style={{ height: '2.6rem' }}>
+                <option value="customer1">Customer 1</option>
+                <option value="customer2">Customer 2</option>
+                {/* Add more options as needed */}
+            </select>
+        </div>
+    </div>
+</div>
+
             <div>
                 <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Module Info</h3>
                 <div className="grid grid-cols-1 gap-4 mb-6">
@@ -327,12 +379,15 @@ const TenantInfo: React.FC = () => {
                 </div>
             </div>
             <div className="flex justify-end space-x-4">
-                <button className="p-2 rounded shadow button">
-                    Cancel
-                </button>
-                <button className="p-2 rounded shadow button">
-                    Submit
-                </button>
+            <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
+          <XMarkIcon className="h-5 w-5 text-black-500 mr-2"/>
+          <span>Cancel</span>
+        </button>
+        <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+        >
+          <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+          <span>Submit</span>
+        </button>
             </div>
         </div>
     );

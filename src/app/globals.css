@@ -32,6 +32,8 @@
 
 .button:hover {
     background-color: #dfeaf8;
+    color: black;
+    font-weight: 500;
 }
 
 .tabs {

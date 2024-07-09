@@ -4,7 +4,7 @@ import React from 'react';
 import ListView from './listView/page';
 import ChartsPage from './charts/page';
 import { useRouter } from 'next/navigation';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ArrowDownTrayIcon  } from '@heroicons/react/24/outline';
 
 const Page: React.FC = () => {
   const router = useRouter();
@@ -27,9 +27,11 @@ const Page: React.FC = () => {
             </button>
             <button
               className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
-              onClick={handleCreateClick}
+              
             >
-              Export
+              <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2"/>
+              <span> Export </span>
+             
             </button>
           </div>
           <ListView />

@@ -80,7 +80,7 @@ const ListView: React.FC = () => {
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
             <thead className="bg-blue-100">
               <tr>
-                <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.NO</th>
+                <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>
                 {Object.keys(data[0]).map((key) => (
                   <th key={key} className="py-3 px-6 border-b border-gray-300 text-left font-semibold">
                     {key}

@@ -23,13 +23,13 @@ const CreateUser: React.FC = () => {
           className={`p-4 ${activeTab === 'userInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('userInfo')}
         >
-          User Info
+          User info
         </button>
         <button 
           className={`p-4 ml-4 ${activeTab === 'tenantInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('tenantInfo')}
         >
-          Tenant Info
+          Tenant info
         </button>
       </div>
         <div className="bg-white shadow-md p-6">
