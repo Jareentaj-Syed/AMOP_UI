@@ -71,9 +71,22 @@
     border-radius: 10px;
 }
 
+.addRow {
+    position: relative;
+    left: -2rem; /* Adjust based on your design */
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    padding: 0.25rem;
+    z-index: 10; /* Ensure it appears above the table */
+  }
+  
+
 .table-cell {}
 
-.table-row {}
+.table-row {
+    position: relative;
+  }
 
 .table-header-row {}
 
@@ -122,8 +135,10 @@
 }
 .logo{
     margin-left: 20px;
+    width: 150px;
+    height: 65px;
 }
-
+  
 /* #650f8f #b144d6--purple 
 bg-blue-200 #3dbdf0 --skyblue
 */

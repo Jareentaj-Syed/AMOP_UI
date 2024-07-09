@@ -21,24 +21,24 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="">
-      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[17.2%]' : 'left-[112px]'}`}>
+      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[17.8%]' : 'left-[112px]'}`}>
         <button 
           className={`p-4 ${activeTab === 'partnerInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('partnerInfo')}
         >
-          Partner Info
+          Partner info
         </button>
         <button 
           className={`p-4 ${activeTab === 'carrierInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('carrierInfo')}
         >
-          Carrier Info
+          Carrier info
         </button>
         <button 
           className={`p-4 ${activeTab === 'apiInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('apiInfo')}
         >
-          Amop API Info
+          Amop API info
         </button>
       </div>
       <div className="bg-white p-4">

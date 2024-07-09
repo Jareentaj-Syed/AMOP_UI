@@ -1,5 +1,8 @@
-"use client"
-import React, { useState, useEffect } from 'react';
+// app/partner-onboarding-form/partner-info.tsx
+
+"use client";
+import React, { useState, useEffect, useRef } from 'react';
+import { useLogoStore } from '../stores/logoStore';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -20,6 +23,9 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [clientId, setClientId] = useState<string>('');
   const [clientSecret, setClientSecret] = useState<string>('');
 
+  const { setLogoUrl } = useLogoStore();
+  const logoFileRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (
       userName.trim() !== '' &&
@@ -35,10 +41,26 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // Perform form submission here
-    console.log('Form submitted');
-    // Call parent component function to switch tabs
-    onSubmit();
+    const file = logoFileRef.current?.files?.[0];
+    if (file) {
+      const validTypes = ['image/png', 'image/jpeg'];
+      if (!validTypes.includes(file.type)) {
+        setLogoError('Only .png and .jpg files are allowed.');
+        return;
+      } else {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const logoUrl = reader.result as string;
+          setLogoUrl(logoUrl);
+          console.log('Form submitted');
+          onSubmit();
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      console.log('Form submitted without logo');
+      onSubmit();
+    }
   };
 
   const handleFocus = (elementName: string) => {
@@ -47,19 +69,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   const handleBlur = () => {
     setActiveElement(null);
-  };
-
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const validTypes = ['image/png', 'image/jpeg'];
-      if (!validTypes.includes(file.type)) {
-        setLogoError('Only .png and .jpg files are allowed.');
-      } else {
-        setLogoError(null);
-        // handle the valid file upload here
-      }
-    }
   };
 
   return (
@@ -131,7 +140,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 type="file"
                 className={`input focus:border-sky-500 ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
                 accept=".png, .jpg"
-                onChange={handleLogoUpload}
+                ref={logoFileRef}
                 onFocus={() => handleFocus('partnerLogo')}
                 onBlur={handleBlur}
               />
@@ -202,7 +211,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               Submit
             </button>
           </div>
-
         </form>
       </div>
     </div>
