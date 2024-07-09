@@ -2,7 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select from 'react-select';
-
+import { partnerCarrierData, subPartnersData, serviceProviders} from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
         Module: string[];
@@ -11,19 +11,6 @@ interface ExcelData {
         };
     };
 }
-
-const partners = [
-    "Altawork",
-    "Go Tech",
-    "Go Tech Mobility",
-    "Titanium",
-    "Live U ",
-    "Spectrotcl ",
-    "Vast ",
-    "Dynalink ",
-    "For2Fi",
-    "Fuse Cloud"
-  ];
 
 const data: ExcelData = {
     "M2M": {
@@ -262,6 +249,16 @@ const data: ExcelData = {
 const TenantInfo: React.FC = () => {
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
+    const [selectedPartner, setSelectedPartner] = useState<string>('');
+    const [carriers, setCarriers] = useState<string[]>([]);
+    const [subPartners, setSubPartners] = useState<string[]>([]);
+  
+    const handlePartnerChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const partner = event.target.value;
+        setSelectedPartner(partner);
+        setCarriers(partnerCarrierData[partner] || []);
+        setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] : []);
+      };
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
@@ -279,48 +276,63 @@ const TenantInfo: React.FC = () => {
             <div>
     <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Tenant Info</h3>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+    <label className="block text-gray-700">Partner</label>
+        <select
+          value={selectedPartner}
+          onChange={handlePartnerChange}
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
+          <option value="">Select a Partner</option>
+          {Object.keys(partnerCarrierData).map((partner, index) => (
+            <option key={index} value={partner}>
+              {partner}
+            </option>
+          ))}
+        </select>
+      </div>
+       
+      <div className="mb-4">
+      <label className="block text-gray-700">Sub Partner</label>
+        <select
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
+          <option value="">Select a Sub-Partner</option>
+          {subPartners.length > 0
+            ? subPartners.map((subPartner, index) => (
+                <option key={index} value={subPartner}>
+                  {subPartner}
+                </option>
+              ))
+            : <option value="">No sub-partners available</option>}
+        </select>
+      </div>
         <div>
-            <label className="block text-gray-700">Partner</label>
-            <select
-                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                style={{ height: '2.6rem' }}>
-                {partners.map((partner, index) => (
-                    <option key={index} value={partner.toLowerCase().replace(/\s+/g, '-')}>
-                        {partner}
-                    </option>
-                ))}
-            </select>
-        </div>
-        <div>
-            <label className="block text-gray-700">Sub-Partner</label>
-            <select
-                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                style={{ height: '2.6rem' }}>
-                <option value="subpartner1">Sub-Partner 1</option>
-                <option value="subpartner2">Sub-Partner 2</option>
-                {/* Add more options as needed */}
-            </select>
-        </div>
-        <div>
-            <label className="block text-gray-700">Carrier</label>
-            <select
-                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                style={{ height: '2.6rem' }}>
-                <option value="carrier1">Carrier 1</option>
-                <option value="carrier2">Carrier 2</option>
-                {/* Add more options as needed */}
-            </select>
-        </div>
-        <div>
-            <label className="block text-gray-700">Service Provider</label>
-            <select
-                className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-                style={{ height: '2.6rem' }}>
-                <option value="provider1">Service Provider 1</option>
-                <option value="provider2">Service Provider 2</option>
-                {/* Add more options as needed */}
-            </select>
-        </div>
+        <label className="block text-gray-700">Carrier</label>
+        
+        <select
+          disabled={!selectedPartner}
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
+          <option value="">Select a Carrier</option>
+          {carriers.map((carrier, index) => (
+            <option key={index} value={carrier}>
+              {carrier}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700">Service Provider</label>
+        <select
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+          style={{ height: '2.6rem' }}
+        >
+          <option value="">Select a Service Provider</option>
+          {serviceProviders.map((provider, index) => (
+            <option key={index} value={provider}>
+              {provider}
+            </option>
+          ))}
+        </select>
+      </div>
         <div>
             <label className="block text-gray-700">Group</label>
             <select
