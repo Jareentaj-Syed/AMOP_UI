@@ -291,7 +291,7 @@ const TenantInfo: React.FC = () => {
         </select>
       </div>
        
-      <div className="mb-4">
+      <div>
       <label className="block text-gray-700">Sub Partner</label>
         <select
           className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
@@ -319,12 +319,10 @@ const TenantInfo: React.FC = () => {
           ))}
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700">Service Provider</label>
+      <div>
+      <label className="block text-gray-700">Service Provider</label>
         <select
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-          style={{ height: '2.6rem' }}
-        >
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
           <option value="">Select a Service Provider</option>
           {serviceProviders.map((provider, index) => (
             <option key={index} value={provider}>
