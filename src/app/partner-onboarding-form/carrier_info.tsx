@@ -10,6 +10,10 @@ const CarrierInfo: React.FC = () => {
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [editMode, setEditMode] = useState(false);
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
+  const [activeElement, setActiveElement] = useState<string | null>(null);
+  const [environment, setEnvironment] = useState<string>('');
+  const environment_options = ['Sandbox', 'QA', 'UAT', 'Prod'];
+
 
   useEffect(() => {
     const fetchExcelData = async (url: string) => {
@@ -48,6 +52,14 @@ const CarrierInfo: React.FC = () => {
     setCarrierData(carrierData);
     setEditMode(false);
   };
+  const handleFocus = (elementName: string) => {
+    setActiveElement(elementName);
+  };
+
+  const handleBlur = () => {
+    setActiveElement(null);
+  };
+
 
   const handleCancel = () => {
     // Revert to the original carrier data and API state
@@ -79,7 +91,24 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className='p-4'>
       <div className="mb-6 mt-4">
-        <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-between">
+      <div className='inline items-center'>
+              <label className={`block text-gray-700 ${activeElement === 'environment' ? 'text-indigo-500' : ''}`}>
+                Environment
+              </label>
+              <select
+                className={`input focus:border-sky-500 ${activeElement === 'environment' ? 'border-sky-500' : ''}`}
+                onFocus={() => handleFocus('environment')}
+                onBlur={handleBlur}
+                value={environment}
+                onChange={(e) => setEnvironment(e.target.value)}
+                 style={{ minWidth: '200px' }}
+              >
+                {environment_options.map((option, index) => (
+                  <option key={index} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
           {editMode ? (
             <div className='flex'>
               <button
