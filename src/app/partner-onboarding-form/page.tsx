@@ -9,6 +9,9 @@ import { useSidebarStore } from '../stores/navBarStore';
 const PartnerInfo = dynamic(() => import('./partner_info'));
 const CarrierInfo = dynamic(() => import('./carrier_info'));
 const APIInfo = dynamic(() => import('./api_info'));
+const PartnerRegestration = dynamic(() => import('./partner_registration'));
+
+// const PartnerRegestration = dynamic(() => import('./partner_registration'));
 
 const CreateUser: React.FC = () => {
   const [activeTab, setActiveTab] = useState('partnerInfo');
@@ -40,11 +43,18 @@ const CreateUser: React.FC = () => {
         >
           Amop API info
         </button>
+        <button 
+          className={`p-4 ${activeTab === 'partnerRegistration' ? 'active-tab' : 'inactive-tab'}`}
+          onClick={() => setActiveTab('partnerRegistration')}
+        >
+            Partner Registration
+        </button>
       </div>
       <div className="p-4 mt-[60px]">
         {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'carrierInfo' && <CarrierInfo />}
         {activeTab === 'apiInfo' && <APIInfo />}
+        {activeTab === 'partnerRegistration' && <PartnerRegestration onSubmit={switchToCarrierInfoTab} />}
       </div>
     </div>
   );

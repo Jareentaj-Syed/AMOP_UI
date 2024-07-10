@@ -98,7 +98,7 @@ const CarrierInfo: React.FC = () => {
   const columnNames = Object.keys(carrierData[0] || {});
 
   return (
-    <div className='p-4'>
+    <div className='p-1'>
       <div className="mb-6 mt-4">
       <div className="mb-4 flex items-center justify-between">
       <div>
