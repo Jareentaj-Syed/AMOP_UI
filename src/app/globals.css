@@ -43,42 +43,41 @@
 }
 
 .header {
-    background-color: #dfeaf8;
     color: black;
     height: 70px;
 }
 
 .navbar {
-    background-color: #dfeaf8;
     color: black;
     font-weight: 500;
     height: calc(100vh - 70px);
     position: fixed;
+    background-color: white;
 }
 
 .nav-link:hover,
 .nav-link-active:hover {
-    background-color: #1640ff;
-    color: white;
+    background-color: #dedede;
+    color: black;
 }
 
 .nav-active-link {
-    background-color: #1640ff;
-    color: white;
+    background-color: #dedede;
+    color: black;
 }
 
 .nav-link {
-    border-radius: 10px;
+    border-radius: 7px;
 }
 
 .addRow {
     position: relative;
-    left: -2rem; /* Adjust based on your design */
+    left: -2rem;
     top: 50%;
     transform: translateY(-50%);
     background: white;
     padding: 0.25rem;
-    z-index: 10; /* Ensure it appears above the table */
+    z-index: 10;
   }
   
 
@@ -104,29 +103,20 @@
 
 .input {
     width: 100%;
-    /* w-full */
     padding: 0.5rem;
-    /* p-2 */
     border: 1px solid #d1d5db;
-    /* border border-gray-300 */
     border-radius: 0.25rem;
-    /* rounded */
     margin-top: 0.25rem;
-    /* mt-1 */
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    /* Smooth transition for focus effects */
 }
 
 .input:focus {
     outline: none;
-    /* focus:outline-none */
     border-color: #1640ff;
-    /* focus:border-blue-500 */
     box-shadow: 0 0 0 1px #1640ff;
-    /* focus:ring-blue-500 */
 }
 
-.children-components {
+.children{
     width: 100%;
 }
 

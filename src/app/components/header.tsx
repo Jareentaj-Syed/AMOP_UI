@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   const { logoUrl } = useLogoStore();
 
   return (
-    <div className="p-2 flex justify-between items-center header">
+    <div className="p-2 flex justify-between items-center shadow-md header">
       <div className="flex items-center space-x-2">
         {/* <button
           className="p-2 rounded-full hover:bg-gray-200 hover:text-gray-800"

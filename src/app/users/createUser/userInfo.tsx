@@ -97,16 +97,16 @@ const UserInfo: React.FC = () => {
   };
   
   return (
-    <div>
+    <div className='bg-gray-50'>
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Basic Information</h3>
+        <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4">Basic Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-gray-700">Partner</label>
             <select
              value={partner}
              onChange={(e) => setPartner(e.target.value)}
-             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
+             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm " style={{ height: '2.6rem' }}>
               {partners.map((partner, index) => (
                 <option key={index} value={partner.toLowerCase().replace(/\s+/g, '-')}>
                   {partner}
@@ -168,7 +168,7 @@ const UserInfo: React.FC = () => {
       </div>
 
       <div>
-  <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-blue-100 pl-4">Additional Information</h3>
+  <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4">Additional Information</h3>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <div>
       <label className="block text-gray-700">Notification enable</label>

@@ -108,7 +108,7 @@ const CarrierInfo: React.FC = () => {
         <div className="container mx-auto">
           {carrierData.length > 0 && (
             <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 table-fixed">
+              <table className="min-w-full border border-gray-200 table-fixed">
                 <thead className="bg-blue-100">
                   <tr className="table-header-row border-gray-300">
                     <th className="py-2 px-4 border-b text-center font-semibold w-16 table-header">S.no</th>
@@ -135,7 +135,7 @@ const CarrierInfo: React.FC = () => {
                                   type="text"
                                   value={row[key]}
                                   onChange={(e) => handleInputChange(index, key, e.target.value)}
-                                  className="w-full p-2 focus:border-blue-500 focus:ring-blue-500"
+                                  className="w-full p-2 focus:outline-none"
                                 />
                               ) : (
                                 row[key] || '-'

@@ -21,7 +21,7 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="">
-      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[17.8%]' : 'left-[112px]'}`}>
+      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[16.2%]' : 'left-[112px]'}`}>
         <button 
           className={`p-4 ${activeTab === 'partnerInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('partnerInfo')}

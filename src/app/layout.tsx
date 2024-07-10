@@ -21,11 +21,11 @@ export default function RootLayout({
         <div className="fixed top-0 left-0 right-0 z-50 bg-white">
           <Header />
         </div>
-        <div className="flex mt-[70px]">
+        <div className="flex mt-[70px]  bg-gray-50">
           <div className="fixed top-[70px] bottom-0 bg-gray-800 text-white">
             <SideNav />
           </div>
-          <div className={`flex-1 overflow-auto mt-[70px] ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}>
+          <div className={`flex-1 overflow-auto mt-[70px] children ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}>
             {children}
           </div>
         </div>

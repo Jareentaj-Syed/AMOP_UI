@@ -36,7 +36,7 @@ const ListView: React.FC = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return data.slice(startIndex, endIndex).map((row, index) => (
-      <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
         <td className="py-3 px-6 border-b border-gray-300">{startIndex + index + 1}</td>
         {Object.entries(row).map(([key, value], i) => (
           <td key={i} className="py-3 px-6 border-b border-gray-300">
