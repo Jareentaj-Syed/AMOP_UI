@@ -228,9 +228,9 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
           </div> */}
           <div className='flex justify-end space-x-4'>
             <button
-              className={`flex w-24 items-center justify-center p-2 rounded-lg shadow border border-gray-300 ${formValid ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+              className={`flex w-24 items-center justify-center p-2 rounded-lg shadow border border-gray-300 button `}
               type="submit"
-              disabled={!formValid}
+              
             >
               Submit
             </button>
