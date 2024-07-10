@@ -135,6 +135,19 @@
 .listview-table{
 
 }
+
+.editPopup{
+    position: absolute;
+    top: 100px;
+    bottom: 100px;
+    overflow: auto;
+}
+.createPopup{
+    position: absolute;
+    top: 100px;
+    bottom: 100px;
+    overflow: auto;
+}
   
 /* #650f8f #b144d6--purple 
 bg-blue-200 #3dbdf0 --skyblue
