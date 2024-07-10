@@ -282,7 +282,7 @@ const ListView: React.FC = () => {
       {renderData().length > 0 && (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg listview-table">
-            <thead className="bg-blue-100">
+            <thead className="bg-[#E5E7EB]">
               <tr>
                 <th className="py-3 border-b border-gray-300 font-semibold table-header">S.no</th>
                 {columnNames.map((key) => (

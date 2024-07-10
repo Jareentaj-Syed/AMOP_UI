@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { PencilIcon, InformationCircleIcon, PlusIcon, ArrowDownTrayIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, InformationCircleIcon, PlusIcon, ArrowDownTrayIcon, AdjustmentsHorizontalIcon,ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/app/components/pagination';
 import router from 'next/router';
 import { Button, Checkbox, Divider, Popover, Input } from 'antd';
@@ -244,35 +244,41 @@ const ListView: React.FC = () => {
             />
           </div>
         </div>
-        <div className="flex space-x-4">
+        <div className="flex space-x-2">
           <button
-            className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+            className="flex items-center p-2 rounded-lg shadow ml-1 button border border-gray-300"
             onClick={handleCreateModalOpen}
           >
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
           </button>
           <button
-            className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
+            className="flex items-center justify-center p-2 rounded-lg shadow ml-1 button border border-gray-300"
           >
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
           <Popover content={columnContent} trigger="click" placement="bottom">
             <button
-              className="flex items-center p-2 rounded-lg shadow button border border-gray-300 bg-white text-black"
+              className="flex items-center justify-center p-2 rounded-lg shadow ml-1 button border border-gray-300"
             >
               <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
               Filter
             </button>
           </Popover>
+          <button
+              className="flex items-center justify-center p-2 rounded-lg shadow ml-1 button border border-gray-300"
+            >
+              <ArrowUpTrayIcon className="h-5 w-5 text-black-500 mr-2" />
+              Upload
+            </button>
         </div>
       </div>
 
       {renderData().length > 0 && (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg listview-table">
-            <thead className="bg-blue-100">
+            <thead className="bg-[#E5E7EB]">
               <tr>
                 <th className="py-3 border-b border-gray-300 font-semibold table-header">S.no</th>
                 {columnNames.map((key) => (
