@@ -67,6 +67,7 @@
 .nav-active-link {
     background-color: #F2F3F5;
     color: black;
+    font-weight: 700;
 }
 
 .nav-link {
