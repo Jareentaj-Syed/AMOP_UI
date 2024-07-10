@@ -12,8 +12,7 @@ const SideNav: React.FC = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const navItems = [
-    { href: '/', label: 'Users', icon: <HomeIcon className="w-4 h-4" /> },
-    { href: '/partner-onboarding-form', label: 'Partner Onboarding form', icon: <ClipboardDocumentCheckIcon className="w-4 h-4" /> },
+    { href: '/', label: 'Partner Onboarding form', icon: <ClipboardDocumentCheckIcon className="w-4 h-4" /> },
     {
       label: 'SIM Management',
       icon: <WifiIcon className="w-4 h-4" />,
@@ -51,7 +50,7 @@ const SideNav: React.FC = () => {
     <div className='navbar p-2 shadow-lg'>
       {isExpanded ? (
         <div>
-          <ul className="space-y-4">
+          <ul className="space-y-4 mt-4">
             {navItems.map((item) => (
               <li key={item.href || item.label}>
                 {item.subNav ? (
@@ -89,7 +88,7 @@ const SideNav: React.FC = () => {
                     passHref
                     className={`flex items-center space-x-2 p-2 nav-link ${currentPath === item.href ||
                         (item.href === '/' &&
-                          (currentPath === '/' || currentPath === '/users/createUser'))
+                          (currentPath === '/people/users' || currentPath === '/people/users/createUser'))
                         ? 'nav-active-link'
                         : ''
                       }`}
