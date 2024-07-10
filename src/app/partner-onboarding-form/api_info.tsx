@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select  from 'react-select';
 import * as XLSX from 'xlsx';
 
 interface ExcelData {
@@ -35,7 +36,27 @@ const CarrierInfo: React.FC = () => {
 
     fetchData();
   }, []);
+  const environmentOptions = [
+    { value: 'Sandbox', label: 'Sandbox' },
+    { value: 'QA', label: 'QA' },
+    { value: 'UAT', label: 'UAT' },
+    { value: 'Prod', label: 'Prod' }
+  ];
 
+  const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
+  const [activeElement, setActiveElement] = useState<string | null>(null);
+
+  const handleFocus = (element: string) => {
+    setActiveElement(element);
+  };
+
+  const handleBlur = () => {
+    setActiveElement(null);
+  };
+
+  const handleChange = (selectedOption: { value: string; label: string } | null) => {
+    setEnvironment(selectedOption);
+  };
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
   };
@@ -79,7 +100,30 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className='p-4'>
       <div className="mb-6 mt-4">
-        <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-between">
+      <div>
+      <label className="block text-gray-700">
+        Environment
+      </label>
+      <Select
+        onFocus={() => handleFocus('environment')}
+        onBlur={handleBlur}
+        value={environment}
+        onChange={handleChange}
+        options={environmentOptions}
+        styles={{
+          control: (base: any,state: { isFocused: any; }) => ({
+            ...base,
+            minWidth:'200px',
+            marginTop:'5px',
+            height: '2.4rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
           {editMode ? (
             <div className='flex'>
               <button
@@ -108,7 +152,7 @@ const CarrierInfo: React.FC = () => {
         <div className="container mx-auto">
           {carrierData.length > 0 && (
             <div className="overflow-x-auto">
-              <table className="min-w-fullborder border-gray-200 table-fixed bg-white">
+              <table className="min-w-full border border-gray-200 table-fixed bg-white">
                 <thead className="bg-blue-100">
                   <tr className="table-header-row border-gray-300">
                     <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>

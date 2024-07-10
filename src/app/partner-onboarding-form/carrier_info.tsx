@@ -1,3 +1,4 @@
+import Select  from 'react-select';
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
@@ -10,9 +11,28 @@ const CarrierInfo: React.FC = () => {
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [editMode, setEditMode] = useState(false);
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
+ 
+  const environmentOptions = [
+    { value: 'Sandbox', label: 'Sandbox' },
+    { value: 'QA', label: 'QA' },
+    { value: 'UAT', label: 'UAT' },
+    { value: 'Prod', label: 'Prod' }
+  ];
+
+  const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [activeElement, setActiveElement] = useState<string | null>(null);
-  const [environment, setEnvironment] = useState<string>('');
-  const environment_options = ['Sandbox', 'QA', 'UAT', 'Prod'];
+
+  const handleFocus = (element: string) => {
+    setActiveElement(element);
+  };
+
+  const handleBlur = () => {
+    setActiveElement(null);
+  };
+
+  const handleChange = (selectedOption: { value: string; label: string } | null) => {
+    setEnvironment(selectedOption);
+  };
 
 
   useEffect(() => {
@@ -52,13 +72,8 @@ const CarrierInfo: React.FC = () => {
     setCarrierData(carrierData);
     setEditMode(false);
   };
-  const handleFocus = (elementName: string) => {
-    setActiveElement(elementName);
-  };
+ 
 
-  const handleBlur = () => {
-    setActiveElement(null);
-  };
 
 
   const handleCancel = () => {
@@ -92,23 +107,29 @@ const CarrierInfo: React.FC = () => {
     <div className='p-4'>
       <div className="mb-6 mt-4">
       <div className="mb-4 flex items-center justify-between">
-      <div className='inline items-center'>
-              <label className={`block text-gray-700 ${activeElement === 'environment' ? 'text-indigo-500' : ''}`}>
-                Environment
-              </label>
-              <select
-                className={`input focus:border-sky-500 ${activeElement === 'environment' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('environment')}
-                onBlur={handleBlur}
-                value={environment}
-                onChange={(e) => setEnvironment(e.target.value)}
-                 style={{ minWidth: '200px' }}
-              >
-                {environment_options.map((option, index) => (
-                  <option key={index} value={option}>{option}</option>
-                ))}
-              </select>
-            </div>
+      <div>
+      <label className="block text-gray-700">
+        Environment
+      </label>
+      <Select
+        onFocus={() => handleFocus('environment')}
+        onBlur={handleBlur}
+        value={environment}
+        onChange={handleChange}
+        options={environmentOptions}
+        styles={{
+          control: (base: any,state: { isFocused: any; }) => ({
+            ...base,
+            minWidth:'200px',
+            marginTop:'5px',
+            height: '2.4rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
           {editMode ? (
             <div className='flex'>
               <button
