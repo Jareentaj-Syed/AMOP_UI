@@ -73,3 +73,13 @@ export const partnerCarrierData: Record<string, string[]>={
     "Verizon - ThingSpace IoT",
     "Verizon - ThingSpace PN"
   ];
+
+  interface ExcelData {
+    [key: string]: {
+        Module: string[];
+        Feature: {
+            [key: string]: string[];
+        };
+    };
+}
+
