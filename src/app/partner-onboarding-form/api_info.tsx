@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import Select  from 'react-select';
+import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
 interface ExcelData {
@@ -11,6 +11,28 @@ const CarrierInfo: React.FC = () => {
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [editMode, setEditMode] = useState(false);
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
+ 
+  const environmentOptions = [
+    { value: 'Sandbox', label: 'Sandbox' },
+    { value: 'QA', label: 'QA' },
+    { value: 'UAT', label: 'UAT' },
+    { value: 'Prod', label: 'Prod' }
+  ];
+
+  const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
+  const [activeElement, setActiveElement] = useState<string | null>(null);
+
+  const handleFocus = (element: string) => {
+    setActiveElement(element);
+  };
+
+  const handleBlur = () => {
+    setActiveElement(null);
+  };
+
+  const handleChange = (selectedOption: { value: string; label: string } | null) => {
+    setEnvironment(selectedOption);
+  };
 
   useEffect(() => {
     const fetchExcelData = async (url: string) => {
@@ -36,27 +58,7 @@ const CarrierInfo: React.FC = () => {
 
     fetchData();
   }, []);
-  const environmentOptions = [
-    { value: 'Sandbox', label: 'Sandbox' },
-    { value: 'QA', label: 'QA' },
-    { value: 'UAT', label: 'UAT' },
-    { value: 'Prod', label: 'Prod' }
-  ];
 
-  const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
-  const [activeElement, setActiveElement] = useState<string | null>(null);
-
-  const handleFocus = (element: string) => {
-    setActiveElement(element);
-  };
-
-  const handleBlur = () => {
-    setActiveElement(null);
-  };
-
-  const handleChange = (selectedOption: { value: string; label: string } | null) => {
-    setEnvironment(selectedOption);
-  };
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
   };
@@ -69,6 +71,9 @@ const CarrierInfo: React.FC = () => {
     setCarrierData(carrierData);
     setEditMode(false);
   };
+ 
+
+
 
   const handleCancel = () => {
     // Revert to the original carrier data and API state
@@ -187,7 +192,7 @@ const CarrierInfo: React.FC = () => {
                             </td>
                           ) : (
                             <td key={i} className="py-2 px-4 border-b border-gray-300 text-center table-cell">
-                              <div className='flex space-x-2'  style={{ marginLeft: '2rem' }}>
+                              <div className='flex space-x-2' >
                               <button
   className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
     apiState[index] === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-300' : 'bg-gray-100 text-gray-500 border-gray-200'
@@ -206,6 +211,7 @@ const CarrierInfo: React.FC = () => {
 >
   Disable
 </button>
+
                               </div>
                             </td>
                           )
