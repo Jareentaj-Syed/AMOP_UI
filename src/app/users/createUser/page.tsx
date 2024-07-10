@@ -18,7 +18,7 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="pt-2">
-      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[16.2%]' : 'left-[112px]'}`}>
+      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
           className={`p-4 ${activeTab === 'userInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('userInfo')}
@@ -32,7 +32,7 @@ const CreateUser: React.FC = () => {
           Tenant info
         </button>
       </div>
-        <div className="shadow-md p-6">
+        <div className="shadow-md p-6 mt-[60px]">
           {activeTab === 'userInfo' ? <UserInfo /> : <TenantInfo />}
         </div>
     </div>

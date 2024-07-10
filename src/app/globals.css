@@ -40,6 +40,7 @@
     position: fixed;
     right: 0px;
     top: 70px;
+    height: 60px;
 }
 
 .header {
@@ -53,6 +54,7 @@
     height: calc(100vh - 70px);
     position: fixed;
     background-color: white;
+    width: 17%;
 }
 
 .nav-link:hover,

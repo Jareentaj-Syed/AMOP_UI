@@ -21,7 +21,7 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="">
-      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[16.2%]' : 'left-[112px]'}`}>
+      <div className={`bg-white shadow-md mb-4 z-99 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
           className={`p-4 ${activeTab === 'partnerInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('partnerInfo')}
@@ -41,7 +41,7 @@ const CreateUser: React.FC = () => {
           Amop API info
         </button>
       </div>
-      <div className="bg-white p-4">
+      <div className="p-4 mt-[60px]">
         {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'carrierInfo' && <CarrierInfo />}
         {activeTab === 'apiInfo' && <APIInfo />}
