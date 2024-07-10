@@ -16,7 +16,7 @@ const ListView: React.FC = () => {
   const itemsPerPage = 10; // Number of items per page
   const [filteredData, setFilteredData] = useState<ExcelData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]); // State to manage visible columns
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

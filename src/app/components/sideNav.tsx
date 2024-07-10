@@ -6,9 +6,10 @@ import Link from 'next/link';
 import { useSidebarStore } from '../stores/navBarStore';
 
 const SideNav: React.FC = () => {
+  console.log("navbar")
   const currentPath = usePathname();
   const { isExpanded } = useSidebarStore();
-  const [isSimManagementOpen, setIsSimManagementOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const navItems = [
     { href: '/', label: 'Users', icon: <HomeIcon className="w-4 h-4" /> },
@@ -25,14 +26,24 @@ const SideNav: React.FC = () => {
     },
     { href: '/device-management', label: 'Device Management', icon: <DevicePhoneMobileIcon className="w-4 h-4" /> },
     { href: '/optimization', label: 'Optimization', icon: <ChartBarIcon className="w-4 h-4" /> },
-    // { href: '/reports', label: 'Reports', icon: <DocumentTextIcon className="w-4 h-4" /> },
-    // { href: '/customer-charges', label: 'Customer Charges', icon: <CurrencyDollarIcon className="w-4 h-4" /> },
-    // { href: '/net-sapiens', label: 'Net Sapiens', icon: <GlobeAltIcon className="w-4 h-4" /> },
-    // { href: '/alerts', label: 'LNP', icon: <PhoneIcon className="w-4 h-4" /> },
-    // { href: '/automation', label: 'Automation', icon: <BriefcaseIcon className="w-4 h-4" /> },
-    { href: '/people', label: 'People', icon: <UserGroupIcon className="w-4 h-4" /> },
+    { 
+      label: 'People', 
+      icon: <UserGroupIcon className="w-4 h-4" />,
+      subNav: [
+        { href: '/people/rev_io_customers', label: 'Rev.Io Customers' },
+        { href: '/people/bandwidth_customers', label: 'Bandwidth Customers' },
+        { href: '/people/netsapiens_customers', label: 'NetSapiens Customers' },
+        { href: '/people/e911_customers', label: 'E911 Customers' },
+        { href: '/people/customer_groups', label: 'Customer Groups' },
+        { href: '/people/users', label: 'Users' },
+      ]
+    },
     { href: '/settings', label: 'Settings', icon: <CogIcon className="w-4 h-4" /> },
   ];
+
+  const handleDropdownClick = (label: string) => {
+    setOpenDropdown(openDropdown === label ? null : label);
+  };
 
   return (
     <div className='navbar p-2 shadow-lg'>
@@ -44,16 +55,16 @@ const SideNav: React.FC = () => {
                 {item.subNav ? (
                   <>
                     <button
-                      onClick={() => setIsSimManagementOpen(!isSimManagementOpen)}
+                      onClick={() => handleDropdownClick(item.label)}
                       className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
-                        currentPath.startsWith('/sim-management') ? 'nav-active-link' : ''
+                        currentPath.startsWith(item.subNav[0].href.split('/')[1]) || openDropdown === item.label ? 'nav-active-link' : ''
                       }`}
                     >
                       {item.icon}
                       <span>{item.label}</span>
-                      {isSimManagementOpen ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
+                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
                     </button>
-                    {isSimManagementOpen && (
+                    {(openDropdown === item.label || currentPath.startsWith(item.subNav[0].href.split('/')[1])) && (
                       <ul className="pl-6 space-y-2 mt-2">
                         {item.subNav.map((subItem) => (
                           <li key={subItem.href}>
@@ -78,6 +89,7 @@ const SideNav: React.FC = () => {
                         ? 'nav-active-link'
                         : ''
                     }`}
+                    onClick={() => handleDropdownClick(item.label)}
                   >
                     {item.icon}
                     <span>{item.label}</span>
@@ -95,15 +107,15 @@ const SideNav: React.FC = () => {
                 {item.subNav ? (
                   <>
                     <button
-                      onClick={() => setIsSimManagementOpen(!isSimManagementOpen)}
+                      onClick={() => handleDropdownClick(item.label)}
                       className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${
-                        currentPath.startsWith('/sim-management') ? 'nav-active-link' : ''
+                        currentPath.startsWith(item.subNav[0].href.split('/')[1]) || openDropdown === item.label ? 'nav-active-link' : ''
                       }`}
                     >
                       {item.icon}
-                      {isSimManagementOpen ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
+                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
                     </button>
-                    {isSimManagementOpen && (
+                    {(openDropdown === item.label || currentPath.startsWith(item.subNav[0].href.split('/')[1])) && (
                       <ul className="pl-4 space-y-2">
                         {item.subNav.map((subItem) => (
                           <li key={subItem.href}>

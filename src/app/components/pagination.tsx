@@ -16,10 +16,31 @@ const Pagination: React.FC<PaginationProps> = ({
     onPageChange(page);
   };
 
-  const pageNumbers: number[] = [];
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  // Calculate which page numbers to display based on current page
+  const calculatePagesToShow = () => {
+    const pagesToShow: (number | string)[] = [];
+    const showEllipsisStart = currentPage > 3;
+    const showEllipsisEnd = currentPage < totalPages - 2;
+
+    if (totalPages <= 5) {
+      for (let i = 1; i <= totalPages; i++) {
+        pagesToShow.push(i);
+      }
+    } else {
+      pagesToShow.push(1);
+      if (showEllipsisStart) pagesToShow.push('...');
+      const startPage = Math.max(2, currentPage - 1);
+      const endPage = Math.min(totalPages - 1, currentPage + 1);
+      for (let i = startPage; i <= endPage; i++) {
+        pagesToShow.push(i);
+      }
+      if (showEllipsisEnd) pagesToShow.push('...');
+      pagesToShow.push(totalPages);
+    }
+    return pagesToShow;
+  };
+
+  const pageNumbers = calculatePagesToShow();
 
   return (
     <div className="flex justify-center mb-4">
@@ -32,13 +53,14 @@ const Pagination: React.FC<PaginationProps> = ({
       >
         <ArrowLeftIcon className="h-5 w-5 inline-block -mt-1 mr-1" /> Previous
       </button>
-      {pageNumbers.map((page) => (
+      {pageNumbers.map((page, index) => (
         <button
-          key={page}
-          onClick={() => handlePageChange(page)}
+          key={index}
+          onClick={() => typeof page === 'number' && handlePageChange(page)}
           className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ${
             currentPage === page ? 'bg-gray-200' : ''
-          }`}
+          } ${page === '...' ? 'cursor-default' : ''}`}
+          disabled={page === '...'}
         >
           {page}
         </button>
