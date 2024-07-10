@@ -74,6 +74,38 @@ export const partnerCarrierData: Record<string, string[]>={
     "Verizon - ThingSpace PN"
   ];
 
+  export const Customeroptions = [
+    { value: 'ABB', label: 'ABB' },
+    { value: 'AMOP Demo', label: 'AMOP Demo' },
+    { value: 'Atlantic Broadband', label: 'Atlantic Broadband' },
+    { value: 'Brazos Test', label: 'Brazos Test' },
+    { value: "Charles' Customer Group", label: "Charles' Customer Group" },
+    { value: 'CS Vizion', label: 'CS Vizion' },
+    { value: 'CS Vizion NS Test', label: 'CS Vizion NS Test' },
+    { value: 'CS Vizion Test', label: 'CS Vizion Test' },
+    { value: 'Nexus ITG', label: 'Nexus ITG' },
+    { value: 'Notification Test Group 2', label: 'Notification Test Group 2' },
+    { value: 'Notification Test Group 3', label: 'Notification Test Group 3' },
+    { value: 'Notification TestCustomer', label: 'Notification TestCustomer' },
+    { value: 'Revio Demo Group', label: 'Revio Demo Group' },
+    { value: 'Titanium Wireless', label: 'Titanium Wireless' },
+    { value: 'Tricom Technology Solutions', label: 'Tricom Technology Solutions' },
+    { value: 'Your Company Name', label: 'Your Company Name' },
+    { value: '#HDTEST', label: '#HDTEST' },
+    { value: '#HDTEST2', label: '#HDTEST2' },
+    { value: 'AWX Test Group', label: 'AWX Test Group' },
+    { value: 'DJ - Test Auto', label: 'DJ - Test Auto' },
+    { value: 'DJ Test', label: 'DJ Test' },
+    { value: 'DJ Test 2 Auto Add', label: 'DJ Test 2 Auto Add' },
+    { value: 'group-port-921', label: 'group-port-921' },
+    { value: 'MobileManagerTest', label: 'MobileManagerTest' },
+    { value: 'NOTR Test', label: 'NOTR Test' },
+    { value: 'Reseller Activation Testing', label: 'Reseller Activation Testing' },
+    { value: 'Test 070923', label: 'Test 070923' },
+    { value: 'Test 731', label: 'Test 731' },
+    { value: 'Test Group Athse', label: 'Test Group Athse' },
+  ];
+
   interface ExcelData {
     [key: string]: {
         Module: string[];

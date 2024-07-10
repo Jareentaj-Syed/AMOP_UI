@@ -74,7 +74,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   return (
     <div className='p-2'>
       <div className="mb-6 mt-4">
-        <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4 mb-4">Partner Info</h3>
+        <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Info</h3>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-4 mb-6">
             <div>
@@ -147,7 +147,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
             </div>
           </div>
-          <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4 mb-4">Partner Registration</h3>
+          <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Registration</h3>
           <div className="grid grid-cols-1 gap-4 mb-6">
             <div>
               <label className={`block text-gray-700 ${activeElement === 'userName' ? 'text-indigo-500' : ''}`}>

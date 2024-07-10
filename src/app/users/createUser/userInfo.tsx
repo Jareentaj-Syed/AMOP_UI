@@ -2,10 +2,14 @@
 import React, { useState } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import countries from '@/app/constants/locationdetails';
-import Select from 'react-select';
+import Select , { SingleValue }  from 'react-select';
 import { Country, State, City } from '@/app/constants/locationdetails';
 
 import { getCities, getCityDetails, getStates} from '@/app/constants/locationdetails';
+type OptionType = {
+  value: string;
+  label: string;
+};
 const partners = [
   "AWX",
   "Altawork-GT",
@@ -25,11 +29,30 @@ const roles = [
   "User"
 ];
 
+const Roleoptions = roles.map((role, index) => ({
+  value: role.toLowerCase().replace(/\s+/g, '-'),
+  label: role,
+}));
+
+const Notificationoptions = [
+  { value: 'yes', label: 'Yes' },
+  { value: 'no', label: 'No' }
+];
+
 const UserInfo: React.FC = () => {
-  const [partner, setPartner] = useState('');
+  const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
+
+  const options = partners.map(partner => ({
+    value: partner.toLowerCase().replace(/\s+/g, '-'),
+    label: partner
+  }));
+
+  const handleChange = (selectedOption: SingleValue<OptionType>) => {
+    setPartner(selectedOption);
+  };
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState<SingleValue<OptionType>>(null);
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number | null>(null);
@@ -99,111 +122,169 @@ const UserInfo: React.FC = () => {
   return (
     <div className='bg-gray-50'>
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4">Basic Information</h3>
+      <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">
+  Basic Information
+</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          <div>
-            <label className="block text-gray-700">Partner</label>
-            <select
-             value={partner}
-             onChange={(e) => setPartner(e.target.value)}
-             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm " style={{ height: '2.6rem' }}>
-              {partners.map((partner, index) => (
-                <option key={index} value={partner.toLowerCase().replace(/\s+/g, '-')}>
-                  {partner}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div>
+      <label className="block text-gray-700">Partner</label>
+      <Select
+        value={partner}
+        onChange={handleChange}
+        options={options}
+       
+        styles={{
+          control: (base,state) => ({
+            ...base,
+            marginTop:'5px',
+            height: '2.6rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
           <div>
             <label className="block text-gray-700">First Name</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
           <div>
             <label className="block text-gray-700">Last Name</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
           <div>
             <label className="block text-gray-700">Username</label>
             <input type="text" 
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
           <div>
             <label className="block text-gray-700">Email id</label>
             <input type="email" 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
-          </div>
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+               </div>
           <div>
             <label className="block text-gray-700">Mobile no</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
           <div>
-            <label className="block text-gray-700">Role</label>
-            <select 
-               value={role}
-               onChange={(e) => setRole(e.target.value)}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
-             {roles.map((role, index) => (
-             <option key={index} value={role.toLowerCase().replace(/\s+/g, '-')}>
-             {role}
-             </option>
-             ))}
-           </select>
-          </div>
+      <label className="block text-gray-700">Role</label>
+      <Select
+        value={role}
+        onChange={handleChange}
+        options={Roleoptions}
+       
+        styles={{
+          control: (base,state) => ({
+            ...base,
+            marginTop:'5px',
+            height: '2.6rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
+ 
           <div>
             <label className="block text-gray-700">Password</label>
             <input type="password" 
              value={password}
              onChange={(e) => setPassword(e.target.value)}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
           <div>
             <label className="block text-gray-700">Phone</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+            <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
         </div>
       </div>
 
       <div>
-  <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4">Additional Information</h3>
+  <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Additional Information</h3>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
+  <div>
       <label className="block text-gray-700">Notification enable</label>
-      <select className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" style={{ height: '2.6rem' }}>
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
+      <Select
+      
+        styles={{
+          control: (base,state) => ({
+            ...base,
+            marginTop:'5px',
+            height: '2.6rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+        options={Notificationoptions}
+      />
     </div>
     <div>
       <label className="block text-gray-700">Business Name</label>
-      <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
     </div>
     <div>
       <label className="block text-gray-700">Locale</label>
-      <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+      <input type="text"
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
     </div>
     <div>
       <label className="block text-gray-700">Apt/Suite</label>
-      <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
     </div>
     <div>
       <label className="block text-gray-700">Address Line-1</label>
-      <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
     </div>
     <div>
       <label className="block text-gray-700">Address Line-2</label>
-      <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
     </div>
-  
+    <div>
+      <label className="block text-gray-700">Country</label>
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+    </div>
+    <div>
+      <label className="block text-gray-700">State</label>
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+    </div>
+    <div>
+      <label className="block text-gray-700">City</label>
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+    </div>
+    <div>
+      <label className="block text-gray-700">Time Zone</label>
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+    </div>
+
+    <div>
+      <label className="block text-gray-700">Zip</label>
+      <input type="text" 
+          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
+    </div>
+{/*   
     <div>
             <label className="block text-gray-700">Country</label>
             <select
               value={selectedCountry || ''}
               onChange={handleCountryChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
               style={{ height: '2.6rem' }}
             >
               <option value="">Select Country</option>
@@ -219,7 +300,7 @@ const UserInfo: React.FC = () => {
             <select
               value={selectedState || ''}
               onChange={handleStateChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
               style={{ height: '2.6rem' }}
             >
               <option value="">Select State</option>
@@ -235,7 +316,7 @@ const UserInfo: React.FC = () => {
             <select
               value={selectedCity || ''}
               onChange={handleCityChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
               style={{ height: '2.6rem' }}
             >
               <option value="">Select City</option>
@@ -252,7 +333,7 @@ const UserInfo: React.FC = () => {
               type="text"
               value={selectedTimeZone}
               readOnly
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
             />
           </div>
           <div>
@@ -261,9 +342,9 @@ const UserInfo: React.FC = () => {
               type="text"
               value={selectedZipCode}
               readOnly
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
             />
-          </div>
+          </div> */}
   </div>
 </div>
 

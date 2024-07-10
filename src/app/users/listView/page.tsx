@@ -3,9 +3,11 @@ import * as XLSX from 'xlsx';
 import { PencilIcon, TrashIcon, InformationCircleIcon, PlusIcon, ArrowDownTrayIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/app/components/pagination';
 import router from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Button, Checkbox, Divider, Popover } from 'antd';
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
+import ChartsPage from '../charts/page';
 interface ExcelData {
   [key: string]: any;
 }
@@ -60,6 +62,7 @@ const ListView: React.FC = () => {
     setCurrentPage(page);
   };
 
+  const router = useRouter();
   const handleCreateClick = () => {
     router.push('users/createUser');
   };
@@ -170,14 +173,22 @@ const ListView: React.FC = () => {
   return (
 
     <div className="container mx-auto p-4">
-        <button
-            className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
-            onClick={handleCreateClick}
-          >
-            <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-            Create New User
-          </button>
-      <div className="flex items-center justify-between mt-1 mb-4">
+     <div className="flex items-center justify-between">
+  {/* Left side: ChartsPage */}
+  <ChartsPage />
+
+  {/* Right side: Create New User button */}
+  <button
+    className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+    onClick={handleCreateClick}
+  >
+    <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+    Create New User
+  </button>
+</div>
+
+
+      <div className="flex items-center justify-between mt-6 mb-4">
     
       <div className="flex items-center space-x-2">
   <div className="flex items-center border border-gray-300 rounded-lg p-1" style={{ width: '300px' }}>
@@ -212,7 +223,7 @@ const ListView: React.FC = () => {
       {renderData().length > 0 && (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-blue-100">
+            <thead className="bg-gray-200">
               <tr>
                 <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>
                 {Object.keys(data.length > 0 ? data[0] : {}).map((key) => (
