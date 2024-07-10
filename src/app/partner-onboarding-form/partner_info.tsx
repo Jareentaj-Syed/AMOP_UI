@@ -20,6 +20,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [environment, setEnvironment] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
+  const [confirmPassword, setconfirmPassword] = useState<string>('');
   const [clientId, setClientId] = useState<string>('');
   const [clientSecret, setClientSecret] = useState<string>('');
 
@@ -30,6 +31,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     if (
       userName.trim() !== '' &&
       userPassword.trim() !== '' &&
+      confirmPassword.trim() !=='' &&
       clientId.trim() !== '' &&
       clientSecret.trim() !== ''
     ) {
@@ -37,7 +39,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     } else {
       setFormValid(false);
     }
-  }, [userName, userPassword, clientId, clientSecret]);
+  }, [userName, userPassword, clientId, clientSecret, confirmPassword]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -76,7 +78,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       <div className="mb-6 mt-4">
         <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Info</h3>
         <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-4 mb-6">
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className={`block text-gray-700 ${activeElement === 'partnerName' ? 'text-indigo-500' : ''}`}>
                 Partner Name
@@ -116,7 +118,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 onChange={(e) => setEmailIds(e.target.value)}
               />
             </div>
-            <div>
+            {/* <div>
               <label className={`block text-gray-700 ${activeElement === 'environment' ? 'text-indigo-500' : ''}`}>
                 Environment
               </label>
@@ -131,7 +133,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   <option key={index} value={option}>{option}</option>
                 ))}
               </select>
-            </div>
+            </div> */}
             <div>
               <label className={`block text-gray-700 ${activeElement === 'partnerLogo' ? 'text-indigo-500' : ''}`}>
                 Partner Logo
@@ -147,8 +149,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
             </div>
           </div>
-          <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Registration</h3>
-          <div className="grid grid-cols-1 gap-4 mb-6">
+          <h3 className="text-lg font-semibold mb-2 text-blue-900 bg-gray-200 pl-4 mb-4">Partner Registration</h3>
+          <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label className={`block text-gray-700 ${activeElement === 'userName' ? 'text-indigo-500' : ''}`}>
                 User Name
@@ -164,7 +166,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
             </div>
             <div>
               <label className={`block text-gray-700 ${activeElement === 'userPassword' ? 'text-indigo-500' : ''}`}>
-                User Password
+                Password
               </label>
               <input
                 type="password"
@@ -173,6 +175,19 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 onBlur={handleBlur}
                 value={userPassword}
                 onChange={(e) => setUserPassword(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className={`block text-gray-700 ${activeElement === 'confirmPassword' ? 'text-indigo-500' : ''}`}>
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                className={`input focus:border-sky-500 ${activeElement === 'confirmPassword' ? 'border-sky-500' : ''}`}
+                onFocus={() => handleFocus('confirmPassword')}
+                onBlur={handleBlur}
+                value={confirmPassword}
+                onChange={(e) => setconfirmPassword(e.target.value)}
               />
             </div>
             <div>

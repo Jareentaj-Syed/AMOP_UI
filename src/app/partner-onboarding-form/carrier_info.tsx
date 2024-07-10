@@ -111,11 +111,11 @@ const CarrierInfo: React.FC = () => {
               <table className="min-w-full border border-gray-200 table-fixed bg-white">
                 <thead className="bg-blue-100">
                   <tr className="table-header-row border-gray-300">
-                    <th className="py-2 px-4 border-b text-center font-semibold w-16 table-header">S.no</th>
+                    <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>
                     {columnNames.map((key) => (
                       <th
                         key={key}
-                        className="table-header text-center"
+                        className="py-3 px-6 border-b border-gray-300 text-left font-semibold"
                       >
                         {formatColumnName(key)}
                       </th>

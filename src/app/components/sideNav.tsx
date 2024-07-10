@@ -22,6 +22,8 @@ const SideNav: React.FC = () => {
         { href: '/sim-management/bulk-change', label: 'Bulk Change' },
         { href: '/sim-management/sim-order-form', label: 'SIM Order Form' },
         { href: '/sim-management/revenue-assurance', label: 'Revenue Assurance' },
+        
+
       ]
     },
     { href: '/device-management', label: 'Device Management', icon: <DevicePhoneMobileIcon className="w-4 h-4" /> },
@@ -62,7 +64,7 @@ const SideNav: React.FC = () => {
                     >
                       {item.icon}
                       <span>{item.label}</span>
-                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
+                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4 absolute "style={{ right: '20px' }}  /> : <ChevronRightIcon className="w-4 h-4 absolute"style={{ right: '20px' }}  />}
                     </button>
                     {(openDropdown === item.label || currentPath.startsWith(item.subNav[0].href.split('/')[1])) && (
                       <ul className="pl-6 space-y-2 mt-2">
