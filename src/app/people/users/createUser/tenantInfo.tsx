@@ -383,7 +383,7 @@ const TenantInfo: React.FC = () => {
       />
     </div>
     <div>
-      <label className="block text-gray-700">Customers</label>
+      <label className="block text-gray-700">Customer Group</label>
       <Select
         options={Customeroptions}
         className="mt-1"

@@ -192,7 +192,7 @@ const CarrierInfo: React.FC = () => {
                             </td>
                           ) : (
                             <td key={i} className="py-2 px-4 border-b border-gray-300 text-center table-cell">
-                              <div className='flex space-x-2' >
+                              <div className='flex space-x-2 mr-4' >
                               <button
   className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
     apiState[index] === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-300' : 'bg-gray-100 text-gray-500 border-gray-200'
@@ -206,7 +206,7 @@ const CarrierInfo: React.FC = () => {
   className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
     apiState[index] === 'disable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
   }`}
-  style={{ width: '100%' }}
+  style={{ width: '100%'}}
   onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'disable' }))}
 >
   Disable
