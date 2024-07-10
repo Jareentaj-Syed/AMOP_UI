@@ -192,19 +192,26 @@ const CarrierInfo: React.FC = () => {
                             </td>
                           ) : (
                             <td key={i} className="py-2 px-4 border-b border-gray-300 text-center table-cell">
-                              <div className='flex space-x-2'  style={{ marginLeft: '2rem' }}>
-                                <button
-                                  className={`text-white px-2 py-1 rounded ${apiState[index] === 'enable' ? 'bg-blue-500' : 'bg-gray-500'}`}
-                                  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'enable' }))}
-                                >
-                                  Enable
-                                </button>
-                                <button
-                                  className={`text-white px-2 py-1 rounded ${apiState[index] === 'disable' ? 'bg-blue-500' : 'bg-gray-500'}`}
-                                  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'disable' }))}
-                                >
-                                  Disable
-                                </button>
+                              <div className='flex space-x-2' >
+                              <button
+  className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
+    apiState[index] === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-300' : 'bg-gray-100 text-gray-500 border-gray-200'
+  }`}
+  style={{ width: '100%' }}
+  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'enable' }))}
+>
+  Enable
+</button>
+<button
+  className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
+    apiState[index] === 'disable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+  }`}
+  style={{ width: '100%' }}
+  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'disable' }))}
+>
+  Disable
+</button>
+
                               </div>
                             </td>
                           )
