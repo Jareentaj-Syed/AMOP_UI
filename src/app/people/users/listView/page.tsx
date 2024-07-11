@@ -20,24 +20,51 @@ const ListView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
+ 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('/users.xlsx');
-      const arrayBuffer = await response.arrayBuffer();
-      const data = new Uint8Array(arrayBuffer);
-      const workbook = XLSX.read(data, { type: 'array' });
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData: ExcelData[] = XLSX.utils.sheet_to_json(worksheet);
-      setData(jsonData);
-      setFilteredData(jsonData); 
-      
-      // Initialize visible columns to all columns initially
-      setVisibleColumns(Object.keys(jsonData.length > 0 ? jsonData[0] : {}));
+      try {
+        const response = await fetch('/users.xlsx');
+        const arrayBuffer = await response.arrayBuffer();
+        const data = new Uint8Array(arrayBuffer);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+    
+        // Adjusting sheet_to_json options to include empty cells
+        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1, // Use first row as header
+          blankrows: false // Include cells with blank values
+        });
+    
+        if (jsonData.length === 0) {
+          throw new Error('No data found in the Excel sheet.');
+        }
+    
+        // Extracting column names from the first row
+        const columnNames = jsonData[0];
+    
+        // Processing rows excluding the first row (header)
+        const filledData = jsonData.slice(1).map(row => {
+          const filledRow: any = {};
+          columnNames.forEach((header: any, index: number) => {
+            filledRow[header] = row[index] || '';
+          });
+          return filledRow;
+        });
+    
+        setData(filledData);
+        setFilteredData(filledData);
+        setVisibleColumns(columnNames);
+      } catch (error) {
+        console.error('Error fetching data from Excel:', error);
+        // Handle error state or display a message to the user
+      }
     };
-
+    
     fetchData();
   }, []);
+
 
   useEffect(() => {
     // Filter data whenever searchTerm changes
