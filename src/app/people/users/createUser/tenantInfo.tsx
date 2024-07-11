@@ -411,7 +411,7 @@ const TenantInfo: React.FC = () => {
     </div>
 </div>
 
-            <div>
+            {/* <div>
                 <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Module Info</h3>
                 <div className="grid grid-cols-1 gap-4 mb-6">
                     {Object.keys(data).map((category) => (
@@ -445,7 +445,7 @@ const TenantInfo: React.FC = () => {
                         </div>
                     ))}
                 </div>
-            </div>
+            </div> */}
             <div className="flex justify-end space-x-4">
             <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
           <XMarkIcon className="h-5 w-5 text-black-500 mr-2"/>
