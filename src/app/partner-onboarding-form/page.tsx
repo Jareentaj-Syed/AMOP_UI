@@ -50,7 +50,7 @@ const PartnerOnboardingForm: React.FC = () => {
             Partner Registration
         </button>
       </div>
-      <div className="p-4 mt-[60px]">
+      <div className="p-4 mt-[60px] overflow-y-auto mt-[60px] h-[calc(100vh-150px)]">
         {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'carrierInfo' && <CarrierInfo />}
         {activeTab === 'apiInfo' && <APIInfo />}
