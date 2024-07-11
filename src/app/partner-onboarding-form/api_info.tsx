@@ -1,3 +1,4 @@
+import Select  from 'react-select';
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 
@@ -10,6 +11,28 @@ const CarrierInfo: React.FC = () => {
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [editMode, setEditMode] = useState(false);
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
+ 
+  const environmentOptions = [
+    { value: 'Sandbox', label: 'Sandbox' },
+    { value: 'QA', label: 'QA' },
+    { value: 'UAT', label: 'UAT' },
+    { value: 'Prod', label: 'Prod' }
+  ];
+
+  const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
+  const [activeElement, setActiveElement] = useState<string | null>(null);
+
+  const handleFocus = (element: string) => {
+    setActiveElement(element);
+  };
+
+  const handleBlur = () => {
+    setActiveElement(null);
+  };
+
+  const handleChange = (selectedOption: { value: string; label: string } | null) => {
+    setEnvironment(selectedOption);
+  };
 
   useEffect(() => {
     const fetchExcelData = async (url: string) => {
@@ -48,6 +71,9 @@ const CarrierInfo: React.FC = () => {
     setCarrierData(carrierData);
     setEditMode(false);
   };
+ 
+
+
 
   const handleCancel = () => {
     // Revert to the original carrier data and API state
@@ -77,9 +103,32 @@ const CarrierInfo: React.FC = () => {
   const columnNames = Object.keys(carrierData[0] || {});
 
   return (
-    <div className='p-4'>
+    <div className='p-1'>
       <div className="mb-6 mt-4">
-        <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex items-center justify-between">
+      <div>
+      <label className="block text-gray-700">
+        Environment
+      </label>
+      <Select
+        onFocus={() => handleFocus('environment')}
+        onBlur={handleBlur}
+        value={environment}
+        onChange={handleChange}
+        options={environmentOptions}
+        styles={{
+          control: (base: any,state: { isFocused: any; }) => ({
+            ...base,
+            minWidth:'200px',
+            marginTop:'5px',
+            height: '2.4rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
           {editMode ? (
             <div className='flex'>
               <button
@@ -108,7 +157,7 @@ const CarrierInfo: React.FC = () => {
         <div className="container mx-auto">
           {carrierData.length > 0 && (
             <div className="overflow-x-auto">
-              <table className="min-w-fullborder border-gray-200 table-fixed bg-white">
+              <table className="min-w-full border border-gray-200 table-fixed bg-white">
                 <thead className="bg-blue-100">
                   <tr className="table-header-row border-gray-300">
                     <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>
@@ -143,19 +192,26 @@ const CarrierInfo: React.FC = () => {
                             </td>
                           ) : (
                             <td key={i} className="py-2 px-4 border-b border-gray-300 text-center table-cell">
-                              <div className='flex space-x-2'  style={{ marginLeft: '2rem' }}>
-                                <button
-                                  className={`text-white px-2 py-1 rounded ${apiState[index] === 'enable' ? 'bg-blue-500' : 'bg-gray-500'}`}
-                                  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'enable' }))}
-                                >
-                                  Enable
-                                </button>
-                                <button
-                                  className={`text-white px-2 py-1 rounded ${apiState[index] === 'disable' ? 'bg-blue-500' : 'bg-gray-500'}`}
-                                  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'disable' }))}
-                                >
-                                  Disable
-                                </button>
+                              <div className='flex space-x-2' >
+                              <button
+  className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
+    apiState[index] === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-300' : 'bg-gray-100 text-gray-500 border-gray-200'
+  }`}
+  style={{ width: '100%' }}
+  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'enable' }))}
+>
+  Enable
+</button>
+<button
+  className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
+    apiState[index] === 'disable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+  }`}
+  style={{ width: '100%' }}
+  onClick={() => setApiState(prevState => ({ ...prevState, [index]: 'disable' }))}
+>
+  Disable
+</button>
+
                               </div>
                             </td>
                           )

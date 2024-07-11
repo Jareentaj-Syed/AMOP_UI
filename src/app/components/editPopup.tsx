@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect } from 'react';
 
 interface EditModalProps {
@@ -7,16 +6,23 @@ interface EditModalProps {
   onSave: (updatedRow: any) => void;
   rowData: any;
   columnNames: string[];
+  isEditable: boolean; // Added isEditable prop
 }
 
-const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData, columnNames = [] }) => {
+const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData, columnNames = [], isEditable }) => {
   const [formData, setFormData] = useState<any>({});
 
   useEffect(() => {
-    setFormData(rowData || {});  // Ensure formData is updated when rowData changes
+    // Set formData to rowData when rowData changes
+    setFormData(rowData || {});
   }, [rowData]);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    // Reset formData when modal closes without saving
+    if (!isOpen) {
+      setFormData(rowData || {});
+    }
+  }, [isOpen, rowData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -32,9 +38,9 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl">
-        <h2 className="text-xl font-semibold mb-4">Edit Row</h2>
+    <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${isOpen ? '' : 'hidden'}`}>
+      <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl editPopup">
+        <h2 className="text-xl font-semibold mb-4">{isEditable?(<span>Edit Customer</span>):(<span>Customer Details</span>)}</h2>
         <div className="space-y-4">
           {columnNames.map((key) => (
             key !== 'api_state' && (
@@ -43,13 +49,11 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
                 <input
                   type="text"
                   name={key}
-                  value={formData[key] || ''}  // Ensure default value for empty fields
+                  value={formData[key] || ''}
                   onChange={handleChange}
-                  className={`mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                    key === 'api_url' || key === 'api_params' ? 'bg-gray-100 text-gray-500' : ''
-                  }`}
-                  readOnly={key === 'api_url' || key === 'api_params'}
-                  style={{ width: '100%' }}  // Ensure input fields do not affect the layout
+                  className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm "
+                  readOnly={!isEditable} 
+                  style={{ width: '100%' }}
                 />
               </div>
             )

@@ -3,7 +3,7 @@
 "use client";
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useSidebarStore } from '../../stores/navBarStore';
+import { useSidebarStore } from '@/app/stores/navBarStore';
 
 
 

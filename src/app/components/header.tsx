@@ -34,7 +34,7 @@ const Header: React.FC = () => {
 
         <div>
           <p className="text-base font-medium">lohitha.v@algonox.com</p>
-          <p className="text-xs text-gray-500">Super Admin</p>
+          <p className="text-xs text-gray-500">Patner Admin</p>
         </div>
         {/* Envelope Icon */}
         <button className="p-2 rounded-full hover:bg-gray-200 hover:text-gray-800">

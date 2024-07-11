@@ -1,7 +1,5 @@
-// pages/charts.tsx
-
-"use client";
 import React from 'react';
+import { UserIcon, CheckCircleIcon, ReceiptPercentIcon } from '@heroicons/react/24/outline'; // Importing icons from Heroicons
 
 const ChartsPage: React.FC = () => {
   const totalUsers = 1500;
@@ -10,38 +8,45 @@ const ChartsPage: React.FC = () => {
 
   return (
     <div className="p-2">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {/* Total Users Card */}
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="ml-4  chart">
-            <div className='chart-heading'>
-              <h2 className="text-lg font-semibold text-gray-800">Total Users</h2>
-            </div>
-            <p className="text-2xl font-bold text-gray-900 mt-2">{totalUsers}</p>
-          </div>
-        </div>
-
-        {/* Active Users Card */}
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="ml-4 chart">
-            <div className='chart-heading'>
-              <h2 className="text-lg font-semibold text-gray-800">Active Users</h2>
-            </div>
-            <p className="text-2xl font-bold text-gray-900 mt-2">{activeUsers}</p>
-          </div>
-        </div>
-
-        {/* Migrated Users Card */}
-        <div className="bg-white p-4 rounded-lg shadow-md flex items-center">
-          <div className="ml-4 chart">
-            <div className='chart-heading'>
-              <h2 className="text-lg font-semibold text-gray-800">Migrated Users</h2>
-            </div>
-            <p className="text-2xl font-bold text-gray-900 mt-2">{migratedUsers}</p>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-wrap gap-4">
+ 
+      <div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '160px', height: '60px' }}>
+  <UserIcon className="h-5 w-5 text-gray-600 mr-2" />
+  <div className="chart">
+    <div className='chart-heading'>
+      <h2 className="text-xxs md:text-xs font-semibold text-gray-800 truncate" style={{ maxWidth: '100px' }}>Total Users</h2>
     </div>
+    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{totalUsers}</p>
+  </div>
+</div>
+  
+
+
+<div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '160px', height: '60px' }}>
+  <CheckCircleIcon className="h-5 w-5 text-gray-600 mr-2" />
+  <div className="chart">
+    <div className='chart-heading'>
+      <h2 className="text-xxs md:text-xs font-semibold text-gray-800 truncate" style={{ maxWidth: '100px' }}>Active Users</h2>
+    </div>
+    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{activeUsers}</p>
+  </div>
+</div>
+
+<div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '160px', height: '60px' }}>
+  <ReceiptPercentIcon className="h-5 w-5 text-gray-600 mr-2" />
+  <div className="chart">
+    <div className='chart-heading'>
+      <h2 className="text-xxs md:text-xs font-semibold text-gray-800 truncate" style={{ maxWidth: '100px' }}>Migrated Users</h2>
+    </div>
+    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{migratedUsers}</p>
+  </div>
+</div>
+
+  
+    </div>
+  </div>
+  
+  
   );
 };
 
