@@ -1,5 +1,3 @@
-// app/partner-onboarding-form/partner-info.tsx
-
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '../stores/logoStore';
@@ -16,7 +14,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   const [partnerName, setPartnerName] = useState<string>('');
   const [subPartnerName, setSubPartnerName] = useState<string>('');
-  const [emailIds, setEmailIds] = useState<string>('');
+  const [emailInput, setEmailInput] = useState<string>('');
+  const [emailList, setEmailList] = useState<string[]>([]);
   const [environment, setEnvironment] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [userPassword, setUserPassword] = useState<string>('');
@@ -31,7 +30,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     if (
       userName.trim() !== '' &&
       userPassword.trim() !== '' &&
-      confirmPassword.trim() !=='' &&
+      confirmPassword.trim() !== '' &&
       clientId.trim() !== '' &&
       clientSecret.trim() !== ''
     ) {
@@ -70,7 +69,19 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   };
 
   const handleBlur = () => {
-    setActiveElement(null)
+    setActiveElement(null);
+  };
+
+  const handleAddEmail = () => {
+    if (emailInput.trim() !== '') {
+      setEmailList([...emailList, emailInput]);
+      setEmailInput('');
+    }
+  };
+
+  const handleRemoveEmail = (index: number) => {
+    const newEmailList = emailList.filter((_, i) => i !== index);
+    setEmailList(newEmailList);
   };
 
   return (
@@ -109,31 +120,38 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <label className={`block text-gray-700 ${activeElement === 'emailIds' ? 'text-indigo-500' : ''}`}>
                 Email ids
               </label>
-              <input
-                type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('emailIds')}
-                onBlur={handleBlur}
-                value={emailIds}
-                onChange={(e) => setEmailIds(e.target.value)}
-              />
-            </div>
-            {/* <div>
-              <label className={`block text-gray-700 ${activeElement === 'environment' ? 'text-indigo-500' : ''}`}>
-                Environment
-              </label>
-              <select
-                className={`input focus:border-sky-500 ${activeElement === 'environment' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('environment')}
-                onBlur={handleBlur}
-                value={environment}
-                onChange={(e) => setEnvironment(e.target.value)}
-              >
-                {environment_options.map((option, index) => (
-                  <option key={index} value={option}>{option}</option>
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  className={`input flex-grow focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
+                  onFocus={() => handleFocus('emailIds')}
+                  onBlur={handleBlur}
+                  value={emailInput}
+                  onChange={(e) => setEmailInput(e.target.value)}
+                />
+                <button
+                  type="button"
+                  className="ml-2 p-2 bg-blue-500 text-white rounded-lg"
+                  onClick={handleAddEmail}
+                >
+                  Add
+                </button>
+              </div>
+              <div className="mt-2">
+                {emailList.map((email, index) => (
+                  <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
+                    <span>{email}</span>
+                    <button
+                      type="button"
+                      className="ml-2 p-1 bg-red-500 text-white rounded-full"
+                      onClick={() => handleRemoveEmail(index)}
+                    >
+                      &times;
+                    </button>
+                  </div>
                 ))}
-              </select>
-            </div> */}
+              </div>
+            </div>
             <div>
               <label className={`block text-gray-700 ${activeElement === 'partnerLogo' ? 'text-indigo-500' : ''}`}>
                 Partner Logo
@@ -149,88 +167,11 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
             </div>
           </div>
-          {/* <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Registration</h3>
-          <div className="grid grid-cols-1 gap-4 mb-6">
-            <div>
-              <label className={`block text-gray-700 ${activeElement === 'userName' ? 'text-indigo-500' : ''}`}>
-                User Name
-              </label>
-              <input
-                type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'userName' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('userName')}
-                onBlur={handleBlur}
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className={`block text-gray-700 ${activeElement === 'userPassword' ? 'text-indigo-500' : ''}`}>
-                Password
-              </label>
-              <input
-                type="password"
-                className={`input focus:border-sky-500 ${activeElement === 'userPassword' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('userPassword')}
-                onBlur={handleBlur}
-                value={userPassword}
-                onChange={(e) => setUserPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className={`block text-gray-700 ${activeElement === 'confirmPassword' ? 'text-indigo-500' : ''}`}>
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                className={`input focus:border-sky-500 ${activeElement === 'confirmPassword' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('confirmPassword')}
-                onBlur={handleBlur}
-                value={confirmPassword}
-                onChange={(e) => setconfirmPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className={`block text-gray-700 ${activeElement === 'clientId' ? 'text-indigo-500' : ''}`}>
-                Client ID
-              </label>
-              <input
-                type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('clientId')}
-                onBlur={handleBlur}
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className={`block text-gray-700 ${activeElement === 'clientSecret' ? 'text-indigo-500' : ''}`}>
-                Client Secret
-              </label>
-              <input
-                type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
-                onFocus={() => handleFocus('clientSecret')}
-                onBlur={handleBlur}
-                value={clientSecret}
-                onChange={(e) => setClientSecret(e.target.value)}
-              />
-            </div>
-          </div>
           <div className='flex justify-end space-x-4'>
             <button
               className={`flex w-24 items-center justify-center p-2 rounded-lg shadow border border-gray-300 ${formValid ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
               type="submit"
               disabled={!formValid}
-            >
-              Submit
-            </button>
-          </div> */}
-          <div className='flex justify-end space-x-4'>
-            <button
-              className={`flex w-24 items-center justify-center p-2 rounded-lg shadow border border-gray-300 button `}
-              type="submit"
-              
             >
               Submit
             </button>
