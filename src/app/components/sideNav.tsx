@@ -10,12 +10,19 @@ const SideNav: React.FC = () => {
   const currentPath = usePathname();
   const { isExpanded } = useSidebarStore();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const iconMap = {
+    ClipboardDocumentCheckIcon: ClipboardDocumentCheckIcon,
+    WifiIcon: WifiIcon,
+  };
+  
+  const wifi = "WifiIcon";
+  
 
   const navItems = [
     { href: '/', label: 'Partner Onboarding form', icon: <ClipboardDocumentCheckIcon className="w-4 h-4" /> },
     {
       label: 'SIM Management',
-      icon: <WifiIcon className="w-4 h-4" />,
+      icon: React.createElement(iconMap[wifi], { className: "w-4 h-4" }),
       subNav: [
         { href: '/sim-management/inventory', label: 'Inventory' },
         { href: '/sim-management/bulk-change', label: 'Bulk Change' },
