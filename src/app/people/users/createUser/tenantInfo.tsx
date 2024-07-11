@@ -331,7 +331,7 @@ const TenantInfo: React.FC = () => {
       <div>
       <label className="block text-gray-700">Carrier</label>
       <Select
-       
+       isMulti
         options={Carrieroptions}
         className="mt-1"
         isDisabled={!selectedPartner}
@@ -350,7 +350,7 @@ const TenantInfo: React.FC = () => {
       <div>
       <label className="block text-gray-700">Service Provider</label>
       <Select
-       
+       isMulti
         options={ServiceProviderOptions}
         className="mt-1"
         styles={{
@@ -385,6 +385,7 @@ const TenantInfo: React.FC = () => {
     <div>
       <label className="block text-gray-700">Customer Group</label>
       <Select
+       isMulti
         options={Customeroptions}
         className="mt-1"
         styles={{
