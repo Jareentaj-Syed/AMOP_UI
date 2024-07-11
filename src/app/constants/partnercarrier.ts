@@ -105,6 +105,22 @@ export const partnerCarrierData: Record<string, string[]>={
     { value: 'Test 731', label: 'Test 731' },
     { value: 'Test Group Athse', label: 'Test Group Athse' },
   ];
+  export const CustomerGroup2Options = [
+    { value: 'Alabama Benefit Counselors (300008621) - Rev.IO', label: 'Alabama Benefit Counselors (300008621) - Rev.IO' },
+    { value: 'Endeavors - SSVF-ETX (300008191) - Rev.IO', label: 'Endeavors - SSVF-ETX (300008191) - Rev.IO' },
+    { value: 'Industrial Cooling Tower (300006938) - Rev.IO', label: 'Industrial Cooling Tower (300006938) - Rev.IO' },
+    { value: 'Johnny\'s Propeller Shop (300007037) - Rev.IO', label: 'Johnny\'s Propeller Shop (300007037) - Rev.IO' },
+    { value: 'Pinnacle Security - Intelecom (300008640) - Rev.IO', label: 'Pinnacle Security - Intelecom (300008640) - Rev.IO' },
+    { value: 'Southern View Media (300008156) - Rev.IO', label: 'Southern View Media (300008156) - Rev.IO' },
+    { value: 'Barton Law Firm (300007910) - Rev.IO', label: 'Barton Law Firm (300007910) - Rev.IO' },
+    { value: 'Baton Rouge Vascular Specialty Clinic (300006959) - Rev.IO', label: 'Baton Rouge Vascular Specialty Clinic (300006959) - Rev.IO' },
+    { value: 'Baybreeze Guest House (300005533) - Rev.IO', label: 'Baybreeze Guest House (300005533) - Rev.IO' },
+    { value: 'Bayou Cane Fire Protection District (300006579) - Rev.IO', label: 'Bayou Cane Fire Protection District (300006579) - Rev.IO' },
+    { value: 'Bayside Properties (300005907) - Rev.IO', label: 'Bayside Properties (300005907) - Rev.IO' },
+    { value: 'Bayside Regenerative Medicine (300008225) - Rev.IO', label: 'Bayside Regenerative Medicine (300008225) - Rev.IO' }
+];
+
+  
 
   interface ExcelData {
     [key: string]: {

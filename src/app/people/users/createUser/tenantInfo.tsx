@@ -2,7 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions} from '@/app/constants/partnercarrier';
+import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions,CustomerGroup2Options} from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
         Module: string[];
@@ -11,6 +11,10 @@ interface ExcelData {
         };
     };
 }
+interface Option {
+    value: string;
+    label: string;
+  }
 
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 const  ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
@@ -259,6 +263,7 @@ const TenantInfo: React.FC = () => {
     const [selectedPartner, setSelectedPartner] = useState<string>('');
     const [carriers, setCarriers] = useState<string[]>([]);
     const [subPartners, setSubPartners] = useState<string[]>([]);
+    const [notificationValue, setNotificationValue] = useState<Option | null>(null);
     const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
     const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   
@@ -285,6 +290,9 @@ const TenantInfo: React.FC = () => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
+    const handleNotificationChange = (selectedOption: Option | null) => {
+        setNotificationValue(selectedOption);
+      };
 
     return (
         <div>
@@ -380,13 +388,13 @@ const TenantInfo: React.FC = () => {
           }),
         }}
         options={Notificationoptions}
-      />
+        onChange={handleNotificationChange}      />
     </div>
     <div>
       <label className="block text-gray-700">Customer Group</label>
       <Select
        isMulti
-        options={Customeroptions}
+       options={notificationValue?.value === 'yes' ? Customeroptions : CustomerGroup2Options}
         className="mt-1"
         styles={{
           control: (base, state) => ({
