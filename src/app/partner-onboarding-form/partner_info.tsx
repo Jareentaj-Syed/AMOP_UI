@@ -137,7 +137,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   Add
                 </button>
               </div>
-              <div className="mt-2">
+              {/* <div className="mt-2">
                 {emailList.map((email, index) => (
                   <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
                     <span>{email}</span>
@@ -150,7 +150,22 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                     </button>
                   </div>
                 ))}
-              </div>
+              </div> */}
+              <div className="mt-2">
+  {emailList.map((email, index) => (
+    <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
+      <span>{email}</span>
+      <button
+        type="button"
+        className="ml-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-200"
+        onClick={() => handleRemoveEmail(index)}
+      >
+        &times;
+      </button>
+    </div>
+  ))}
+</div>
+
             </div>
             <div>
               <label className={`block text-gray-700 ${activeElement === 'partnerLogo' ? 'text-indigo-500' : ''}`}>
