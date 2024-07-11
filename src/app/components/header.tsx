@@ -27,7 +27,7 @@ const Header: React.FC = () => {
         )}
       </div>
 
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2" style={{ cursor: 'pointer' }}>
         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 text-white">
           <UserIcon className="w-6 h-6" />
         </div>
