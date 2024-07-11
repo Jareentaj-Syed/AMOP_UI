@@ -21,7 +21,7 @@ export default function RootLayout({
         <div className="fixed top-0 left-0 right-0 bg-white" style={{ zIndex: 999}}>
           <Header />
         </div>
-        <div className="flex mt-[70px]  bg-gray-50">
+        <div className="flex mt-[70px]  bg-gray-50 overflow-hidden">
           <div className={`fixed top-[70px] bottom-0 bg-gray-800 text-white ${isExpanded ? 'w-[17%]' : 'w-[110px]'}`}>
             <SideNav />
           </div>
