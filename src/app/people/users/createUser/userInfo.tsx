@@ -1,15 +1,15 @@
-"use client";
 import React, { useState } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
+import Select, { SingleValue } from 'react-select';
 import countries from '@/app/constants/locationdetails';
-import Select , { SingleValue }  from 'react-select';
 import { Country, State, City } from '@/app/constants/locationdetails';
+import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
 
-import { getCities, getCityDetails, getStates} from '@/app/constants/locationdetails';
 type OptionType = {
   value: string;
   label: string;
 };
+
 const partners = [
   "AWX",
   "Altawork-GT",
@@ -41,15 +41,6 @@ const Notificationoptions = [
 
 const UserInfo: React.FC = () => {
   const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
-
-  const options = partners.map(partner => ({
-    value: partner.toLowerCase().replace(/\s+/g, '-'),
-    label: partner
-  }));
-
-  const handleChange = (selectedOption: SingleValue<OptionType>) => {
-    setPartner(selectedOption);
-  };
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<SingleValue<OptionType>>(null);
@@ -60,6 +51,34 @@ const UserInfo: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
   const [selectedZipCode, setSelectedZipCode] = useState<string>('');
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
+
+  const options = partners.map(partner => ({
+    value: partner.toLowerCase().replace(/\s+/g, '-'),
+    label: partner
+  }));
+
+  const handleChange = (selectedOption: SingleValue<OptionType>) => {
+    setPartner(selectedOption);
+  };
+
+  const handleSave = () => {
+    const errors: string[] = [];
+    if (!partner) errors.push('Partner is required.');
+    if (!username) errors.push('Username is required.');
+    if (!email) errors.push('Email id is required.');
+    if (!role) errors.push('Role is required.');
+    if (!password) errors.push('Password is required.');
+
+    setErrorMessages(errors);
+    
+    if (errors.length === 0) {
+      console.log('Saving...');
+    }
+    else {
+      scrollToTop()
+    }
+  };
+
   const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const countryId = parseInt(event.target.value);
     setSelectedCountry(countryId);
@@ -73,7 +92,6 @@ const UserInfo: React.FC = () => {
     setSelectedCity(null); // Reset selected city when state changes
   };
 
- 
   const handleCityChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const cityId = parseInt(event.target.value);
     setSelectedCity(cityId);
@@ -89,63 +107,39 @@ const UserInfo: React.FC = () => {
       console.error('Error fetching city details:', error);
     }
   };
-
-  const handleSave = () => {
-    const errors: string[] = [];
-    if (!partner) errors.push('Partner is required.');
-    if (!username) errors.push('Username is required.');
-    if (!email) errors.push('Email id is required.');
-    if (!role) errors.push('Role is required.');
-    if (!password) errors.push('Password is required.');
-
-    setErrorMessages(errors);
-
-    if (errors.length === 0) {
-      console.log('Saving...');
-    }
-  };
-  
-  
-
-  const getStates = (countryId: number): State[] | undefined => {
-    const country = countries.find((country) => country.id === countryId);
-    return country?.states;
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto'  // Optional: Smooth scroll animation
+    });
   };
 
-
-  const getCities = (countryId: number, stateId: number): City[] | undefined => {
-    const states = getStates(countryId);
-    const state = states?.find((state) => state.id === stateId);
-    return state?.cities;
-  };
-  
   return (
-    <div className='bg-gray-50'>
-      <div>
-      <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">
-  Basic Information
-</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div className='bg-gray-50 p-4'>
+      <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Basic Information</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-      <label className="block text-gray-700">Partner</label>
-      <Select
-        value={partner}
-        onChange={handleChange}
-        options={options}
-       
-        styles={{
-          control: (base,state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-          <div>
+          <label className="block text-gray-700">Partner</label>
+          <Select
+            value={partner}
+            onChange={handleChange}
+            options={options}
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                marginTop: '5px',
+                height: '2.6rem',
+                borderRadius: '0.375rem',
+                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+              }),
+            }}
+          />
+          {errorMessages.includes('Partner is required.') && (
+            <span className="text-red-600 ml-1">Partner is required.</span>
+          )}
+        </div>
+        <div>
             <label className="block text-gray-700">First Name</label>
             <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
@@ -153,58 +147,73 @@ const UserInfo: React.FC = () => {
             <label className="block text-gray-700">Last Name</label>
             <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
-          <div>
-            <label className="block text-gray-700">Username</label>
-            <input type="text" 
+        <div>
+          <label className="block text-gray-700">Username</label>
+          <input
+            type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
-          </div>
-          <div>
-            <label className="block text-gray-700">Email id</label>
-            <input type="email" 
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-               </div>
-          <div>
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+          />
+          {errorMessages.includes('Username is required.') && (
+            <span className="text-red-600 ml-1">Username is required.</span>
+          )}
+        </div>
+        <div>
+          <label className="block text-gray-700">Email id</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+          />
+          {errorMessages.includes('Email id is required.') && (
+            <span className="text-red-600 ml-1">Email id is required.</span>
+          )}
+        </div>
+        <div>
             <label className="block text-gray-700">Mobile no</label>
             <input type="text" 
           className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
-          <div>
-      <label className="block text-gray-700">Role</label>
-      <Select
-        value={role}
-        onChange={handleChange}
-        options={Roleoptions}
-       
-        styles={{
-          control: (base,state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
- 
-          <div>
-            <label className="block text-gray-700">Password</label>
-            <input type="password" 
-             value={password}
-             onChange={(e) => setPassword(e.target.value)}
-             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-          </div>
-          <div>
+        <div>
+          <label className="block text-gray-700">Role</label>
+          <Select
+            value={role}
+            onChange={handleChange}
+            options={Roleoptions}
+            styles={{
+              control: (base, state) => ({
+                ...base,
+                marginTop: '5px',
+                height: '2.6rem',
+                borderRadius: '0.375rem',
+                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+              }),
+            }}
+          />
+          {errorMessages.includes('Role is required.') && (
+            <span className="text-red-600 ml-1">Role is required.</span>
+          )}
+        </div>
+        <div>
+          <label className="block text-gray-700">Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+          />
+          {errorMessages.includes('Password is required.') && (
+            <span className="text-red-600 ml-1">Password is required.</span>
+          )}
+        </div>
+        <div>
             <label className="block text-gray-700">Phone</label>
             <input type="text" 
           className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
-        </div>
       </div>
 
       <div>
@@ -348,26 +357,19 @@ const UserInfo: React.FC = () => {
   </div>
 </div>
 
-{errorMessages.length > 0 && (
-        <div className="mt-4 p-2 bg-red-100 text-red-600 border border-red-400 rounded-md">
-          {errorMessages.map((error, index) => (
-            <p key={index}>{error}</p>
-          ))}
-        </div>
-      )}
-
       <div className="flex justify-end space-x-4 mt-3">
         <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
-          <XMarkIcon className="h-5 w-5 text-black-500 mr-2"/>
+          <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
           <span>Cancel</span>
         </button>
-        <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
-        onClick={handleSave} >
+        <button
+          className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+          onClick={handleSave}
+        >
           <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
           <span>Save</span>
         </button>
       </div>
-      
     </div>
   );
 };
