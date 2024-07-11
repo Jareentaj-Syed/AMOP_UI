@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { HomeIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, DocumentTextIcon, CurrencyDollarIcon, GlobeAltIcon, PhoneIcon, BriefcaseIcon, UserGroupIcon, CogIcon, ClipboardDocumentCheckIcon, ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, DocumentTextIcon, CurrencyDollarIcon, GlobeAltIcon, PhoneIcon, BriefcaseIcon, UserGroupIcon, CogIcon, ClipboardDocumentCheckIcon, ChevronDownIcon, ChevronRightIcon , UserIcon} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { useSidebarStore } from '../stores/navBarStore';
 
@@ -43,7 +43,7 @@ const SideNav: React.FC = () => {
         { href: '/people/netsapiens_customers', label: 'NetSapiens Customers' },
         { href: '/people/e911_customers', label: 'E911 Customers' },
         { href: '/people/customer_groups', label: 'Customer Groups' },
-        { href: '/people/users', label: 'Users' },
+        { href: '/people/users', label: 'Users', icon: <UserIcon className="w-4 h-4" />  },
       ]
     },
     { href: '/settings', label: 'Settings', icon: <CogIcon className="w-4 h-4" /> },
