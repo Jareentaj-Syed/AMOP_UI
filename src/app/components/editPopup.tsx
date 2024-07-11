@@ -38,7 +38,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   };
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${isOpen ? '' : 'hidden'}`}>
+    <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50  ${isOpen ? '' : 'hidden'}`} style={{ zIndex: 9999}}>
       <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl editPopup">
         <h2 className="text-xl font-semibold mb-4">{isEditable?(<span>Edit Customer</span>):(<span>Customer Details</span>)}</h2>
         <div className="space-y-4">

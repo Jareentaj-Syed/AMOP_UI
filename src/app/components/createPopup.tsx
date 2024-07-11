@@ -24,7 +24,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"  style={{ zIndex: 9999}}>
       <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl createPopup">
         <h2 className="text-xl font-semibold mb-4">Add New Customer</h2>
         <div className="space-y-4">

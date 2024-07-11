@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen grid`}>
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white">
+        <div className="fixed top-0 left-0 right-0 bg-white" style={{ zIndex: 999}}>
           <Header />
         </div>
         <div className="flex mt-[70px]  bg-gray-50">
