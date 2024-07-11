@@ -294,7 +294,19 @@ return (
             </div>
         ))}
     </div>
+    <div className="flex justify-end space-x-4">
+                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
+                    <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+                    <span>Cancel</span>
+                </button>
+                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+                >
+                    <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+                    <span>Submit</span>
+                </button>
+            </div>
 </div>
+
 );
 };
 export default UserRole;
