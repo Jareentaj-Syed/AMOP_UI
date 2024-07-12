@@ -208,7 +208,7 @@
         border-color: #00C2F3 !important;
         color: #00C2F3 !important;
         border-radius: 15px;
-        background-color: none !important;
+        background: none !important;
         gap: 10px;
         margin-bottom: 10px;
   }

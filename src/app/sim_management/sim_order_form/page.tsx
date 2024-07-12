@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Form, Input, Checkbox, Button, Select } from 'antd';
-import { PlusOutlined } from '@ant-design/icons'; // Import the PlusOutlined icon
+import { PlusOutlined ,CheckOutlined} from '@ant-design/icons'; // Import the PlusOutlined icon
 
 const { Option } = Select;
 
@@ -124,7 +124,8 @@ const SimOrderForm: React.FC = () => {
                                 name={`carrier${index}`}
                                 rules={[{ required: true, message: 'Please select your carrier!' }]}
                             >
-                                <Select defaultValue="Select Carrier" style={{ width: '100%' }}>
+                                <Select defaultValue="Select Carrier" style={{ width: '100%' }}
+                                >
                                     {carrierOptions.map(carrier => (
                                         <Option key={carrier} value={carrier}>
                                             {carrier}
@@ -169,8 +170,14 @@ const SimOrderForm: React.FC = () => {
                     </div>
                 </div>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit" className='buttons'>Submit</Button>
-                </Form.Item>
+                <Button
+              type="primary"
+              htmlType="submit"
+              className="buttons"
+              icon={<CheckOutlined />}
+            >
+              Save
+            </Button>                </Form.Item>
             </Form>
         </div>
     );
