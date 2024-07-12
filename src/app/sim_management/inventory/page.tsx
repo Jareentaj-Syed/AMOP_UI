@@ -4,7 +4,7 @@ import { Input, Button, Badge } from 'antd';
 import { DownloadOutlined } from "@ant-design/icons";
 import { SearchOutlined } from '@ant-design/icons';
 import AdvancedFilter from './advanced-filter';
-import { TableColumnChooser } from './table-column-chooser';
+
 const sim_management: React.FC = () => {
    const EXPORT = " Export";
    const searchPlaceholder = "Search"
@@ -20,16 +20,8 @@ const sim_management: React.FC = () => {
             >
               {EXPORT}
        </Button>
-       <Input.Search
-              placeholder={searchPlaceholder}
-              className="w-full lg:w-auto"
-              allowClear
-              size="large"
-        />
-         <TableColumnChooser
-            
-          />
-      
+     
+       
     </div>
   );
 };

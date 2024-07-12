@@ -1,14 +1,14 @@
+// src/app/ListView.tsx
+
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { PencilIcon, TrashIcon, InformationCircleIcon, PlusIcon, ArrowDownTrayIcon, MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import Pagination from '@/app/components/pagination';
-import router from 'next/router';
 import { useRouter } from 'next/navigation';
-import { Button, Checkbox, Divider, Popover } from 'antd';
-import { Input } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
 import ChartsPage from '../charts/page';
 import TableComponent from '@/app/components/tableComponent';
+import ColumnFilter from './columnfilter';
+import SearchInput from './Search-Input';
 
 interface ExcelData {
   [key: string]: any;
@@ -31,20 +31,20 @@ const ListView: React.FC = () => {
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
-    
+
         // Adjusting sheet_to_json options to include empty cells
         const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
           header: 1, // Use first row as header
           blankrows: false // Include cells with blank values
         });
-    
+
         if (jsonData.length === 0) {
           throw new Error('No data found in the Excel sheet.');
         }
-    
+
         // Extracting column names from the first row
         const columnNames = jsonData[0];
-    
+
         // Processing rows excluding the first row (header)
         const filledData = jsonData.slice(1).map(row => {
           const filledRow: any = {};
@@ -53,7 +53,7 @@ const ListView: React.FC = () => {
           });
           return filledRow;
         });
-    
+
         setData(filledData);
         setFilteredData(filledData);
         setVisibleColumns(columnNames);
@@ -62,7 +62,7 @@ const ListView: React.FC = () => {
         // Handle error state or display a message to the user
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -70,10 +70,6 @@ const ListView: React.FC = () => {
     // Filter data whenever searchTerm changes
     filterData(searchTerm);
   }, [searchTerm]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
 
   const filterData = (searchTerm: string) => {
     const filtered = data.filter(item =>
@@ -97,50 +93,8 @@ const ListView: React.FC = () => {
   const handleDelete = (index: number) => {
     setData(prevData => prevData.filter((_, i) => i !== index));
   };
+
   const totalPages = Math.ceil((searchTerm ? filteredData.length : data.length) / itemsPerPage);
-
-  const handleColumnVisibilityChange = (checkedValues: string[]) => {
-    setVisibleColumns(checkedValues);
-  };
-
-  const handleCheckAllChange = (e: { target: { checked: any; }; }) => {
-    const allColumns = Object.keys(data.length > 0 ? data[0] : {});
-    if (e.target.checked) {
-      handleColumnVisibilityChange(allColumns);
-    } else {
-      handleColumnVisibilityChange([]);
-    }
-  };
-
-  const columnContent = (
-    <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '300px', overflowY: 'auto' }}>
-      <Checkbox
-        onChange={handleCheckAllChange}
-        checked={visibleColumns.length === Object.keys(data.length > 0 ? data[0] : {}).length}
-        style={{ marginBottom: '4px' }}
-      >
-      All
-      </Checkbox>
-      <Divider style={{ margin: "0.5rem 0 0.2rem" }} />
-      {Object.keys(data.length > 0 ? data[0] : {}).map((column) => (
-        <Checkbox
-          key={column}
-          value={column}
-          checked={visibleColumns.includes(column)}
-          onChange={(e) =>
-            handleColumnVisibilityChange(
-              e.target.checked
-                ? [...visibleColumns, column]
-                : visibleColumns.filter((col) => col !== column)
-            )
-          }
-          style={{ marginBottom: '4px', whiteSpace: 'nowrap' }}
-        >
-          {column}
-        </Checkbox>
-      ))}
-    </div>
-  );
 
   const headers = visibleColumns;
 
@@ -158,28 +112,13 @@ const ListView: React.FC = () => {
       </div>
 
       <div className="flex items-center justify-between mt-6 mb-4">
-        <div className="flex items-center space-x-2">
-          <div className="flex items-center border border-gray-300 rounded-lg p-1" style={{ width: '300px' }}>
-            <SearchOutlined className="text-gray-500 ml-2" />
-            <Input
-              placeholder="Search..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="ml-2 h-8 border-none outline-none w-full"
-            />
-          </div>
-        </div>
+        <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <div className="flex space-x-4">
           <button className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300">
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-          <Popover content={columnContent} trigger="click" placement="bottom">
-            <button className="flex items-center p-2 rounded-lg shadow button border border-gray-300 bg-white text-black">
-              <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
-              Filter
-            </button>
-          </Popover>
+          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
         </div>
       </div>
 
@@ -192,7 +131,7 @@ const ListView: React.FC = () => {
               currentPage * itemsPerPage
             )}
             actions={['edit', 'delete', 'info']}
-            onDelete={(row:any) => handleDelete(data.indexOf(row))}
+            onDelete={(row: any) => handleDelete(data.indexOf(row))}
             searchQuery={searchTerm}
             visibleColumns={visibleColumns}
           />
