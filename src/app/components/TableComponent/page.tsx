@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import EditModal from '../../components/editPopup';
 import Pagination from '@/app/components/pagination';
-import DateTimeCellRenderer from './TableComponent/data-grid-cell-renderers/date-time-cell-renderer';
 
 interface TableComponentProps {
   headers: string[];
@@ -19,6 +18,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
   const [isEditable, setIsEditable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [apiState, setApiState] = useState<{ [key: number]: string }>({});
 
   useEffect(() => {
     setRowData(initialData);
@@ -32,8 +32,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       )
     );
     setRowData(filteredData);
-    setCurrentPage(1); 
-    console.log(initialData)
+    setCurrentPage(1);
   }, [searchQuery, initialData]);
 
   const formatColumnName = (name: string) => {
@@ -83,32 +82,37 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   };
 
-  const renderActionIcon = (action: string, rowIndex: number) => {
-    switch (action) {
-      case 'edit':
-        return (
-          <PencilIcon
-            className="h-5 w-5 text-blue-500 cursor-pointer"
-            onClick={() => handleActionClick('edit', rowIndex)}
-          />
-        );
-      case 'delete':
-        return (
-          <TrashIcon
-            className="h-5 w-5 text-red-500 cursor-pointer"
-            onClick={() => handleActionClick('delete', rowIndex)}
-          />
-        );
-      case 'info':
-        return (
-          <InformationCircleIcon
-            className="h-5 w-5 text-green-500 cursor-pointer"
-            onClick={() => handleActionClick('info', rowIndex)}
-          />
-        );
-      default:
-        return null;
-    }
+  const handleToggle = (rowIndex: number) => {
+    const updatedData = [...rowData];
+    updatedData[rowIndex].API_state = apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
+    setRowData(updatedData);
+    setApiState(prevState => ({
+      ...prevState,
+      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+    }));
+  };
+
+  const renderApiState = (apiState: string, index: number) => {
+    return (
+      <div className="flex items-center space-x-2">
+        <button
+          className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${apiState === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+            }`}
+          style={{ width: '100%' }}
+          onClick={() => handleToggle(index)}
+        >
+          Enable
+        </button>
+        <button
+          className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${apiState === 'disable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+            }`}
+          style={{ width: '100%' }}
+          onClick={() => handleToggle(index)}
+        >
+          Disable
+        </button>
+      </div>
+    );
   };
 
   // Calculate pagination
@@ -117,8 +121,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   return (
     <div className="relative max-h-96">
-      <div className="overflow-auto" style={{ maxHeight: '600px' }}>
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+      <div className='overflow-auto' style={{ maxHeight: '600px' }}>
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg ">
           <thead className="bg-gray-200">
             <tr>
               <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header">S.no</th>
@@ -131,25 +135,38 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, rowIndex) => (
-              <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-gray-50' : ''}>
-                <td className="py-3 px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + rowIndex + 1}</td>
-                {headers.map((header, colIndex) => (
-                  <td key={colIndex} className="py-3 px-6 border-b border-gray-300 table-cell">
-                    {visibleColumns.includes(header) ? (
-                      (header === 'DateAdded' || header === 'DateActivated') ? (
-                        <DateTimeCellRenderer value={row[header]} />
-                      ) : (
-                        row[header]
-                      )
-                    ) : null}
+            {paginatedData.map((row, index) => (
+              <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
+                <td className="py-3 px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                {headers.map((header, columnIndex) => (
+                  <td key={columnIndex} className="py-3 px-6 border-b border-gray-300 table-cell">
+                    {visibleColumns.includes(header) && (header === 'API_state' ? (
+                      renderApiState(row[header], index)
+                    ) : (
+                      row[header]
+                    ))}
                   </td>
                 ))}
                 <td className="py-3 px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
-                    {allowedActions.includes('edit') && renderActionIcon('edit', (currentPage - 1) * itemsPerPage + rowIndex)}
-                    {allowedActions.includes('delete') && renderActionIcon('delete', (currentPage - 1) * itemsPerPage + rowIndex)}
-                    {allowedActions.includes('info') && renderActionIcon('info', (currentPage - 1) * itemsPerPage + rowIndex)}
+                    {allowedActions.includes('edit') && (
+                      <PencilIcon
+                        className="h-5 w-5 text-blue-500 cursor-pointer"
+                        onClick={() => handleActionClick('edit', (currentPage - 1) * itemsPerPage + index)}
+                      />
+                    )}
+                    {allowedActions.includes('delete') && (
+                      <TrashIcon
+                        className="h-5 w-5 text-red-500 cursor-pointer"
+                        onClick={() => handleActionClick('delete', (currentPage - 1) * itemsPerPage + index)}
+                      />
+                    )}
+                    {allowedActions.includes('info') && (
+                      <InformationCircleIcon
+                        className="h-5 w-5 text-green-500 cursor-pointer"
+                        onClick={() => handleActionClick('info', (currentPage - 1) * itemsPerPage + index)}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
@@ -175,3 +192,4 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 };
 
 export default TableComponent;
+
