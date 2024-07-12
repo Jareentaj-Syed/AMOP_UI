@@ -9,27 +9,39 @@ const sim_management: React.FC = () => {
    const EXPORT = " Export";
    const searchPlaceholder = "Search"
    return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '20px' }}>
+    <div>
+       <div className="flex justify-between items-center mt-10 ml-6">
       <Input.Search
-        placeholder={searchPlaceholder}
+        placeholder="Search"
         className="w-full lg:w-auto"
         allowClear
         size="large"
       />
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '10px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <Button
-            type="primary"
-            className="ml-2"
-            icon={<DownloadOutlined />}
-            size="large"
-            ghost
-          >
-            {EXPORT}
-          </Button>
-          
-        </div>
-        <div style={{ marginTop: '10px' }}>
+      <div className="flex space-x-5" style={{ marginRight: '20px' }}>
+        <Button
+          type="primary"
+          className="ml-2"
+          icon={<DownloadOutlined />}
+          size="large"
+          ghost
+        >
+          Columns
+        </Button>
+        <Button
+          type="primary"
+          className="ml-2"
+          icon={<DownloadOutlined />}
+          size="large"
+          ghost
+        >
+          {EXPORT}
+        </Button>
+      </div>
+    </div>
+       
+      <div>
+       
+        <div>
           <AdvancedFilter />
         </div>
       </div>

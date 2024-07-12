@@ -63,9 +63,10 @@ const AdvancedFilter: React.FC = () => {
 
   return (
     <div className="mb-2">
-      <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4">
+      <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4" style={{ margin: '20px' }}>
         <Button
           type="primary"
+          size="large"
           className="w-full md:w-auto"
           onClick={handleShowAdvanced}
         >
@@ -79,6 +80,7 @@ const AdvancedFilter: React.FC = () => {
         >
           <Button
             type="default"
+            size="large"
             className="w-full md:w-auto"
             onClick={handleFilter}
             disabled={!showAdvanced}
@@ -89,6 +91,7 @@ const AdvancedFilter: React.FC = () => {
         </Badge>
         <Button
           type="default"
+          size="large"
           className="w-full md:w-auto"
           onClick={handleClear}
         >
@@ -97,7 +100,7 @@ const AdvancedFilter: React.FC = () => {
       </div>
 
       {showAdvanced && (
-        <Form form={form} layout="vertical">
+        <Form form={form} layout="vertical" style={{ margin: '21px' }}>
           <AdvancedFilterGroup
             title="Account Information"
             filters={
