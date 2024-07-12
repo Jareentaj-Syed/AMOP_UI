@@ -119,7 +119,7 @@ const UserInfo: React.FC = () => {
       <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <label className="block text-gray-700">Partner</label>
+          <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
           <Select
             value={partner}
             onChange={handleChange}
@@ -148,7 +148,7 @@ const UserInfo: React.FC = () => {
             <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
           </div>
         <div>
-          <label className="block text-gray-700">Username</label>
+          <label className="block text-gray-700">Username<span className="text-red-500">*</span></label>
           <input
             type="text"
             value={username}
@@ -160,7 +160,7 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
-          <label className="block text-gray-700">Email id</label>
+          <label className="block text-gray-700">Email id<span className="text-red-500">*</span></label>
           <input
             type="email"
             value={email}
@@ -177,7 +177,7 @@ const UserInfo: React.FC = () => {
           className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
           </div>
         <div>
-          <label className="block text-gray-700">Role</label>
+          <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
           <Select
             value={role}
             onChange={handleChange}
@@ -198,7 +198,7 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
-          <label className="block text-gray-700">Password</label>
+          <label className="block text-gray-700">Password<span className="text-red-500">*</span></label>
           <input
             type="password"
             value={password}
