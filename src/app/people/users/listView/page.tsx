@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import ChartsPage from '../charts/page';
-import TableComponent from '@/app/components/tableComponent';
+import TableComponent from '@/app/components/TableComponent/page';
 import ColumnFilter from '../../../components/columnfilter';
 import SearchInput from '../../../components/Search-Input';
+import { useRouter } from 'next/navigation';
 
 interface ExcelDataRow {
   [key: string]: any;
@@ -14,6 +15,10 @@ const ListView: React.FC = () => {
   const [data, setData] = useState<ExcelDataRow[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const router = useRouter();
+  const handleCreateClick = () => {
+    router.push('users/createUser');
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +71,7 @@ const ListView: React.FC = () => {
         <ChartsPage />
         <button
           className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
-          onClick={() => {}} // Placeholder for create button action
+          onClick={handleCreateClick} // Placeholder for create button action
         >
           <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
           Create New User
