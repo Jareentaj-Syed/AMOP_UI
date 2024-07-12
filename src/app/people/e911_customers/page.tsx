@@ -88,22 +88,11 @@ const E911Customers: React.FC = () => {
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-          <Popover
-            content={
-              <ColumnFilter
+          <ColumnFilter
                 data={data}
                 visibleColumns={visibleColumns}
                 setVisibleColumns={setVisibleColumns}
               />
-            }
-            trigger="click"
-            placement="bottom"
-          >
-            <button className="flex items-center justify-center p-2 rounded-lg shadow ml-1 button border border-gray-300">
-              <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
-              Filter
-            </button>
-          </Popover>
         </div>
       </div>
 
