@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import { Form, Input, Checkbox, Button, Select } from 'antd';
-import { PlusOutlined ,CheckOutlined} from '@ant-design/icons'; // Import the PlusOutlined icon
+import { PlusOutlined, CheckOutlined } from '@ant-design/icons'; // Import the PlusOutlined icon
 
 const { Option } = Select;
 
@@ -25,8 +25,25 @@ const SimOrderForm: React.FC = () => {
         'Teal',
         'T-Mobile - Advantage',
         'T-Mobile Jasper',
-        'Verzon - ThingSpace PN'
+        'Verzon - ThingSpace PN',
+        'Verzon - ThingSpace IoT'
     ];
+    const [carrier, setCarrier] = useState<string>(''); // Explicitly define carrier as string
+
+    function getSimSizeOptions(carrier: string): string[] {
+        switch (carrier) {
+            case 'AT&T - Cisco Jasper':
+            case 'T-Mobile - Advantage':
+            case 'T-Mobile Jasper':
+            case 'Verzon - ThingSpace PN':
+            case 'Verzon - ThingSpace IoT':
+                return ['Tri-cut']; // Tri-cut SIM size options
+            case 'AT&T-POD19':
+                return ['Standard', 'Macro', 'Nano']; // Standard, Macro, Nano SIM size options
+            default:
+                return []; // Default no options
+        }
+    }
 
     const onFinish = (values: { [key: string]: any }) => {
         const labels: { [key: string]: string } = {
@@ -123,8 +140,10 @@ const SimOrderForm: React.FC = () => {
                                 label={<span className="bold-label">Carrier</span>}
                                 name={`carrier${index}`}
                                 rules={[{ required: true, message: 'Please select your carrier!' }]}
+
                             >
                                 <Select defaultValue="Select Carrier" style={{ width: '100%' }}
+                                onChange={(value: string) => setCarrier(value)} // Set selected carrier
                                 >
                                     {carrierOptions.map(carrier => (
                                         <Option key={carrier} value={carrier}>
@@ -140,9 +159,12 @@ const SimOrderForm: React.FC = () => {
                                 rules={[{ required: true, message: 'Please select your SIM size!' }]}
                             >
                                 <Select placeholder="SIM Size" style={{ width: '100%' }}>
-                                    <Option value="Standard">Standard</Option>
-                                    {/* Add more options as needed */}
-                                </Select>
+                    {getSimSizeOptions(carrier).map(size => (
+                        <Option key={size} value={size}>
+                            {size}
+                        </Option>
+                    ))}
+                </Select>
                             </Form.Item>
 
                             <Form.Item
@@ -170,14 +192,14 @@ const SimOrderForm: React.FC = () => {
                     </div>
                 </div>
                 <Form.Item>
-                <Button
-              type="primary"
-              htmlType="submit"
-              className="buttons"
-              icon={<CheckOutlined />}
-            >
-              Save
-            </Button>                </Form.Item>
+                    <Button
+                        type="primary"
+                        htmlType="submit"
+                        className="buttons"
+                        icon={<CheckOutlined />}
+                    >
+                        Save
+                    </Button>                </Form.Item>
             </Form>
         </div>
     );
