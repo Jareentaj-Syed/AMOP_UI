@@ -8,6 +8,8 @@ import { Button, Checkbox, Divider, Popover } from 'antd';
 import { Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import ChartsPage from '../charts/page';
+import TableComponent from '@/app/components/tableComponent';
+
 interface ExcelData {
   [key: string]: any;
 }
@@ -20,7 +22,6 @@ const ListView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
- 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -65,7 +66,6 @@ const ListView: React.FC = () => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     // Filter data whenever searchTerm changes
     filterData(searchTerm);
@@ -97,56 +97,6 @@ const ListView: React.FC = () => {
   const handleDelete = (index: number) => {
     setData(prevData => prevData.filter((_, i) => i !== index));
   };
-
-  const renderData = () => {
-    // Check if there is a search term applied
-    const renderDataset = searchTerm ? filteredData : data;
-  
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = Math.min(startIndex + itemsPerPage, renderDataset.length);
-  
-    return renderDataset.slice(startIndex, endIndex).map((row, index) => (
-      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-        <td className="py-3 px-6 border-b border-gray-300">{startIndex + index + 1}</td>
-        {Object.entries(row).map(([key, value], i) => (
-          visibleColumns.includes(key) && (
-            <td key={i} className="py-3 px-6 border-b border-gray-300">
-              {key === 'Status' ? (
-                <button
-                  className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${
-                    value === 'Active' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
-                  }`}
-                  style={{ width: '100%' }}
-                >
-                  {value}
-                </button>
-              ) : (
-                value
-              )}
-            </td>
-          )
-        ))}
-        <td className="py-3 px-6 border-b border-gray-300">
-          <div className="flex space-x-2">
-            <button className="text-blue-500 hover:text-blue-700">
-              <PencilIcon className="w-5 h-5" />
-            </button>
-            <button 
-              className="text-red-500 hover:text-red-700"
-              onClick={() => handleDelete(startIndex + index)}
-            >
-              <TrashIcon className="w-5 h-5" />
-            </button>
-            <button className="text-green-500 hover:text-green-700">
-              <InformationCircleIcon className="w-5 h-5" />
-            </button>
-          </div>
-        </td>
-      </tr>
-    ));
-  };
-  
-  
   const totalPages = Math.ceil((searchTerm ? filteredData.length : data.length) / itemsPerPage);
 
   const handleColumnVisibilityChange = (checkedValues: string[]) => {
@@ -168,7 +118,6 @@ const ListView: React.FC = () => {
         onChange={handleCheckAllChange}
         checked={visibleColumns.length === Object.keys(data.length > 0 ? data[0] : {}).length}
         style={{ marginBottom: '4px' }}
-
       >
       All
       </Checkbox>
@@ -192,81 +141,61 @@ const ListView: React.FC = () => {
       ))}
     </div>
   );
-  
-  
-  
-  
+
+  const headers = visibleColumns;
 
   return (
-
     <div className="container mx-auto p-4">
-     <div className="flex items-center justify-between">
-  {/* Left side: ChartsPage */}
-  <ChartsPage />
-
-  {/* Right side: Create New User button */}
-  <button
-    className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
-    onClick={handleCreateClick}
-  >
-    <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-    Create New User
-  </button>
-</div>
-
+      <div className="flex items-center justify-between">
+        <ChartsPage />
+        <button
+          className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+          onClick={handleCreateClick}
+        >
+          <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+          Create New User
+        </button>
+      </div>
 
       <div className="flex items-center justify-between mt-6 mb-4">
-    
-      <div className="flex items-center space-x-2">
-  <div className="flex items-center border border-gray-300 rounded-lg p-1" style={{ width: '300px' }}>
-    <SearchOutlined className="text-gray-500 ml-2" />
-    <Input
-      placeholder="Search..."
-      value={searchTerm}
-      onChange={handleSearch}
-      className="ml-2 h-8 border-none outline-none w-full" // Adding w-full to make input full width within its container
-    />
-  </div>
-</div>
-        <div className="flex space-x-4"> {/* Added space-x-4 for horizontal spacing */}
-  <button
-    className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300"
-  >
-    <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
-    <span>Export</span>
-  </button>
-  <Popover content={columnContent} trigger="click" placement="bottom">
-    <button
-      className="flex items-center p-2 rounded-lg shadow button border border-gray-300 bg-white text-black"
-    >
-      <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
-      Filter
-    </button>
-  </Popover>
-</div>
-
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center border border-gray-300 rounded-lg p-1" style={{ width: '300px' }}>
+            <SearchOutlined className="text-gray-500 ml-2" />
+            <Input
+              placeholder="Search..."
+              value={searchTerm}
+              onChange={handleSearch}
+              className="ml-2 h-8 border-none outline-none w-full"
+            />
+          </div>
         </div>
-      
-      {renderData().length > 0 && (
+        <div className="flex space-x-4">
+          <button className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300">
+            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
+            <span>Export</span>
+          </button>
+          <Popover content={columnContent} trigger="click" placement="bottom">
+            <button className="flex items-center p-2 rounded-lg shadow button border border-gray-300 bg-white text-black">
+              <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
+              Filter
+            </button>
+          </Popover>
+        </div>
+      </div>
+
+      {filteredData.length > 0 && (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-            <thead className="bg-gray-200">
-              <tr>
-                <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">S.no</th>
-                {Object.keys(data.length > 0 ? data[0] : {}).map((key) => (
-                  visibleColumns.includes(key) && (
-                    <th key={key} className="py-3 px-6 border-b border-gray-300 text-left font-semibold">
-                      {key}
-                    </th>
-                  )
-                ))}
-                <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {renderData()}
-            </tbody>
-          </table>
+          <TableComponent
+            headers={headers}
+            rowData={filteredData.slice(
+              (currentPage - 1) * itemsPerPage,
+              currentPage * itemsPerPage
+            )}
+            actions={['edit', 'delete', 'info']}
+            onDelete={(row:any) => handleDelete(data.indexOf(row))}
+            searchQuery={searchTerm}
+            visibleColumns={visibleColumns}
+          />
           <div className="mb-4"></div>
           <Pagination
             currentPage={currentPage}
