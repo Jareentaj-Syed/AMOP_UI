@@ -69,8 +69,9 @@ const ListView: React.FC = () => {
     <div className="container mx-auto p-4">
       <div className="flex items-center justify-between">
         <ChartsPage />
+        
         <button
-          className="flex items-center p-2 rounded-lg shadow ml-2  mr-20 button border border-gray-300"
+          className="flex items-center p-2 rounded-lg shadow ml-2  button border border-gray-300" style={ {marginRight: '3.5rem'}}
           onClick={handleCreateClick} // Placeholder for create button action
         >
           <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
@@ -78,16 +79,17 @@ const ListView: React.FC = () => {
         </button>
       </div>
 
-      <div className="flex items-center justify-between mt-6 mb-4 mr-20">
-        <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <div className="flex space-x-4">
-          <button className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300">
-            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
-            <span>Export</span>
-          </button>
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-        </div>
-      </div>
+      <div className="flex items-center justify-between mt-6 mb-4">
+  <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+  <div className="flex space-x-4" style={ {marginRight: '3.5rem'}}> {/* ml-auto aligns the flex items to the right */}
+    <button className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300">
+      <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
+      <span>Export</span>
+    </button>
+    <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+  </div>
+</div>
+
 
       <div className="">
         <TableComponent
