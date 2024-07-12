@@ -57,8 +57,11 @@ const UserInfo: React.FC = () => {
     label: partner
   }));
 
-  const handleChange = (selectedOption: SingleValue<OptionType>) => {
+  const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
     setPartner(selectedOption);
+  };
+  const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
+    setRole(selectedOption);
   };
 
   const handleSave = () => {
@@ -122,7 +125,7 @@ const UserInfo: React.FC = () => {
           <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
           <Select
             value={partner}
-            onChange={handleChange}
+            onChange={handleSetPartner}
             options={options}
             styles={{
               control: (base, state) => ({
@@ -180,7 +183,7 @@ const UserInfo: React.FC = () => {
           <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
           <Select
             value={role}
-            onChange={handleChange}
+            onChange={handlesetRole}
             options={Roleoptions}
             styles={{
               control: (base, state) => ({
