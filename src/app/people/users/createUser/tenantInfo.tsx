@@ -377,7 +377,7 @@ const TenantInfo: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Group</label>
+                        <label className="block text-gray-700">Customer Group</label>
                         <Select
 
                             styles={{
@@ -394,7 +394,7 @@ const TenantInfo: React.FC = () => {
                             onChange={handleNotificationChange} />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Customer Group</label>
+                        <label className="block text-gray-700">Customers</label>
                         <Select
                             isMulti
                             options={notificationValue?.value === 'yes' ? Customeroptions : CustomerGroup2Options}

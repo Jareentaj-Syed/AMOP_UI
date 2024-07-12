@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import * as XLSX from 'xlsx';
 import TableComponent from '../components/TableComponent/page';
+import SearchInput from '../components/Search-Input';
 
 interface ExcelData {
   [key: string]: any;
@@ -13,7 +14,7 @@ const CarrierInfo: React.FC = () => {
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
-
+  const [searchTerm, setSearchTerm] = useState('');
   const environmentOptions = [
     { value: 'Sandbox', label: 'Sandbox' },
     { value: 'QA', label: 'QA' },
@@ -116,6 +117,7 @@ const CarrierInfo: React.FC = () => {
               }}
             />
           </div>
+          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
 
         <div className="container mx-auto">
@@ -123,7 +125,7 @@ const CarrierInfo: React.FC = () => {
               <TableComponent
                 headers={columnNames}
                 initialData={carrierData}
-                searchQuery=""
+                searchQuery={searchTerm}
                 visibleColumns={columnNames} 
                 itemsPerPage={10}
                 allowedActions={["edit"]}             

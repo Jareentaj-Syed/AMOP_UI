@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import EditModal from '../../components/editPopup';
 import Pagination from '@/app/components/pagination';
+import DateTimeCellRenderer from './data-grid-cell-renderers/date-time-cell-renderer';
 
 interface TableComponentProps {
   headers: string[];
