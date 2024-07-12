@@ -6,6 +6,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import AdvancedFilter from './advanced-filter';
 import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
+import SearchInput from '@/app/components/Search-Input';
+import ColumnFilter from '@/app/components/columnfilter';
 interface ExcelDataRow {
   [key: string]: any;
 }
@@ -64,22 +66,11 @@ const sim_management: React.FC = () => {
    return (
     <div>
        <div className="flex justify-between items-center mt-10 ml-6">
-      <Input.Search
-        placeholder="Search"
-        className="w-full lg:w-auto"
-        allowClear
-        size="large"
-      />
+       <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
       <div className="flex space-x-5" style={{ marginRight: '20px' }}>
-        <Button
-          type="primary"
-          className="ml-2"
-          icon={<DownloadOutlined />}
-          size="large"
-          ghost
-        >
-          Columns
-        </Button>
+      <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+
         <Button
           type="primary"
           className="ml-2"
@@ -98,14 +89,14 @@ const sim_management: React.FC = () => {
           <AdvancedFilter />
         </div>
       </div>
-      {/* <TableComponent
+      <TableComponent
           headers={headers}
           initialData={data}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns} 
           itemsPerPage={10}
           allowedActions={["edit","delete","info"]}
-           /> */}
+           />
     </div>
   );
 };
