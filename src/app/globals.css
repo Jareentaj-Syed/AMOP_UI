@@ -154,6 +154,77 @@
     overflow: auto;
 }
   
+.rectangular-input {
+    border-radius: 0;
+    padding: 9px;
+    /* background-color: #eee; */
+   
+  }
+ 
+  .bold-label {
+    /* font-weight: bold; */
+    font-size: 20px;
+  }
+  .ant-form{
+    padding: 5px;
+  }
+  ant-checkbox{
+    width: 20px;
+    height: 20px;
+  }
+  .custom-disabled-input{
+    /* color: #333;  */
+    pointer-events: none; 
+    background-color: #eee;
+
+  }
+  .custom-disabled-input:focus,
+  .custom-disabled-input:hover {
+      border-color: #f0f0f0; 
+      box-shadow: none; 
+      outline: none; 
+  }
+.ant-select-selector {
+    border-radius: 5px !important;
+    height: 40px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.ant-select-selection-item {
+    font-size: 16px !important;
+}
+.form-block {
+    border: 1px solid #ccc; /* Border style */
+    padding: 20px; /* Padding inside the border */
+    margin-bottom: 20px; /* Margin bottom for separation */
+    border-radius: 15px;
+    display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns for grid layout */
+  gap: 20px; /* Gap between grid items */
+  }
+  .buttons{
+        margin-right: 10px ;
+        border-color: #00C2F3 !important;
+        color: #00C2F3 !important;
+        border-radius: 15px;
+        background-color: none !important;
+        gap: 10px;
+        margin-bottom: 10px;
+  }
+  .buttons:hover,
+.buttons:focus,
+.buttons:active {
+  border-color: #00C2F3 !important;
+  color: #00C2F3 !important;
+  box-shadow: none;
+}
+.buttons:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: none !important;
+  }
+
 /* #650f8f #b144d6--purple 
 bg-blue-200 #3dbdf0 --skyblue
 */
