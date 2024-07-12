@@ -168,10 +168,6 @@
   .ant-form{
     padding: 5px;
   }
-  ant-checkbox{
-    width: 20px;
-    height: 20px;
-  }
   .custom-disabled-input{
     /* color: #333;  */
     pointer-events: none; 
@@ -199,7 +195,7 @@
     padding: 20px; /* Padding inside the border */
     margin-bottom: 20px; /* Margin bottom for separation */
     border-radius: 15px;
-    display: grid;
+    /* display: grid; */
   grid-template-columns: 1fr 1fr; /* Two columns for grid layout */
   gap: 20px; /* Gap between grid items */
   }
@@ -224,6 +220,20 @@
     box-shadow: none !important;
     background-color: none !important;
   }
+  .save-button{
+    margin-right: 10px ;
+    background-color: #00C2F3; /* Red background color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 18px;
+  }
+  .cancel-button {
+    margin-right: 20px ;
+    background-color: #BF1212; /* Red background color */
+    color: white; /* Text color */
+    border: none; /* Remove border */
+    border-radius: 18px;
+}
 
 /* #650f8f #b144d6--purple 
 bg-blue-200 #3dbdf0 --skyblue
