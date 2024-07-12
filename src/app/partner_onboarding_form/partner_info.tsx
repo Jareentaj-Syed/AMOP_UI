@@ -7,7 +7,6 @@ interface PartnerInfo {
 }
 
 const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
-  const environment_options = ['Sandbox', 'QA', 'UAT', 'Prod'];
   const [logoError, setLogoError] = useState<string | null>(null);
   const [activeElement, setActiveElement] = useState<string | null>(null);
   const [formValid, setFormValid] = useState<boolean>(false);
@@ -16,29 +15,21 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [subPartnerName, setSubPartnerName] = useState<string>('');
   const [emailInput, setEmailInput] = useState<string>('');
   const [emailList, setEmailList] = useState<string[]>([]);
-  const [environment, setEnvironment] = useState<string>('');
-  const [userName, setUserName] = useState<string>('');
-  const [userPassword, setUserPassword] = useState<string>('');
-  const [confirmPassword, setconfirmPassword] = useState<string>('');
-  const [clientId, setClientId] = useState<string>('');
-  const [clientSecret, setClientSecret] = useState<string>('');
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (
-      userName.trim() !== '' &&
-      userPassword.trim() !== '' &&
-      confirmPassword.trim() !== '' &&
-      clientId.trim() !== '' &&
-      clientSecret.trim() !== ''
+      partnerName.trim() !== '' &&
+      subPartnerName.trim() !== '' &&
+      emailList.length >0
     ) {
       setFormValid(true);
     } else {
       setFormValid(false);
     }
-  }, [userName, userPassword, clientId, clientSecret, confirmPassword]);
+  }, [partnerName, subPartnerName, emailList]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

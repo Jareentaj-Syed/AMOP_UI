@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import * as XLSX from 'xlsx';
-import TableComponent from '../components/tableComponent';
+import TableComponent from '../components/TableComponent/page';
 
 interface ExcelData {
   [key: string]: any;

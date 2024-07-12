@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
-import EditModal from '../components/editPopup';
+import EditModal from '../../components/editPopup';
 import Pagination from '@/app/components/pagination';
 
 interface TableComponentProps {
