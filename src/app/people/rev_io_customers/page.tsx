@@ -42,7 +42,7 @@ const RevIOCustomers: React.FC = () => {
         const filledData = jsonData.slice(1).map((row) => {
           const filledRow: any = {};
           columnNames.forEach((header: any, index: number) => {
-            filledRow[header] = row[index] || '';
+            filledRow[header] = row[index] !== undefined ? row[index] : '';
           });
           return filledRow;
         });

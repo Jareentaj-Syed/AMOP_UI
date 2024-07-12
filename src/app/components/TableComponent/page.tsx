@@ -23,6 +23,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
+    console.log(initialData)
   }, [initialData]);
 
   useEffect(() => {
