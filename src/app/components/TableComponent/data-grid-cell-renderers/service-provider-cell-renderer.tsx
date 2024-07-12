@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react";
 import { Popover } from "antd";
-import ImageWithHideOnError from "../image-with-hide-on-error";
+import ImageWithHideOnError from "./image-with-hide-on-error";
 
 interface ServiceProviderCellProps {
   value: string;
