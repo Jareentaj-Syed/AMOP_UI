@@ -1,5 +1,3 @@
-// src/app/ListView.tsx
-
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
@@ -10,15 +8,15 @@ import TableComponent from '@/app/components/tableComponent';
 import ColumnFilter from './columnfilter';
 import SearchInput from './Search-Input';
 
-interface ExcelData {
+interface ExcelDataRow {
   [key: string]: any;
 }
 
 const ListView: React.FC = () => {
-  const [data, setData] = useState<ExcelData[]>([]);
+  const [data, setData] = useState<ExcelDataRow[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // Number of items per page
-  const [filteredData, setFilteredData] = useState<ExcelData[]>([]);
+  const [filteredData, setFilteredData] = useState<ExcelDataRow[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
@@ -90,8 +88,12 @@ const ListView: React.FC = () => {
     router.push('users/createUser');
   };
 
-  const handleDelete = (index: number) => {
-    setData(prevData => prevData.filter((_, i) => i !== index));
+  const handleDelete = (rowIndex: number) => {
+    if (rowIndex >= 0 && rowIndex < filteredData.length) {
+      const updatedData = [...filteredData];
+      updatedData.splice((currentPage - 1) * itemsPerPage + rowIndex, 1);
+      setFilteredData(updatedData);
+    }
   };
 
   const totalPages = Math.ceil((searchTerm ? filteredData.length : data.length) / itemsPerPage);
@@ -126,14 +128,10 @@ const ListView: React.FC = () => {
         <div className="overflow-x-auto">
           <TableComponent
             headers={headers}
-            rowData={filteredData.slice(
+            initialData={filteredData.slice(
               (currentPage - 1) * itemsPerPage,
               currentPage * itemsPerPage
             )}
-            actions={['edit', 'delete', 'info']}
-            onDelete={(row: any) => handleDelete(data.indexOf(row))}
-            searchQuery={searchTerm}
-            visibleColumns={visibleColumns}
           />
           <div className="mb-4"></div>
           <Pagination
