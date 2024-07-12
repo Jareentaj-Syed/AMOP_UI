@@ -5,7 +5,7 @@ import { DownloadOutlined } from "@ant-design/icons";
 import { SearchOutlined } from '@ant-design/icons';
 import AdvancedFilter from './advanced-filter';
 
-const sim_management: React.FC = () => {
+const Sim_management: React.FC = () => {
    const EXPORT = " Export";
    const searchPlaceholder = "Search"
    return (
@@ -49,4 +49,4 @@ const sim_management: React.FC = () => {
   );
 };
 
-export default sim_management;
+export default Sim_management;

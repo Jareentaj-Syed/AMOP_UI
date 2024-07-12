@@ -2,7 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select from 'react-select';
-import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions,CustomerGroup2Options} from '@/app/constants/partnercarrier';
+import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions, CustomerGroup2Options } from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
         Module: string[];
@@ -14,14 +14,14 @@ interface ExcelData {
 interface Option {
     value: string;
     label: string;
-  }
+}
 
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
-const  ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
+const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
 const Notificationoptions = [
     { value: 'yes', label: 'Yes' },
     { value: 'no', label: 'No' }
-  ];
+];
 
 const data: ExcelData = {
     "M2M": {
@@ -92,7 +92,7 @@ const data: ExcelData = {
             "Customer Charges"
         ],
         "Feature": {
-            "Customer Charges":[
+            "Customer Charges": [
                 "Export"
             ]
         }
@@ -266,20 +266,20 @@ const TenantInfo: React.FC = () => {
     const [notificationValue, setNotificationValue] = useState<Option | null>(null);
     const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
     const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
-  
+
     const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
         if (selectedOption) {
-          const partner = selectedOption.value;
-          setSelectedPartner(partner);
-          setCarriers(partnerCarrierData[partner] || []);
-          setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+            const partner = selectedOption.value;
+            setSelectedPartner(partner);
+            setCarriers(partnerCarrierData[partner] || []);
+            setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
         } else {
-          setSelectedPartner('');
-          setCarriers([]);
-          setSubPartners([]);
+            setSelectedPartner('');
+            setCarriers([]);
+            setSubPartners([]);
         }
-      };
-      const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
+    };
+    const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
         setSelectedModules({ ...selectedModules, [category]: moduleValues });
@@ -292,124 +292,127 @@ const TenantInfo: React.FC = () => {
     };
     const handleNotificationChange = (selectedOption: Option | null) => {
         setNotificationValue(selectedOption);
-      };
+    };
 
     return (
         <div>
             <div>
-    <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Tenant Info</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
-      <label className="block text-gray-700">Partner</label>
-      <Select
-        value={{ value: selectedPartner, label: selectedPartner }}
-        onChange={handlePartnerChange}
-        options={Partneroptions}
-        className="mt-1"
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-       
-      <div>
-      <label className="block text-gray-700">Sub Partner</label>
-      <Select
-        options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-        className="mt-1"
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-      <div>
-      <label className="block text-gray-700">Carrier</label>
-      <Select
-       isMulti
-        options={Carrieroptions}
-        className="mt-1"
-        isDisabled={!selectedPartner}
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-      <div>
-      <label className="block text-gray-700">Service Provider</label>
-      <Select
-       isMulti
-        options={ServiceProviderOptions}
-        className="mt-1"
-        styles={{
-            control: (base,state) => ({
-              ...base,
-              marginTop:'5px',
-              height: '2.6rem',
-              borderRadius: '0.375rem',
-              borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-              boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-            }),
-          }}
-      />
-    </div>
-    <div>
-      <label className="block text-gray-700">Group</label>
-      <Select
-      
-        styles={{
-          control: (base,state) => ({
-            ...base,
-            height: '2.6rem',
-            marginTop:'5px',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-        options={Notificationoptions}
-        onChange={handleNotificationChange}      />
-    </div>
-    <div>
-      <label className="block text-gray-700">Customer Group</label>
-      <Select
-       isMulti
-       options={notificationValue?.value === 'yes' ? Customeroptions : CustomerGroup2Options}
-        className="mt-1"
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            height: '2.6rem',
-            marginTop:'5px',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-    </div>
-</div>
+                <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Tenant Info</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label className="block text-gray-700">Partner</label>
+                        <Select
+                            
+                            value={{ value: selectedPartner, label: selectedPartner }}
+                            onChange={handlePartnerChange}
+                            options={Partneroptions}
+                            className="mt-1"
+                            
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-gray-700">Sub Partner</label>
+                        <Select
+                            isMulti
+                            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+                            className="mt-1"
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Carrier</label>
+                        <Select
+                            isMulti
+                            options={Carrieroptions}
+                            className="mt-1"
+                            isDisabled={!selectedPartner}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Service Provider</label>
+                        <Select
+                            isMulti
+                            options={ServiceProviderOptions}
+                            className="mt-1"
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Group</label>
+                        <Select
+
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    height: '2.6rem',
+                                    marginTop: '5px',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                            options={Notificationoptions}
+                            onChange={handleNotificationChange} />
+                    </div>
+                    <div>
+                        <label className="block text-gray-700">Customer Group</label>
+                        <Select
+                            isMulti
+                            options={notificationValue?.value === 'yes' ? Customeroptions : CustomerGroup2Options}
+                            className="mt-1"
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    height: '2.6rem',
+                                    marginTop: '5px',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+                </div>
+            </div>
 
             {/* <div>
                 <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Module Info</h3>
@@ -447,15 +450,15 @@ const TenantInfo: React.FC = () => {
                 </div>
             </div> */}
             <div className="flex justify-end space-x-4">
-            <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
-          <XMarkIcon className="h-5 w-5 text-black-500 mr-2"/>
-          <span>Cancel</span>
-        </button>
-        <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
-        >
-          <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-          <span>Submit</span>
-        </button>
+                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
+                    <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+                    <span>Cancel</span>
+                </button>
+                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+                >
+                    <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+                    <span>Submit</span>
+                </button>
             </div>
         </div>
     );
