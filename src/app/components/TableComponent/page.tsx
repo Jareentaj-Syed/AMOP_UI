@@ -115,6 +115,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     );
   };
 
+  const renderUserStatus = (status: string) => {
+    let textColorClass = '';
+    if (status === 'Active') {
+      textColorClass = 'text-blue-500';
+    } else if (status === 'Inactive') {
+      textColorClass = 'text-red-500';
+    }
+    return <span className={`${textColorClass}`}>{status}</span>;
+  };
+
   // Calculate pagination
   const totalPages = Math.ceil(rowData.length / itemsPerPage);
   const paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -142,6 +152,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                   <td key={columnIndex} className="py-3 px-6 border-b border-gray-300 table-cell">
                     {visibleColumns.includes(header) && (header === 'API_state' ? (
                       renderApiState(row[header], index)
+                    ) : header === 'User status' ? (
+                      renderUserStatus(row[header])
                     ) : (
                       row[header]
                     ))}
@@ -192,4 +204,3 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 };
 
 export default TableComponent;
-
