@@ -1,11 +1,11 @@
-"use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useState, useEffect, useRef } from 'react';
+import { Checkbox, Input } from 'antd';
 
 interface Column {
   label: string;
   type: string;
-  value: any;
+  value: any[];
   mandatory: string;
 }
 
@@ -31,10 +31,8 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
 
   if (!isOpen) return null;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    setFormData({ ...formData, [name]: type === 'checkbox' ? checked : value });
+  const handleChange = (name: string, value: any) => {
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSave = () => {
@@ -53,7 +51,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ zIndex: 9999 }}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl relative createPopup" style={{ paddingBottom: isScrollable ? '0' : '2rem' }}>
         <h2 className="text-xl font-semibold mb-4">{`Add New ${heading}`}</h2>
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
@@ -62,56 +60,59 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
           </svg>
         </button>
         <div ref={modalContentRef} className="createPopup-height overflow-auto">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
-            {columnNames.map(({ label, type, value, mandatory }) => (
-              <div key={label} className="flex flex-col mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  {label} {mandatory === 'true' && <span className="text-red-500">*</span>}
-                </label>
-                {type === 'text' && (
-                  <input
-                    type="text"
-                    name={label}
-                    value={formData[label] || ''}
-                    onChange={handleChange}
-                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                )}
-                {type === 'dropdown' && (
-                  <select
-                    name={label}
-                    value={formData[label] || ''}
-                    onChange={handleChange}
-                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  >
-                    {value.map((option: string) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                )}
-                {type === 'checkbox' && (
-                  <input
-                    type="checkbox"
-                    name={label}
-                    checked={formData[label] || false}
-                    onChange={handleChange}
-                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                )}
-                {type === 'date' && (
-                  <input
-                    type="date"
-                    name={label}
-                    value={formData[label] || ''}
-                    onChange={handleChange}
-                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+          <form>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
+              {columnNames.map(({ label, type, value, mandatory }) => (
+                <div key={label} className="flex flex-col mb-4">
+                  <label className="block text-sm font-medium text-gray-700">
+                    {label} {mandatory === 'true' && <span className="text-red-500">*</span>}
+                  </label>
+                  {type === 'text' && (
+                    <Input
+                      type="text"
+                      name={label}
+                      value={formData[label] || ''}
+                      onChange={(e) => handleChange(label, e.target.value)}
+                      className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  )}
+                  {type === 'dropdown' && (
+                    <div className="relative mt-1 block w-full">
+                      <select
+                        value={formData[label]}
+                        onChange={(e) => handleChange(label, e.target.value)}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      >
+                        {value.map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  {type === 'checkbox' && (
+                    <Checkbox
+                      checked={formData[label] || false}
+                      onChange={(e) => handleChange(label, e.target.checked)}
+                      className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    >
+                      {label}
+                    </Checkbox>
+                  )}
+                  {type === 'date' && (
+                    <Input
+                      type="date"
+                      name={label}
+                      value={formData[label] || ''}
+                      onChange={(e) => handleChange(label, e.target.value)}
+                      className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </form>
         </div>
         <div className={`flex justify-end space-x-4 mt-4 ${isScrollable ? 'relative' : 'absolute bottom-4 right-4'}`}>
           <button onClick={onClose} className="cancel-btn">

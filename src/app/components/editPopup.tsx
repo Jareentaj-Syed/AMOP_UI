@@ -1,6 +1,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useState, useEffect } from 'react';
 
+
 interface Column {
   label: string;
   type: string;
@@ -88,14 +89,18 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
         </select>
       )}
       {type === 'checkbox' && (
+        <div className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm flex items-center">
         <input
           type="checkbox"
+          id={label}
           name={label}
           checked={formData[label] || false}
           onChange={handleChange}
-          className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="mr-2 focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded"
           readOnly={!isEditable}
         />
+        <label htmlFor={label} className="select-none">{label}</label>
+      </div>
       )}
       {type === 'date' && (
         <input
