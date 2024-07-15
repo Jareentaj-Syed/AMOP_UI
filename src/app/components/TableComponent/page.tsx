@@ -7,21 +7,33 @@ import EditUsernameCellRenderer from './data-grid-cell-renderers/edit-username-c
 import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-renderer';
 import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
-import { Modal, Checkbox } from 'antd'
-import ActionItems from '@/app/sim_management/inventory/action-items';
+import { Modal, Checkbox } from 'antd';
+import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
+
 interface TableComponentProps {
+  infoColumns:any []
+  editColumns:any[]
   headers: string[];
   initialData: { [key: string]: any }[];
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
   allowedActions: ('edit' | 'delete' | 'info' | 'Actions')[];
-  popupHeading:string;
-  infoColumns:any []
-  editColumns:any[]
+  popupHeading: string;
+  advancedFilters: { [key: string]: any }; // Define the type of advancedFilters
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions,popupHeading ,infoColumns,editColumns}) => {
+const TableComponent: React.FC<TableComponentProps> = ({
+  headers,
+  initialData,
+  searchQuery,
+  visibleColumns,
+  itemsPerPage,
+  allowedActions,
+  popupHeading,
+  advancedFilters
+  ,infoColumns,editColumns
+}) => {
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -34,48 +46,64 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
 
-
-  const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
-    setSelectAll(e.target.checked);
-    if (e.target.checked) {
-      // Select all rows
-      const allRowIndices = paginatedData.map((_, index) => index);
-      setSelectedRows(allRowIndices);
-    } else {
-      // Deselect all rows
-      setSelectedRows([]);
-    }
-  };
-
-  const handleRowCheckboxChange = (index: number) => {
-    const currentIndex = selectedRows.indexOf(index);
-    const newSelectedRows = [...selectedRows];
-
-    if (currentIndex === -1) {
-      newSelectedRows.push(index);
-    } else {
-      newSelectedRows.splice(currentIndex, 1);
-    }
-
-    setSelectedRows(newSelectedRows);
-  };
-
-
   useEffect(() => {
-    setRowData(initialData);
-    console.log(initialData)
-  }, [initialData]);
-
-  useEffect(() => {
-    // Filter row data based on search query
+    // Filter row data based on search query and advanced filters
     const filteredData = initialData.filter(row =>
+      Object.entries(advancedFilters).every(([key, value]) => {
+        if (Array.isArray(value) && value.length > 0) {
+          // Check if any of the values in the array match the row's value
+          return value.includes(row[key]);
+        } else if (typeof value === 'string' && value !== '') {
+          // Check if the row's value includes the string
+          return row[key]?.includes(value);
+        }
+        return true; // Include all rows for empty or undefined filters
+      })
+    );
+
+    // Further filter by search query
+    const finalFilteredData = filteredData.filter(row =>
       Object.values(row).some(value =>
         typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-    setRowData(filteredData);
+
+    setRowData(finalFilteredData);
     setCurrentPage(1);
-  }, [searchQuery, initialData]);
+  }, [searchQuery, initialData, advancedFilters]);
+
+  const filterData = () => {
+    // Apply filters based on advancedFilters and searchQuery
+    let filteredData = initialData;
+
+    // Filter by searchQuery
+    if (searchQuery.trim() !== '') {
+      filteredData = filteredData.filter((row) =>
+        Object.values(row).some(
+          (value) =>
+            typeof value === 'string' &&
+            value.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
+    }
+
+    // Apply advanced filters
+    Object.entries(advancedFilters).forEach(([filterKey, filterValue]) => {
+      if (filterValue !== undefined && filterValue !== null && filterValue !== '') {
+        filteredData = filteredData.filter((row) => {
+          // Adjust this logic based on your data structure and filter criteria
+          if (Array.isArray(row[filterKey])) {
+            return row[filterKey].includes(filterValue);
+          } else {
+            return row[filterKey] === filterValue;
+          }
+        });
+      }
+    });
+
+    setRowData(filteredData);
+    setCurrentPage(1); // Reset to first page after filtering
+  };
 
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
@@ -135,11 +163,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const handleToggle = (rowIndex: number) => {
     const updatedData = [...rowData];
-    updatedData[rowIndex].API_state = apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
+    updatedData[rowIndex].API_state =
+      apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
     setRowData(updatedData);
-    setApiState(prevState => ({
+    setApiState((prevState) => ({
       ...prevState,
-      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable',
     }));
   };
 
@@ -147,16 +176,18 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     return (
       <div className="flex items-center space-x-2">
         <button
-          className={`${apiState === 'enable' ? 'active-btn' : 'inactive-btn'
-            }`}
+          className={`${
+            apiState === 'enable' ? 'active-btn' : 'inactive-btn'
+          }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
           Enable
         </button>
         <button
-          className={`${apiState === 'disable' ? 'active-btn' : 'inactive-btn'
-            }`}
+          className={`${
+            apiState === 'disable' ? 'active-btn' : 'inactive-btn'
+          }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
@@ -178,16 +209,45 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   // Calculate pagination
   const totalPages = Math.ceil(rowData.length / itemsPerPage);
-  const paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedData = rowData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   const colorMap = {
     Activated: '#19AF91', // Light Green
     Deactivated: '#E95463', // Light Red
     // Add more statuses and colors as needed
   };
 
+ 
+  const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setSelectAll(e.target.checked);
+    if (e.target.checked) {
+      // Select all rows
+      const allRowIndices = paginatedData.map((_, index) => index);
+      setSelectedRows(allRowIndices);
+    } else {
+      // Deselect all rows
+      setSelectedRows([]);
+    }
+  };
+
+  const handleRowCheckboxChange = (index: number) => {
+    const currentIndex = selectedRows.indexOf(index);
+    const newSelectedRows = [...selectedRows];
+
+    if (currentIndex === -1) {
+      newSelectedRows.push(index);
+    } else {
+      newSelectedRows.splice(currentIndex, 1);
+    }
+
+    setSelectedRows(newSelectedRows);
+  };
+
   return (
     <div className="relative max-h-96">
-      <div className="overflow-auto" style={{ maxHeight: "500px", height: "500px" }}>
+      <div className="overflow-auto" style={{ maxHeight: '500px', height: '500px' }}>
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>
@@ -219,16 +279,18 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             {paginatedData.map((row, index) => (
               <tr
                 key={index}
-                className={index % 2 === 0 ? "bg-gray-50" : ""}
+                className={index % 2 === 0 ? 'bg-gray-50' : ''}
               >
                 <td className="px-6 border-b border-gray-300 table-cell">
                   <Checkbox
-                    onChange={() => handleRowCheckboxChange(index as number)}
-                    checked={selectedRows.map(String).includes(String(index))}
+                    onChange={() => handleRowCheckboxChange(
+                      (currentPage - 1) * itemsPerPage + index
+                    )}
+                    checked={selectedRows.includes(
+                      (currentPage - 1) * itemsPerPage + index
+                    )}
                     style={{ fontSize: '2rem' }}
                   />
-
-
                 </td>
                 {headers.map((header, columnIndex) => (
                   <td
@@ -236,25 +298,25 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     className="px-6 border-b border-gray-300 table-cell"
                   >
                     {visibleColumns.includes(header) && (
-                      header === "API_state" ? (
+                      header === 'API_state' ? (
                         renderApiState(row[header], index)
-                      ) : header === "User status" ? (
+                      ) : header === 'User status' ? (
                         renderUserStatus(row[header])
-                      ) : header === "DateAdded" ||
-                        header === "DateActivated" ? (
+                      ) : header === 'DateAdded' ||
+                        header === 'DateActivated' ? (
                         <DateTimeCellRenderer value={row[header]} />
-                      ) : header === "Username" ? (
+                      ) : header === 'Username' ? (
                         <EditUsernameCellRenderer value={row[header]} />
-                      ) : header === "SimStatus" ? (
+                      ) : header === 'SimStatus' ? (
                         <StatusCellRenderer
                           record={row}
                           value={row[header]}
                           index={index}
                           colorMap={colorMap}
                         />
-                      ) : header === "StatusHistory" ? (
+                      ) : header === 'StatusHistory' ? (
                         <StatusHistoryCellRenderer value={row[header]} />
-                      ) : header === "Provider" ? (
+                      ) : header === 'Provider' ? (
                         <ServiceProviderCellRenderer value={row[header]} />
                       ) : (
                         row[header]
@@ -264,41 +326,47 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 ))}
                 <td className="px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
-                    {allowedActions.includes("edit") && (
+                    {allowedActions.includes('edit') && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
                         onClick={() =>
                           handleActionClick(
-                            "edit",
+                            'edit',
                             (currentPage - 1) * itemsPerPage + index
                           )
                         }
                       />
                     )}
-                    {allowedActions.includes("delete") && (
+                    {allowedActions.includes('delete') && (
                       <TrashIcon
                         className="h-5 w-5 text-red-500 cursor-pointer"
                         onClick={() =>
                           handleActionClick(
-                            "delete",
+                            'delete',
                             (currentPage - 1) * itemsPerPage + index
                           )
                         }
                       />
                     )}
-                    {allowedActions.includes("info") && (
+                    {allowedActions.includes('info') && (
                       <InformationCircleIcon
                         className="h-5 w-5 text-green-500 cursor-pointer"
                         onClick={() =>
                           handleActionClick(
-                            "info",
+                            'info',
                             (currentPage - 1) * itemsPerPage + index
                           )
                         }
                       />
                     )}
-                      {allowedActions.includes("Actions") && (
-                      <ActionItems record={undefined}/>
+                    {allowedActions.includes('Actions') && (
+                      <ActionItems
+                        initialData={initialData}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        index={index}
+                        handleActionClick={handleActionClick}
+                      />
                     )}
                   </div>
                 </td>
@@ -307,7 +375,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           </tbody>
         </table>
       </div>
-
 
       <div className="flex justify-center mt-5">
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
@@ -324,15 +391,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         heading={popupHeading}
       />
 
-<Modal
+      <Modal
         title="Confirm Deletion"
-        open={deleteModalOpen}
+        visible={deleteModalOpen}
         onOk={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}
       >
         <p>Do you want to delete this row?</p>
       </Modal>
-
     </div>
   );
 };

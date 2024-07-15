@@ -132,6 +132,7 @@ const CarrierInfo: React.FC = () => {
                 popupHeading='API'      
                 infoColumns={[]}  
                 editColumns={[]}
+                advancedFilters={[]}
               />
           )}
         </div>

@@ -24,28 +24,30 @@ const EditUsernameModal: FC<EditUsernameProps> = ({
     <Modal
       title={
         <div>
-          <span>Edit Username</span>
-          <hr className="border-gray-300 mt-2 mb-8" />
-        </div>
+        <span className="font-semibold  text-xl">Edit Username</span>
+        <hr className="border-gray-300 mt-2 mb-8" />
+      </div>
       }
       centered
       visible={true}
       onCancel={onCancel}
       footer={[
-        <hr className="border-gray-300 mb-4 mt-8" />,
-        <div className="flex justify-center space-x-2" key="buttons">
-          <Button key="cancel" onClick={onCancel} className="cancel-btn h-[30px]">
+        // <hr className="border-gray-300 mb-4 mt-8" />,
+        <div className="flex justify-center space-x-2 mt-10" key="buttons">
+          <Button key="cancel" onClick={onCancel} className="cancel-btn h-[30px] font-semibold  text-base">
             Cancel
           </Button>
-          <Button key="update" onClick={handleUpdate} className="save-btn">
+          <Button key="update" onClick={handleUpdate} className="save-btn font-semibold  text-base">
             Update
           </Button>
         </div>,
       ]}
+      style={{ height: '500px' }}
     >
       <div className="flex justify-center items-center">
-        <span className="mr-4">UserName:</span>
+        <span className="mr-4 font-medium  text-lg">UserName:</span>
         <Input
+          className=" text-base h-10"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter new username"
@@ -78,7 +80,7 @@ const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
         type="link"
         icon={<EditFilled />}
         onClick={handleOpenModal}
-        className="mr-2"
+        className="mr-1"
       />
       <a onClick={handleOpenModal} className="text-blue-500 cursor-pointer">
         {value}

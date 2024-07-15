@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Input, Button, Badge } from 'antd';
 import { DownloadOutlined } from "@ant-design/icons";
 import { SearchOutlined } from '@ant-design/icons';
-import AdvancedFilter from './advanced-filter';
+import AdvancedFilter from './Table-feautures/advanced-filter';
 import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
 import SearchInput from '@/app/components/Search-Input';
@@ -63,6 +63,10 @@ const sim_management: React.FC = () => {
   const headers = visibleColumns;
    const EXPORT = " Export";
    const searchPlaceholder = "Search"
+   const [filteredData, setFilteredData] = useState([]); 
+   const handleFilter = (advancedFilters: any) => {
+     setFilteredData(advancedFilters);
+   };
    return (
     <div>
        <div className="flex justify-between items-center mt-10 ml-6">
@@ -89,15 +93,18 @@ const sim_management: React.FC = () => {
       <div>
        
         <div>
-          <AdvancedFilter />
+          <AdvancedFilter  onFilter={handleFilter}/>
         </div>
       </div>
       <TableComponent
+         infoColumns={[]}  
+         editColumns={[]}
          headers={headers}
          initialData={data}
          searchQuery={searchTerm}
          visibleColumns={visibleColumns}
          itemsPerPage={10}
+         advancedFilters={filteredData}
          allowedActions={["Actions"]} popupHeading={''}           />
     </div>
   );

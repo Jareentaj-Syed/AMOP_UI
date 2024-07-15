@@ -20,7 +20,11 @@ const splitAndFilter = (input?: string): string[] => {
   return input?.split("\n").filter(Boolean) || [];
 };
 
-const AdvancedFilter: React.FC = () => {
+interface AdvancedFilterProps {
+  onFilter: (filters: FilterShape) => void; // Corrected function signature
+}
+
+const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<FilterShape>({});
   const [form] = Form.useForm();
@@ -39,8 +43,10 @@ const AdvancedFilter: React.FC = () => {
       },
       {},
     );
+    console.log(advancedFilters)
     setActiveFilters(advancedFilters);
-    // onFilter({ ...filters, ...advancedFilters });
+
+    onFilter(advancedFilters );
     handleShowAdvanced();
   };
 

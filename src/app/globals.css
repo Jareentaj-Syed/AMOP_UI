@@ -312,29 +312,18 @@
     border: none;
     border-top: 1px solid #ccc;
   }
-
-  .pagination-prev{
-    padding: 5px 8px;
-    padding-right: 10px;
+  
+  .custom-checkbox .ant-checkbox-inner {
+    width: 20px; /* Adjust size as needed */
+    height: 20px; /* Adjust size as needed */
+    border-radius: 4px; /* Adjust rounded corners if needed */
   }
-  .pagination-next{
-    padding: 5px 8px;
-    padding-left: 10px;
+  
+  .custom-checkbox .ant-checkbox-inner::after {
+    width: 10px; /* Adjust checkmark size */
+    height: 10px; /* Adjust checkmark size */
   }
-  .pagination{
-    height: 35px;
-    align-items: center;
-  }
-
-  .pagination-num{
-    padding: 5px 10px;
-  }
-
-  .email-add-btn{
-    margin-top: 4px;
-    height: 42px;
-  }
-
+  
 /*
 Gray 50: #F9FAFB
 Gray 100: #F3F4F6
