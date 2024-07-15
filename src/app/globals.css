@@ -276,7 +276,40 @@
     justify-content: center;
 }
 
-
+.custom-modal {
+    max-width: 800px; /* Increased width */
+  }
+  
+  .custom-modal .ant-modal-content {
+    padding: 24px; /* Add padding to content area */
+  }
+  
+  .custom-modal .modal-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .custom-modal .modal-section {
+    margin-bottom: 16px; /* Space between sections */
+  }
+  
+  .custom-modal .modal-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .custom-modal .modal-input {
+    width: 100%;
+  }
+  
+  .custom-modal .modal-divider {
+    margin: 16px 0; /* Divider between sections */
+    border: none;
+    border-top: 1px solid #ccc;
+  }
+  
 
 /*
 Gray 50: #F9FAFB

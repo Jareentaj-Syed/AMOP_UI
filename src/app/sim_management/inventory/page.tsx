@@ -70,8 +70,11 @@ const sim_management: React.FC = () => {
 
       <div className="flex space-x-5" style={{ marginRight: '20px' }}>
       <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-
-        <Button
+      <button className="flex items-center p-2 save-btn">
+        <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />
+        {EXPORT}
+      </button>
+        {/* <Button
           type="primary"
           className="ml-2"
           icon={<DownloadOutlined />}
@@ -79,7 +82,7 @@ const sim_management: React.FC = () => {
           ghost
         >
           {EXPORT}
-        </Button>
+        </Button> */}
       </div>
     </div>
        
@@ -90,14 +93,12 @@ const sim_management: React.FC = () => {
         </div>
       </div>
       <TableComponent
-          headers={headers}
-          initialData={data}
-          searchQuery={searchTerm}
-          visibleColumns={visibleColumns} 
-          itemsPerPage={10}
-          allowedActions={["edit","delete","info"]}
-          popupHeading=''          
-           />
+         headers={headers}
+         initialData={data}
+         searchQuery={searchTerm}
+         visibleColumns={visibleColumns}
+         itemsPerPage={10}
+         allowedActions={["Actions"]} popupHeading={''}           />
     </div>
   );
 };

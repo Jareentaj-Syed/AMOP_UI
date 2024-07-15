@@ -8,13 +8,14 @@ import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-rende
 import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
 import { Modal, Checkbox } from 'antd'
+import ActionItems from '@/app/sim_management/inventory/action-items';
 interface TableComponentProps {
   headers: string[];
   initialData: { [key: string]: any }[];
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
-  allowedActions: ('edit' | 'delete' | 'info')[];
+  allowedActions: ('edit' | 'delete' | 'info' | 'Actions')[];
   popupHeading:string;
 }
 
@@ -293,6 +294,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                           )
                         }
                       />
+                    )}
+                      {allowedActions.includes("Actions") && (
+                      <ActionItems record={undefined}/>
                     )}
                   </div>
                 </td>

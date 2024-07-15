@@ -23,9 +23,12 @@ const EditUsernameModal: FC<EditUsernameProps> = ({
   return (
     <Modal
       title="Edit Username"
+      centered
       visible={true} // This should be controlled by a state in your actual implementation
       onOk={handleUpdate}
       onCancel={onCancel}
+      width={500}
+      
       footer={[
         <Button key="cancel" onClick={onCancel}>
           Cancel
@@ -35,11 +38,13 @@ const EditUsernameModal: FC<EditUsernameProps> = ({
         </Button>,
       ]}
     >
+      <label> UserName:</label>
       <Input
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         placeholder="Enter new username"
       />
+        
     </Modal>
   );
 };

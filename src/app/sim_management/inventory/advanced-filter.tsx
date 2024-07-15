@@ -3,7 +3,7 @@ import { FilterValue } from "antd/es/table/interface";
 import React, { useMemo, useState } from "react";
 import { AdvancedFilterGroup } from "./advanced-filtergroup";
 import TextAreaFilterItem from "./text-area-filter-item";
-
+import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 interface FilterShape {
   featureCode?: string[];
   iccid?: string[];
@@ -64,14 +64,18 @@ const AdvancedFilter: React.FC = () => {
   return (
     <div className="mb-2">
       <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4" style={{ margin: '20px' }}>
-        <Button
-          type="primary"
-          size="large"
-          className="w-full md:w-auto"
-          onClick={handleShowAdvanced}
-        >
-          {showAdvanced ? "Hide Advanced" : "Show Advanced"}
-        </Button>
+      <Button
+  size="large"
+  className="w-full md:w-auto save-btn "
+  onClick={handleShowAdvanced}
+  icon={showAdvanced ? <CaretDownOutlined/> : < CaretUpOutlined />
+    
+  }
+  style={{ fontWeight: '450' }}
+>
+  {showAdvanced ? "Hide Advanced" : "Show Advanced"}
+ 
+</Button>
         <Badge
           count={countActiveFilters}
           showZero
