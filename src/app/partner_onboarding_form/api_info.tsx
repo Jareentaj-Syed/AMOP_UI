@@ -128,7 +128,8 @@ const CarrierInfo: React.FC = () => {
                 searchQuery={searchTerm}
                 visibleColumns={columnNames} 
                 itemsPerPage={10}
-                allowedActions={["edit"]}             
+                allowedActions={["edit"]}   
+                popupHeading='API'          
               />
           )}
         </div>

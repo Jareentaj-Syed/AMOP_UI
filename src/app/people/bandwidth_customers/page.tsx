@@ -106,6 +106,8 @@ const BandWidthCustomers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["info"]}
+        popupHeading='Customer'          
+
       />
 
       <CreateModal
@@ -113,6 +115,7 @@ const BandWidthCustomers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={Object.keys(data.length > 0 ? data[0] : {})}
+        heading='Customer'
       />
     </div>
   );

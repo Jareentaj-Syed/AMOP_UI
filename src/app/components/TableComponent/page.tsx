@@ -15,9 +15,10 @@ interface TableComponentProps {
   visibleColumns: string[];
   itemsPerPage: number;
   allowedActions: ('edit' | 'delete' | 'info')[];
+  popupHeading:string;
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions,popupHeading }) => {
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -313,6 +314,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
         onSave={handleSaveModal}
         onClose={handleCloseModal}
+        heading={popupHeading}
       />
 
 <Modal

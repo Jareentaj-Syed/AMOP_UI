@@ -107,6 +107,7 @@ const E911Customers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
+        popupHeading='Customer'          
       />
 
       <CreateModal
@@ -114,6 +115,7 @@ const E911Customers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={Object.keys(data.length > 0 ? data[0] : {})}
+        heading='Customer'
       />
     </div>
   );

@@ -96,6 +96,7 @@ const sim_management: React.FC = () => {
           visibleColumns={visibleColumns} 
           itemsPerPage={10}
           allowedActions={["edit","delete","info"]}
+          popupHeading=''          
            />
     </div>
   );
