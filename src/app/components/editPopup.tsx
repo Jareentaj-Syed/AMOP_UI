@@ -66,17 +66,19 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
           ))}
         </div>
 
-        <div className="flex justify-end mt-4 space-x-2 absolute bottom-10 right-8">
-          <button onClick={onClose} className="cancel-btn">
-            <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
-
-            Cancel
-          </button>
-          <button onClick={handleSave} className="save-btn">
-          <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-
-            Save
-          </button>
+        <div>
+          {isEditable && (
+            <div className="flex justify-end mt-4 space-x-2 absolute bottom-10 right-8">
+              <button onClick={onClose} className="cancel-btn">
+                <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+                Cancel
+              </button>
+              <button onClick={handleSave} className="save-btn">
+                <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+                Save
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

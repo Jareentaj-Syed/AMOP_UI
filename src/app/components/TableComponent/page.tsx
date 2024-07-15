@@ -7,7 +7,7 @@ import EditUsernameCellRenderer from './data-grid-cell-renderers/edit-username-c
 import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-renderer';
 import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
-import { Checkbox } from 'antd'
+import { Modal, Checkbox } from 'antd'
 interface TableComponentProps {
   headers: string[];
   initialData: { [key: string]: any }[];
@@ -27,6 +27,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
+
+
   const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
@@ -39,7 +43,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   };
 
-  const handleRowCheckboxChange = (index:number) => {
+  const handleRowCheckboxChange = (index: number) => {
     const currentIndex = selectedRows.indexOf(index);
     const newSelectedRows = [...selectedRows];
 
@@ -81,7 +85,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setEditModalOpen(true);
         break;
       case 'delete':
-        handleDelete(rowIndex);
+        setDeleteRowIndex(rowIndex);
+        setDeleteModalOpen(true);
         break;
       case 'info':
         setEditRowIndex(rowIndex);
@@ -106,6 +111,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setEditModalOpen(false);
     setIsEditable(false);
     setEditRowIndex(null);
+  };
+
+  const confirmDelete = () => {
+    if (deleteRowIndex !== null) {
+      handleDelete(deleteRowIndex);
+    }
+    setDeleteModalOpen(false);
+    setDeleteRowIndex(null);
   };
 
   const handleDelete = (rowIndex: number) => {
@@ -167,126 +180,126 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     Deactivated: '#E95463', // Light Red
     // Add more statuses and colors as needed
   };
-  
+
   return (
     <div className="relative max-h-96">
-     <div className="overflow-auto" style={{ maxHeight: "600px" }}>
-      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-        <thead className="bg-gray-200">
-          <tr>
-            <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header">
-              <Checkbox
-                onChange={handleSelectAllChange}
-                checked={selectAll}
-                indeterminate={
-                  selectedRows.length > 0 &&
-                  selectedRows.length < paginatedData.length
-                }
-                style={{ fontSize: '2rem' }}
-              />
-            </th>
-            {headers.map((header, index) => (
-              <th
-                key={index}
-                className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header"
-              >
-                {formatColumnName(header)}
+      <div className="overflow-auto" style={{ maxHeight: "500px", height: "500px" }}>
+        <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead className="bg-gray-200">
+            <tr>
+              <th className="px-6 border-b border-gray-300 text-left font-semibold table-header">
+                <Checkbox
+                  onChange={handleSelectAllChange}
+                  checked={selectAll}
+                  indeterminate={
+                    selectedRows.length > 0 &&
+                    selectedRows.length < paginatedData.length
+                  }
+                  style={{ fontSize: '2rem' }}
+                />
               </th>
-            ))}
-            <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedData.map((row, index) => (
-            <tr
-              key={index}
-              className={index % 2 === 0 ? "bg-gray-50" : ""}
-            >
-              <td className="py-3 px-6 border-b border-gray-300 table-cell">
-              <Checkbox
-  onChange={() => handleRowCheckboxChange(index as number)}
-  checked={selectedRows.map(String).includes(String(index))}
-  style={{ fontSize: '2rem' }}
-/>
-
-
-              </td>
-              {headers.map((header, columnIndex) => (
-                <td
-                  key={columnIndex}
-                  className="py-3 px-6 border-b border-gray-300 table-cell"
+              {headers.map((header, index) => (
+                <th
+                  key={index}
+                  className="px-6 border-b border-gray-300 text-left font-semibold table-header"
                 >
-                  {visibleColumns.includes(header) && (
-                    header === "API_state" ? (
-                      renderApiState(row[header], index)
-                    ) : header === "User status" ? (
-                      renderUserStatus(row[header])
-                    ) : header === "DateAdded" ||
-                      header === "DateActivated" ? (
-                      <DateTimeCellRenderer value={row[header]} />
-                    ) : header === "Username" ? (
-                      <EditUsernameCellRenderer value={row[header]} />
-                    ) : header === "SimStatus" ? (
-                      <StatusCellRenderer
-                        record={row}
-                        value={row[header]}
-                        index={index}
-                        colorMap={colorMap}
-                      />
-                    ) : header === "StatusHistory" ? (
-                      <StatusHistoryCellRenderer value={row[header]} />
-                    ) : header === "Provider" ? (
-                      <ServiceProviderCellRenderer value={row[header]} />
-                    ) : (
-                      row[header]
-                    )
-                  )}
-                </td>
+                  {formatColumnName(header)}
+                </th>
               ))}
-              <td className="py-3 px-6 border-b border-gray-300 table-cell">
-                <div className="flex items-center space-x-2">
-                  {allowedActions.includes("edit") && (
-                    <PencilIcon
-                      className="h-5 w-5 text-blue-500 cursor-pointer"
-                      onClick={() =>
-                        handleActionClick(
-                          "edit",
-                          (currentPage - 1) * itemsPerPage + index
-                        )
-                      }
-                    />
-                  )}
-                  {allowedActions.includes("delete") && (
-                    <TrashIcon
-                      className="h-5 w-5 text-red-500 cursor-pointer"
-                      onClick={() =>
-                        handleActionClick(
-                          "delete",
-                          (currentPage - 1) * itemsPerPage + index
-                        )
-                      }
-                    />
-                  )}
-                  {allowedActions.includes("info") && (
-                    <InformationCircleIcon
-                      className="h-5 w-5 text-green-500 cursor-pointer"
-                      onClick={() =>
-                        handleActionClick(
-                          "info",
-                          (currentPage - 1) * itemsPerPage + index
-                        )
-                      }
-                    />
-                  )}
-                </div>
-              </td>
+              <th className="px-6 border-b border-gray-300 text-left font-semibold">
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {paginatedData.map((row, index) => (
+              <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-gray-50" : ""}
+              >
+                <td className="px-6 border-b border-gray-300 table-cell">
+                  <Checkbox
+                    onChange={() => handleRowCheckboxChange(index as number)}
+                    checked={selectedRows.map(String).includes(String(index))}
+                    style={{ fontSize: '2rem' }}
+                  />
+
+
+                </td>
+                {headers.map((header, columnIndex) => (
+                  <td
+                    key={columnIndex}
+                    className="px-6 border-b border-gray-300 table-cell"
+                  >
+                    {visibleColumns.includes(header) && (
+                      header === "API_state" ? (
+                        renderApiState(row[header], index)
+                      ) : header === "User status" ? (
+                        renderUserStatus(row[header])
+                      ) : header === "DateAdded" ||
+                        header === "DateActivated" ? (
+                        <DateTimeCellRenderer value={row[header]} />
+                      ) : header === "Username" ? (
+                        <EditUsernameCellRenderer value={row[header]} />
+                      ) : header === "SimStatus" ? (
+                        <StatusCellRenderer
+                          record={row}
+                          value={row[header]}
+                          index={index}
+                          colorMap={colorMap}
+                        />
+                      ) : header === "StatusHistory" ? (
+                        <StatusHistoryCellRenderer value={row[header]} />
+                      ) : header === "Provider" ? (
+                        <ServiceProviderCellRenderer value={row[header]} />
+                      ) : (
+                        row[header]
+                      )
+                    )}
+                  </td>
+                ))}
+                <td className="px-6 border-b border-gray-300 table-cell">
+                  <div className="flex items-center space-x-2">
+                    {allowedActions.includes("edit") && (
+                      <PencilIcon
+                        className="h-5 w-5 text-blue-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionClick(
+                            "edit",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
+                      />
+                    )}
+                    {allowedActions.includes("delete") && (
+                      <TrashIcon
+                        className="h-5 w-5 text-red-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionClick(
+                            "delete",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
+                      />
+                    )}
+                    {allowedActions.includes("info") && (
+                      <InformationCircleIcon
+                        className="h-5 w-5 text-green-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionClick(
+                            "info",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
+                      />
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
 
       <div className="flex justify-center mt-5">
@@ -301,6 +314,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onSave={handleSaveModal}
         onClose={handleCloseModal}
       />
+
+<Modal
+        title="Confirm Deletion"
+        open={deleteModalOpen}
+        onOk={confirmDelete}
+        onCancel={() => setDeleteModalOpen(false)}
+      >
+        <p>Do you want to delete this row?</p>
+      </Modal>
+
     </div>
   );
 };
