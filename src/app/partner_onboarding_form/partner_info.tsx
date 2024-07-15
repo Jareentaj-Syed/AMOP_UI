@@ -1,6 +1,6 @@
-"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '../stores/logoStore';
+import EmailModal from './EmailModal';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -13,8 +13,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   const [partnerName, setPartnerName] = useState<string>('');
   const [subPartnerName, setSubPartnerName] = useState<string>('');
-  const [emailInput, setEmailInput] = useState<string>('');
   const [emailList, setEmailList] = useState<string[]>([]);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
@@ -23,7 +23,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     if (
       partnerName.trim() !== '' &&
       subPartnerName.trim() !== '' &&
-      emailList.length >0
+      emailList.length > 0
     ) {
       setFormValid(true);
     } else {
@@ -63,11 +63,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     setActiveElement(null);
   };
 
-  const handleAddEmail = () => {
-    if (emailInput.trim() !== '') {
-      setEmailList([...emailList, emailInput]);
-      setEmailInput('');
-    }
+  const handleAddEmail = (email: string) => {
+    setEmailList([...emailList, email]);
   };
 
   const handleRemoveEmail = (index: number) => {
@@ -76,7 +73,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   };
 
   return (
-    <div className='p-2'>
+    <div className="p-2">
       <div className="mb-6 mt-4">
         <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Info</h3>
         <form onSubmit={handleSubmit}>
@@ -117,46 +114,17 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   className={`input flex-grow focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
                   onFocus={() => handleFocus('emailIds')}
                   onBlur={handleBlur}
-                  value={emailInput}
-                  onChange={(e) => setEmailInput(e.target.value)}
+                  value={emailList.join(', ')}
+                  readOnly
                 />
                 <button
                   type="button"
                   className="ml-2 p-2 bg-blue-500 text-white rounded-lg"
-                  onClick={handleAddEmail}
+                  onClick={() => setIsEmailModalOpen(true)}
                 >
-                  +
+                  !
                 </button>
               </div>
-              {/* <div className="mt-2">
-                {emailList.map((email, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
-                    <span>{email}</span>
-                    <button
-                      type="button"
-                      className="ml-2 p-1 bg-red-500 text-white rounded-full"
-                      onClick={() => handleRemoveEmail(index)}
-                    >
-                      &times;
-                    </button>
-                  </div>
-                ))}
-              </div> */}
-              <div className="mt-2">
-  {emailList.map((email, index) => (
-    <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
-      <span>{email}</span>
-      <button
-        type="button"
-        className="ml-2 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75 transition duration-200"
-        onClick={() => handleRemoveEmail(index)}
-      >
-        &times;
-      </button>
-    </div>
-  ))}
-</div>
-
             </div>
             <div>
               <label className={`block text-gray-700 ${activeElement === 'partnerLogo' ? 'text-indigo-500' : ''}`}>
@@ -173,7 +141,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
             </div>
           </div>
-          <div className='flex justify-end space-x-4'>
+          <div className="flex justify-end space-x-4">
             <button
               className={`${formValid ? 'save-btn' : 'cancel-btn'}`}
               type="submit"
@@ -184,6 +152,13 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
           </div>
         </form>
       </div>
+      <EmailModal
+        isOpen={isEmailModalOpen}
+        emailList={emailList}
+        onClose={() => setIsEmailModalOpen(false)}
+        onAddEmail={handleAddEmail}
+        onRemoveEmail={handleRemoveEmail}
+      />
     </div>
   );
 };
