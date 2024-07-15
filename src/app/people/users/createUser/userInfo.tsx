@@ -361,12 +361,12 @@ const UserInfo: React.FC = () => {
 </div>
 
       <div className="flex justify-end space-x-4 mt-3">
-        <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
+        <button className="cancel-btn">
           <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
           <span>Cancel</span>
         </button>
         <button
-          className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+          className="save-btn"
           onClick={handleSave}
         >
           <CheckIcon className="h-5 w-5 text-black-500 mr-2" />

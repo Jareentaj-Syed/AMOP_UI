@@ -70,7 +70,7 @@ const ListView: React.FC = () => {
       <div className="flex items-center justify-between">
         <ChartsPage />
         <button
-          className="flex items-center p-2 rounded-lg shadow ml-2  button border border-gray-300"
+          className="save-btn"
           onClick={handleCreateClick} // Placeholder for create button action
         >
           <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
@@ -81,7 +81,7 @@ const ListView: React.FC = () => {
       <div className="flex items-center justify-between mt-6 mb-4">
         <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <div className="flex space-x-4">
-          <button className="flex items-center justify-center p-2 rounded-lg shadow ml-4 button border border-gray-300">
+          <button className="save-btn">
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>

@@ -98,7 +98,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     return (
       <div className="flex items-center space-x-2">
         <button
-          className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${apiState === 'enable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+          className={`${apiState === 'enable' ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
@@ -106,7 +106,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           Enable
         </button>
         <button
-          className={`font-bold px-4 rounded-3xl border-4 focus:outline-none focus:shadow-outline ${apiState === 'disable' ? 'bg-blue-100 text-blue-500 border-blue-200' : 'bg-gray-100 text-gray-500 border-gray-200'
+          className={`${apiState === 'disable' ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}

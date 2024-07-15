@@ -450,11 +450,11 @@ const TenantInfo: React.FC = () => {
                 </div>
             </div> */}
             <div className="flex justify-end space-x-4">
-                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300">
+                <button className="cancel-btn">
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="flex items-center p-2 rounded-lg shadow ml-2 button border border-gray-300"
+                <button className="save-btn"
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Submit</span>

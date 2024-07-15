@@ -56,7 +56,7 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({ data, visibleColumns, setVi
 
   return (
     <Popover content={columnContent} trigger="click" placement="bottom">
-      <button className="flex items-center p-2 rounded-lg shadow button border border-gray-300 bg-white text-black">
+      <button className="flex items-center p-2 save-btn">
         <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
         Filter
       </button>

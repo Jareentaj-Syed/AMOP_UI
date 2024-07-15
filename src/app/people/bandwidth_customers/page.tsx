@@ -78,13 +78,13 @@ const BandWidthCustomers: React.FC = () => {
         <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <div className="flex space-x-2">
           <button
-            className="flex items-center p-2 rounded-lg shadow ml-1 button border border-gray-300"
+            className="save-btn"
             onClick={handleCreateModalOpen}
           >
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
           </button>
-          <button className="flex items-center justify-center p-2 rounded-lg shadow ml-1 button border border-gray-300">
+          <button className="save-btn">
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>

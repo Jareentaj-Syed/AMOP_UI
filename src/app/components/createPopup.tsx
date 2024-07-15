@@ -52,13 +52,13 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
         <div className="flex justify-end space-x-4 mt-4">
           <button
             onClick={onClose}
-            className="bg-gray-500 w-[80px] text-white px-4 py-2 rounded"
+            className="cancel-btn"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="bg-blue-500 w-[80px] text-white px-4 py-2 rounded"
+            className="save-btn"
           >
             Save
           </button>

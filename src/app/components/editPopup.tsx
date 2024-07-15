@@ -66,10 +66,10 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       </div>
   
       <div className="flex justify-end mt-4 space-x-2 absolute bottom-10 right-8">
-        <button onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded">
+        <button onClick={onClose} className="cancel-btn">
           Cancel
         </button>
-        <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded">
+        <button onClick={handleSave} className="save-btn">
           Save
         </button>
       </div>
