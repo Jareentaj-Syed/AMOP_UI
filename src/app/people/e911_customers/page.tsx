@@ -75,7 +75,15 @@ const E911Customers: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="flex items-center justify-between mt-1 mb-8">
+        <div className="flex space-x-2">
         <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <ColumnFilter
+                data={data}
+                visibleColumns={visibleColumns}
+                setVisibleColumns={setVisibleColumns}
+              />
+        </div>
+       
         <div className="flex space-x-2">
           <button
             className="save-btn"
@@ -88,11 +96,7 @@ const E911Customers: React.FC = () => {
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-          <ColumnFilter
-                data={data}
-                visibleColumns={visibleColumns}
-                setVisibleColumns={setVisibleColumns}
-              />
+          
         </div>
       </div>
 

@@ -79,13 +79,16 @@ const ListView: React.FC = () => {
       </div>
 
       <div className="flex items-center justify-between mt-6 mb-4">
-        <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <div className="flex space-x-4">
+          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+        </div>
+
         <div className="flex space-x-4">
           <button className="save-btn">
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
         </div>
       </div>
 
@@ -94,10 +97,10 @@ const ListView: React.FC = () => {
           headers={headers}
           initialData={data}
           searchQuery={searchTerm}
-          visibleColumns={visibleColumns} 
+          visibleColumns={visibleColumns}
           itemsPerPage={10}
-          allowedActions={["edit","delete","info"]}
-           />
+          allowedActions={["edit", "delete", "info"]}
+        />
       </div>
     </div>
   );

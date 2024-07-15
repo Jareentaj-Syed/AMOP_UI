@@ -249,14 +249,28 @@
 .cancel-btn{
     background-color: #D1D5DB
 }
+.cancel-btn:hover{
+    background-color: #6B7280;
+    color: white;
+}
 
 .save-btn{
     background-color: #BFDBFE;
+}
+.save-btn:hover{
+    background-color: #3B82F6;
+    color: white;
 }
 
 .cancel-btn,.save-btn{
     min-width: 115px;
     border-radius: 8px;
+    display: flex;
+    padding: 4px 4px;
+    padding-right: 8px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
 }
 
 
