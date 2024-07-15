@@ -7,6 +7,7 @@ import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
+import { createModalData } from './customer_groups_constants';
 
 interface ExcelData {
   [key: string]: any;
@@ -18,6 +19,7 @@ const CustomerGroups: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const createColumns=createModalData
 
   useEffect(() => {
     const fetchData = async () => {
@@ -114,8 +116,8 @@ const CustomerGroups: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={Object.keys(data.length > 0 ? data[0] : {})}
-        heading='Customer'
+        columnNames={createColumns}
+        heading='Customer Group'
       />
     </div>
   );

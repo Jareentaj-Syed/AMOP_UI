@@ -7,6 +7,7 @@ import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
+import { createModalData } from './rev_io_customers_constants';
 
 interface ExcelData {
   [key: string]: any;
@@ -18,7 +19,7 @@ const RevIOCustomers: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-
+const createColumns=createModalData
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -118,7 +119,7 @@ const RevIOCustomers: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={Object.keys(data.length > 0 ? data[0] : {})}
+        columnNames={createColumns}
         heading='Customer'
       />
     </div>
