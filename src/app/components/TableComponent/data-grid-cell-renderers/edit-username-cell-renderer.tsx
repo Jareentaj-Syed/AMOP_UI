@@ -22,29 +22,35 @@ const EditUsernameModal: FC<EditUsernameProps> = ({
 
   return (
     <Modal
-      title="Edit Username"
+      title={
+        <div>
+          <span>Edit Username</span>
+          <hr className="border-gray-300 mt-2 mb-8" />
+        </div>
+      }
       centered
-      visible={true} // This should be controlled by a state in your actual implementation
-      onOk={handleUpdate}
+      visible={true}
       onCancel={onCancel}
-      width={500}
-      
       footer={[
-        <Button key="cancel" onClick={onCancel}>
-          Cancel
-        </Button>,
-        <Button key="update" type="primary" onClick={handleUpdate}>
-          Update
-        </Button>,
+        <hr className="border-gray-300 mb-4 mt-8" />,
+        <div className="flex justify-center space-x-2" key="buttons">
+          <Button key="cancel" onClick={onCancel} className="cancel-btn h-[30px]">
+            Cancel
+          </Button>
+          <Button key="update" onClick={handleUpdate} className="save-btn">
+            Update
+          </Button>
+        </div>,
       ]}
     >
-      <label> UserName:</label>
-      <Input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Enter new username"
-      />
-        
+      <div className="flex justify-center items-center">
+        <span className="mr-4">UserName:</span>
+        <Input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter new username"
+        />
+      </div>
     </Modal>
   );
 };
