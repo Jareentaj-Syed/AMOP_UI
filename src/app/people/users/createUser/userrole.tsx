@@ -1,8 +1,13 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
-import Select from 'react-select';
-import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions,CustomerGroup2Options} from '@/app/constants/partnercarrier';
+import Select, { SingleValue } from 'react-select';
+
+type OptionType = {
+    value: string;
+    label: string;
+};
+
 
 interface ExcelData {
     [key: string]: {
@@ -82,7 +87,7 @@ const data: ExcelData = {
             "Customer Charges"
         ],
         "Feature": {
-            "Customer Charges":[
+            "Customer Charges": [
                 "Export"
             ]
         }
@@ -246,8 +251,29 @@ const data: ExcelData = {
         }
     }
 }
+const partners = [
+    "AWX",
+    "Altawork-GT",
+    "AWX-AWX",
+    "AWX Test",
+    "CSV RS AG",
+    "Go-Tech-AWX-Test",
+    "GT"
+];
+
+const roles = [
+    "Agent",
+    "Agent Partner Admin",
+    "Notification Only User",
+    "Partner Admin",
+    "Super Admin",
+    "User"
+];
 
 const UserRole: React.FC = () => {
+    const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
+    const [role, setRole] = useState<SingleValue<OptionType>>(null);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const handleModuleChange = (category: string, modules: any) => {
@@ -259,54 +285,130 @@ const UserRole: React.FC = () => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
-return (
-    <div>
-    <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Module Info</h3>
-    <div className="grid grid-cols-1 gap-4 mb-6">
-        {Object.keys(data).map((category) => (
-            <div key={category} className="col-span-1">
-                <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label className="block text-gray-700">Module</label>
-                        <Select
-                            isMulti
-                            closeMenuOnSelect={false}
-                            value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
-                            onChange={(selected) => handleModuleChange(category, selected)}
-                            options={data[category].Module.map(module => ({ value: module, label: module }))}
-                            className="w-full mt-1"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-gray-700">Features</label>
-                        <Select
-                            isMulti
-                            closeMenuOnSelect={false}
-                            value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
-                            onChange={(selected) => handleFeatureChange(category, selected)}
-                            options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                            className="w-full mt-1"
-                            isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
-                        />
-                    </div>
+
+    const options = partners.map(partner => ({
+        value: partner.toLowerCase().replace(/\s+/g, '-'),
+        label: partner
+    }));
+    const Roleoptions = roles.map((role, index) => ({
+        value: role.toLowerCase().replace(/\s+/g, '-'),
+        label: role,
+    }));
+    const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
+        setPartner(selectedOption);
+    };
+
+    const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
+        setRole(selectedOption);
+    };
+
+    const handleSubmit = () => {
+        const errors: string[] = [];
+        if (!partner) errors.push('Partner is required.');
+        if (!role) errors.push('Role is required.');
+
+        setErrorMessages(errors);
+
+        if (errors.length === 0) {
+            console.log('Saving...');
+        }
+        else {
+        }
+    };
+    return (
+        <div>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+                    <Select
+                        value={partner}
+                        onChange={handleSetPartner}
+                        options={options}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                marginTop: '5px',
+                                height: '2.6rem',
+                                borderRadius: '0.375rem',
+                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                            }),
+                        }}
+                    />
+                    {errorMessages.includes('Partner is required.') && (
+                        <span className="text-red-600 ml-1">Partner is required.</span>
+                    )}
+                </div>
+                <div>
+                    <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
+                    <Select
+                        value={role}
+                        onChange={handlesetRole}
+                        options={Roleoptions}
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                marginTop: '5px',
+                                height: '2.6rem',
+                                borderRadius: '0.375rem',
+                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                            }),
+                        }}
+                    />
+                    {errorMessages.includes('Role is required.') && (
+                        <span className="text-red-600 ml-1">Role is required.</span>
+                    )}
                 </div>
             </div>
-        ))}
-    </div>
-    <div className="flex justify-end space-x-4">
+            <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Module Info</h3>
+            <div className="grid grid-cols-1 gap-4 mb-6">
+                {Object.keys(data).map((category) => (
+                    <div key={category} className="col-span-1">
+                        <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label className="block text-gray-700">Module</label>
+                                <Select
+                                    isMulti
+                                    closeMenuOnSelect={false}
+                                    value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
+                                    onChange={(selected) => handleModuleChange(category, selected)}
+                                    options={data[category].Module.map(module => ({ value: module, label: module }))}
+                                    className="w-full mt-1"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700">Features</label>
+                                <Select
+                                    isMulti
+                                    closeMenuOnSelect={false}
+                                    value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
+                                    onChange={(selected) => handleFeatureChange(category, selected)}
+                                    options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
+                                    className="w-full mt-1"
+                                    isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="flex justify-end space-x-4">
                 <button className="cancel-btn">
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="save-btn"
+                <button
+                    className="save-btn"
+                    onClick={handleSubmit}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Submit</span>
                 </button>
             </div>
-</div>
+        </div>
 
-);
+    );
 };
 export default UserRole;

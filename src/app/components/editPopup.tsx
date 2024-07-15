@@ -47,7 +47,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
           {columnNames.map((key) => (
             key !== 'api_state' && (
               <div key={key} className="flex flex-col mb-4">

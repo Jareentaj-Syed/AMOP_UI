@@ -62,12 +62,12 @@
 
 .nav-link:hover,
 .nav-link-active:hover {
-    background-color: #F2F3F5;
+    background-color: #E5E7EB;
     color: black;
 }
 
 .nav-active-link {
-    background-color: #F2F3F5;
+    background-color: #E5E7EB;
     color: black;
     font-weight: 700;
 }

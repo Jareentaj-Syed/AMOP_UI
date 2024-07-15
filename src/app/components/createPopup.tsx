@@ -34,7 +34,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div className="space-y-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
           {columnNames.map((key) => (
             key !== 'api_state' && (
               <div key={key} className="flex flex-col mb-4">

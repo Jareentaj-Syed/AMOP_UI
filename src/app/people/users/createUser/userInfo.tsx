@@ -73,7 +73,7 @@ const UserInfo: React.FC = () => {
     if (!password) errors.push('Password is required.');
 
     setErrorMessages(errors);
-    
+
     if (errors.length === 0) {
       console.log('Saving...');
     }
@@ -143,13 +143,13 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
-            <label className="block text-gray-700">First Name</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
-          </div>
-          <div>
-            <label className="block text-gray-700">Last Name</label>
-            <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
-          </div>
+          <label className="block text-gray-700">First Name</label>
+          <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+        </div>
+        <div>
+          <label className="block text-gray-700">Last Name</label>
+          <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+        </div>
         <div>
           <label className="block text-gray-700">Username<span className="text-red-500">*</span></label>
           <input
@@ -175,11 +175,11 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
-       
-            <label className="block text-gray-700">Mobile no</label>
-            <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-          </div>
+
+          <label className="block text-gray-700">Mobile no</label>
+          <input type="text"
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+        </div>
         <div>
           <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
           <Select
@@ -214,84 +214,84 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
-            <label className="block text-gray-700">Phone</label>
-            <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-          </div>
+          <label className="block text-gray-700">Phone</label>
+          <input type="text"
+            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+        </div>
       </div>
 
       <div>
-  <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Additional Information</h3>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-  <div>
-      <label className="block text-gray-700">Notification enable</label>
-      <Select
-      
-        styles={{
-          control: (base,state) => ({
-            ...base,
-            marginTop:'5px',
-            height: '2.6rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-        options={Notificationoptions}
-      />
-    </div>
-    <div>
-      <label className="block text-gray-700">Business Name</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Locale</label>
-      <input type="text"
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Apt/Suite</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Address Line-1</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Address Line-2</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Country</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">State</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">City</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-    <div>
-      <label className="block text-gray-700">Time Zone</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
+        <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Additional Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div>
+            <label className="block text-gray-700">Notification enable</label>
+            <Select
 
-    <div>
-      <label className="block text-gray-700">Zip</label>
-      <input type="text" 
-          className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     
-    </div>
-{/*   
+              styles={{
+                control: (base, state) => ({
+                  ...base,
+                  marginTop: '5px',
+                  height: '2.6rem',
+                  borderRadius: '0.375rem',
+                  borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                  boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                }),
+              }}
+              options={Notificationoptions}
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Business Name</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Locale</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Apt/Suite</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Address Line-1</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Address Line-2</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Country</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">State</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">City</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          <div>
+            <label className="block text-gray-700">Time Zone</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Zip</label>
+            <input type="text"
+              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          </div>
+          {/*   
     <div>
             <label className="block text-gray-700">Country</label>
             <select
@@ -358,8 +358,8 @@ const UserInfo: React.FC = () => {
               className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
             />
           </div> */}
-  </div>
-</div>
+        </div>
+      </div>
 
       <div className="flex justify-end space-x-4 mt-3">
         <button className="cancel-btn">
