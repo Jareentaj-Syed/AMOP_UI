@@ -70,32 +70,35 @@ const sim_management: React.FC = () => {
    };
    return (
     <div>
-       <div className="flex justify-between items-center mt-10 ml-6">
-       <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+     <div className="flex justify-end items-center mt-5 mr-6">
+  <div className="flex space-x-5">
+    <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+    <button className="flex items-center p-2 save-btn">
+      <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />
+      {EXPORT}
+    </button>
+    {/* <Button
+      type="primary"
+      className="ml-2"
+      icon={<DownloadOutlined />}
+      size="large"
+      ghost
+    >
+      {EXPORT}
+    </Button> */}
+  </div> 
+</div>
 
-      <div className="flex space-x-5" style={{ marginRight: '20px' }}>
-      <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-      <button className="flex items-center p-2 save-btn">
-        <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />
-        {EXPORT}
-      </button>
-        {/* <Button
-          type="primary"
-          className="ml-2"
-          icon={<DownloadOutlined />}
-          size="large"
-          ghost
-        >
-          {EXPORT}
-        </Button> */}
-      </div>
-    </div>
+
+
        
       <div>
        
-        <div>
-          <AdvancedFilter  onFilter={handleFilter}/>
-        </div>
+      <div className="flex justify-between items-center ml-4">
+  <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+  <AdvancedFilter onFilter={handleFilter} />
+</div>
+
       </div>
       <TableComponent
          infoColumns={[]}  

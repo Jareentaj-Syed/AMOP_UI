@@ -19,7 +19,7 @@ interface TableComponentProps {
   itemsPerPage: number;
   allowedActions: ('edit' | 'delete' | 'info' | 'Actions')[];
   popupHeading:string;
-  advancedFilters:any
+  advancedFilters?:any
   infoColumns:any []
   editColumns:any[]
 }

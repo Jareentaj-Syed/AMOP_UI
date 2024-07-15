@@ -74,7 +74,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
   size="large"
   className="w-full md:w-auto save-btn "
   onClick={handleShowAdvanced}
-  icon={showAdvanced ? <CaretDownOutlined/> : < CaretUpOutlined />
+  icon={showAdvanced ? < CaretUpOutlined /> : <CaretDownOutlined/> 
     
   }
   style={{ fontWeight: '450' }}
