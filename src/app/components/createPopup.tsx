@@ -51,7 +51,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 " style={{ zIndex: 9999 }}>
       <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl relative createPopup" style={{ paddingBottom: isScrollable ? '0' : '2rem' }}>
         <h2 className="text-xl font-semibold mb-4">{`Add New ${heading}`}</h2>
         <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
