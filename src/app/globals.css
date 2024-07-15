@@ -330,6 +330,11 @@
     padding: 5px 10px;
   }
 
+  .email-add-btn{
+    margin-top: 4px;
+    height: 42px;
+  }
+
 /*
 Gray 50: #F9FAFB
 Gray 100: #F3F4F6

@@ -28,19 +28,21 @@ const EmailModal: React.FC<EmailModalProps> = ({
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-xl font-semibold mb-4">Manage Emails</h2>
-        <input
-          type="text"
-          className="input w-full mb-4"
-          value={emailInput}
-          onChange={(e) => setEmailInput(e.target.value)}
-        />
-        <button
-          type="button"
-          className="w-full bg-blue-500 text-white p-2 rounded-lg mb-4"
-          onClick={handleAddEmail}
-        >
-          Add Email
-        </button>
+        <div className="flex mb-4">
+          <input
+            type="text"
+            className="input w-full"
+            value={emailInput}
+            onChange={(e) => setEmailInput(e.target.value)}
+          />
+          <button
+            type="button"
+            className="ml-2 bg-blue-500 text-white p-2 rounded-lg h-full email-add-btn"
+            onClick={handleAddEmail}
+          >
+            Add
+          </button>
+        </div>
         <div className="max-h-40 overflow-y-auto mb-4">
           {emailList.map((email, index) => (
             <div key={index} className="flex items-center justify-between bg-gray-200 p-2 rounded-lg mb-2">
