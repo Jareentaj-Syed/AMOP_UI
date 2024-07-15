@@ -13,10 +13,11 @@ const ServiceProviderCellRenderer: FC<ServiceProviderCellProps> = ({
 
   const getNetworkCarrierLogoUrl = (networkCarrier: string) => {
     const formattedName = networkCarrier?.trim().replace(/\./g, "").toUpperCase();
-    const basePublicAssetsUrl = ""; // Replace with your actual URL prefix for public assets
+    const basePublicAssetsUrl = "/images"; // Replace with your actual URL prefix for public assets
 
     switch (formattedName) {
       case "AT&T":
+      case "AT&T - POD19":
       case "AT&T MOBILITY":
       case "AT&T WIRELESS":
       case "CENTENNIAL PUERTO RIO LICENSE CORP":

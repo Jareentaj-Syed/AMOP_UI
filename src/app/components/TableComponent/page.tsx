@@ -3,7 +3,11 @@ import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/2
 import EditModal from '../../components/editPopup';
 import Pagination from '@/app/components/pagination';
 import DateTimeCellRenderer from './data-grid-cell-renderers/date-time-cell-renderer';
-
+import EditUsernameCellRenderer from './data-grid-cell-renderers/edit-username-cell-renderer';
+import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-renderer';
+import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
+import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
+import { Checkbox } from 'antd'
 interface TableComponentProps {
   headers: string[];
   initialData: { [key: string]: any }[];
@@ -20,6 +24,34 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [isEditable, setIsEditable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
+  const [selectAll, setSelectAll] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
+
+  const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
+    setSelectAll(e.target.checked);
+    if (e.target.checked) {
+      // Select all rows
+      const allRowIndices = paginatedData.map((_, index) => index);
+      setSelectedRows(allRowIndices);
+    } else {
+      // Deselect all rows
+      setSelectedRows([]);
+    }
+  };
+
+  const handleRowCheckboxChange = (index:number) => {
+    const currentIndex = selectedRows.indexOf(index);
+    const newSelectedRows = [...selectedRows];
+
+    if (currentIndex === -1) {
+      newSelectedRows.push(index);
+    } else {
+      newSelectedRows.splice(currentIndex, 1);
+    }
+
+    setSelectedRows(newSelectedRows);
+  };
+
 
   useEffect(() => {
     setRowData(initialData);
@@ -130,64 +162,132 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   // Calculate pagination
   const totalPages = Math.ceil(rowData.length / itemsPerPage);
   const paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
+  const colorMap = {
+    Activated: '#19AF91', // Light Green
+    Deactivated: '#E95463', // Light Red
+    // Add more statuses and colors as needed
+  };
+  
   return (
     <div className="relative max-h-96">
-      <div className='overflow-auto' style={{ maxHeight: '600px' }}>
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg ">
-          <thead className="bg-gray-200">
-            <tr>
-              <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header">S.no</th>
-              {headers.map((header, index) => (
-                <th key={index} className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header">
-                  {formatColumnName(header)}
-                </th>
-              ))}
-              <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((row, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : ''}>
-                <td className="py-3 px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-                {headers.map((header, columnIndex) => (
-                  <td key={columnIndex} className="py-3 px-6 border-b border-gray-300 table-cell">
-                    {visibleColumns.includes(header) && (header === 'API_state' ? (
+     <div className="overflow-auto" style={{ maxHeight: "600px" }}>
+      <table className="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead className="bg-gray-200">
+          <tr>
+            <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header">
+              <Checkbox
+                onChange={handleSelectAllChange}
+                checked={selectAll}
+                indeterminate={
+                  selectedRows.length > 0 &&
+                  selectedRows.length < paginatedData.length
+                }
+                style={{ fontSize: '2rem' }}
+              />
+            </th>
+            {headers.map((header, index) => (
+              <th
+                key={index}
+                className="py-3 px-6 border-b border-gray-300 text-left font-semibold table-header"
+              >
+                {formatColumnName(header)}
+              </th>
+            ))}
+            <th className="py-3 px-6 border-b border-gray-300 text-left font-semibold">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData.map((row, index) => (
+            <tr
+              key={index}
+              className={index % 2 === 0 ? "bg-gray-50" : ""}
+            >
+              <td className="py-3 px-6 border-b border-gray-300 table-cell">
+              <Checkbox
+  onChange={() => handleRowCheckboxChange(index as number)}
+  checked={selectedRows.map(String).includes(String(index))}
+  style={{ fontSize: '2rem' }}
+/>
+
+
+              </td>
+              {headers.map((header, columnIndex) => (
+                <td
+                  key={columnIndex}
+                  className="py-3 px-6 border-b border-gray-300 table-cell"
+                >
+                  {visibleColumns.includes(header) && (
+                    header === "API_state" ? (
                       renderApiState(row[header], index)
-                    ) : header === 'User status' ? (
+                    ) : header === "User status" ? (
                       renderUserStatus(row[header])
+                    ) : header === "DateAdded" ||
+                      header === "DateActivated" ? (
+                      <DateTimeCellRenderer value={row[header]} />
+                    ) : header === "Username" ? (
+                      <EditUsernameCellRenderer value={row[header]} />
+                    ) : header === "SimStatus" ? (
+                      <StatusCellRenderer
+                        record={row}
+                        value={row[header]}
+                        index={index}
+                        colorMap={colorMap}
+                      />
+                    ) : header === "StatusHistory" ? (
+                      <StatusHistoryCellRenderer value={row[header]} />
+                    ) : header === "Provider" ? (
+                      <ServiceProviderCellRenderer value={row[header]} />
                     ) : (
                       row[header]
-                    ))}
-                  </td>
-                ))}
-                <td className="py-3 px-6 border-b border-gray-300 table-cell">
-                  <div className="flex items-center space-x-2">
-                    {allowedActions.includes('edit') && (
-                      <PencilIcon
-                        className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() => handleActionClick('edit', (currentPage - 1) * itemsPerPage + index)}
-                      />
-                    )}
-                    {allowedActions.includes('delete') && (
-                      <TrashIcon
-                        className="h-5 w-5 text-red-500 cursor-pointer"
-                        onClick={() => handleActionClick('delete', (currentPage - 1) * itemsPerPage + index)}
-                      />
-                    )}
-                    {allowedActions.includes('info') && (
-                      <InformationCircleIcon
-                        className="h-5 w-5 text-green-500 cursor-pointer"
-                        onClick={() => handleActionClick('info', (currentPage - 1) * itemsPerPage + index)}
-                      />
-                    )}
-                  </div>
+                    )
+                  )}
                 </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              ))}
+              <td className="py-3 px-6 border-b border-gray-300 table-cell">
+                <div className="flex items-center space-x-2">
+                  {allowedActions.includes("edit") && (
+                    <PencilIcon
+                      className="h-5 w-5 text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        handleActionClick(
+                          "edit",
+                          (currentPage - 1) * itemsPerPage + index
+                        )
+                      }
+                    />
+                  )}
+                  {allowedActions.includes("delete") && (
+                    <TrashIcon
+                      className="h-5 w-5 text-red-500 cursor-pointer"
+                      onClick={() =>
+                        handleActionClick(
+                          "delete",
+                          (currentPage - 1) * itemsPerPage + index
+                        )
+                      }
+                    />
+                  )}
+                  {allowedActions.includes("info") && (
+                    <InformationCircleIcon
+                      className="h-5 w-5 text-green-500 cursor-pointer"
+                      onClick={() =>
+                        handleActionClick(
+                          "info",
+                          (currentPage - 1) * itemsPerPage + index
+                        )
+                      }
+                    />
+                  )}
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
 
       <div className="flex justify-center mt-5">
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />

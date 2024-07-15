@@ -175,6 +175,7 @@ const UserInfo: React.FC = () => {
           )}
         </div>
         <div>
+       
             <label className="block text-gray-700">Mobile no</label>
             <input type="text" 
           className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "/>     

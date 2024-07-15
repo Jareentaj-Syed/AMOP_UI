@@ -1,0 +1,33 @@
+{
+  "name": "AMOP (Beta)",
+  "short_name": "AMOP (Beta)",
+  "theme_color": "#04c4f8",
+  "background_color": "#ffffff",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/static/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/static/images/screenshot-desktop.png",
+      "sizes": "2732x1536",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "wide"
+    },
+    {
+      "src": "/static/images/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "narrow"
+    }
+  ]
+}

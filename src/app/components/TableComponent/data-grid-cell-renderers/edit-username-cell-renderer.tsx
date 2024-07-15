@@ -8,7 +8,7 @@ interface EditUsernameProps {
   onUpdate: (newValue: string) => void;
 }
 
-export const EditUsernameModal: FC<EditUsernameProps> = ({
+const EditUsernameModal: FC<EditUsernameProps> = ({
   initialValue,
   onCancel,
   onUpdate,
@@ -26,7 +26,6 @@ export const EditUsernameModal: FC<EditUsernameProps> = ({
       visible={true} // This should be controlled by a state in your actual implementation
       onOk={handleUpdate}
       onCancel={onCancel}
-      closeIcon={<></>}
       footer={[
         <Button key="cancel" onClick={onCancel}>
           Cancel
@@ -45,7 +44,7 @@ export const EditUsernameModal: FC<EditUsernameProps> = ({
   );
 };
 
-export const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
+const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -68,15 +67,18 @@ export const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
         type="link"
         icon={<EditFilled />}
         onClick={handleOpenModal}
-        className="text-wrap contents"
-      >
-        {value}
-      </Button>
-      <EditUsernameModal
-        initialValue={value}
-        onCancel={handleCloseModal}
-        onUpdate={handleUpdateUsername}
+        className="mr-2"
       />
+      <a onClick={handleOpenModal} className="text-blue-500 cursor-pointer">
+        {value}
+      </a>
+      {modalOpen && (
+        <EditUsernameModal
+          initialValue={value}
+          onCancel={handleCloseModal}
+          onUpdate={handleUpdateUsername}
+        />
+      )}
     </>
   );
 };
@@ -84,3 +86,5 @@ export const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
 export function renderEditUsernameCell(value: string) {
   return <EditUsernameCellRenderer value={value} />;
 }
+
+export default EditUsernameCellRenderer
