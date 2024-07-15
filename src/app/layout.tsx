@@ -1,5 +1,6 @@
 // app/layout.tsx
 "use client"
+import { useEffect } from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
@@ -14,7 +15,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
-
+  useEffect(() => {
+    // Set Calibri as the default font for the entire application
+    document.body.style.fontFamily = 'Calibri';
+  }, []);
   return (
     <html lang="en">
       <body className={`${inter.className} min-h-screen grid`}>
