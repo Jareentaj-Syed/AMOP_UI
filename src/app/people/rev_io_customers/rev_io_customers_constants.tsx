@@ -14,7 +14,7 @@ export const createModalData= [
     },
     {
       "label":"Bill Profile",
-      "type":"text",
+      "type":"dropdown",
       "value":["Annually","Bi-Annually","Catapult","Monthly","Prepay","Re-bill","Reseller","Saas Reseller","Tri-Annually"],
       "mandatory":"true"
     },

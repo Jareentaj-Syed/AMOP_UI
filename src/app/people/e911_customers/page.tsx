@@ -109,7 +109,9 @@ const E911Customers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
-        popupHeading='Customer'          
+        popupHeading='Customer'  
+        infoColumns={createColumns}  
+        editColumns={createColumns}            
       />
 
       <CreateModal

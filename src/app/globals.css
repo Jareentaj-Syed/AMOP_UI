@@ -156,6 +156,9 @@
     bottom: 100px;
     overflow: auto;
 }
+.createPopup-height{
+    max-height:75%;
+}
   
 .rectangular-input {
     border-radius: 0;
@@ -309,7 +312,23 @@
     border: none;
     border-top: 1px solid #ccc;
   }
-  
+
+  .pagination-prev{
+    padding: 5px 8px;
+    padding-right: 10px;
+  }
+  .pagination-next{
+    padding: 5px 8px;
+    padding-left: 10px;
+  }
+  .pagination{
+    height: 35px;
+    align-items: center;
+  }
+
+  .pagination-num{
+    padding: 5px 10px;
+  }
 
 /*
 Gray 50: #F9FAFB

@@ -1,94 +1,72 @@
 export const createModalData= [
-    {
-      "label":"Status",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Rev.IO Account",
-      "type":"dropdown",
-      "value":["AMOPToRevio@altaworx_sandbox","GoTech API@Catput"],
-      "mandatory":"true"
-      
-    },
-    {
-      "label":"Bill Profile",
-      "type":"text",
-      "value":["Annually","Bi-Annually","Catapult","Monthly","Prepay","Re-bill","Reseller","Saas Reseller","Tri-Annually"],
-      "mandatory":"true"
-    },
-    {
-      "label":"First Name",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Middle Initial",
-      "type":"text",
-      "value":"",
-      "mandatory":"false"
-    },
-    {
-      "label":"Last Name",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Company Name",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Address Line 1",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Address Line 2",
-      "type":"text",
-      "value":"",
-      "mandatory":"false"
-    },
-    {
-      "label":"City",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"State",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Postal Code",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Postal Code Extension",
-      "type":"text",
-      "value":"",
-      "mandatory":"true"
-    },
-  
-    {
-      "label":"Use Service Adress as Billing Adress?",
-      "type":"checkbox",
-      "value":"",
-      "mandatory":"true"
-    },
-    {
-      "label":"Use Service Adress as Listing Adress?",
-      "type":"checkbox",
-      "value":"",
-      "mandatory":"true"
-    }
-  ]
+  {
+    "label": "Partner",
+    "type": "dropdown",
+    "value": [
+      "Agent",
+      "Agent Partner Admin",
+      "Notification Only User",
+      "Partner Admin",
+      "Super Admin",
+      "User"
+    ],
+    "mandatory": "true"
+  },
+  {
+    "label": "Name",
+    "type": "text",
+    "value":"",
+    "mandatory": "true"
+  },
+  {
+    "label": "Include Child Accounts?",
+    "type": "checkbox",
+    "value": "",
+    "mandatory": "false"
+  },
+  {
+    "label": "Customers",
+    "type": "dropdown",
+    "value": [
+      "KeySys",
+      "KQA",
+      "QA Customer",
+      "Belcom Inc",
+      "Mitzi Gilchrist"
+    ],
+    "mandatory": "true"
+  },
+  {
+    "label": "BAN",
+    "type": "dropdown",
+    "value": [
+      "287342370228",
+      "287277612222",
+      "287256845357",
+      "287294130093",
+      "287260128567"
+    ],
+    "mandatory": "false"
+  },
+  {
+    "label": "Customer Rate Plan",
+    "type": "dropdown",
+    "value": [
+      "!aasrte",
+      "100 GB 10W Pooled Data",
+      "10005",
+      "PORT -1714"
+    ],
+    "mandatory": "false"
+  },
+  {
+    "label": "Customer Rate Plan",
+    "type": "dropdown",
+    "value": [
+      "$3 Pooling Fee",
+      "$5 Pooling Fee",
+      "100GB Hotspot"
+    ],
+    "mandatory": "false"
+  }
+]

@@ -100,7 +100,9 @@ const ListView: React.FC = () => {
           visibleColumns={visibleColumns}
           itemsPerPage={10}
           allowedActions={["edit", "delete", "info"]}
-          popupHeading='User'          
+          popupHeading='User'    
+          infoColumns={[]}  
+          editColumns={[]}          
 
         />
       </div>

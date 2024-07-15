@@ -129,7 +129,9 @@ const CarrierInfo: React.FC = () => {
                 visibleColumns={columnNames} 
                 itemsPerPage={10}
                 allowedActions={["edit"]}   
-                popupHeading='API'          
+                popupHeading='API'      
+                infoColumns={[]}  
+                editColumns={[]}
               />
           )}
         </div>

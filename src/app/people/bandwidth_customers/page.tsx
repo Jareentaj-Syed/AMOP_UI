@@ -108,7 +108,9 @@ const BandWidthCustomers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["info"]}
-        popupHeading='Customer'          
+        popupHeading='Customer'      
+        infoColumns={createColumns}  
+        editColumns={createColumns}    
 
       />
 

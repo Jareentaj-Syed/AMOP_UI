@@ -43,11 +43,11 @@ const Pagination: React.FC<PaginationProps> = ({
   const pageNumbers = calculatePagesToShow();
 
   return (
-    <div className="flex justify-center mb-4">
+    <div className="flex justify-center mb-4 pagination">
       <button
         onClick={() => handlePageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ${
+        className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold border border-gray-400 rounded shadow pagination-prev ${
           currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
@@ -57,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           key={index}
           onClick={() => typeof page === 'number' && handlePageChange(page)}
-          className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ${
+          className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold pagination-num border border-gray-400 rounded shadow ${
             currentPage === page ? 'bg-gray-200' : ''
           } ${page === '...' ? 'cursor-default' : ''}`}
           disabled={page === '...'}
@@ -68,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         onClick={() => handlePageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow ${
+        className={`bg-white hover:bg-gray-100 text-gray-800 font-semibold pagination-next border border-gray-400 rounded shadow ${
           currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >

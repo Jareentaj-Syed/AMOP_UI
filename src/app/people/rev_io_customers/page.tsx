@@ -111,7 +111,9 @@ const createColumns=createModalData
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["edit", "info"]}
-        popupHeading='Customer'          
+        popupHeading='Customer'    
+        infoColumns={createColumns}  
+        editColumns={createColumns}          
 
       />
 
