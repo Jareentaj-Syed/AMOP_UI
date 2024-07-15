@@ -94,7 +94,7 @@ const CarrierInfo: React.FC = () => {
 
   return (
     <div className='p-1'>
-      <div className="mb-6 mt-4">
+      <div className="mb-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <label className="block text-gray-700">

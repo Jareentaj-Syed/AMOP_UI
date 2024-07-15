@@ -74,12 +74,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   return (
     <div className="p-2">
-      <div className="mb-6 mt-4">
+      <div className="mb-6 ">
         <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Info</h3>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label className={`block text-gray-700 ${activeElement === 'partnerName' ? 'text-indigo-500' : ''}`}>
+              <label className={`block  ${activeElement === 'partnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Partner Name
               </label>
               <input
@@ -92,7 +92,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label className={`block text-gray-700 ${activeElement === 'subPartnerName' ? 'text-indigo-500' : ''}`}>
+              <label className={`block ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Sub Partner Name
               </label>
               <input
@@ -105,12 +105,13 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label className={`block text-gray-700 ${activeElement === 'emailIds' ? 'text-indigo-500' : ''}`}>
+              <label className={`block  ${activeElement === 'emailIds' ?'text-blue-500' : 'text-gray-700'}`}>
                 Email ids
               </label>
               <div className="flex items-center">
                 <input
                   type="text"
+                  placeholder='Click on + to add email'
                   className={`input flex-grow focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
                   onFocus={() => handleFocus('emailIds')}
                   onBlur={handleBlur}
@@ -127,7 +128,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </div>
             </div>
             <div>
-              <label className={`block text-gray-700 ${activeElement === 'partnerLogo' ? 'text-indigo-500' : ''}`}>
+              <label className={`block ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Partner Logo
               </label>
               <input

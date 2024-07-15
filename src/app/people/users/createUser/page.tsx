@@ -40,7 +40,7 @@ const CreateUser: React.FC = () => {
         </button>
         
       </div>
-        <div className="shadow-md p-6 mt-[60px]">
+        <div className="shadow-md p-6 ">
           {activeTab === 'userInfo' && <UserInfo />}
           {activeTab ===  'tenantInfo' && <TenantInfo />}
           {activeTab ===  'userrole' && <UserRole />}

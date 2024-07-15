@@ -65,6 +65,7 @@ const sim_management: React.FC = () => {
    const searchPlaceholder = "Search"
    const [filteredData, setFilteredData] = useState([]); 
    const handleFilter = (advancedFilters: any) => {
+     console.log(advancedFilters)
      setFilteredData(advancedFilters);
    };
    return (

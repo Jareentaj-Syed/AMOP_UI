@@ -95,7 +95,7 @@ const CarrierInfo: React.FC = () => {
 
   return (
     <div className='p-1'>
-      <div className="mb-6 mt-4">
+      <div className="mb-6">
         <div className="mb-4 flex items-center justify-between">
           <div>
             <label className="block text-gray-700">
@@ -110,7 +110,7 @@ const CarrierInfo: React.FC = () => {
                 control: (base: any, state: { isFocused: any; }) => ({
                   ...base,
                   minWidth: '200px',
-                  marginTop: '5px',
+                  marginTop: '4px',
                   height: '2.4rem',
                   borderRadius: '0.375rem',
                   borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
@@ -133,7 +133,8 @@ const CarrierInfo: React.FC = () => {
                 allowedActions={["edit"]}        
                 popupHeading='Carrier'  
                 infoColumns={[]}  
-                editColumns={[]}        
+                editColumns={[]}  
+                advancedFilters={[]}        
                  />
           )}
         </div>

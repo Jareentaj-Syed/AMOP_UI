@@ -10,6 +10,7 @@ import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-his
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
 import { Modal, Checkbox } from 'antd'
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
+import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
 interface TableComponentProps {
   headers: string[];
   initialData: { [key: string]: any }[];
@@ -23,7 +24,7 @@ interface TableComponentProps {
   editColumns:any[]
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions,popupHeading,  infoColumns,editColumns }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions,popupHeading,  infoColumns,editColumns,  advancedFilters }) => {
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -40,11 +41,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
-      // Select all rows
       const allRowIndices = paginatedData.map((_, index) => index);
       setSelectedRows(allRowIndices);
     } else {
-      // Deselect all rows
       setSelectedRows([]);
     }
   };
@@ -70,6 +69,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     // Filter row data based on search query
+ 
     const filteredData = initialData.filter(row =>
       Object.values(row).some(value =>
         typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
@@ -186,6 +186,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     Deactivated: '#E95463', // Light Red
     // Add more statuses and colors as needed
   };
+
+ 
+  console.log(advancedFilters)
 
   return (
     <div className="relative max-h-96">
