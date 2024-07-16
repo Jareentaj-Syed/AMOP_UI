@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import EditModal from '../../components/editPopup';
@@ -12,6 +13,8 @@ import { Modal, Checkbox } from 'antd';
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+import { useRouter } from 'next/navigation';
 
 
 interface TableComponentProps {
@@ -41,9 +44,21 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
-  
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!router) {
+      console.error('NextRouter is not available.');
+    }
+  }, [router]);
+
   const handleActionSingleClick = () => {
-    // Replace '/new-url' with the desired URL
+    if (router) {
+      router.push('/super_admin/partner_users/user_role');
+    } else {
+      console.error('NextRouter is not available.');
+    }
   };
   const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setSelectAll(e.target.checked);
