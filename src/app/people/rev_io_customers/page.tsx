@@ -74,8 +74,8 @@ const createColumns=createModalData
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex items-center justify-between mt-1 mb-8">
+    <div className="container mx-auto">
+      <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
         <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <ColumnFilter

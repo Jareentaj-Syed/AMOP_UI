@@ -31,7 +31,6 @@ export default function RootLayout({
           </div>
           <div
             className={`flex-1 overflow-y-auto overflow-x-hidden children ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}
-            style={{ maxHeight: '100vh' }}
           >
             {children}
           </div>

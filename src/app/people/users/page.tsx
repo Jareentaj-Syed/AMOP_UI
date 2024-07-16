@@ -9,9 +9,9 @@ const Page: React.FC = () => {
   const router = useRouter();
  
   return (
-    <div className="container mx-auto p-2">
+    <div className="container mx-auto">
       <div className="flex-1 flex flex-col">
-        <main className="p-2 flex">
+        <main className="flex">
           {/* <ChartsPage /> */}
         
         

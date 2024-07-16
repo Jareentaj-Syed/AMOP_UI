@@ -18,7 +18,7 @@ const CreateUser: React.FC = () => {
 
 
   return (
-    <div className="pt-2">
+    <div className="">
       <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
           className={`p-4 ${activeTab === 'userInfo' ? 'active-tab' : 'inactive-tab'}`}
@@ -40,7 +40,7 @@ const CreateUser: React.FC = () => {
         </button>
         
       </div>
-        <div className="shadow-md p-6 ">
+        <div className="shadow-md p-6 mt-8">
           {activeTab === 'userInfo' && <UserInfo />}
           {activeTab ===  'tenantInfo' && <TenantInfo />}
           {activeTab ===  'userrole' && <UserRole />}

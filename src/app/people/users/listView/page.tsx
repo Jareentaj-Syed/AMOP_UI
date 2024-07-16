@@ -66,9 +66,18 @@ const ListView: React.FC = () => {
   const headers = visibleColumns;
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       <div className="flex items-center justify-between">
         <ChartsPage />
+      </div>
+
+      <div className="p-4 flex items-center justify-between mt-2 mb-2">
+        <div className="flex space-x-4">
+          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+        </div>
+
+        <div className="flex space-x-4">
         <button
           className="save-btn"
           onClick={handleCreateClick} // Placeholder for create button action
@@ -76,15 +85,6 @@ const ListView: React.FC = () => {
           <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
           Create New User
         </button>
-      </div>
-
-      <div className="flex items-center justify-between mt-6 mb-4">
-        <div className="flex space-x-4">
-          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-        </div>
-
-        <div className="flex space-x-4">
           <button className="save-btn">
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
