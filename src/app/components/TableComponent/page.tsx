@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import EditModal from '../../components/editPopup';
@@ -11,6 +10,9 @@ import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-prov
 import { Modal, Checkbox } from 'antd'
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+
 interface TableComponentProps {
   headers: string[];
   initialData: { [key: string]: any }[];
@@ -18,13 +20,13 @@ interface TableComponentProps {
   visibleColumns: string[];
   itemsPerPage: number;
   allowedActions: ('edit' | 'delete' | 'info' | 'Actions')[];
-  popupHeading:string;
-  advancedFilters?:any
-  infoColumns:any []
-  editColumns:any[]
+  popupHeading: string;
+  advancedFilters?: any
+  infoColumns: any[]
+  editColumns: any[]
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions,popupHeading,  infoColumns,editColumns,  advancedFilters }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters }) => {
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -33,10 +35,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
-
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
-
+  const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
 
   const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setSelectAll(e.target.checked);
@@ -61,7 +62,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setSelectedRows(newSelectedRows);
   };
 
-
   useEffect(() => {
     setRowData(initialData);
     console.log(initialData)
@@ -69,7 +69,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     // Filter row data based on search query
- 
     const filteredData = initialData.filter(row =>
       Object.values(row).some(value =>
         typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
@@ -178,6 +177,26 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     return <span className={`${textColorClass}`}>{status}</span>;
   };
 
+  const handleSort = (key: string) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+
+    const sortedData = [...rowData].sort((a, b) => {
+      if (a[key] < b[key]) {
+        return direction === 'ascending' ? -1 : 1;
+      }
+      if (a[key] > b[key]) {
+        return direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+
+    setSortConfig({ key, direction });
+    setRowData(sortedData);
+  };
+
   // Calculate pagination
   const totalPages = Math.ceil(rowData.length / itemsPerPage);
   const paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -187,7 +206,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     // Add more statuses and colors as needed
   };
 
- 
   console.log(advancedFilters)
 
   return (
@@ -201,8 +219,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                   onChange={handleSelectAllChange}
                   checked={selectAll}
                   indeterminate={
-                    selectedRows.length > 0 &&
-                    selectedRows.length < paginatedData.length
+                    selectedRows.length > 0 && selectedRows.length < paginatedData.length
                   }
                   style={{ fontSize: '2rem' }}
                 />
@@ -211,15 +228,25 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 <th
                   key={index}
                   className="px-6 border-b border-gray-300 text-left font-semibold table-header"
+                  onClick={() => handleSort(header)}
+                  style={{ cursor: 'pointer' }}
                 >
                   {formatColumnName(header)}
+                  {sortConfig && sortConfig.key === header ? (
+                    sortConfig.direction === 'ascending' ? (
+                      <ArrowUpOutlined style={{ marginLeft: 8 }} />
+                    ) : (
+                      <ArrowDownOutlined style={{ marginLeft: 8 }} />
+                    )
+                  ) : (
+                    <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
+                  )}
                 </th>
               ))}
-              <th className="px-6 border-b border-gray-300 text-left font-semibold">
-                Actions
-              </th>
+              <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {paginatedData.map((row, index) => (
               <tr
@@ -232,8 +259,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     checked={selectedRows.map(String).includes(String(index))}
                     style={{ fontSize: '2rem' }}
                   />
-
-
                 </td>
                 {headers.map((header, columnIndex) => (
                   <td
@@ -302,14 +327,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         }
                       />
                     )}
-                      {allowedActions.includes("Actions") && (
-                       <ActionItems
-                       initialData={initialData}
-                       currentPage={currentPage}
-                       itemsPerPage={itemsPerPage}
-                       index={index}
-                       handleActionClick={handleActionClick}
-                     />
+                    {allowedActions.includes("Actions") && (
+                      <ActionItems
+                        initialData={initialData}
+                        currentPage={currentPage}
+                        itemsPerPage={itemsPerPage}
+                        index={index}
+                        handleActionClick={handleActionClick}
+                      />
                     )}
                   </div>
                 </td>
@@ -318,16 +343,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           </tbody>
         </table>
       </div>
-
-
       <div className="flex justify-center mt-5">
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
-
       <EditModal
-       infoColumns={infoColumns}
-       editColumns={headers}
-      
+        infoColumns={infoColumns}
+        editColumns={headers}
         isOpen={editModalOpen}
         isEditable={isEditable}
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
@@ -335,8 +356,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onClose={handleCloseModal}
         heading={popupHeading}
       />
-
-<Modal
+      <Modal
         title="Confirm Deletion"
         open={deleteModalOpen}
         onOk={confirmDelete}
@@ -344,10 +364,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       >
         <p>Do you want to delete this row?</p>
       </Modal>
-
     </div>
   );
 };
 
 export default TableComponent;
-
