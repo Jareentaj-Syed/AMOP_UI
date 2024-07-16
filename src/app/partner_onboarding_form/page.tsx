@@ -24,9 +24,9 @@ const PartnerOnboardingForm: React.FC = () => {
 
   return (
     <div className="">
-      <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
+      <div className={`bg-white shadow-md mb-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
-          className={`p-4 ${activeTab === 'partnerInfo' ? 'active-tab' : 'inactive-tab'}`}
+          className={`tab-headings ${activeTab === 'partnerInfo' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('partnerInfo')}
         >
           Partner info
@@ -44,7 +44,7 @@ const PartnerOnboardingForm: React.FC = () => {
           Amop API info
         </button> */}
         <button 
-          className={`p-4 ${activeTab === 'partnerRegistration' ? 'active-tab' : 'inactive-tab'}`}
+          className={`tab-headings ${activeTab === 'partnerRegistration' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('partnerRegistration')}
         >
             Partner Registration

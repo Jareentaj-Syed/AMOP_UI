@@ -13,39 +13,47 @@
   border-bottom: 1px solid #aea6a66e;
 }
 
-.active-tab {
-    font-weight: 500;
-    font-size: 18px;
-
-    color: black;
-    border-bottom: 2px solid #3B82F6 ;
+.active-tab-heading {
+  border-bottom: 2px solid #3B82F6;
+  font-size: 600;
 }
 
-
-.inactive-tab {
+.tab-headings {
   font-weight: 500;
   font-size: 18px;
+  height: 100%;
+  width: auto;
+  padding: 16px;
+  cursor: pointer;
+  align-items: center;
 }
 
-/* .button {
-    background-color: #3B82F6;
-    min-width: 115px;
-    color: white
+.tab-headings:hover {
+  background-color: #F3F4F6;
 }
-
-.button:hover {
-    background-color: #dfeaf8;
-    color: black;
-    font-weight: 500;
-} */
 
 .tabs {
-    position: fixed;
-    right: 0px;
-    top: 70px;
-    height: 60px;
-    z-index: 99;
-    display:flex;
+  position: fixed;
+  right: 0px;
+  top: 70px;
+  height: 60px;
+  z-index: 99;
+  display: flex;
+  color: black;
+  background-color: white;
+  align-items: left;
+}
+
+.tabs-sub-headings {
+  color: #3B82F6;
+  background-color: #E5E7EB;
+  font-weight: 600;
+  padding: 4px;
+  padding-left: 16px;
+  margin-bottom: 8px;
+  text-align: left;
+  font-size: 18px;
+
 }
 
 .header {
@@ -54,17 +62,19 @@
 }
 
 .navbar {
-    color: black;
-    font-weight: 500;
-    height: calc(100vh - 70px);
-    position: fixed;
-    background-color: white;
-    width: 17%;
-    z-index: 999;
-    overflow-y: auto;
+  color: black;
+  font-weight: 500;
+  height: calc(100vh - 70px);
+  position: fixed;
+  background-color: white;
+  width: 17%;
+  z-index: 999;
+  overflow-y: auto;
 }
+
 .navbar::-webkit-scrollbar {
-  display: none; /* For Chrome, Safari, and Opera */
+  display: none;
+  /* For Chrome, Safari, and Opera */
 }
 
 
@@ -125,7 +135,7 @@
 
 .input {
   width: 100%;
-  padding:8px;
+  padding: 8px;
   border: 1px solid #d1d5db;
   border-radius: 0.25rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;

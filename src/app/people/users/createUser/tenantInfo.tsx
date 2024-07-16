@@ -297,7 +297,7 @@ const TenantInfo: React.FC = () => {
     return (
         <div className='mt-4'>
             <div>
-                <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Tenant Info</h3>
+                <h3 className="tabs-sub-headings">Tenant Info</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <label className="block text-gray-700">Partner</label>

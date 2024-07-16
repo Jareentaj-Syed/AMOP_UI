@@ -77,7 +77,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         
         <form onSubmit={handleSubmit}>
         
-          <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Partner Registration</h3>
+          <h3 className="tabs-sub-headings">Partner Registration</h3>
           <div className="grid grid-cols-2 gap-4 mb-6">
             {/* <div>
               <label className={`block text-gray-700 ${activeElement === 'userName' ? 'text-indigo-500' : ''}`}>

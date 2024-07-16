@@ -361,7 +361,7 @@ const UserRole: React.FC = () => {
                     )}
                 </div>
             </div>
-            <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Module Info</h3>
+            <h3 className="tabs-sub-headings">Module Info</h3>
             <div className="grid grid-cols-1 gap-4 mb-6">
                 {Object.keys(data).map((category) => (
                     <div key={category} className="col-span-1">

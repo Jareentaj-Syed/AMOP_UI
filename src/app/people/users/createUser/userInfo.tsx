@@ -119,7 +119,7 @@ const UserInfo: React.FC = () => {
 
   return (
     <div className='bg-gray-50 p-4'>
-      <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Basic Information</h3>
+      <h3 className="tabs-sub-headings">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
           <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
@@ -221,7 +221,7 @@ const UserInfo: React.FC = () => {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 py-2">Additional Information</h3>
+        <h3 className="tabs-sub-headings">Additional Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
             <label className="block text-gray-700">Notification enable</label>

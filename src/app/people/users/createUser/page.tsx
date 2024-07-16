@@ -21,19 +21,19 @@ const CreateUser: React.FC = () => {
     <div className="">
       <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
-          className={`p-4 ${activeTab === 'userInfo' ? 'active-tab' : 'inactive-tab'}`}
+          className={`tab-headings ${activeTab === 'userInfo' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('userInfo')}
         >
           User info
         </button>
         <button 
-          className={`p-4 ${activeTab === 'userrole' ? 'active-tab' : 'inactive-tab'}`}
+          className={`tab-headings ${activeTab === 'userrole' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('userrole')}
         >
           User role
         </button>
         <button 
-          className={`p-4 ml-4 ${activeTab === 'tenantInfo' ? 'active-tab' : 'inactive-tab'}`}
+          className={`tab-headings ${activeTab === 'tenantInfo' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('tenantInfo')}
         >
           Tenant info

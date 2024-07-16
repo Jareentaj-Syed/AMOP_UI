@@ -20,13 +20,13 @@ const PartnerInfoForm: React.FC = () => {
         <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
          
           <button 
-            className={`p-4 ${activeTab === 'carrierInfo' ? 'active-tab' : 'inactive-tab'}`}
+            className={`tab-headings ${activeTab === 'carrierInfo' ? 'active-tab-heading' : ''}`}
             onClick={() => setActiveTab('carrierInfo')}
           >
             Carrier info
           </button>
           <button 
-            className={`p-4 ${activeTab === 'apiInfo' ? 'active-tab' : 'inactive-tab'}`}
+            className={`tab-headings ${activeTab === 'apiInfo' ? 'active-tab-heading' : ''}`}
             onClick={() => setActiveTab('apiInfo')}
           >
             Amop API info
