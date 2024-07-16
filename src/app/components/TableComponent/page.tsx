@@ -7,7 +7,8 @@ import EditUsernameCellRenderer from './data-grid-cell-renderers/edit-username-c
 import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-renderer';
 import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
-import { Modal, Checkbox } from 'antd'
+import { Modal, Checkbox } from 'antd';
+
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
@@ -19,7 +20,7 @@ interface TableComponentProps {
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
-  allowedActions: ('edit' | 'delete' | 'info' | 'Actions')[];
+  allowedActions: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick')[];
   popupHeading: string;
   advancedFilters?: any
   infoColumns: any[]
@@ -35,10 +36,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
+  const [EnableModalOpen, setEnableModalOpen] = useState(false); // State for Enable Modal
+  const [DisableModalOpen, setDisableModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
-
+  
+  const handleActionSingleClick = () => {
+    // Replace '/new-url' with the desired URL
+  };
   const handleSelectAllChange = (e: { target: { checked: boolean | ((prevState: boolean) => boolean); }; }) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
@@ -142,8 +148,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
     }));
+    if (updatedData[rowIndex].API_state  === 'enable') {
+      setEnableModalOpen(true);
+    } else {
+      setDisableModalOpen(true);
+    }
   };
-
+  const confirmSubmit = () => {
+    setEnableModalOpen(false);
+    setDisableModalOpen(false);
+  };
   const renderApiState = (apiState: string, index: number) => {
     return (
       <div className="flex items-center space-x-2">
@@ -336,6 +350,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         handleActionClick={handleActionClick}
                       />
                     )}
+                     {allowedActions.includes("SingleClick") && (
+                      <PencilIcon
+                        className="h-5 w-5 text-blue-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionSingleClick()
+                        }
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
@@ -364,6 +386,25 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       >
         <p>Do you want to delete this row?</p>
       </Modal>
+      <Modal
+        title={<span style={{  fontWeight: 'bold' , fontSize:'16px' }}>Confirm Enable</span>}
+        open={EnableModalOpen}
+        onOk={confirmSubmit}
+        onCancel={() => setEnableModalOpen(false)}
+        centered
+      >
+        <p>Do you want to <strong>Enable</strong> this API State?</p>
+      </Modal>
+      <Modal
+        title={<span style={{  fontWeight: 'bold' , fontSize:'16px' }}>Confirm Disable</span>}
+        open={DisableModalOpen}
+        onOk={confirmSubmit}
+        onCancel={() => setDisableModalOpen(false)}
+        centered
+      >
+        <p>Do you want to <strong>Disable</strong> this API State?</p>
+      </Modal>
+
     </div>
   );
 };

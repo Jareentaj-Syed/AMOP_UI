@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import * as XLSX from 'xlsx';
-import TableComponent from '../components/TableComponent/page';
-import { TrashIcon, PencilIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
-import SearchInput from '../components/Search-Input';
+import TableComponent from '../../components/TableComponent/page';
+import SearchInput from '../../components/Search-Input';
 
 interface ExcelData {
   [key: string]: any;
@@ -63,7 +62,7 @@ const CarrierInfo: React.FC = () => {
     };
 
     const fetchData = async () => {
-      const { filledData } = await fetchExcelData('/carrier_info.xlsx');
+      const { filledData } = await fetchExcelData('/api_info.xlsx');
       setCarrierData(filledData);
       setOriginalCarrierData([...filledData]);
       const initialApiState: { [key: number]: string } = {};
@@ -101,7 +100,6 @@ const CarrierInfo: React.FC = () => {
             <label className="block text-gray-700">
               Environment
             </label>
-
             <Select
               value={environment}
               onChange={(selectedOption) => setEnvironment(selectedOption)}
@@ -110,7 +108,7 @@ const CarrierInfo: React.FC = () => {
                 control: (base: any, state: { isFocused: any; }) => ({
                   ...base,
                   minWidth: '200px',
-                  marginTop: '4px',
+                  marginTop: '5px',
                   height: '2.4rem',
                   borderRadius: '0.375rem',
                   borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
@@ -130,12 +128,12 @@ const CarrierInfo: React.FC = () => {
                 searchQuery={searchTerm}
                 visibleColumns={columnNames} 
                 itemsPerPage={10}
-                allowedActions={["edit"]}        
-                popupHeading='Carrier'  
+                allowedActions={["edit"]}   
+                popupHeading='API'      
                 infoColumns={[]}  
-                editColumns={[]}  
-                advancedFilters={[]}        
-                 />
+                editColumns={[]}
+                advancedFilters={[]}
+              />
           )}
         </div>
       </div>

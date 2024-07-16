@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '../stores/logoStore';
 import EmailModal from './EmailModal';
+import { Modal } from 'antd';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -10,7 +11,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [logoError, setLogoError] = useState<string | null>(null);
   const [activeElement, setActiveElement] = useState<string | null>(null);
   const [formValid, setFormValid] = useState<boolean>(false);
-
+  const [SubmitModalOpen, setSubmitModalOpen] = useState(false);
   const [partnerName, setPartnerName] = useState<string>('');
   const [subPartnerName, setSubPartnerName] = useState<string>('');
   const [emailList, setEmailList] = useState<string[]>([]);
@@ -26,6 +27,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       emailList.length > 0
     ) {
       setFormValid(true);
+      
     } else {
       setFormValid(false);
     }
@@ -34,24 +36,22 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const file = logoFileRef.current?.files?.[0];
+    
     if (file) {
       const validTypes = ['image/png', 'image/jpeg'];
       if (!validTypes.includes(file.type)) {
         setLogoError('Only .png and .jpg files are allowed.');
-        return;
       } else {
         const reader = new FileReader();
         reader.onload = () => {
           const logoUrl = reader.result as string;
           setLogoUrl(logoUrl);
-          console.log('Form submitted');
-          onSubmit();
+          setSubmitModalOpen(true); // Open modal after logo is processed
         };
         reader.readAsDataURL(file);
       }
     } else {
-      console.log('Form submitted without logo');
-      onSubmit();
+      setSubmitModalOpen(true); // Open modal without logo
     }
   };
 
@@ -70,6 +70,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const handleRemoveEmail = (index: number) => {
     const newEmailList = emailList.filter((_, i) => i !== index);
     setEmailList(newEmailList);
+  };
+
+  const confirmSubmit = () => {
+    // Perform submission logic here
+    setSubmitModalOpen(false); 
+    onSubmit()// Close modal after submission
   };
 
   return (
@@ -160,6 +166,15 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         onAddEmail={handleAddEmail}
         onRemoveEmail={handleRemoveEmail}
       />
+      <Modal
+        title={<span style={{  fontWeight: 'bold' , fontSize:'16px' }}>Confirm Submission</span>}
+        open={SubmitModalOpen}
+        onOk={confirmSubmit}
+        onCancel={() => setSubmitModalOpen(false)}
+        centered
+      >
+        <p>Do you want to submit this Partner Info Form?</p>
+      </Modal>
     </div>
   );
 };

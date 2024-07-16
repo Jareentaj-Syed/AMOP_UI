@@ -1,4 +1,4 @@
-import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon } from '@heroicons/react/24/outline'; 
+import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon } from '@heroicons/react/24/outline'; 
 
 export const moduleIconMap = {
   'Partner Onboarding form': ClipboardDocumentCheckIcon,
@@ -7,6 +7,7 @@ export const moduleIconMap = {
   'Optimization': ChartBarIcon,
   'People': UserGroupIcon,
   'Settings': CogIcon,
+  'Super Admin': UserCircleIcon
 };
 
 export const moduleData = [
@@ -55,5 +56,13 @@ export const moduleData = [
       parent_module_name: 'Settings',
       queue_order: 6,
       children: [],
+    },
+    {
+      parent_module_name: 'Super Admin',
+      queue_order: 7,
+      children: [
+        { child_module_name: 'Partner Info', queue_order: 1, sub_children: [] },
+        { child_module_name: 'Partner Users', queue_order: 2, sub_children: [] },
+      ],
     },
   ];

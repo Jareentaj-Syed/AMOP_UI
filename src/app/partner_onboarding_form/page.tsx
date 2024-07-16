@@ -7,8 +7,8 @@ import { useSidebarStore } from '../stores/navBarStore';
 
 // Dynamically import the PartnerInfo, CarrierInfo, and APIInfo components
 const PartnerInfo = dynamic(() => import('./partner_info'));
-const CarrierInfo = dynamic(() => import('./carrier_info'));
-const APIInfo = dynamic(() => import('./api_info'));
+const CarrierInfo = dynamic(() => import('../super_admin/partner_info/carrier_info'));
+const APIInfo = dynamic(() => import('../super_admin/partner_info/api_info'));
 const PartnerRegestration = dynamic(() => import('./partner_registration'));
 
 // const PartnerRegestration = dynamic(() => import('./partner_registration'));
@@ -31,7 +31,7 @@ const PartnerOnboardingForm: React.FC = () => {
         >
           Partner info
         </button>
-        <button 
+        {/* <button 
           className={`p-4 ${activeTab === 'carrierInfo' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('carrierInfo')}
         >
@@ -42,7 +42,7 @@ const PartnerOnboardingForm: React.FC = () => {
           onClick={() => setActiveTab('apiInfo')}
         >
           Amop API info
-        </button>
+        </button> */}
         <button 
           className={`p-4 ${activeTab === 'partnerRegistration' ? 'active-tab' : 'inactive-tab'}`}
           onClick={() => setActiveTab('partnerRegistration')}
@@ -52,8 +52,8 @@ const PartnerOnboardingForm: React.FC = () => {
       </div>
       <div className=" mt-[60px] mt-[60px] h-[calc(100vh-150px)] container">
         {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
-        {activeTab === 'carrierInfo' && <CarrierInfo />}
-        {activeTab === 'apiInfo' && <APIInfo />}
+        {/* {activeTab === 'carrierInfo' && <CarrierInfo />}
+        {activeTab === 'apiInfo' && <APIInfo />} */}
         {activeTab === 'partnerRegistration' && <PartnerRegestration onSubmit={switchToCarrierInfoTab} />}
       </div>
     </div>
