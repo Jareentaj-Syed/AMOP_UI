@@ -322,7 +322,8 @@ const UserRole: React.FC = () => {
                 <div>
                     <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
                     <Select
-                        value={partner}
+                    defaultValue={[options[1]]}
+                        value={options[1]}
                         onChange={handleSetPartner}
                         options={options}
                         styles={{

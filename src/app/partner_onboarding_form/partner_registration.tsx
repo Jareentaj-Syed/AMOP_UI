@@ -114,9 +114,11 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 className={`input ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientId')}
                 onBlur={handleBlur}
-                value={clientId}
+                value={'135791113151719'}
                 onChange={(e) => setClientId(e.target.value)}
+                readOnly
               />
+              {/* value={clientId } */}
             </div>
             <div>
               <label className={`field-label  ${activeElement === 'clientSecret' ? 'text-blue-500' : 'text-gray-700'}`}>
@@ -127,9 +129,11 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 className={`input ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientSecret')}
                 onBlur={handleBlur}
-                value={clientSecret}
+                value={'zyxwvutsrqponmlkjihgfedcba987654'}
                 onChange={(e) => setClientSecret(e.target.value)}
+                readOnly
               />
+                {/* value={clientSecret} */}
             </div>
           </div>
           {/* <div className='flex justify-end space-x-4'>

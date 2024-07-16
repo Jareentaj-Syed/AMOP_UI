@@ -104,9 +104,11 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 className={`input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('partnerName')}
                 onBlur={handleBlur}
-                value={partnerName}
+                value={'Altaworx'}
                 onChange={(e) => setPartnerName(e.target.value)}
+                readOnly
               />
+               {/* value={partnerName} */}
             </div>
             <div>
               <label className={`field-label ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
@@ -117,14 +119,16 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 className={`input ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('subPartnerName')}
                 onBlur={handleBlur}
-                value={subPartnerName}
+                value={'Altantech-AWX'}
                 onChange={(e) => setSubPartnerName(e.target.value)}
+                readOnly
               />
+              {/* value={subPartnerName} */}
             </div>
             <div>
-              <label className={`field-label ${activeElement === 'emailIds' ? 'text-blue-500' : 'text-gray-700'}`}>
-                Email ids
-              </label>
+              <label className={`block  ${activeElement === 'emailIds' ?'text-blue-500' : 'text-gray-700'}`}>
+                Email ids<span className="text-red-500">*</span>
+              </label> 
               <div className="flex items-center">
                 <input
                   type="text"
@@ -134,7 +138,9 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   onBlur={handleBlur}
                   value={emailList.join(', ')}
                   readOnly
+                  required 
                 />
+                
                 <button
                   type="button"
                   className="save-btn email-plus"

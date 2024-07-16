@@ -303,7 +303,7 @@ const TenantInfo: React.FC = () => {
                         <label className="block text-gray-700">Partner</label>
                         <Select
                             
-                            value={{ value: selectedPartner, label: selectedPartner }}
+                            value={Partneroptions[0]}
                             onChange={handlePartnerChange}
                             options={Partneroptions}
                             className="input"
@@ -324,6 +324,7 @@ const TenantInfo: React.FC = () => {
                     <div>
                         <label className="block text-gray-700">Sub Partner</label>
                         <Select
+                        value={subPartnersoptions[0]}
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
                             className="input"
@@ -340,7 +341,7 @@ const TenantInfo: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Carrier</label>
+                        <label className="block text-gray-700">Carrier <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
                             options={Carrieroptions}
@@ -359,7 +360,7 @@ const TenantInfo: React.FC = () => {
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Service Provider</label>
+                        <label className="block text-gray-700">Service Provider <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
                             options={ServiceProviderOptions}
@@ -435,9 +436,9 @@ const TenantInfo: React.FC = () => {
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="save-btn"
+                <button className="save-btn" 
                 >
-                    <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+                    <CheckIcon className="h-5 w-5 text-black-500 mr-2"  />
                     <span>Submit</span>
                 </button>
             </div>

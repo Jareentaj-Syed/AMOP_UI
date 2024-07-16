@@ -45,6 +45,7 @@ const UserInfo: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<SingleValue<OptionType>>(null);
+  const [notification, setNotification]=useState<SingleValue<OptionType>>(null);
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number | null>(null);
@@ -79,6 +80,11 @@ const UserInfo: React.FC = () => {
   const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
     setRole(selectedOption);
   };
+  const handleNotification = (selectedOption: SingleValue<OptionType>) => {
+    console.log('wsdf',selectedOption)
+    setNotification(selectedOption);
+
+  };
 
   const handleSave = () => {
     const errors: string[] = [];
@@ -87,6 +93,7 @@ const UserInfo: React.FC = () => {
     if (!email) errors.push('Email id is required.');
     if (!role) errors.push('Role is required.');
     if (!password) errors.push('Password is required.');
+    if (!notification) errors.push('Notification is required.')
 
     setErrorMessages(errors);
 
@@ -259,9 +266,8 @@ const UserInfo: React.FC = () => {
         <h3 className="tabs-sub-headings">Additional Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-gray-700">Notification enable</label>
+            <label className="block text-gray-700">Notification enable<span className="text-red-500">*</span></label>
             <Select
-
               styles={{
                 control: (base, state) => ({
                   ...base,
@@ -272,8 +278,13 @@ const UserInfo: React.FC = () => {
                   boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
                 }),
               }}
+              value={notification}
               options={Notificationoptions}
+              onChange={handleNotification}
             />
+            {errorMessages.includes('Notification is required.') && (
+            <span className="text-red-600 ml-1">Notification is required.</span>
+          )}
           </div>
           <div>
             <label className="block text-gray-700">Business Name</label>
