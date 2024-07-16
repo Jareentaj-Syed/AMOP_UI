@@ -101,7 +101,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('partnerName')}
                 onBlur={handleBlur}
                 value={partnerName}
@@ -114,7 +114,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('subPartnerName')}
                 onBlur={handleBlur}
                 value={subPartnerName}
@@ -129,7 +129,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 <input
                   type="text"
                   placeholder="Click on + to add email"
-                  className={`input flex-grow focus:border-sky-500 ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
+                  className={`input ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
                   onFocus={() => handleFocus('emailIds')}
                   onBlur={handleBlur}
                   value={emailList.join(', ')}
@@ -150,7 +150,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="file"
-                className={`input focus:border-sky-500 ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
                 accept=".png, .jpg"
                 ref={logoFileRef}
                 onFocus={() => handleFocus('partnerLogo')}

@@ -73,7 +73,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
                       name={label}
                       value={formData[label] || ''}
                       onChange={(e) => handleChange(label, e.target.value)}
-                      className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                      className="input"
                     />
                   )}
                   {type === 'dropdown' && (

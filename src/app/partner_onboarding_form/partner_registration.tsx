@@ -111,7 +111,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientId')}
                 onBlur={handleBlur}
                 value={clientId}
@@ -124,7 +124,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input focus:border-sky-500 ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientSecret')}
                 onBlur={handleBlur}
                 value={clientSecret}

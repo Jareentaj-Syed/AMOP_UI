@@ -134,16 +134,21 @@
 }
 
 .input {
+  color: black;
+  background-color: white;
+  font-size: 16px;
   width: 100%;
   padding: 8px;
   border: 1px solid #d1d5db;
-  border-radius: 0.25rem;
+  border-radius: 4px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  text-align: left;
 }
 
 .input:focus {
   outline: none;
-  border-color: #1640ff;
+  /* sky-500*/
+  border-color: #0EA5E9;
   box-shadow: 0 0 0 1px #1640ff;
 }
 
