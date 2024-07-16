@@ -18,10 +18,10 @@ interface Option {
 
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
-const Notificationoptions = [
-    { value: 'yes', label: 'Yes' },
-    { value: 'no', label: 'No' }
-];
+// const Notificationoptions = [
+//     { value: 'yes', label: 'Yes' },
+//     { value: 'no', label: 'No' }
+// ];
 
 const data: ExcelData = {
     "M2M": {
@@ -390,14 +390,14 @@ const TenantInfo: React.FC = () => {
                                     boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
                                 }),
                             }}
-                            options={Notificationoptions}
+                            options={Customeroptions}
                             onChange={handleNotificationChange} />
                     </div>
                     <div>
                         <label className="block text-gray-700">Customers</label>
                         <Select
                             isMulti
-                            options={notificationValue?.value === 'yes' ? Customeroptions : CustomerGroup2Options}
+                            options={CustomerGroup2Options}
                             className="mt-1"
                             styles={{
                                 control: (base, state) => ({
