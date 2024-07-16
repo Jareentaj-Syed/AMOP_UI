@@ -224,7 +224,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   return (
     <div className="relative max-h-96">
-      <div className="overflow-auto" style={{ maxHeight: "500px", height: "500px" }}>
+      <div className="overflow-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>

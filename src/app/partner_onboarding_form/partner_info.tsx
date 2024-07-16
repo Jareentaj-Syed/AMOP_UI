@@ -126,8 +126,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 />
                 <button
                   type="button"
-                  className="ml-2 p-2 bg-blue-500 text-white rounded-lg"
-                  onClick={() => setIsEmailModalOpen(true)}
+                  className="save-btn email-plus"
+                  onClick={() => setIsEmailModalOpen(true)}                
                 >
                   +
                 </button>
