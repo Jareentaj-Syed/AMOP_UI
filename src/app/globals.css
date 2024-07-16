@@ -16,9 +16,11 @@
 .active-tab {
     font-weight: 500;
     font-size: 18px;
+
     color: black;
     border-bottom: 2px solid #3B82F6 ;
 }
+
 
 .inactive-tab {
     font-weight: 500;
@@ -58,7 +60,12 @@
     background-color: white;
     width: 17%;
     z-index: 999;
+    overflow-y: auto;
 }
+.navbar::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
 
 .nav-link:hover,
 .nav-link-active:hover {
