@@ -4,7 +4,7 @@ import Select, { SingleValue } from 'react-select';
 import countries from '@/app/constants/locationdetails';
 import { Country, State, City } from '@/app/constants/locationdetails';
 import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
-
+import { partnerCarrierData, subPartnersData } from '@/app/constants/partnercarrier';
 type OptionType = {
   value: string;
   label: string;
@@ -28,6 +28,7 @@ const roles = [
   "Super Admin",
   "User"
 ];
+const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 const Roleoptions = roles.map((role, index) => ({
   value: role.toLowerCase().replace(/\s+/g, '-'),
@@ -51,7 +52,22 @@ const UserInfo: React.FC = () => {
   const [selectedCity, setSelectedCity] = useState<number | null>(null);
   const [selectedZipCode, setSelectedZipCode] = useState<string>('');
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
-
+  const [selectedPartner, setSelectedPartner] = useState<string>('');
+  const [subPartners, setSubPartners] = useState<string[]>([]);
+  const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
+  const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
+  const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
+      if (selectedOption) {
+          const partner = selectedOption.value;
+          setSelectedPartner(partner);
+       
+          setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+      } else {
+          setSelectedPartner('');
+         
+          setSubPartners([]);
+      }
+  };
   const options = partners.map(partner => ({
     value: partner.toLowerCase().replace(/\s+/g, '-'),
     label: partner
@@ -118,30 +134,49 @@ const UserInfo: React.FC = () => {
   };
 
   return (
-    <div className='bg-gray-50 p-4'>
-      <h3 className="tabs-sub-headings">Basic Information</h3>
+    <div className='bg-gray-50 pt-6'>
+      <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-2 py-2">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div>
-          <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
-          <Select
-            value={partner}
-            onChange={handleSetPartner}
-            options={options}
-            styles={{
-              control: (base, state) => ({
-                ...base,
-                marginTop: '5px',
-                height: '2.6rem',
-                borderRadius: '0.375rem',
-                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-              }),
-            }}
-          />
-          {errorMessages.includes('Partner is required.') && (
-            <span className="text-red-600 ml-1">Partner is required.</span>
-          )}
-        </div>
+      <div>
+                        <label className="block text-gray-700">Partner</label>
+                        <Select
+                            
+                            value={{ value: selectedPartner, label: selectedPartner }}
+                            onChange={handlePartnerChange}
+                            options={Partneroptions}
+                            className="mt-1"
+                            
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-gray-700">Sub Partner</label>
+                        <Select
+                            isMulti
+                            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+                            className="mt-1"
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                    </div>
         <div>
           <label className="block text-gray-700">First Name</label>
           <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />

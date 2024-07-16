@@ -19,7 +19,7 @@ interface ExcelData {
 }
 
 const data: ExcelData = {
-    "M2M": {
+    "Sim Management": {
         "Module": [
             "Inventory",
             "Bulk Change",
@@ -276,6 +276,7 @@ const UserRole: React.FC = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
+
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
         setSelectedModules({ ...selectedModules, [category]: moduleValues });
