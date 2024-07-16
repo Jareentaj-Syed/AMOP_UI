@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {XMarkIcon} from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 interface EmailModalProps {
   isOpen: boolean;
   emailList: string[];
@@ -25,30 +25,30 @@ const EmailModal: React.FC<EmailModalProps> = ({
   };
 
   return isOpen ? (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 "  style={{ zIndex: 9999 }}>
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 " style={{ zIndex: 9999 }}>
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-      <div className="flex justify-between items-center mb-4">
-  <h2 className="text-xl font-semibold">Manage Emails: </h2>
-  <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
-    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </button>
-</div>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-semibold">Manage Emails: </h2>
+          <button onClick={onClose} className="text-gray-600 hover:text-gray-900">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
         <div className="flex mb-4">
           <input
             type="text"
-            className="input w-full focus:border-sky-500 "
+            className="input h-[40px]"
             value={emailInput}
             onChange={(e) => setEmailInput(e.target.value)}
           />
           <button
             type="button"
-            className="ml-2 mt-1 bg-blue-500 text-white p-2 rounded-lg h-full email-add-btn"
+            className="email-plus save-btn h-[40px]"
             onClick={handleAddEmail}
           >
-            Add
+            +
           </button>
         </div>
         <div className="max-h-40 overflow-y-auto mb-4">
@@ -67,7 +67,7 @@ const EmailModal: React.FC<EmailModalProps> = ({
         </div>
         <button
           type="button"
-          className="w-full bg-gray-300 text-black p-2 rounded-lg"
+          className="w-full bg-gray-300 text-black p-2 rounded-lg hover:bg-gray-400"
           onClick={onClose}
         >
           Close

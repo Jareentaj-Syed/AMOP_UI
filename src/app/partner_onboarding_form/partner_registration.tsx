@@ -106,7 +106,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div> */}
             <div>
-              <label className={`block  ${activeElement === 'clientId' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label  ${activeElement === 'clientId' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Client ID
               </label>
               <input
@@ -119,7 +119,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label className={`block  ${activeElement === 'clientSecret' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label  ${activeElement === 'clientSecret' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Client Secret
               </label>
               <input

@@ -96,7 +96,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label className={`block ${activeElement === 'partnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label ${activeElement === 'partnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Partner Name
               </label>
               <input
@@ -109,7 +109,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label className={`block ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Sub Partner Name
               </label>
               <input
@@ -122,7 +122,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               />
             </div>
             <div>
-              <label className={`block ${activeElement === 'emailIds' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label ${activeElement === 'emailIds' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Email ids
               </label>
               <div className="flex items-center">
@@ -145,7 +145,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </div>
             </div>
             <div>
-              <label className={`block ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className={`field-label ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Partner Logo
               </label>
               <input

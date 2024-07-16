@@ -306,7 +306,7 @@ const TenantInfo: React.FC = () => {
                             value={{ value: selectedPartner, label: selectedPartner }}
                             onChange={handlePartnerChange}
                             options={Partneroptions}
-                            className="mt-1"
+                            className="input"
                             
                             styles={{
                                 control: (base, state) => ({
@@ -326,7 +326,7 @@ const TenantInfo: React.FC = () => {
                         <Select
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            className="mt-1"
+                            className="input"
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
@@ -344,7 +344,7 @@ const TenantInfo: React.FC = () => {
                         <Select
                             isMulti
                             options={Carrieroptions}
-                            className="mt-1"
+                            className="input"
                             isDisabled={!selectedPartner}
                             styles={{
                                 control: (base, state) => ({
@@ -363,7 +363,7 @@ const TenantInfo: React.FC = () => {
                         <Select
                             isMulti
                             options={ServiceProviderOptions}
-                            className="mt-1"
+                            className="input"
                             styles={{
                                 control: (base, state) => ({
                                     ...base,
@@ -380,16 +380,7 @@ const TenantInfo: React.FC = () => {
                         <label className="block text-gray-700">Customer Group</label>
                         <Select
 
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    height: '2.6rem',
-                                    marginTop: '5px',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            className='input'
                             options={Customeroptions}
                             onChange={handleNotificationChange} />
                     </div>
@@ -398,17 +389,7 @@ const TenantInfo: React.FC = () => {
                         <Select
                             isMulti
                             options={CustomerGroup2Options}
-                            className="mt-1"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    height: '2.6rem',
-                                    marginTop: '5px',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            className="input"
                         />
                     </div>
                 </div>

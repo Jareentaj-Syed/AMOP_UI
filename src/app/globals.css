@@ -16,6 +16,7 @@
 .active-tab-heading {
   border-bottom: 2px solid #3B82F6;
   font-size: 600;
+  font-family: 'Calibri';
 }
 
 .tab-headings {
@@ -26,6 +27,8 @@
   padding: 16px;
   cursor: pointer;
   align-items: center;
+  font-family: 'Calibri';
+
 }
 
 .tab-headings:hover {
@@ -42,6 +45,7 @@
   color: black;
   background-color: white;
   align-items: left;
+  font-family: 'Calibri';
 }
 
 .tabs-sub-headings {
@@ -151,7 +155,12 @@
   border-color: #0EA5E9;
   box-shadow: 0 0 0 1px #1640ff;
 }
-
+.field-label{
+  /* color: #374151; */
+  margin-bottom: 4px;
+  margin-left: 2px;
+  display: block;
+}
 .children {
   width: 100%;
 }
