@@ -148,6 +148,9 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
 }
+.input:hover{
+  border-color: #3B82F6;
+}
 
 .input:focus {
   outline: none;
@@ -189,23 +192,25 @@
   width: 150px;
   height: 65px;
 }
-
-.listview-table {}
-
-.editPopup {
-  position: absolute;
-  top: 100px;
-  bottom: 100px;
+.popup{
+  background-color: white;
+  padding: 8px;
   overflow: auto;
+  height: 100%;
 }
-
-.createPopup {
-  position: absolute;
-  top: 100px;
-  bottom: 100px;
-  overflow: auto;
+.popup-heading{
+  color: black;
+  font-weight: 500;
+  font-size: 17px;
+  text-align: left;
 }
-
+.confirm-popup-heading{
+  color: black;
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 4px;
+  text-align: left;
+}
 .createPopup-height {
   max-height: 85%;
 }

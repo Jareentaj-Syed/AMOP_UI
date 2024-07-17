@@ -105,12 +105,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <label className={`field-label ${activeElement === 'partnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className="field-label">
                 Partner Name
               </label>
               <input
                 type="text"
-                className={`non-editable-input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
+                className="non-editable-input"
                 onFocus={() => handleFocus('partnerName')}
                 onBlur={handleBlur}
                 value={'Altaworx'}
@@ -120,12 +120,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                {/* value={partnerName} */}
             </div>
             <div>
-              <label className={`field-label ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className="field-label">
                 Sub Partner Name
               </label>
               <input
                 type="text"
-                className={`non-editable-input ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
+                className="non-editable-input"
                 onFocus={() => handleFocus('subPartnerName')}
                 onBlur={handleBlur}
                 value={'Altantech-AWX'}
@@ -135,14 +135,14 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               {/* value={subPartnerName} */}
             </div>
             <div>
-              <label className={`block  ${activeElement === 'emailIds' ?'text-blue-500' : 'text-gray-700'}`}>
+              <label className="field-label">
                 Email ids<span className="text-red-500">*</span>
               </label> 
               <div className="flex items-center">
                 <input
                   type="text"
                   placeholder="Click on + to add email"
-                  className={`input ${activeElement === 'emailIds' ? 'border-sky-500' : ''}`}
+                  className="input"
                   onFocus={() => handleFocus('emailIds')}
                   onBlur={handleBlur}
                   value={emailList.join(', ')}
@@ -160,12 +160,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </div>
             </div>
             <div>
-              <label className={`field-label ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
+              <label className="field-label">
                 Partner Logo
               </label>
               <input
                 type="file"
-                className={`input ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
+                className="input p-1"
                 accept=".png, .jpg"
                 ref={logoFileRef}
                 onFocus={() => handleFocus('partnerLogo')}
@@ -176,9 +176,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
           </div>
           <div className="flex justify-end space-x-4">
             <button
-              className={`${formValid ? 'save-btn' : 'cancel-btn'}`}
+              className='save-btn'
               type="submit"
-              disabled={!formValid}
             >
               Submit
             </button>

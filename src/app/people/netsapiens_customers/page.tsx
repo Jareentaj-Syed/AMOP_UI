@@ -108,7 +108,7 @@ const NetSapiensCustomers: React.FC = () => {
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
         itemsPerPage={10}
-        allowedActions={["info"]}
+        allowedActions={["info","edit"]}
         popupHeading='Customer'    
         infoColumns={createColumns}  
         editColumns={createColumns}          
