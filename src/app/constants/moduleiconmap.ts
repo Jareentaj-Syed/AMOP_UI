@@ -1,7 +1,7 @@
 import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon } from '@heroicons/react/24/outline'; 
 
 export const moduleIconMap = {
-  'Partner Onboarding form': ClipboardDocumentCheckIcon,
+  'Partner': ClipboardDocumentCheckIcon,
   'SIM Management': WifiIcon,
   'Device Management': DevicePhoneMobileIcon,
   'Optimization': ChartBarIcon,
@@ -12,7 +12,7 @@ export const moduleIconMap = {
 
 export const moduleData = [
     {
-      parent_module_name: 'Partner Onboarding form',
+      parent_module_name: 'Partner',
       queue_order: 1,
       children: [],
     },
