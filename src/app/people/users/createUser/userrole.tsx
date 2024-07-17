@@ -297,10 +297,17 @@ const UserRole: React.FC = () => {
     }));
     const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
         setPartner(selectedOption);
+        if (selectedOption) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Partner is required.'));
+        }
+        
     };
 
     const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
         setRole(selectedOption);
+        if (selectedOption) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
+        }
     };
 
     const handleSubmit = () => {
@@ -327,22 +334,13 @@ const UserRole: React.FC = () => {
         <div className='mt-2'>
             <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+                    <label className='field-label'>Partner<span className="text-red-500">*</span></label>
                     <Select
                     defaultValue={[options[1]]}
                         value={options[1]}
                         onChange={handleSetPartner}
                         options={options}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                marginTop: '5px',
-                                height: '2.6rem',
-                                borderRadius: '0.375rem',
-                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                            }),
-                        }}
+                        className='non-editable-input'
                     />
                     {errorMessages.includes('Partner is required.') && (
                         <span className="text-red-600 ml-1">Partner is required.</span>

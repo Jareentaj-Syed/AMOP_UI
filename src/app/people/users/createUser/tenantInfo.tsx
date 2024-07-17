@@ -1,7 +1,7 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
-import Select from 'react-select';
+import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions, CustomerGroup2Options } from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
@@ -15,6 +15,10 @@ interface Option {
     value: string;
     label: string;
 }
+type OptionType = {
+    value: string;
+    label: string;
+};
 
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
@@ -263,6 +267,9 @@ const TenantInfo: React.FC = () => {
     const [selectedPartner, setSelectedPartner] = useState<string>('');
     const [carriers, setCarriers] = useState<string[]>([]);
     const [subPartners, setSubPartners] = useState<string[]>([]);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
+    const [ServiceProvider,setServiceProvider]  = useState<MultiValue<OptionType>>([]);
     const [notificationValue, setNotificationValue] = useState<Option | null>(null);
     const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
     const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
@@ -293,7 +300,39 @@ const TenantInfo: React.FC = () => {
     const handleNotificationChange = (selectedOption: Option | null) => {
         setNotificationValue(selectedOption);
     };
+    const handleSubmit = () => {
+        const errors: string[] = [];
+        if (CarrierNotification.length === 0) errors.push('Carrier is required.');
+        if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
 
+        setErrorMessages(errors);
+
+        if (errors.length === 0) {
+            console.log('Saving...');
+        }
+        else {
+            scrollToTop()
+          }
+    };
+    const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto'  // Optional: Smooth scroll animation
+        });
+      };
+      const handleCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => { 
+        setCarrierNotification(newValue);
+        if (newValue.length > 0) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
+        }
+    };
+      const serviceProviderCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {        
+
+        setServiceProvider(newValue);
+        if (newValue.length > 0) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
+        }
+    };
     return (
         <div className='mt-4'>
             <div>
@@ -308,16 +347,6 @@ const TenantInfo: React.FC = () => {
                             options={Partneroptions}
                             className="input"
                             
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
                         />
                     </div>
 
@@ -328,36 +357,23 @@ const TenantInfo: React.FC = () => {
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
                             className="input"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            
                         />
                     </div>
                     <div>
                         <label className="block text-gray-700">Carrier <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
+                            value={CarrierNotification}
                             options={Carrieroptions}
                             className="input"
+                            onChange={handleCarrier}
                             isDisabled={!selectedPartner}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                           
                         />
+                        {errorMessages.includes('Carrier is required.') && (
+                        <span className="text-red-600 ml-1">Carrier is required.</span>
+                    )}
                     </div>
                     <div>
                         <label className="block text-gray-700">Service Provider <span className="text-red-500">*</span></label>
@@ -365,17 +381,13 @@ const TenantInfo: React.FC = () => {
                             isMulti
                             options={ServiceProviderOptions}
                             className="input"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            value={ServiceProvider}
+                            onChange={serviceProviderCarrier}
+                           
                         />
+                        {errorMessages.includes('Service Provider is required.') && (
+                        <span className="text-red-600 ml-1">Service Provider is required.</span>
+                    )}
                     </div>
                     <div>
                         <label className="block text-gray-700">Customer Group</label>
@@ -436,7 +448,7 @@ const TenantInfo: React.FC = () => {
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="save-btn" 
+                <button className="save-btn" onClick={handleSubmit}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2"  />
                     <span>Submit</span>

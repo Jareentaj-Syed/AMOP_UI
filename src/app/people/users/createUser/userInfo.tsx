@@ -79,11 +79,16 @@ const UserInfo: React.FC = () => {
   };
   const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
     setRole(selectedOption);
+    if (selectedOption) {
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
+  }
   };
   const handleNotification = (selectedOption: SingleValue<OptionType>) => {
     console.log('wsdf',selectedOption)
     setNotification(selectedOption);
-
+    if (selectedOption) {
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Notification is required.'));
+  }
   };
 
   const handleSave = () => {
@@ -139,6 +144,33 @@ const UserInfo: React.FC = () => {
       behavior: 'auto'  // Optional: Smooth scroll animation
     });
   };
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setUsername(newValue);
+
+    // Remove 'Username is required.' from error messages if the input is not empty
+    if (newValue) {
+        setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Username is required.'));
+    }
+};
+const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const newValue = e.target.value;
+  setPassword(newValue);
+
+  // Remove 'Username is required.' from error messages if the input is not empty
+  if (newValue) {
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Password is required.'));
+  }
+};
+const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const newValue = e.target.value;
+  setEmail(newValue);
+
+  // Remove 'Username is required.' from error messages if the input is not empty
+  if (newValue) {
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Email id is required.'));
+  }
+};
 
   return (
     <div className='bg-gray-50 pt-6'>
@@ -197,7 +229,7 @@ const UserInfo: React.FC = () => {
           <input
             type="text"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleUsernameChange}
             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
           />
           {errorMessages.includes('Username is required.') && (
@@ -209,7 +241,7 @@ const UserInfo: React.FC = () => {
           <input
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailID}
             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
           />
           {errorMessages.includes('Email id is required.') && (
@@ -228,16 +260,7 @@ const UserInfo: React.FC = () => {
             value={role}
             onChange={handlesetRole}
             options={Roleoptions}
-            styles={{
-              control: (base, state) => ({
-                ...base,
-                marginTop: '5px',
-                height: '2.6rem',
-                borderRadius: '0.375rem',
-                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-              }),
-            }}
+            className='input'
           />
           {errorMessages.includes('Role is required.') && (
             <span className="text-red-600 ml-1">Role is required.</span>
@@ -248,7 +271,7 @@ const UserInfo: React.FC = () => {
           <input
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePassword}
             className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
           />
           {errorMessages.includes('Password is required.') && (
