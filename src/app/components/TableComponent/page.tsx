@@ -28,7 +28,7 @@ interface TableComponentProps {
   advancedFilters?: any
   infoColumns: any[]
   editColumns: any[]
-  isSelectRowVisible:boolean
+  isSelectRowVisible?:boolean
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters,isSelectRowVisible= true }) => {

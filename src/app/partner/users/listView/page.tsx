@@ -20,6 +20,39 @@ const ListView: React.FC = () => {
     router.push('partner/users/createUser');
   };
 
+  const infoColumns=[
+    {
+      "label": "UserName",
+      "type": "text",
+      "value": "",
+      "mandatory": "false"
+    },
+    {
+      "label": "Role",
+      "type": "text",
+      "value":"",
+      "mandatory": "true"
+    },
+    {
+      "label": "EmailId",
+      "type": "text",
+      "value": "",
+      "mandatory": "false"
+    },
+    {
+      "label": "Tenant",
+      "type": "text",
+      "value":"",
+      "mandatory": "false"
+    },
+    {
+      "label": "Sub-Tenant",
+      "type": "text",
+      "value":"",
+      "mandatory": "false"
+    }
+  ]
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -102,8 +135,8 @@ const ListView: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["edit", "delete", "info"]}
           popupHeading='User'    
-          infoColumns={[]}  
-          editColumns={[]}          
+          infoColumns={infoColumns}  
+          editColumns={infoColumns}          
 
         />
       </div>

@@ -153,7 +153,6 @@
 
 .input:focus {
   outline: none;
-  /* sky-500*/
   border-color: #0EA5E9;
   box-shadow: 0 0 0 1px #1640ff;
 }
@@ -204,6 +203,7 @@
   padding: 8px;
   overflow: auto;
   height: 100%;
+  color: black;
 }
 .popup-heading{
   color: black;
