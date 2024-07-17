@@ -2,6 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
+import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
 
 type OptionType = {
     value: string;
@@ -269,7 +270,8 @@ const roles = [
     "Super Admin",
     "User"
 ];
-
+const editableDrp=DropdownStyles;
+const nonEditableDrp=NonEditableDropdownStyles;
 const UserRole: React.FC = () => {
     const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
@@ -340,28 +342,20 @@ const UserRole: React.FC = () => {
                         value={options[1]}
                         onChange={handleSetPartner}
                         options={options}
-                        className='non-editable-input'
-                    />
+                        styles={nonEditableDrp}
+                        />
                     {errorMessages.includes('Partner is required.') && (
                         <span className="text-red-600 ml-1">Partner is required.</span>
                     )}
                 </div>
                 <div>
-                    <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
+                    <label className="field-label">Role<span className="text-red-500">*</span></label>
                     <Select
                         value={role}
                         onChange={handlesetRole}
                         options={Roleoptions}
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                marginTop: '5px',
-                                height: '2.6rem',
-                                borderRadius: '0.375rem',
-                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                            }),
-                        }}
+                        styles={nonEditableDrp}
+
                     />
                     {errorMessages.includes('Role is required.') && (
                         <span className="text-red-600 ml-1">Role is required.</span>
@@ -382,7 +376,7 @@ const UserRole: React.FC = () => {
                                     value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                     onChange={(selected) => handleModuleChange(category, selected)}
                                     options={data[category].Module.map(module => ({ value: module, label: module }))}
-                                    className="w-full mt-1"
+                                     styles={editableDrp}
                                 />
                             </div>
                             <div>
@@ -393,7 +387,7 @@ const UserRole: React.FC = () => {
                                     value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
                                     onChange={(selected) => handleFeatureChange(category, selected)}
                                     options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                                    className="w-full mt-1"
+                                     styles={nonEditableDrp}
                                     isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
                                 />
                             </div>

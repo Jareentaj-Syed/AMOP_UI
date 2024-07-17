@@ -2,6 +2,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
+import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions, CustomerGroup2Options } from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
@@ -19,7 +20,8 @@ type OptionType = {
     value: string;
     label: string;
 };
-
+const editableDrp=DropdownStyles;
+const nonEditableDrp=NonEditableDropdownStyles;
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
 // const Notificationoptions = [
@@ -339,34 +341,33 @@ const TenantInfo: React.FC = () => {
                 <h3 className="tabs-sub-headings">Tenant Info</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label className="block text-gray-700">Partner</label>
+                        <label className="field-label">Partner</label>
                         <Select
                             
                             value={Partneroptions[0]}
                             onChange={handlePartnerChange}
                             options={Partneroptions}
-                            className="input"
+                            styles={nonEditableDrp}
                             
                         />
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Sub Partner</label>
+                        <label className="field-label">Sub Partner</label>
                         <Select
                         value={subPartnersoptions[0]}
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            className="input"
-                            
+                            styles={nonEditableDrp}                            
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Carrier <span className="text-red-500">*</span></label>
+                        <label className="field-label">Carrier <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
                             value={CarrierNotification}
                             options={Carrieroptions}
-                            className="input"
+                            styles={selectedPartner?editableDrp:nonEditableDrp}                            
                             onChange={handleCarrier}
                             isDisabled={!selectedPartner}
                            
@@ -376,11 +377,11 @@ const TenantInfo: React.FC = () => {
                     )}
                     </div>
                     <div>
-                        <label className="block text-gray-700">Service Provider <span className="text-red-500">*</span></label>
+                        <label className="field-label">Service Provider <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
                             options={ServiceProviderOptions}
-                            className="input"
+                            styles={editableDrp}                            
                             value={ServiceProvider}
                             onChange={serviceProviderCarrier}
                            
@@ -390,19 +391,19 @@ const TenantInfo: React.FC = () => {
                     )}
                     </div>
                     <div>
-                        <label className="block text-gray-700">Customer Group</label>
+                        <label className="field-label">Customer Group</label>
                         <Select
 
-                            className='input'
+                            styles={editableDrp}
                             options={Customeroptions}
                             onChange={handleNotificationChange} />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Customers</label>
+                        <label className="field-label">Customers</label>
                         <Select
                             isMulti
                             options={CustomerGroup2Options}
-                            className="input"
+                            styles={editableDrp}
                         />
                     </div>
                 </div>
@@ -416,7 +417,7 @@ const TenantInfo: React.FC = () => {
                             <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div>
-                                    <label className="block text-gray-700">Module</label>
+                                    <label className="field-label">Module</label>
                                     <Select
                                         isMulti
                                         closeMenuOnSelect={false}
@@ -427,7 +428,7 @@ const TenantInfo: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-700">Features</label>
+                                    <label className="field-label">Features</label>
                                     <Select
                                         isMulti
                                         closeMenuOnSelect={false}
