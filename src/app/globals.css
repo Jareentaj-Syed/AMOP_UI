@@ -170,35 +170,6 @@
 .non-editable-input:focus{
   outline: none;
 }
-.non-editable-dropdown .react-select__control {
-  color: gray;
-  background-color: #F9FAFB;
-  font-size: 16px;
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #d1d5db;
-  border-radius: 4px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  text-align: left;
-}
-
-.non-editable-dropdown .react-select__single-value {
-  color: gray;
-}
-
-.non-editable-dropdown .react-select__menu {
-  background-color: #F9FAFB;
-}
-
-.non-editable-dropdown .react-select__option {
-  background-color: #F9FAFB;
-  color: black;
-}
-
-.non-editable-dropdown .react-select__option--is-selected {
-  background-color: #e2e8f0;
-}
-
 .field-label{
   /* color: #374151; */
   margin-bottom: 4px;

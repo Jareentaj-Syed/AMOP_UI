@@ -5,6 +5,7 @@ import countries from '@/app/constants/locationdetails';
 import { Country, State, City } from '@/app/constants/locationdetails';
 import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
 import { partnerCarrierData, subPartnersData } from '@/app/constants/partnercarrier';
+import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
 type OptionType = {
   value: string;
   label: string;
@@ -29,7 +30,8 @@ const roles = [
   "User"
 ];
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
-
+const editableDrp=DropdownStyles;
+const nonEditableDrp=NonEditableDropdownStyles;
 const Roleoptions = roles.map((role, index) => ({
   value: role.toLowerCase().replace(/\s+/g, '-'),
   label: role,
@@ -177,24 +179,13 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
       <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-2 py-2">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
       <div>
-                        <label className="block text-gray-700">Partner</label>
+                        <label className="field-label">Partner</label>
                         <Select
                             
                             value={{ value: selectedPartner, label: selectedPartner }}
                             onChange={handlePartnerChange}
-                            options={Partneroptions}
-                            className="mt-1"
-                            
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            options={Partneroptions}                            
+                            styles={editableDrp}
                         />
                     </div>
 
@@ -250,17 +241,18 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
         </div>
         <div>
 
-          <label className="block text-gray-700">Mobile no</label>
+          <label className="field-label">Mobile no</label>
           <input type="text"
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+            className="input" />
         </div>
         <div>
-          <label className="block text-gray-700">Role<span className="text-red-500">*</span></label>
+          <label className="field-label">Role<span className="text-red-500">*</span></label>
           <Select
             value={role}
             onChange={handlesetRole}
             options={Roleoptions}
-            className='input'
+            className=''
+            styles={editableDrp}
           />
           {errorMessages.includes('Role is required.') && (
             <span className="text-red-600 ml-1">Role is required.</span>
