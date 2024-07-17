@@ -94,6 +94,7 @@ const ListView: React.FC = () => {
 
       <div className="">
         <TableComponent
+          isSelectRowVisible={true}
           headers={headers}
           initialData={data}
           searchQuery={searchTerm}
