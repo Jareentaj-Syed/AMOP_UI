@@ -23,7 +23,7 @@ interface TableComponentProps {
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
-  allowedActions: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick')[];
+  allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick')[];
   popupHeading: string;
   advancedFilters?: any
   infoColumns: any[]
@@ -55,7 +55,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const handleActionSingleClick = () => {
     if (router) {
-      router.push('/super_admin/partner_users/user_role');
+      router.push('/super_admin/partner_modules/user_role');
     } else {
       console.error('NextRouter is not available.');
     }
@@ -271,8 +271,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
                   )}
                 </th>
+                
               ))}
-              <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
+                {allowedActions && (
+      <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
+    )}
+  
             </tr>
           </thead>
 
@@ -295,9 +299,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     className="px-6 border-b border-gray-300 table-cell"
                   >
                     {visibleColumns.includes(header) && (
-                      header === "API_state" ? (
+                      header === "API_state" ||  header === "Module state" ? (
                         renderApiState(row[header], index)
-                      ) : header === "User status" ? (
+                      ) : header === "User status " ||  header === "Role status" ? (
                         renderUserStatus(row[header])
                       ) : header === "DateAdded" ||
                         header === "DateActivated" ? (
@@ -321,9 +325,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     )}
                   </td>
                 ))}
+                
                 <td className="px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
-                    {allowedActions.includes("edit") && (
+                    {allowedActions?.includes("edit") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
                         onClick={() =>
@@ -334,7 +339,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         }
                       />
                     )}
-                    {allowedActions.includes("delete") && (
+                    {allowedActions?.includes("delete") && (
                       <TrashIcon
                         className="h-5 w-5 text-red-500 cursor-pointer"
                         onClick={() =>
@@ -345,7 +350,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         }
                       />
                     )}
-                    {allowedActions.includes("info") && (
+                    {allowedActions?.includes("info") && (
                       <InformationCircleIcon
                         className="h-5 w-5 text-green-500 cursor-pointer"
                         onClick={() =>
@@ -356,7 +361,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         }
                       />
                     )}
-                    {allowedActions.includes("Actions") && (
+                    {allowedActions?.includes("Actions") && (
                       <ActionItems
                         initialData={initialData}
                         currentPage={currentPage}
@@ -365,7 +370,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         handleActionClick={handleActionClick}
                       />
                     )}
-                     {allowedActions.includes("SingleClick") && (
+                     {allowedActions?.includes("SingleClick") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
                         onClick={() =>
