@@ -101,7 +101,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
+                className={`non-editable-input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('partnerName')}
                 onBlur={handleBlur}
                 value={'Altaworx'}
