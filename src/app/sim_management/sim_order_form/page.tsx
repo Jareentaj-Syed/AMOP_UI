@@ -105,7 +105,7 @@ const SimOrderForm: React.FC = () => {
                         <Form.Item
                             label={<span className="field-label">Contact Name</span>}
                             name="contactName"
-                            rules={[{ required: true, message: 'Please input your contact name!' }]}
+                            rules={[{ message: 'Please input your contact name!' }]}
                         >
                             <Input className="non-editable-input" placeholder="Contact Name" readOnly />
                         </Form.Item>
@@ -114,7 +114,7 @@ const SimOrderForm: React.FC = () => {
                         <Form.Item
                             label={<span className="field-label">Email</span>}
                             name="email"
-                            rules={[{ required: true, message: 'Please input your email!' }]}
+                            rules={[{ message: 'Please input your email!' }]}
                         >
                             <Input className="non-editable-input" placeholder="Email" readOnly />
                         </Form.Item>
