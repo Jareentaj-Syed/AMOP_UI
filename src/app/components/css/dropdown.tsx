@@ -10,6 +10,9 @@ export const NonEditableDropdownStyles = {
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         textAlign: 'left',
         padding: '2px',
+        '&:hover': {
+        backgroundColor: '#3B82F6'
+        }
     }),
     singleValue: (provided: any) => ({
         ...provided,
@@ -40,11 +43,14 @@ export const DropdownStyles = {
         borderRadius: '4px',
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         textAlign: 'left',
-        padding: '2px'
+        padding: '2px',
+        '&:hover': {
+        borderColor: '#3B82F6'
+        }
     }),
     singleValue: (provided: any) => ({
         ...provided,
-        color: 'gray',
+        color: 'black',
     }),
     // menu: (provided: any) => ({
     //     ...provided,

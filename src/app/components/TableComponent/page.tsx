@@ -365,7 +365,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       </div>
       <EditModal
         infoColumns={infoColumns}
-        editColumns={headers}
+        editColumns={infoColumns}
         isOpen={editModalOpen}
         isEditable={isEditable}
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
