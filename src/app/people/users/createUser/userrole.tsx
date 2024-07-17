@@ -314,8 +314,15 @@ const UserRole: React.FC = () => {
             console.log('Saving...');
         }
         else {
-        }
+            scrollToTop()
+          }
     };
+    const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto'  // Optional: Smooth scroll animation
+        });
+      };
     return (
         <div className='mt-2'>
             <div className="grid grid-cols-2 gap-4 mb-4">

@@ -111,7 +111,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
+                className={`non-editable-input ${activeElement === 'clientId' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientId')}
                 onBlur={handleBlur}
                 value={'135791113151719'}
@@ -126,7 +126,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`input ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
+                className={`non-editable-input ${activeElement === 'clientSecret' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('clientSecret')}
                 onBlur={handleBlur}
                 value={'zyxwvutsrqponmlkjihgfedcba987654'}
