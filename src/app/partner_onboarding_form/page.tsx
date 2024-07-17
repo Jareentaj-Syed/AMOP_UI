@@ -7,8 +7,8 @@ import { useSidebarStore } from '../stores/navBarStore';
 
 // Dynamically import the PartnerInfo, CarrierInfo, and APIInfo components
 const PartnerInfo = dynamic(() => import('./partner_info'));
-const CarrierInfo = dynamic(() => import('../super_admin/partner_info/carrier_info'));
-const APIInfo = dynamic(() => import('../super_admin/partner_info/api_info'));
+const CarrierInfo = dynamic(() => import('../super_admin/partner_api/carrier_info'));
+const APIInfo = dynamic(() => import('../super_admin/partner_api/api_info'));
 const PartnerRegestration = dynamic(() => import('./partner_registration'));
 
 // const PartnerRegestration = dynamic(() => import('./partner_registration'));

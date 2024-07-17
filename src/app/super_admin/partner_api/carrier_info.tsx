@@ -4,10 +4,11 @@ import TableComponent from '../../components/TableComponent/page';
 import { TrashIcon, PencilIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import SearchInput from '../../components/Search-Input';
 import { useEffect, useState } from 'react';
-
+import { partnerCarrierData } from '@/app/constants/partnercarrier';
 interface ExcelData {
   [key: string]: any;
 }
+const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 const CarrierInfo: React.FC = () => {
   const [carrierData, setCarrierData] = useState<ExcelData[]>([]);
@@ -16,6 +17,7 @@ const CarrierInfo: React.FC = () => {
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPartner, setSelectedPartner] = useState<{ value: string; label: string } | null>(null);
   const environmentOptions = [
     { value: 'Sandbox', label: 'Sandbox' },
     { value: 'QA', label: 'QA' },
@@ -79,6 +81,7 @@ const CarrierInfo: React.FC = () => {
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
   };
+ 
 
   const handleOpenEditModal = (index: number) => {
     setEditRowIndex(index);
@@ -96,31 +99,56 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className=''>
       <div className="">
-        <div className="p-4 flex items-center justify-between">
-          <div>
-            <label className="block text-gray-700">
-              Environment
-            </label>
+      <div className="p-4 flex items-center justify-between">
+      <div className="flex space-x-4">
+    <div>
+      <label className="block text-gray-700">
+        Environment<span className="text-red-500">*</span>
+      </label>
+      <Select
+        value={environment}
+        onChange={(selectedOption) => setEnvironment(selectedOption)}
+        options={environmentOptions}
+         
+        styles={{
+          control: (base, state) => ({
+            ...base,
+            minWidth: '250px',
+            marginTop: '4px',
+            height: '2.4rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+      <Select
+        value={selectedPartner}
+        onChange={(selectedOption) => setSelectedPartner(selectedOption)}
+        options={Partneroptions}
+        className="mt-1"
+        styles={{
+          control: (base, state) => ({
+            ...base,
+            minWidth: '250px',
+            marginTop: '4px',
+            height: '2.4rem',
+            borderRadius: '0.375rem',
+            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+          }),
+        }}
+      />
+    </div>
+  </div>
+  <div className="ml-auto mt-4">
+    <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+  </div>
+</div>
 
-            <Select
-              value={environment}
-              onChange={(selectedOption) => setEnvironment(selectedOption)}
-              options={environmentOptions}
-              styles={{
-                control: (base: any, state: { isFocused: any; }) => ({
-                  ...base,
-                  minWidth: '200px',
-                  marginTop: '4px',
-                  height: '2.4rem',
-                  borderRadius: '0.375rem',
-                  borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                  boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                }),
-              }}
-            />
-          </div>
-          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        </div>
 
         <div className="container mx-auto">
           {carrierData.length > 0 && (

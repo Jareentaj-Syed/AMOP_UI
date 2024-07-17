@@ -61,8 +61,9 @@ export const moduleData = [
       parent_module_name: 'Super Admin',
       queue_order: 7,
       children: [
-        { child_module_name: 'Partner Info', queue_order: 1, sub_children: [] },
-        { child_module_name: 'Partner Users', queue_order: 2, sub_children: [] },
+        { child_module_name: 'Partner Creation', queue_order: 1, sub_children: [] },
+        { child_module_name: 'Partner API', queue_order: 2, sub_children: [] },
+        { child_module_name: 'Partner Modules', queue_order: 3, sub_children: [] },
       ],
     },
   ];

@@ -23,13 +23,13 @@ const PartnerInfoForm: React.FC = () => {
             className={`tab-headings ${activeTab === 'carrierInfo' ? 'active-tab-heading' : ''}`}
             onClick={() => setActiveTab('carrierInfo')}
           >
-            Carrier info
+            Carrier API's
           </button>
           <button 
             className={`tab-headings ${activeTab === 'apiInfo' ? 'active-tab-heading' : ''}`}
             onClick={() => setActiveTab('apiInfo')}
           >
-            Amop API info
+            Amop API's
           </button>
          
         </div>

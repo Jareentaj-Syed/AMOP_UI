@@ -1,6 +1,7 @@
+"use client"
 import React, { useState, useEffect, useRef } from 'react';
-import { useLogoStore } from '../stores/logoStore';
-import EmailModal from './EmailModal';
+import { useLogoStore } from '@/app/stores/logoStore';
+import EmailModal from '@/app/partner_onboarding_form/EmailModal';
 import { Modal } from 'antd';
 
 interface PartnerInfo {
@@ -92,15 +93,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   return (
     <div className="p-2">
       <div className="mb-6">
-      <div className="flex items-center mb-4 mt-2">
-    <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
-    Partner
-</a>
-<span className="mx-2 text-gray-500">/</span>
-<span className="text-lg font-light text-black">Partner Info</span>
-
-</div>
-
         <h3 className="tabs-sub-headings">Partner Info</h3>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-6">
@@ -110,14 +102,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`non-editable-input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'partnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('partnerName')}
                 onBlur={handleBlur}
-                value={'Altaworx'}
+                value={partnerName}
                 onChange={(e) => setPartnerName(e.target.value)}
-                readOnly
               />
-               {/* value={partnerName} */}
             </div>
             <div>
               <label className={`field-label ${activeElement === 'subPartnerName' ? 'text-blue-500' : 'text-gray-700'}`}>
@@ -125,19 +115,17 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="text"
-                className={`non-editable-input ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
+                className={`input ${activeElement === 'subPartnerName' ? 'border-sky-500' : ''}`}
                 onFocus={() => handleFocus('subPartnerName')}
                 onBlur={handleBlur}
-                value={'Altantech-AWX'}
+                value={subPartnerName}
                 onChange={(e) => setSubPartnerName(e.target.value)}
-                readOnly
               />
-              {/* value={subPartnerName} */}
             </div>
             <div>
-              <label className={`block  ${activeElement === 'emailIds' ?'text-blue-500' : 'text-gray-700'}`}>
-                Email ids<span className="text-red-500">*</span>
-              </label> 
+              <label className={`field-label ${activeElement === 'emailIds' ? 'text-blue-500' : 'text-gray-700'}`}>
+                Email ids
+              </label>
               <div className="flex items-center">
                 <input
                   type="text"
@@ -147,9 +135,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   onBlur={handleBlur}
                   value={emailList.join(', ')}
                   readOnly
-                  required 
                 />
-                
                 <button
                   type="button"
                   className="save-btn email-plus"
@@ -159,7 +145,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 </button>
               </div>
             </div>
-            <div>
+            {/* <div>
               <label className={`field-label ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
                 Partner Logo
               </label>
@@ -172,7 +158,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 onBlur={handleBlur}
               />
               {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
-            </div>
+            </div> */}
           </div>
           <div className="flex justify-end space-x-4">
             <button
