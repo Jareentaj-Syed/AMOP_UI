@@ -61,23 +61,27 @@ const sim_management: React.FC = () => {
   }, []);
 
   const headers = visibleColumns;
-   const EXPORT = " Export";
-   const searchPlaceholder = "Search"
-   const [filteredData, setFilteredData] = useState([]); 
-   const handleFilter = (advancedFilters: any) => {
-     console.log(advancedFilters)
-     setFilteredData(advancedFilters);
-   };
-   return (
+  const EXPORT = " Export";
+  const searchPlaceholder = "Search"
+  const [filteredData, setFilteredData] = useState([]);
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  return (
     <div>
-     <div className="flex justify-end items-center mt-5 mr-6">
-  <div className="flex space-x-5">
-    <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
-    <button className="flex items-center p-2 save-btn">
-      <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />
-      {EXPORT}
-    </button>
-    {/* <Button
+      <div className="flex justify-end items-center mt-5 mr-6">
+        <div className="flex-1 ml-3">
+          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        </div>
+        <div className="flex items-center space-x-5">
+          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+
+          <button className="flex items-center p-2 save-btn">
+            <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />
+            {EXPORT}
+          </button>
+          {/* <Button
       type="primary"
       className="ml-2"
       icon={<DownloadOutlined />}
@@ -86,30 +90,29 @@ const sim_management: React.FC = () => {
     >
       {EXPORT}
     </Button> */}
-  </div> 
-</div>
+        </div>
+      </div>
 
 
 
-       
+
       <div>
-       
-      <div className="flex justify-between items-center ml-4">
-  <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-  <AdvancedFilter onFilter={handleFilter} />
-</div>
+
+        <div className="">
+          <AdvancedFilter onFilter={handleFilter} />
+        </div>
 
       </div>
       <TableComponent
-         infoColumns={[]}  
-         editColumns={[]}
-         headers={headers}
-         initialData={data}
-         searchQuery={searchTerm}
-         visibleColumns={visibleColumns}
-         itemsPerPage={10}
-         advancedFilters={filteredData}
-         allowedActions={["Actions"]} popupHeading={''}           />
+        infoColumns={[]}
+        editColumns={[]}
+        headers={headers}
+        initialData={data}
+        searchQuery={searchTerm}
+        visibleColumns={visibleColumns}
+        itemsPerPage={10}
+        advancedFilters={filteredData}
+        allowedActions={["Actions"]} popupHeading={''} />
     </div>
   );
 };
