@@ -1,21 +1,25 @@
 "use client"
 import React, { useState } from 'react';
 import { Form, Input, Checkbox, Button, Select, Col, Row } from 'antd';
-import { PlusOutlined, CheckOutlined ,StopOutlined  } from '@ant-design/icons'; // Import the PlusOutlined icon
-
+import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
+import { PlusOutlined, CheckOutlined, StopOutlined, CloseOutlined } from '@ant-design/icons'; // Import the PlusOutlined icon
+import { PlusIcon } from '@heroicons/react/16/solid';
 const { Option } = Select;
 
 const SimOrderForm: React.FC = () => {
-    const [form] = Form.useForm(); 
+    const editableDrp = DropdownStyles;
+    const nonEditableDrp = NonEditableDropdownStyles;
+    const [form] = Form.useForm();
     const [count, setCount] = useState(1);
+    const [blocks, setBlocks] = useState<number[]>([0]);
     const handleAddMore = () => {
+        setBlocks([...blocks, blocks.length]);
         setCount(count + 1);
     };
 
-    const handleRemove = () => {
-        if (count > 1) {
-            setCount(count - 1);
-        }
+    const handleRemove = (index: number) => {
+        setBlocks(blocks.filter((_, i) => i !== index));
+        setCount(count - 1);
     };
     function handleCancel() {
         // Clear form fields and reset validation messages
@@ -90,76 +94,84 @@ const SimOrderForm: React.FC = () => {
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item
-                            label={<span className="bold-label">Company</span>}
+                            label={<span className="field-label">Company</span>}
                             name="company"
                             rules={[{ required: true, message: 'Please input your company name!' }]}
                         >
-                            <Input className="rectangular-input custom-disabled-input" placeholder="Company" readOnly />
+                            <Input className="non-editable-input" placeholder="Company" readOnly />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            label={<span className="bold-label">Contact Name</span>}
+                            label={<span className="field-label">Contact Name</span>}
                             name="contactName"
                             rules={[{ required: true, message: 'Please input your contact name!' }]}
                         >
-                            <Input className="rectangular-input custom-disabled-input" placeholder="Contact Name" readOnly />
+                            <Input className="non-editable-input" placeholder="Contact Name" readOnly />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            label={<span className="bold-label">Email</span>}
+                            label={<span className="field-label">Email</span>}
                             name="email"
                             rules={[{ required: true, message: 'Please input your email!' }]}
                         >
-                            <Input className="rectangular-input custom-disabled-input" placeholder="Email" readOnly />
+                            <Input className="non-editable-input" placeholder="Email" readOnly />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            label={<span className="bold-label">Country</span>}
+                            label={<span className="field-label">Country</span>}
                             name="country"
                             rules={[{ required: true, message: 'Please input your country!' }]}
                         >
-                            <Input className="rectangular-input" placeholder="Country" />
+                            <Input className="input" placeholder="Country" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
-                            label={<span className="bold-label">Shipping Address</span>}
+                            label={<span className="field-label">Shipping Address</span>}
                             name="shippingAddress"
                             rules={[{ required: true, message: 'Please input your shipping address!' }]}
                         >
-                            <Input.TextArea className="rectangular-input" placeholder="Shipping Address" rows={4} />
+                            <Input.TextArea className="text-area" placeholder="Shipping Address" rows={4} />
                         </Form.Item>
                     </Col>
-                    
+
                     <Col span={12}>
-                    <Form.Item
-                            label={<span className="bold-label">Special Instructions</span>}
+                        <Form.Item
+                            label={<span className="field-label">Special Instructions</span>}
                             name="SpecialInstructions"
                         >
-                            <Input.TextArea className="rectangular-input" placeholder="Special Instructions" rows={4} />
+                            <Input.TextArea className="text-area" placeholder="Special Instructions" rows={4} />
                         </Form.Item>
                     </Col>
                     <Col span={24}>
-                    <Form.Item name="expedite" valuePropName="checked">
+                        <Form.Item name="expedite" valuePropName="checked">
                             <Checkbox style={{ width: '50px', height: '50px', fontSize: '20px', lineHeight: '50px' }}>Expedite?</Checkbox>
                         </Form.Item>
-                       
+
                     </Col>
                 </Row>
                 {/* second Block */}
                 <div>
-                    {Array.from({ length: count }, (_, index) => (
+                    {blocks.map((_, index) => (
                         <div className="form-block" key={index}>
+                            {index > 0 && (
+                                <Button
+                                    
+                                    icon={<CloseOutlined />}
+                                    onClick={() => handleRemove(index)}
+                                     className="custom-close-button"
+                                />
+                            )}
                             <Form.Item
-                                label={<span className="bold-label">Carrier</span>}
+                                label={<span className="field-label">Carrier</span>}
                                 name={`carrier${index}`}
                                 rules={[{ required: true, message: 'Please select your carrier!' }]}
 
                             >
-                                <Select defaultValue="Select Carrier" style={{ width: '100%' }}
+                                <Select defaultValue="Select Carrier" className='editableDrp'
                                     onChange={(value: string) => setCarrier(value)} // Set selected carrier
                                 >
                                     {carrierOptions.map(carrier => (
@@ -171,11 +183,11 @@ const SimOrderForm: React.FC = () => {
                             </Form.Item>
 
                             <Form.Item
-                                label={<span className="bold-label">SIM Size</span>}
+                                label={<span className="field-label">SIM Size</span>}
                                 name={`simSize${index}`}
                                 rules={[{ required: true, message: 'Please select your SIM size!' }]}
                             >
-                                <Select placeholder="SIM Size" style={{ width: '100%' }}>
+                                <Select placeholder="SIM Size" className='editableDrp'>
                                     {getSimSizeOptions(carrier).map(size => (
                                         <Option key={size} value={size}>
                                             {size}
@@ -185,45 +197,48 @@ const SimOrderForm: React.FC = () => {
                             </Form.Item>
 
                             <Form.Item
-                                label={<span className="bold-label">Quantity</span>}
+                                label={<span className="field-label">Quantity</span>}
                                 name={`quantity${index}`}
                                 rules={[{ required: true, message: 'Please input the quantity!' }]}
                             >
-                                <Input className="rectangular-input" placeholder="Quantity" type="number" />
+                                <Input className="input" placeholder="Quantity" type="number" />
                             </Form.Item>
                         </div>
                     ))}
 
-                    <div>
+                    
                         <Button
-                            type="primary"
+                            
                             onClick={handleAddMore}
-                            className='buttons'
-                            icon={<PlusOutlined style={{ color: '#00C2F3' }} />}
-                        >
+                            className='save-btn '
+                        >           
+                         <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+
                             Add Additional SIMs?
                         </Button>
-                        <Button type="primary" onClick={handleRemove} danger>
+                        {/* <Button type="primary" onClick={handleRemove} danger>
                             Remove
-                        </Button>
-                    </div>
+                        </Button> */}
+                    
                 </div>
                 <Form.Item>
+                    <div className='button-container'>
                     <Button
-                        type="primary"
+
                         htmlType="submit"
-                        className="save-button"
+                        className="save-btn"
                         icon={<CheckOutlined />}
                     >
                         Save
-                    </Button>     
+                    </Button>
                     <Button
-                    onClick={handleCancel}
-                    className="cancel-button"
-                    icon={<StopOutlined  />}
-                >
-                    Cancel
-                </Button>           
+                        onClick={handleCancel}
+                        className="cancel-btn"
+                        icon={<StopOutlined />}
+                    >
+                        Cancel
+                    </Button>
+                    </div>
                 </Form.Item>
             </Form>
         </div>
