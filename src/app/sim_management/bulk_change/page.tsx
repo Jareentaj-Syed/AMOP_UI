@@ -130,17 +130,75 @@ const BulkChange: React.FC = () => {
                 }
 
                 // Extracting column names from the first row
-                const columnNames = jsonData[0];
+                // const columnNames = jsonData[0];
 
                 // Processing rows excluding the first row (header)
-                const filledData = jsonData.slice(1).map(row => {
-                    const filledRow: any = {};
-                    columnNames.forEach((header: any, index: number) => {
-                        filledRow[header] = row[index] || '';
-                    });
-                    return filledRow;
-                });
+                // const filledData = jsonData.slice(1).map(row => {
+                //     const filledRow: any = {};
+                //     columnNames.forEach((header: any, index: number) => {
+                //         filledRow[header] = row[index] || '';
+                //     });
+                //     return filledRow;
+                // });
 
+                const filledData = [
+                    {
+                        "Service Provider": "AT&T - POD19",
+                        "Change Type": "Update",
+                        "Status": "Completed",
+                        "Uploaded": 45,
+                        "Successfull": 9,
+                        "Errors": 1,
+                        "Processed By": "User5",
+                        "Processed Date": "2024-09-25T14:30:00.000Z",
+                        "Change Details": "Updated DN(s) added"
+                    },
+                    {
+                        "Service Provider": "Verizon",
+                        "Change Type": "Update",
+                        "Status": "Pending",
+                        "Uploaded": 30,
+                        "Successfull": 10,
+                        "Errors": 5,
+                        "Processed By": "User6",
+                        "Processed Date": "2024-09-26T10:20:00.000Z",
+                        "Change Details": "Removed DN(s) failed"
+                    },
+                    {
+                        "Service Provider": "AT&T - POD19",
+                        "Change Type": "Delete",
+                        "Status": "Completed",
+                        "Uploaded": 28,
+                        "Successfull": 20,
+                        "Errors": 0,
+                        "Processed By": "User7",
+                        "Processed Date": "2024-09-27T16:45:00.000Z",
+                        "Change Details": "Updated DN(s) deleted"
+                    },
+                    {
+                        "Service Provider": "Verizon",
+                        "Change Type": "Add",
+                        "Status": "Completed",
+                        "Uploaded": 15,
+                        "Successfull": 28,
+                        "Errors": 2,
+                        "Processed By": "User8",
+                        "Processed Date": "2024-09-28T11:15:00.000Z",
+                        "Change Details": "Added new DN(s)"
+                    }
+                ];
+                const columnNames = [
+                    "Service Provider",
+                    "Change Type",
+                    "Status",
+                    "Uploaded",
+                    "Successfull",
+                    "Errors",
+                    "Processed By",
+                    "Processed Date",
+                    "Change Details"
+                ]
+                
                 setData(filledData);
                 setVisibleColumns(columnNames);
             } catch (error) {
@@ -200,8 +258,10 @@ const BulkChange: React.FC = () => {
                 searchQuery={searchTerm}
                 visibleColumns={visibleColumns}
                 itemsPerPage={10}
+                allowedActions={['info']}
                 advancedFilters={filteredData}
-                allowedActions={["Actions"]} popupHeading={''} />
+                isSelectRowVisible={false}
+                 popupHeading={''} />
         </div>
     );
 };

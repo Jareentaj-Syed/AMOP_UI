@@ -106,13 +106,15 @@ const sim_management: React.FC = () => {
       <TableComponent
         infoColumns={[]}
         editColumns={[]}
+        isSelectRowVisible={false}
         headers={headers}
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         advancedFilters={filteredData}
-        allowedActions={["Actions"]} popupHeading={''} />
+        allowedActions={["Actions"]} 
+        popupHeading={''} />
     </div>
   );
 };

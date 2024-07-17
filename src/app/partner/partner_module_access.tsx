@@ -292,11 +292,11 @@ const UserRole: React.FC = () => {
         if (selectedOption) {
             const partner = selectedOption.value;
             setSelectedPartner(partner);
-           
+
             setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
         } else {
             setSelectedPartner('');
-           
+
             setSubPartners([]);
         }
     };
@@ -339,7 +339,7 @@ const UserRole: React.FC = () => {
         else {
         }
     };
-    const handleDelete = (indexToDelete:any) => {
+    const handleDelete = (indexToDelete: any) => {
         setCount((prevCount) => prevCount - 1);
         // Optionally, you may remove associated state for the deleted item
         // Example: Clear selectedModules and selectedFeatures for the deleted index
@@ -356,14 +356,14 @@ const UserRole: React.FC = () => {
     };
     return (
         <div className=' p-4'>
-  <div className="flex items-center mb-4 mt-2">
-    <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
-    Partner
-</a>
-<span className="mx-2 text-gray-500">/</span>
-<span className="text-lg font-light text-black">Partner Module Access</span>
+            <div className="flex items-center mb-4 mt-2">
+                <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
+                    Partner
+                </a>
+                <span className="mx-2 text-gray-500">/</span>
+                <span className="text-lg font-light text-black">Partner Module Access</span>
 
-</div>
+            </div>
 
 
 
@@ -372,63 +372,63 @@ const UserRole: React.FC = () => {
                 <div>
                     <label className="block text-gray-700">Partner</label>
                     <Select
-                            
-                            value={{ value: selectedPartner, label: selectedPartner }}
-                            onChange={handlePartnerChange}
-                            options={Partneroptions}
-                            className="mt-1"
-                            
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
-                        />
+
+                        value={{ value: selectedPartner, label: selectedPartner }}
+                        onChange={handlePartnerChange}
+                        options={Partneroptions}
+                        className="mt-1"
+
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                marginTop: '5px',
+                                height: '2.6rem',
+                                borderRadius: '0.375rem',
+                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                            }),
+                        }}
+                    />
                     {errorMessages.includes('Partner is required.') && (
                         <span className="text-red-600 ml-1">Partner is required.</span>
                     )}
                 </div>
                 <div>
-                <label className="block text-gray-700">Sub Partner</label>
-                        <Select
-                            isMulti
-                            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            className="mt-1"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
-                        />
-                    
+                    <label className="block text-gray-700">Sub Partner</label>
+                    <Select
+                        isMulti
+                        options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+                        className="mt-1"
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                marginTop: '5px',
+                                height: '2.6rem',
+                                borderRadius: '0.375rem',
+                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                            }),
+                        }}
+                    />
+
                     {errorMessages.includes('Role is required.') && (
                         <span className="text-red-600 ml-1">Sub partner is required.</span>
                     )}
                 </div>
             </div>
             <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 pr-4 py-2 flex justify-between items-center">
-    Module Access
-    {/* <button onClick={handleAddSection} className="text-blue-600 border border-blue-600 rounded-md px-2 py-1">
+                Module Access
+                {/* <button onClick={handleAddSection} className="text-blue-600 border border-blue-600 rounded-md px-2 py-1">
         ADD
     </button> */}
-</h3>
+            </h3>
 
 
 
             {Array.from({ length: count }, (_, index) => (
-               <div key={index} className="relative border border-gray-300 p-4 rounded-md mb-4">
-               {/* Cross mark for deletion */}
-               {/* <button
+                <div key={index} className="relative border border-gray-300 p-4 rounded-md mb-4">
+                    {/* Cross mark for deletion */}
+                    {/* <button
                    onClick={() => handleDelete(index)}
                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 focus:outline-none"
                    style={{ zIndex: 10 }} // Ensure the button is above other elements
@@ -438,29 +438,29 @@ const UserRole: React.FC = () => {
                    </svg>
                </button> */}
                     <div>
-                          
-                    <label className="block text-gray-700">
-    <span className="font-semibold text-lg">Role</span><span className="text-red-500">*</span>
-</label>
+
+                        <label className="block text-gray-700">
+                            <span className="font-semibold text-lg">Role</span><span className="text-red-500">*</span>
+                        </label>
                         <Select
-                value={role}
-                onChange={handlesetRole}
-                options={Roleoptions}
-                styles={{
-                    control: (base, state) => ({
-                        ...base,
-                        marginTop: '5px',
-                        height: '2.6rem',
-                        width:'570px',
-                        borderRadius: '0.375rem',
-                        borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                        boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                    }),
-                }}
-            />
-            {errorMessages.includes('Role is required.') && (
-                <span className="text-red-600 ml-1">Role is required.</span>
-            )}
+                            value={role}
+                            onChange={handlesetRole}
+                            options={Roleoptions}
+                            styles={{
+                                control: (base, state) => ({
+                                    ...base,
+                                    marginTop: '5px',
+                                    height: '2.6rem',
+                                    width: '570px',
+                                    borderRadius: '0.375rem',
+                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
+                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
+                                }),
+                            }}
+                        />
+                        {errorMessages.includes('Role is required.') && (
+                            <span className="text-red-600 ml-1">Role is required.</span>
+                        )}
                     </div>
                     <div className="grid grid-cols-1 gap-4 mt-4">
                         {/* Mapping over your data object */}
@@ -469,27 +469,27 @@ const UserRole: React.FC = () => {
                                 <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                     <div>
-                                    <label className="block text-gray-700">Module</label>
-                            <Select
-                                isMulti
-                                closeMenuOnSelect={false}
-                                value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
-                                onChange={(selected) => handleModuleChange(category, selected)}
-                                options={data[category].Module.map(module => ({ value: module, label: module }))}
-                                className="w-full mt-1"
-                            />
+                                        <label className="block text-gray-700">Module</label>
+                                        <Select
+                                            isMulti
+                                            closeMenuOnSelect={false}
+                                            value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
+                                            onChange={(selected) => handleModuleChange(category, selected)}
+                                            options={data[category].Module.map(module => ({ value: module, label: module }))}
+                                            className="w-full mt-1"
+                                        />
                                     </div>
                                     <div>
-                                    <label className="block text-gray-700">Features</label>
-                            <Select
-                                isMulti
-                                closeMenuOnSelect={false}
-                                value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
-                                onChange={(selected) => handleFeatureChange(category, selected)}
-                                options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                                className="w-full mt-1"
-                                isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
-                            />
+                                        <label className="block text-gray-700">Features</label>
+                                        <Select
+                                            isMulti
+                                            closeMenuOnSelect={false}
+                                            value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
+                                            onChange={(selected) => handleFeatureChange(category, selected)}
+                                            options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
+                                            className="w-full mt-1"
+                                            isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -497,7 +497,7 @@ const UserRole: React.FC = () => {
                     </div>
                 </div>
             ))}
- 
+
 
             <div className="flex justify-end space-x-4">
                 <button className="cancel-btn">

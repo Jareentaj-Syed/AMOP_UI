@@ -28,9 +28,10 @@ interface TableComponentProps {
   advancedFilters?: any
   infoColumns: any[]
   editColumns: any[]
+  isSelectRowVisible:boolean
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters,isSelectRowVisible= true }) => {
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -163,7 +164,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
     }));
-    if (updatedData[rowIndex].API_state  === 'enable') {
+    if (updatedData[rowIndex].API_state === 'enable') {
       setEnableModalOpen(true);
     } else {
       setDisableModalOpen(true);
@@ -243,16 +244,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>
-              <th className="px-6 border-b border-gray-300 text-left font-semibold table-header">
-                <Checkbox
-                  onChange={handleSelectAllChange}
-                  checked={selectAll}
-                  indeterminate={
-                    selectedRows.length > 0 && selectedRows.length < paginatedData.length
-                  }
-                  style={{ fontSize: '2rem' }}
-                />
-              </th>
+              {isSelectRowVisible && ( // Conditionally render checkbox cell
+                <th className="px-6 border-b border-gray-300 text-left font-semibold table-header">
+                  <Checkbox
+                    onChange={handleSelectAllChange}
+                    checked={selectAll}
+                    indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedData.length}
+                    style={{ fontSize: '2rem' }}
+                  />
+                </th>
+              )}
               {headers.map((header, index) => (
                 <th
                   key={index}
@@ -271,40 +272,32 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
                   )}
                 </th>
-                
               ))}
-                {allowedActions && (
-      <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
-    )}
-  
+              {allowedActions && (
+                <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
+              )}
             </tr>
           </thead>
-
           <tbody>
-            {paginatedData.map((row, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-gray-50" : ""}
-              >
-                <td className="px-6 border-b border-gray-300 table-cell">
-                  <Checkbox
-                    onChange={() => handleRowCheckboxChange(index as number)}
-                    checked={selectedRows.map(String).includes(String(index))}
-                    style={{ fontSize: '2rem' }}
-                  />
-                </td>
+            {paginatedData.map((row, rowIndex) => (
+              <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50" : ""}>
+                {isSelectRowVisible && ( // Conditionally render checkbox cell
+                  <td className="px-6 border-b border-gray-300 table-cell">
+                    <Checkbox
+                      onChange={() => handleRowCheckboxChange(rowIndex)}
+                      checked={selectedRows.includes(rowIndex)}
+                      style={{ fontSize: '2rem' }}
+                    />
+                  </td>
+                )}
                 {headers.map((header, columnIndex) => (
-                  <td
-                    key={columnIndex}
-                    className="px-6 border-b border-gray-300 table-cell"
-                  >
+                  <td key={columnIndex} className="px-6 border-b border-gray-300 table-cell">
                     {visibleColumns.includes(header) && (
-                      header === "API_state" ||  header === "Module state" ? (
-                        renderApiState(row[header], index)
-                      ) : header === "User status " ||  header === "Role status" ? (
+                      header === "API_state" || header === "Module state" ? (
+                        renderApiState(row[header], rowIndex)
+                      ) : header === "User status " || header === "Role status" ? (
                         renderUserStatus(row[header])
-                      ) : header === "DateAdded" ||
-                        header === "DateActivated" ? (
+                      ) : header === "DateAdded" || header === "DateActivated" ? (
                         <DateTimeCellRenderer value={row[header]} />
                       ) : header === "Username" ? (
                         <EditUsernameCellRenderer value={row[header]} />
@@ -312,7 +305,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         <StatusCellRenderer
                           record={row}
                           value={row[header]}
-                          index={index}
+                          index={rowIndex}
                           colorMap={colorMap}
                         />
                       ) : header === "StatusHistory" ? (
@@ -325,40 +318,24 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     )}
                   </td>
                 ))}
-                
                 <td className="px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
                     {allowedActions?.includes("edit") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "edit",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
+                        onClick={() => handleActionClick("edit", rowIndex)}
                       />
                     )}
                     {allowedActions?.includes("delete") && (
                       <TrashIcon
                         className="h-5 w-5 text-red-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "delete",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
+                        onClick={() => handleActionClick("delete", rowIndex)}
                       />
                     )}
                     {allowedActions?.includes("info") && (
                       <InformationCircleIcon
                         className="h-5 w-5 text-green-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "info",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
+                        onClick={() => handleActionClick("info", rowIndex)}
                       />
                     )}
                     {allowedActions?.includes("Actions") && (
@@ -366,16 +343,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         initialData={initialData}
                         currentPage={currentPage}
                         itemsPerPage={itemsPerPage}
-                        index={index}
+                        index={rowIndex}
                         handleActionClick={handleActionClick}
                       />
                     )}
-                     {allowedActions?.includes("SingleClick") && (
+                    {allowedActions?.includes("SingleClick") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionSingleClick()
-                        }
+                        onClick={handleActionSingleClick}
                       />
                     )}
                   </div>
@@ -407,7 +382,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <p>Do you want to delete this row?</p>
       </Modal>
       <Modal
-        title={<span style={{  fontWeight: 'bold' , fontSize:'16px' }}>Confirm Enable</span>}
+        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Enable</span>}
         open={EnableModalOpen}
         onOk={confirmSubmit}
         onCancel={() => setEnableModalOpen(false)}
@@ -416,7 +391,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <p>Do you want to <strong>Enable</strong> this API State?</p>
       </Modal>
       <Modal
-        title={<span style={{  fontWeight: 'bold' , fontSize:'16px' }}>Confirm Disable</span>}
+        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
         open={DisableModalOpen}
         onOk={confirmSubmit}
         onCancel={() => setDisableModalOpen(false)}
@@ -424,9 +399,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       >
         <p>Do you want to <strong>Disable</strong> this API State?</p>
       </Modal>
-
     </div>
   );
+  
 };
 
 export default TableComponent;
