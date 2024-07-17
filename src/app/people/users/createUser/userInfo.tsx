@@ -190,50 +190,41 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Sub Partner</label>
+                        <label className="field-label">Sub Partner</label>
                         <Select
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
                             className="mt-1"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            styles={editableDrp}
                         />
                     </div>
         <div>
-          <label className="block text-gray-700">First Name</label>
-          <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          <label className="field-label">First Name</label>
+          <input type="text" className="input" />
         </div>
         <div>
-          <label className="block text-gray-700">Last Name</label>
-          <input type="text" className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+          <label className="field-label">Last Name</label>
+          <input type="text" className="input" />
         </div>
         <div>
-          <label className="block text-gray-700">Username<span className="text-red-500">*</span></label>
+          <label className="field-label">Username<span className="text-red-500">*</span></label>
           <input
             type="text"
             value={username}
             onChange={handleUsernameChange}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+            className="input"
           />
           {errorMessages.includes('Username is required.') && (
             <span className="text-red-600 ml-1">Username is required.</span>
           )}
         </div>
         <div>
-          <label className="block text-gray-700">Email id<span className="text-red-500">*</span></label>
+          <label className="field-label">Email id<span className="text-red-500">*</span></label>
           <input
             type="email"
             value={email}
             onChange={handleEmailID}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+            className="input"
           />
           {errorMessages.includes('Email id is required.') && (
             <span className="text-red-600 ml-1">Email id is required.</span>
@@ -259,21 +250,21 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
           )}
         </div>
         <div>
-          <label className="block text-gray-700">Password<span className="text-red-500">*</span></label>
+          <label className="field-label">Password<span className="text-red-500">*</span></label>
           <input
             type="password"
             value={password}
             onChange={handlePassword}
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
+            className="input"
           />
           {errorMessages.includes('Password is required.') && (
             <span className="text-red-600 ml-1">Password is required.</span>
           )}
         </div>
         <div>
-          <label className="block text-gray-700">Phone</label>
+          <label className="field-label">Phone</label>
           <input type="text"
-            className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+            className="input" />
         </div>
       </div>
 
@@ -281,18 +272,9 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
         <h3 className="tabs-sub-headings">Additional Information</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-gray-700">Notification enable<span className="text-red-500">*</span></label>
+            <label className="field-label">Notification enable<span className="text-red-500">*</span></label>
             <Select
-              styles={{
-                control: (base, state) => ({
-                  ...base,
-                  marginTop: '5px',
-                  height: '2.6rem',
-                  borderRadius: '0.375rem',
-                  borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                  boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                }),
-              }}
+              styles={editableDrp}
               value={notification}
               options={Notificationoptions}
               onChange={handleNotification}
@@ -302,63 +284,63 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
           )}
           </div>
           <div>
-            <label className="block text-gray-700">Business Name</label>
+            <label className="field-label">Business Name</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Locale</label>
+            <label className="field-label">Locale</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Apt/Suite</label>
+            <label className="field-label">Apt/Suite</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Address Line-1</label>
+            <label className="field-label">Address Line-1</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Address Line-2</label>
+            <label className="field-label">Address Line-2</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Country</label>
+            <label className="field-label">Country</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">State</label>
+            <label className="field-label">State</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">City</label>
+            <label className="field-label">City</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           <div>
-            <label className="block text-gray-700">Time Zone</label>
+            <label className="field-label">Time Zone</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
 
           <div>
-            <label className="block text-gray-700">Zip</label>
+            <label className="field-label">Zip</label>
             <input type="text"
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 " />
+              className="input" />
           </div>
           {/*   
     <div>
-            <label className="block text-gray-700">Country</label>
+            <label className="field-label">Country</label>
             <select
               value={selectedCountry || ''}
               onChange={handleCountryChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
+              className="input"
               style={{ height: '2.6rem' }}
             >
               <option value="">Select Country</option>
@@ -370,11 +352,11 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
             </select>
           </div>
           <div>
-            <label className="block text-gray-700">State</label>
+            <label className="field-label">State</label>
             <select
               value={selectedState || ''}
               onChange={handleStateChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
+              className="input"
               style={{ height: '2.6rem' }}
             >
               <option value="">Select State</option>
@@ -386,11 +368,11 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
             </select>
           </div>
           <div>
-            <label className="block text-gray-700">City</label>
+            <label className="field-label">City</label>
             <select
               value={selectedCity || ''}
               onChange={handleCityChange}
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
+              className="input"
               style={{ height: '2.6rem' }}
             >
               <option value="">Select City</option>
@@ -402,16 +384,16 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
             </select>
           </div>
           <div>
-            <label className="block text-gray-700">Time zone</label>
+            <label className="field-label">Time zone</label>
             <input
               type="text"
               value={selectedTimeZone}
               readOnly
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 "
+              className="input"
             />
           </div>
           <div>
-            <label className="block text-gray-700">Zip</label>
+            <label className="field-label">Zip</label>
             <input
               type="text"
               value={selectedZipCode}
