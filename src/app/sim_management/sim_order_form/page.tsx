@@ -156,7 +156,7 @@ const SimOrderForm: React.FC = () => {
                 {/* second Block */}
                 <div>
                     {blocks.map((_, index) => (
-                        <div className="form-block" key={index}>
+                        <div className=" form-block" key={index}>
                             {index > 0 && (
                                 <Button
                                     
@@ -165,6 +165,7 @@ const SimOrderForm: React.FC = () => {
                                      className="custom-close-button"
                                 />
                             )}
+                            <div className="grid grid-cols-1 ">
                             <Form.Item
                                 label={<span className="field-label">Carrier</span>}
                                 name={`carrier${index}`}
@@ -203,6 +204,7 @@ const SimOrderForm: React.FC = () => {
                             >
                                 <Input className="input" placeholder="Quantity" type="number" />
                             </Form.Item>
+                            </div>
                         </div>
                     ))}
 
