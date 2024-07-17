@@ -1,6 +1,6 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import React, { useState, useEffect, useRef } from 'react';
-import { Checkbox, Input } from 'antd';
+import { Checkbox, Input, Modal } from 'antd';
 
 interface Column {
   label: string;
@@ -20,6 +20,7 @@ interface CreateModalProps {
 const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading }) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isScrollable, setIsScrollable] = useState(false);
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const modalContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,16 +51,33 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
     onClose();
   };
 
+  const handleSaveClick = () => {
+    setIsConfirmationOpen(true);
+  };
+
+  const handleConfirmSave = () => {
+    handleSave();
+    setIsConfirmationOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsConfirmationOpen(false);
+  };
+
+  const modalWidth = (window.innerWidth * 2.5) / 4;
+  const modalHeight = (window.innerHeight * 2.5) / 4;
+
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 " style={{ zIndex: 9999 }}>
-      <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl relative createPopup" style={{ paddingBottom: isScrollable ? '0' : '2rem' }}>
-        <h2 className="text-xl font-semibold mb-4">{`Add New ${heading}`}</h2>
-        <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div ref={modalContentRef} className="createPopup-height overflow-auto">
+    <>
+      <Modal
+        title={`Add New ${heading}`}
+        visible={isOpen}
+        onCancel={onClose}
+        footer={null}
+        width={modalWidth}
+        bodyStyle={{ height: modalHeight }}
+      >
+        <div ref={modalContentRef} className="createPopup-height overflow-auto" style={{ height: '100%' }}>
           <form>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
               {columnNames.map(({ label, type, value, mandatory }) => (
@@ -83,7 +101,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
                         onChange={(e) => handleChange(label, e.target.value)}
                         className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                       >
-                        {value.map((option:any) => (
+                        {value.map((option: any) => (
                           <option key={option} value={option}>
                             {option}
                           </option>
@@ -119,13 +137,24 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
             <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
             Cancel
           </button>
-          <button onClick={handleSave} className="save-btn">
+          <button onClick={handleSaveClick} className="save-btn">
             <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
             Save
           </button>
         </div>
-      </div>
-    </div>
+      </Modal>
+
+      <Modal
+        title={`Add New ${heading}`}
+        visible={isConfirmationOpen}
+        onOk={handleConfirmSave}
+        onCancel={handleCancel}
+        style={{ zIndex: 10000 }}
+        centered
+      >
+        <p>Do you want to save?</p>
+      </Modal>
+    </>
   );
 };
 

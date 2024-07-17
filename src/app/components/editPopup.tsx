@@ -1,6 +1,6 @@
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-
+import { Checkbox, Input, Modal } from 'antd';
 
 interface Column {
   label: string;
@@ -22,6 +22,7 @@ interface EditModalProps {
 
 const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData, infoColumns = [], editColumns = [], isEditable, heading }) => {
   const [formData, setFormData] = useState<any>({});
+  const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
 
   useEffect(() => {
     setFormData(rowData || {});
@@ -33,136 +34,146 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
     }
   }, [isOpen, rowData]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
+  const handleChange = (name: string, value: any) => {
     setFormData((prevState: any) => ({
       ...prevState,
-      [name]: type === 'checkbox' ? checked : value.trim() === '' ? '' : value,
+      [name]: value,
     }));
   };
 
   const handleSave = () => {
-    // Validate mandatory fields
-    const missingFields = infoColumns
-      .filter(column => column.mandatory === 'true' && !formData[column.label])
-      .map(column => column.label);
-
-    // if (missingFields.length > 0) {
-    //   alert(`Please fill in the mandatory fields: ${missingFields.join(', ')}`);
-    //   return;
-    // }
-
     onSave(formData);
     onClose();
   };
 
-  const renderColumn = ({ label, type, value, mandatory }: Column) => (
-    <div key={label} className="flex flex-col mb-4">
-      <label className="block text-sm font-medium text-gray-700">
-        {label} {mandatory === 'true' && <span className="text-red-500">*</span>}
-      </label>
-      {type === 'text' && (
-        <input
-          type="text"
-          name={label}
-          value={formData[label] || ''}
-          onChange={handleChange}
-          className="input"
-          readOnly={!isEditable}
-          style={{ width: '100%' }}
-        />
-      )}
-      {type === 'dropdown' && (
-        <select
-          name={label}
-          value={formData[label] || ''}
-          onChange={handleChange}
-          className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          disabled={!isEditable}
-        >
-          {value.map((option: string) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      )}
-      {type === 'checkbox' && (
-        <div className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm flex items-center">
-        <input
-          type="checkbox"
-          id={label}
-          name={label}
-          checked={formData[label] || false}
-          onChange={handleChange}
-          className="mr-2 input"
-          readOnly={!isEditable}
-        />
-        <label htmlFor={label} className="select-none">{label}</label>
-      </div>
-      )}
-      {type === 'date' && (
-        <input
-          type="date"
-          name={label}
-          value={formData[label] || ''}
-          onChange={handleChange}
-          className="input"
-          readOnly={!isEditable}
-        />
-      )}
-    </div>
-  );
+  const handleCancel = () => {
+    onClose();
+  };
+
+  const showConfirmation = () => {
+    setIsConfirmationOpen(true);
+  };
+
+  const handleConfirmSave = () => {
+    handleSave();
+    setIsConfirmationOpen(false);
+  };
+
+  const handleCancelConfirmation = () => {
+    setIsConfirmationOpen(false);
+  };
+  const modalWidth = (window.innerWidth * 2.5) / 4;
+  const modalHeight = (window.innerHeight * 2.5) / 4;
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ${isOpen ? '' : 'hidden'}`} style={{ zIndex: 9999 }}>
-      <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-4xl editPopup relative">
-        <h2 className="text-xl font-semibold mb-4">
+    <>
+      <Modal
+        title={isEditable ? `Edit ${heading}` : `${heading} Details`}
+        visible={isOpen}
+        onCancel={handleCancel}
+        footer={null}
+        width={modalWidth} // Example: Adjust width as needed
+        maskClosable={false} // Prevent closing on mask click
+        bodyStyle={{ height: modalHeight, padding:'4px'}}
+
+      >
+        <div className={`overflow-auto ${isEditable ? 'max-h-85' : 'max-h-full'}`}>
+        <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
           {isEditable ? (
-            <span>{`Edit ${heading}`}</span>
+            editColumns.map((key) => (
+              <div key={key} className="flex flex-col mb-4">
+                <label className="block text-sm font-medium text-gray-700">{key}</label>
+                <Input
+                  type="text"
+                  name={key}
+                  value={formData[key] || ''}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  style={{ width: '100%' }}
+                />
+              </div>
+            ))
           ) : (
-            <span>{`${heading} Details`}</span>
-          )}
-        </h2>
-        <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-900">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
-          {isEditable
-            ? editColumns.map((key) => (
-                <div key={key} className="flex flex-col mb-4">
-                  <label className="block text-sm font-medium text-gray-700">{key}</label>
-                  <input
+            infoColumns.map(({ label, type, value, mandatory }) => (
+              <div key={label} className="flex flex-col mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  {label} {mandatory === 'true' && <span className="text-red-500">*</span>}
+                </label>
+                {type === 'text' && (
+                  <Input
                     type="text"
-                    name={key}
-                    value={formData[key] || ''}
-                    onChange={handleChange}
-                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    readOnly={!isEditable}
+                    name={label}
+                    value={formData[label] || ''}
+                    readOnly
+                    className="input"
                     style={{ width: '100%' }}
                   />
-                </div>
-              ))
-            : infoColumns.map(renderColumn)}
+                )}
+                {type === 'dropdown' && (
+                  <select
+                    name={label}
+                    value={formData[label]}
+                    disabled
+                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    style={{ width: '100%' }}
+                  >
+                    {value.map((option: string) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {type === 'checkbox' && (
+                  <Checkbox
+                    checked={formData[label] || false}
+                    onChange={(e) => handleChange(label, e.target.checked)}
+                    className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    {label}
+                  </Checkbox>
+                )}
+                {type === 'date' && (
+                  <Input
+                    type="date"
+                    name={label}
+                    value={formData[label] || ''}
+                    readOnly
+                    className="input"
+                    style={{ width: '100%' }}
+                  />
+                )}
+              </div>
+            ))
+          )}
         </div>
-
+        </div>
         {isEditable && (
           <div className="absolute bottom-4 right-4 flex space-x-2">
-            <button onClick={onClose} className="cancel-btn">
-              <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+            <button onClick={handleCancel} className="cancel-btn">
+              <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
               Cancel
             </button>
-            <button onClick={handleSave} className="save-btn">
-              <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+            <button onClick={showConfirmation} className="save-btn">
+              <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
               Save
             </button>
           </div>
         )}
-      </div>
-    </div>
+      </Modal>
+
+      <Modal
+        title={`Save Changes to ${heading}`}
+        visible={isConfirmationOpen}
+        onOk={handleConfirmSave}
+        onCancel={handleCancelConfirmation}
+        okText="Save"
+        cancelText="Cancel"
+        centered
+      >
+        <p>Are you sure you want to save changes?</p>
+      </Modal>
+    </>
   );
 };
 
