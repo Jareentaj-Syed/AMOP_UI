@@ -113,19 +113,18 @@
 }
 
 
-.table-cell {}
 
 .table-row {
   position: relative;
 }
 
-.table-header-row {}
+
 
 .table-header,
 .table-cell {
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
-  height: 40px;
+  height: 51px;
   max-width: 250px;
   white-space: nowrap;
   overflow: hidden;

@@ -69,7 +69,7 @@ const UserRole: React.FC = () => {
     return (
         <div className='p-4'>
             <div className="flex items-center">
-                <a href="/super_admin/partner_creation" className="flex items-center text-lg font-light text-black-300 hover:underline">
+                <a href="/super_admin/partner_modules" className="flex items-center text-lg font-light text-black-300 hover:underline">
                     Super admin
                 </a>
                 <span className="mx-2 text-gray-500">/</span>
@@ -81,6 +81,7 @@ const UserRole: React.FC = () => {
                         Role
                     </h3>
                     <TableComponent
+                    isSelectRowVisible={false}
                         headers={headers1}
                         initialData={data}
                         searchQuery={searchTerm}
@@ -89,14 +90,16 @@ const UserRole: React.FC = () => {
                         popupHeading='User'
                         infoColumns={[]}
                         editColumns={[]}
+                        
                     />
                 </div>
 
-                <div className='mt-[23%]'>
+                <div className='mt-[22%]'>
                     <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 pr-4 py-2 flex justify-between items-center">
                         Module Access
                     </h3>
                     <TableComponent
+                        isSelectRowVisible={false}
                         headers={headers2}
                         initialData={data2}
                         searchQuery={searchTerm}

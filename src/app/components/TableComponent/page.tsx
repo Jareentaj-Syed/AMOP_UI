@@ -38,6 +38,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [isEditable, setIsEditable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
+  const [moduleState, setModuleState] = useState<{ [key: number]: string }>({});
+
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [EnableModalOpen, setEnableModalOpen] = useState(false); // State for Enable Modal
@@ -159,17 +161,35 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const handleToggle = (rowIndex: number) => {
     const updatedData = [...rowData];
     updatedData[rowIndex].API_state = apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
+    updatedData[rowIndex].Module_state = moduleState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle Module state
+    
     setRowData(updatedData);
+    
     setApiState(prevState => ({
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
     }));
+  
+    setModuleState(prevState => ({
+      ...prevState,
+      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+    }));
+  
     if (updatedData[rowIndex].API_state === 'enable') {
       setEnableModalOpen(true);
-    } else {
+      setDisableModalOpen(false);
+    } else if (updatedData[rowIndex].API_state === 'disable') {
       setDisableModalOpen(true);
+      setEnableModalOpen(false);
+    } else if (updatedData[rowIndex].Module_state === 'enable') {
+      setEnableModalOpen(true);
+      setDisableModalOpen(false);
+    } else if (updatedData[rowIndex].Module_state === 'disable') {
+      setDisableModalOpen(true);
+      setEnableModalOpen(false);
     }
   };
+  
   const confirmSubmit = () => {
     setEnableModalOpen(false);
     setDisableModalOpen(false);
@@ -244,98 +264,121 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>
-              {isSelectRowVisible && ( // Conditionally render checkbox cell
-                <th className="px-6 border-b border-gray-300 text-left font-semibold table-header">
-                  <Checkbox
-                    onChange={handleSelectAllChange}
-                    checked={selectAll}
-                    indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedData.length}
-                    style={{ fontSize: '2rem' }}
-                  />
-                </th>
-              )}
-              {headers.map((header, index) => (
-                <th
-                  key={index}
-                  className="px-6 border-b border-gray-300 text-left font-semibold table-header"
-                  onClick={() => handleSort(header)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  {formatColumnName(header)}
-                  {sortConfig && sortConfig.key === header ? (
-                    sortConfig.direction === 'ascending' ? (
-                      <ArrowUpOutlined style={{ marginLeft: 8 }} />
-                    ) : (
-                      <ArrowDownOutlined style={{ marginLeft: 8 }} />
-                    )
-                  ) : (
-                    <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
-                  )}
-                </th>
-              ))}
-              {allowedActions && (
-                <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
-              )}
+            {headers.map((header, index) => (
+  <th
+    key={index}
+    className="px-6 border-b border-gray-300 text-left font-semibold table-header"
+    onClick={() => handleSort(header)}
+    style={{ cursor: 'pointer' }}
+  >
+    {formatColumnName(header)}
+    {sortConfig && sortConfig.key === header ? (
+      sortConfig.direction === 'ascending' ? (
+        <ArrowUpOutlined style={{ marginLeft: 8 }} />
+      ) : (
+        <ArrowDownOutlined style={{ marginLeft: 8 }} />
+      )
+    ) : (
+      <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
+    )}
+
+    {/* Check if the header is 'select', render the Checkbox */}
+    {header === 'Select' && (
+      <Checkbox
+        onChange={handleSelectAllChange}
+        checked={selectAll}
+        indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedData.length}
+        style={{ fontSize: '1rem', marginLeft: 8 }}
+      />
+    )}
+  </th>
+))}
+
+                {allowedActions && (
+      <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
+    )}
+  
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, rowIndex) => (
-              <tr key={rowIndex} className={rowIndex % 2 === 0 ? "bg-gray-50" : ""}>
-                {isSelectRowVisible && ( // Conditionally render checkbox cell
-                  <td className="px-6 border-b border-gray-300 table-cell">
-                    <Checkbox
-                      onChange={() => handleRowCheckboxChange(rowIndex)}
-                      checked={selectedRows.includes(rowIndex)}
-                      style={{ fontSize: '2rem' }}
-                    />
-                  </td>
-                )}
-                {headers.map((header, columnIndex) => (
-                  <td key={columnIndex} className="px-6 border-b border-gray-300 table-cell">
-                    {visibleColumns.includes(header) && (
-                      header === "API_state" || header === "Module state" ? (
-                        renderApiState(row[header], rowIndex)
-                      ) : header === "User status " || header === "Role status" ? (
-                        renderUserStatus(row[header])
-                      ) : header === "DateAdded" || header === "DateActivated" ? (
-                        <DateTimeCellRenderer value={row[header]} />
-                      ) : header === "Username" ? (
-                        <EditUsernameCellRenderer value={row[header]} />
-                      ) : header === "SimStatus" ? (
-                        <StatusCellRenderer
-                          record={row}
-                          value={row[header]}
-                          index={rowIndex}
-                          colorMap={colorMap}
-                        />
-                      ) : header === "StatusHistory" ? (
-                        <StatusHistoryCellRenderer value={row[header]} />
-                      ) : header === "Provider" ? (
-                        <ServiceProviderCellRenderer value={row[header]} />
-                      ) : (
-                        row[header]
-                      )
-                    )}
-                  </td>
-                ))}
-                <td className="px-6 border-b border-gray-300 table-cell">
+            {paginatedData.map((row, index) => (
+              <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-gray-50" : ""}
+              >
+              {headers.map((header, columnIndex) => (
+  <td
+    key={columnIndex}
+    className="px-6 border-b border-gray-300 table-cell"
+  >
+    {visibleColumns.includes(header) && (
+      // Check if the header is the selection column
+      header === "Select" ? (
+        <Checkbox
+          onChange={() => handleRowCheckboxChange(index as number)} // Assuming `index` is defined
+          checked={selectedRows.map(String).includes(String(index))}
+          style={{ fontSize: '2rem' }}
+        />
+      ) : // If not the selection column, render based on other headers
+      header === "API_state" || header === "Module_state" ? (
+        renderApiState(row[header], index)
+      ) : header === "User status" || header === "Role status" ? (
+        renderUserStatus(row[header])
+      ) : header === "DateAdded" || header === "DateActivated" ? (
+        <DateTimeCellRenderer value={row[header]} />
+      ) : header === "Username" ? (
+        <EditUsernameCellRenderer value={row[header]} />
+      ) : header === "SimStatus" ? (
+        <StatusCellRenderer
+          record={row}
+          value={row[header]}
+          index={index}
+          colorMap={colorMap}
+        />
+      ) : header === "StatusHistory" ? (
+        <StatusHistoryCellRenderer value={row[header]} />
+      ) : header === "Provider" ? (
+        <ServiceProviderCellRenderer value={row[header]} />
+      ) : (
+        row[header]
+      )
+    )}
+  </td>
+))}
+
+{allowedActions && (<td className="px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
                     {allowedActions?.includes("edit") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() => handleActionClick("edit", rowIndex)}
+                        onClick={() =>
+                          handleActionClick(
+                            "edit",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
                       />
                     )}
                     {allowedActions?.includes("delete") && (
                       <TrashIcon
                         className="h-5 w-5 text-red-500 cursor-pointer"
-                        onClick={() => handleActionClick("delete", rowIndex)}
+                        onClick={() =>
+                          handleActionClick(
+                            "delete",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
                       />
                     )}
                     {allowedActions?.includes("info") && (
                       <InformationCircleIcon
                         className="h-5 w-5 text-green-500 cursor-pointer"
-                        onClick={() => handleActionClick("info", rowIndex)}
+                        onClick={() =>
+                          handleActionClick(
+                            "info",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
                       />
                     )}
                     {allowedActions?.includes("Actions") && (
@@ -343,18 +386,21 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         initialData={initialData}
                         currentPage={currentPage}
                         itemsPerPage={itemsPerPage}
-                        index={rowIndex}
+                        index={index}
                         handleActionClick={handleActionClick}
                       />
                     )}
-                    {allowedActions?.includes("SingleClick") && (
+                     {allowedActions?.includes("SingleClick") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={handleActionSingleClick}
+                        onClick={() =>
+                          handleActionSingleClick()
+                        }
                       />
                     )}
                   </div>
-                </td>
+                </td>)}
+                
               </tr>
             ))}
           </tbody>
@@ -388,7 +434,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onCancel={() => setEnableModalOpen(false)}
         centered
       >
-        <p>Do you want to <strong>Enable</strong> this API State?</p>
+        <p>Do you want to <strong>Enable</strong> this State?</p>
       </Modal>
       <Modal
         title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
@@ -397,7 +443,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onCancel={() => setDisableModalOpen(false)}
         centered
       >
-        <p>Do you want to <strong>Disable</strong> this API State?</p>
+        <p>Do you want to <strong>Disable</strong> this State?</p>
       </Modal>
     </div>
   );
