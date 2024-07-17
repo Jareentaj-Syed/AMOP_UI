@@ -172,6 +172,14 @@
 }
 .non-editable-input:focus{
   outline: none;
+  background-color:#F9FAFB ;
+  box-shadow: none;
+  border: 1px solid #d1d5db;
+}
+.non-editable-input:hover{
+  background-color:#F9FAFB ;
+  border: 1px solid #d1d5db;
+
 }
 .field-label{
   /* color: #374151; */
