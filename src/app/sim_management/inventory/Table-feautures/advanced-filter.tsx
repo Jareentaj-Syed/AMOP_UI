@@ -46,7 +46,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
     console.log(advancedFilters)
     setActiveFilters(advancedFilters);
 
-    onFilter(advancedFilters );
+    onFilter(advancedFilters);
     handleShowAdvanced();
   };
 
@@ -66,22 +66,22 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
       return Boolean(value);
     }).length;
   }, [activeFilters]);
-
+  // flex justify-end items-center
   return (
     <div className="mb-2">
       <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4" style={{ margin: '20px' }}>
-      <Button
-  size="large"
-  className="w-full md:w-auto save-btn "
-  onClick={handleShowAdvanced}
-  icon={showAdvanced ? < CaretUpOutlined /> : <CaretDownOutlined/> 
-    
-  }
-  style={{ fontWeight: '450' }}
->
-  {showAdvanced ? "Hide Advanced" : "Show Advanced"}
- 
-</Button>
+        <Button
+          size="large"
+          className="w-full md:w-auto save-btn "
+          onClick={handleShowAdvanced}
+          icon={showAdvanced ? < CaretUpOutlined /> : <CaretDownOutlined />
+
+          }
+          style={{ fontWeight: '450' }}
+        >
+          {showAdvanced ? "Hide Advanced" : "Show Advanced"}
+
+        </Button>
         <Badge
           count={countActiveFilters}
           showZero
@@ -94,7 +94,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
             className="w-full md:w-auto"
             onClick={handleFilter}
             disabled={!showAdvanced}
-            // loading={isFetching}
+          // loading={isFetching}
           >
             Filter
           </Button>
@@ -108,7 +108,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
           Clear
         </Button>
       </div>
-
+      <div className="flex justify-start items-center ml-0">
       {showAdvanced && (
         <Form form={form} layout="vertical" style={{ margin: '21px' }}>
           <AdvancedFilterGroup
@@ -195,6 +195,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
           />
         </Form>
       )}
+      </div>
     </div>
   );
 };
