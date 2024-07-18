@@ -60,7 +60,7 @@ export const createModalData= [
     "mandatory": "false"
   },
   {
-    "label": "Feature Code",
+    "label": "Feature Codes",
     "type": "dropdown",
     "value": [
       "$3 Pooling Fee",
