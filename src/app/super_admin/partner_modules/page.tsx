@@ -13,7 +13,8 @@ const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: 
 const Page: React.FC = () => {
   const [selectedPartner, setSelectedPartner] = useState<string>('');
   const [subPartners, setSubPartners] = useState<string[]>([]);
-  const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
+  // const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
+  const subPartnersoptions =subPartnersData['Altaworx'].map(subPartner => ({ value: subPartner, label: subPartner })) ;
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
 
   const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
@@ -21,7 +22,7 @@ const Page: React.FC = () => {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
 
-      setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+     
     } else {
       setSelectedPartner('');
 
@@ -38,20 +39,24 @@ const Page: React.FC = () => {
         <div>
           <label className="field-label">Partner</label>
           <Select
-
-            value={{ value: selectedPartner, label: selectedPartner }}
+            defaultValue={[Partneroptions[0]]}
+          
+            value={[Partneroptions[0]]}
             onChange={handlePartnerChange}
             options={Partneroptions}
-            styles={editableDrp}
+            styles={nonEditableDrp}
           />
         </div>
         <div>
           <label className="field-label">Sub Partner</label>
           <Select
-            isMulti
-            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+            defaultValue={[subPartnersoptions[1]]}
+            
+            value={[subPartnersoptions[1]]}
+            options={subPartnersoptions}
+            // options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
             className="mt-1"
-            styles={editableDrp}
+            styles={nonEditableDrp}
           />
         </div>
       </div>

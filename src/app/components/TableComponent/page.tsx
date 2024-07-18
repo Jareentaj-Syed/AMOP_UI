@@ -39,6 +39,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [currentPage, setCurrentPage] = useState(1);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [moduleState, setModuleState] = useState<{ [key: number]: string }>({});
+  const [roleState, setRoleState] = useState<{ [key: number]: string }>({});
 
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -162,7 +163,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     const updatedData = [...rowData];
     updatedData[rowIndex].API_state = apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
     updatedData[rowIndex].Module_state = moduleState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle Module state
-    
+    updatedData[rowIndex].Role_status = roleState[rowIndex] === 'Active' ? 'Inactive' : 'Active'; // Toggle Module state
+
     setRowData(updatedData);
     
     setApiState(prevState => ({
@@ -173,6 +175,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setModuleState(prevState => ({
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+    }));
+
+    setRoleState(prevState => ({
+      ...prevState,
+      [rowIndex]: prevState[rowIndex] === 'Active' ? 'Inactive' : 'Active'
     }));
   
     if (updatedData[rowIndex].API_state === 'enable') {
@@ -188,6 +195,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       setDisableModalOpen(true);
       setEnableModalOpen(false);
     }
+    else if (updatedData[rowIndex].Role_status === 'enable') {
+      setEnableModalOpen(true);
+      setDisableModalOpen(false);
+    } else if (updatedData[rowIndex].Role_status === 'disable') {
+      setDisableModalOpen(true);
+      setEnableModalOpen(false);
+    }
   };
   
   const confirmSubmit = () => {
@@ -196,22 +210,25 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
   const renderApiState = (apiState: string, index: number) => {
     return (
+      
       <div className="flex items-center space-x-2">
         <button
-          className={`${apiState === 'enable' ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === 'enable' || apiState === 'Active'? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          Enable
+           {`${apiState === 'enable' || apiState === 'disable' ? 'Enable' : 'Active'}`}
+
         </button>
         <button
-          className={`${apiState === 'disable' ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === 'disable' || apiState === 'Inactive' ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          Disable
+        {`${apiState === 'enable' || apiState === 'disable' ? 'Disable' : 'Inactive'}`}
+
         </button>
       </div>
     );
@@ -320,9 +337,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ fontSize: '2rem' }}
         />
       ) : // If not the selection column, render based on other headers
-      header === "API_state" || header === "Module_state" ? (
+      header === "API_state" || header === "Module_state"   || header === "Role_status"  ? (
         renderApiState(row[header], index)
-      ) : header === "User status" || header === "Role status" ? (
+      ) : header === "User status"? (
         renderUserStatus(row[header])
       ) : header === "DateAdded" || header === "DateActivated" ? (
         <DateTimeCellRenderer value={row[header]} />
