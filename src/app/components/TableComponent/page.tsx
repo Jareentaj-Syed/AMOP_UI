@@ -284,7 +284,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   console.log(advancedFilters)
 
   return (
-    <div className="relative max-h-96">
+    <div className="relative">
       <div className="overflow-auto">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
