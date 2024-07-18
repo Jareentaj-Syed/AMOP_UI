@@ -333,7 +333,7 @@ const UserRole: React.FC = () => {
         });
       };
     return (
-        <div className='mt-2'>
+        <div className=''>
             <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label className='field-label'>Partner<span className="text-red-500">*</span></label>

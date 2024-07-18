@@ -36,9 +36,10 @@
 }
 
 .tabs {
-  position: fixed;
+  /* position: fixed; */
+  position: relative;
   right: 0px;
-  top: 70px;
+  /* top: 70px; */
   height: 60px;
   z-index: 99;
   display: flex;
@@ -46,6 +47,7 @@
   background-color: white;
   align-items: left;
   font-family: 'Calibri';
+  left: 0;
 }
 
 .tabs-sub-headings {
@@ -147,7 +149,8 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
 }
-.input:hover{
+
+.input:hover {
   border-color: #3B82F6;
 }
 
@@ -157,7 +160,7 @@
   box-shadow: 0 0 0 1px #1640ff;
 }
 
-.non-editable-input{
+.non-editable-input {
   color: gray;
   background-color: #F9FAFB;
   font-size: 16px;
@@ -168,23 +171,27 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
 }
-.non-editable-input:focus{
+
+.non-editable-input:focus {
   outline: none;
-  background-color:#F9FAFB ;
+  background-color: #F9FAFB;
   box-shadow: none;
   border: 1px solid #d1d5db;
 }
-.non-editable-input:hover{
-  background-color:#F9FAFB ;
+
+.non-editable-input:hover {
+  background-color: #F9FAFB;
   border: 1px solid #d1d5db;
 
 }
-.field-label{
+
+.field-label {
   /* color: #374151; */
   margin-bottom: 4px;
   margin-left: 2px;
   display: block;
 }
+
 .children {
   width: 100%;
 }
@@ -198,26 +205,30 @@
   width: 150px;
   height: 65px;
 }
-.popup{
+
+.popup {
   background-color: white;
   padding: 8px;
   overflow: auto;
   height: 100%;
   color: black;
 }
-.popup-heading{
+
+.popup-heading {
   color: black;
   font-weight: 500;
   font-size: 17px;
   text-align: left;
 }
-.confirm-popup-heading{
+
+.confirm-popup-heading {
   color: black;
   font-weight: 500;
   font-size: 15px;
   margin-bottom: 4px;
   text-align: left;
 }
+
 .createPopup-height {
   max-height: 85%;
 }
@@ -259,6 +270,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+
 .custom-close-button {
   float: right;
   background: none !important;
@@ -267,7 +279,8 @@
   top: -18px;
   right: -18px;
 }
-.text-area{
+
+.text-area {
   resize: none !important;
 }
 
@@ -291,8 +304,7 @@
 
 .cancel-btn:hover {
   background-color: #6B7280 !important;
-  color: white !important
-  ;
+  color: white !important;
 }
 
 .save-btn {
@@ -301,13 +313,15 @@
 
 .save-btn:hover {
   background-color: #3B82F6 !important;
-  color: white !important ;
+  color: white !important;
 }
-.button-container{
+
+.button-container {
   display: flex;
-    justify-content: flex-end;
-    gap: 10px; 
+  justify-content: flex-end;
+  gap: 10px;
 }
+
 .cancel-btn,
 .save-btn {
   min-width: 115px;

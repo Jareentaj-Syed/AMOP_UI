@@ -1,18 +1,5 @@
 export const createModalData= [
   {
-    "label": "Partner",
-    "type": "dropdown",
-    "value": [
-      "Agent",
-      "Agent Partner Admin",
-      "Notification Only User",
-      "Partner Admin",
-      "Super Admin",
-      "User"
-    ],
-    "mandatory": "true"
-  },
-  {
     "label": "Name",
     "type": "text",
     "value":"",

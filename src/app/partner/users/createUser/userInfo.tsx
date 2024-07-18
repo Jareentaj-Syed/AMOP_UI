@@ -5,7 +5,7 @@ import countries from '@/app/constants/locationdetails';
 import { Country, State, City } from '@/app/constants/locationdetails';
 import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
 import { partnerCarrierData, subPartnersData } from '@/app/constants/partnercarrier';
-import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
+import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 type OptionType = {
   value: string;
   label: string;
@@ -30,8 +30,8 @@ const roles = [
   "User"
 ];
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
-const editableDrp=DropdownStyles;
-const nonEditableDrp=NonEditableDropdownStyles;
+const editableDrp = DropdownStyles;
+const nonEditableDrp = NonEditableDropdownStyles;
 const Roleoptions = roles.map((role, index) => ({
   value: role.toLowerCase().replace(/\s+/g, '-'),
   label: role,
@@ -47,7 +47,7 @@ const UserInfo: React.FC = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<SingleValue<OptionType>>(null);
-  const [notification, setNotification]=useState<SingleValue<OptionType>>(null);
+  const [notification, setNotification] = useState<SingleValue<OptionType>>(null);
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<number | null>(null);
@@ -60,16 +60,16 @@ const UserInfo: React.FC = () => {
   const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
-      if (selectedOption) {
-          const partner = selectedOption.value;
-          setSelectedPartner(partner);
-       
-          setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
-      } else {
-          setSelectedPartner('');
-         
-          setSubPartners([]);
-      }
+    if (selectedOption) {
+      const partner = selectedOption.value;
+      setSelectedPartner(partner);
+
+      setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+    } else {
+      setSelectedPartner('');
+
+      setSubPartners([]);
+    }
   };
   const options = partners.map(partner => ({
     value: partner.toLowerCase().replace(/\s+/g, '-'),
@@ -83,14 +83,14 @@ const UserInfo: React.FC = () => {
     setRole(selectedOption);
     if (selectedOption) {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
-  }
+    }
   };
   const handleNotification = (selectedOption: SingleValue<OptionType>) => {
-    console.log('wsdf',selectedOption)
+    console.log('wsdf', selectedOption)
     setNotification(selectedOption);
     if (selectedOption) {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Notification is required.'));
-  }
+    }
   };
 
   const handleSave = () => {
@@ -152,52 +152,52 @@ const UserInfo: React.FC = () => {
 
     // Remove 'Username is required.' from error messages if the input is not empty
     if (newValue) {
-        setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Username is required.'));
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Username is required.'));
     }
-};
-const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const newValue = e.target.value;
-  setPassword(newValue);
+  };
+  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setPassword(newValue);
 
-  // Remove 'Username is required.' from error messages if the input is not empty
-  if (newValue) {
+    // Remove 'Username is required.' from error messages if the input is not empty
+    if (newValue) {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Password is required.'));
-  }
-};
-const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const newValue = e.target.value;
-  setEmail(newValue);
+    }
+  };
+  const handleEmailID = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setEmail(newValue);
 
-  // Remove 'Username is required.' from error messages if the input is not empty
-  if (newValue) {
+    // Remove 'Username is required.' from error messages if the input is not empty
+    if (newValue) {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Email id is required.'));
-  }
-};
+    }
+  };
 
   return (
-    <div className='bg-gray-50 pt-6'>
+    <div className='bg-gray-50'>
       <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-2 py-2">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-                        <label className="field-label">Partner</label>
-                        <Select
-                            
-                            value={{ value: selectedPartner, label: selectedPartner }}
-                            onChange={handlePartnerChange}
-                            options={Partneroptions}                            
-                            styles={editableDrp}
-                        />
-                    </div>
+        <div>
+          <label className="field-label">Partner</label>
+          <Select
 
-                    <div>
-                        <label className="field-label">Sub Partner</label>
-                        <Select
-                            isMulti
-                            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            className="mt-1"
-                            styles={editableDrp}
-                        />
-                    </div>
+            value={{ value: selectedPartner, label: selectedPartner }}
+            onChange={handlePartnerChange}
+            options={Partneroptions}
+            styles={editableDrp}
+          />
+        </div>
+
+        <div>
+          <label className="field-label">Sub Partner</label>
+          <Select
+            isMulti
+            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+            className="mt-1"
+            styles={editableDrp}
+          />
+        </div>
         <div>
           <label className="field-label">First Name</label>
           <input type="text" className="input" />
@@ -280,8 +280,8 @@ const handleEmailID  = (e: React.ChangeEvent<HTMLInputElement>) => {
               onChange={handleNotification}
             />
             {errorMessages.includes('Notification is required.') && (
-            <span className="text-red-600 ml-1">Notification is required.</span>
-          )}
+              <span className="text-red-600 ml-1">Notification is required.</span>
+            )}
           </div>
           <div>
             <label className="field-label">Business Name</label>

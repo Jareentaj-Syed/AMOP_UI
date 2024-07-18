@@ -33,7 +33,7 @@ const PartnerInfoForm: React.FC = () => {
           </button>
          
         </div>
-        <div className=" mt-[60px] mt-[60px] h-[calc(100vh-150px)] container">
+        <div className="h-[calc(100vh-150px)] container">
           {activeTab === 'carrierInfo' && <CarrierInfo />}
           {activeTab === 'apiInfo' && <APIInfo />}
         </div>
