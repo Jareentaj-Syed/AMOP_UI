@@ -97,16 +97,16 @@ const CarrierInfo: React.FC = () => {
 
   return (
     <div className=''>
-          <div className="flex items-center mb-4 mt-2">
+          <div className="flex items-center p-2 mt-2">
     <a href="/super_admin/partner_creation" className="flex items-center text-lg font-light text-black-300 hover:underline">
     Super Admin
 </a>
 <span className="mx-2 text-gray-500">/</span>
-<span className="text-lg font-light text-black">Carrier Info</span>
+<span className="text-lg font-light text-black">Amop API Info</span>
 
 </div>
       <div className="">
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-2 mb-2 flex items-center justify-between">
   <div className="flex space-x-4">
     <div>
       <label className="block text-gray-700">

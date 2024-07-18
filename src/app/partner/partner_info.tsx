@@ -165,13 +165,13 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               </label>
               <input
                 type="file"
-                className="input p-1"
+                className="input"
                 accept=".png, .jpg"
                 ref={logoFileRef}
                 onFocus={() => handleFocus('partnerLogo')}
                 onBlur={handleBlur}
               />
-              {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
+              {logoError && <p className="text-red-500 text-sm">{logoError}</p>}
             </div>
           </div>
           <div className="flex justify-end space-x-4">

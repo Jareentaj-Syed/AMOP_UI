@@ -14,7 +14,7 @@ const PartnerUsers = dynamic(() => import('./users/page'));
 // const Notification = dynamic(() => import('./notification/page'));
 // const PartnerRegestration = dynamic(() => import('./partner_registration'));
 
-const PartnerOnboardingForm: React.FC = () => {
+const Partner: React.FC = () => {
   const [activeTab, setActiveTab] = useState('partnerInfo');
   const isExpanded = useSidebarStore((state:any) => state.isExpanded);
 
@@ -90,4 +90,4 @@ const PartnerOnboardingForm: React.FC = () => {
   );
 };
 
-export default PartnerOnboardingForm;
+export default Partner;

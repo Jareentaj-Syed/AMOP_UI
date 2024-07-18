@@ -98,7 +98,7 @@ const CarrierInfo: React.FC = () => {
 
   return (
     <div className=''>
-       <div className="flex items-center mb-4 mt-2">
+       <div className="flex items-center p-2 mt-2">
     <a href="/super_admin/partner_creation" className="flex items-center text-lg font-light text-black-300 hover:underline">
     Super Admin
 </a>
@@ -108,7 +108,7 @@ const CarrierInfo: React.FC = () => {
 </div>
       <div className="">
      
-      <div className="p-4 flex items-center justify-between">
+      <div className="p-2 flex items-center justify-between mb-2">
       <div className="flex space-x-4">
     <div>
       <label className="block text-gray-700">

@@ -1,11 +1,11 @@
 // app/page.tsx
 "use client"
 import React from 'react';
-import PartnerPartnerOnboardingForm from './partner_onboarding_form/page'
+import Partner from './partner/page'
 
 const Page: React.FC = () => {
   return (
-      <PartnerPartnerOnboardingForm/>
+      <Partner/>
   );
 };
 
