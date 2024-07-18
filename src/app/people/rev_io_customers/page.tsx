@@ -57,6 +57,7 @@ const createColumns=createModalData
 
     fetchData();
   }, []);
+  const headers = visibleColumns;
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -105,7 +106,7 @@ const createColumns=createModalData
       </div>
 
       <TableComponent
-        headers={Object.keys(data.length > 0 ? data[0] : {})}
+        headers={headers}
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}

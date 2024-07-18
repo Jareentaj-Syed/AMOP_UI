@@ -58,7 +58,7 @@ const E911Customers: React.FC = () => {
 
     fetchData();
   }, []);
-
+  const headers = visibleColumns;
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
@@ -103,7 +103,7 @@ const E911Customers: React.FC = () => {
       </div>
 
       <TableComponent
-        headers={Object.keys(data.length > 0 ? data[0] : {})}
+        headers={headers}
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
