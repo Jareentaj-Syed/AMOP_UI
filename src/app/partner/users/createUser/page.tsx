@@ -12,14 +12,19 @@ const UserInfo = dynamic(() => import('./userInfo'));
 const TenantInfo = dynamic(() => import('./tenantInfo'));
 const UserRole   = dynamic(() => import('./userrole'));
 
-const CreateUser: React.FC = () => {
+interface CreateUserProps {
+  isPopup?:boolean;
+  rowData?: any;
+}
+
+const CreateUser:React.FC<CreateUserProps> = ({ isPopup, rowData}) => {
   const [activeTab, setActiveTab] = useState('userInfo');
   const isExpanded = useSidebarStore((state:any) => state.isExpanded);
 
 
   return (
     <div className="">
-      <div className={`bg-white shadow-md tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`} style={{zIndex:'98'}}>
+      <div className={`bg-white shadow-md ${isPopup?'':'tabs'} ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`} style={{zIndex:'98'}}>
         <button 
           className={`tab-headings ${activeTab === 'userInfo' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('userInfo')}
@@ -40,7 +45,7 @@ const CreateUser: React.FC = () => {
         </button>
         
       </div>
-        <div className="shadow-md p-4">
+        <div className={`shadow-md pt-[70px] p-4 ${isPopup?'':'mt-[-10px]'}`}>
           {activeTab === 'userInfo' && <UserInfo />}
           {activeTab ===  'tenantInfo' && <TenantInfo />}
           {activeTab ===  'userrole' && <UserRole />}

@@ -94,7 +94,9 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
         footer={null}
         >
           <div className='popup'>
-          <CreateUser />
+          <CreateUser 
+          isPopup={true}
+          />
 
           </div>
         </Modal>

@@ -36,8 +36,8 @@
 }
 
 .tabs {
-  /* position: fixed; */
-  position: relative;
+  position: fixed;
+  /* position: relative; */
   right: 0px;
   /* top: 70px; */
   height: 60px;
@@ -47,7 +47,7 @@
   background-color: white;
   align-items: left;
   font-family: 'Calibri';
-  left: 0;
+  /* left: 0; */
 }
 
 .tabs-sub-headings {

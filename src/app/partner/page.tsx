@@ -61,7 +61,7 @@ const Partner: React.FC = () => {
            Notifications
         </button>
       </div>
-      <div className="container">
+      <div className="container pt-[70px]">
         {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'partnerRegistration' && <PartnerAuthentication onSubmit={switchToCarrierInfoTab} />}
         {activeTab === 'partnermoduleaccess' && <PartnerModuleAccess/>}
