@@ -343,25 +343,12 @@ const UserRole: React.FC = () => {
           
             <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 pr-4 py-2 flex justify-between items-center">
                 Module Access
-                {/* <button onClick={handleAddSection} className="text-blue-600 border border-blue-600 rounded-md px-2 py-1">
-        ADD
-    </button> */}
             </h3>
 
 
 
-            {Array.from({ length: count }, (_, index) => (
-                <div key={index} className="relative border border-gray-300 p-4 rounded-md mb-4">
-                    {/* Cross mark for deletion */}
-                    {/* <button
-                   onClick={() => handleDelete(index)}
-                   className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 focus:outline-none"
-                   style={{ zIndex: 10 }} // Ensure the button is above other elements
-               >
-                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                   </svg>
-               </button> */}
+                <div className="relative border border-gray-300 p-4 rounded-md mb-4">
+              
                     <div>
 
                         <label className="block text-gray-700">
@@ -388,7 +375,7 @@ const UserRole: React.FC = () => {
                         )}
                     </div>
                     <div className="grid grid-cols-1 gap-4 mt-4">
-                        {/* Mapping over your data object */}
+                       
                         {Object.keys(data).map((category) => (
                             <div key={category} className="col-span-1">
                                 <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
@@ -421,7 +408,7 @@ const UserRole: React.FC = () => {
                         ))}
                     </div>
                 </div>
-            ))}
+            
 
 
             <div className="flex justify-end space-x-4">
