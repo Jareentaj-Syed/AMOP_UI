@@ -9,7 +9,6 @@ interface PartnerInfo {
 
 const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [logoError, setLogoError] = useState<string | null>(null);
-  const [activeElement, setActiveElement] = useState<string | null>(null);
   const [formValid, setFormValid] = useState<boolean>(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [partnerName, setPartnerName] = useState<string>('');
@@ -36,15 +35,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     event.preventDefault();
     setSubmitModalOpen(true);
   };
-
-  const handleFocus = (elementName: string) => {
-    setActiveElement(elementName);
-  };
-
-  const handleBlur = () => {
-    setActiveElement(null);
-  };
-
   const handleAddEmail = (email: string) => {
     setEmailList([...emailList, email]);
   };
@@ -102,8 +92,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                onFocus={() => handleFocus('partnerName')}
-                onBlur={handleBlur}
                 value={'Altaworx'}
                 onChange={(e) => setPartnerName(e.target.value)}
                 readOnly
@@ -117,8 +105,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                onFocus={() => handleFocus('subPartnerName')}
-                onBlur={handleBlur}
                 value={'Altantech-AWX'}
                 onChange={(e) => setSubPartnerName(e.target.value)}
                 readOnly
@@ -134,8 +120,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   type="text"
                   placeholder="Click on + to add email"
                   className="input"
-                  onFocus={() => handleFocus('emailIds')}
-                  onBlur={handleBlur}
                   value={emailList.join(', ')}
                   readOnly
                   required 
@@ -159,8 +143,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 className="input"
                 accept=".png, .jpg"
                 ref={logoFileRef}
-                onFocus={() => handleFocus('partnerLogo')}
-                onBlur={handleBlur}
               />
               {logoError && <p className="text-red-500 text-sm">{logoError}</p>}
             </div>
