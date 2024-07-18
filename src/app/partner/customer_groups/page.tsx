@@ -94,7 +94,7 @@ const CustomerGroups: React.FC = () => {
               onClick={handleCreateModalOpen}
             >
               <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-              Add Customer
+              Add Customer Group
             </button>
             <button className="save-btn">
               <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />

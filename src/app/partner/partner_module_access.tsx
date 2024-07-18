@@ -3,6 +3,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
+import { DropdownStyles, NonEditableDropdownStyles } from '../components/css/dropdown';
 type OptionType = {
     value: string;
     label: string;
@@ -271,19 +272,14 @@ const roles = [
 ];
 
 const UserRole: React.FC = () => {
-    const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-   
+    const editableDrp = DropdownStyles
+    const nonEditableDrp = NonEditableDropdownStyles
 
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
-    const [count, setCount] = useState(1); // State to track the number of sections
 
-    const handleAddSection = () => {
-        setCount(prevCount => prevCount + 1); // Increment count on button click
-    };
-  
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
         setSelectedModules({ ...selectedModules, [category]: moduleValues });
@@ -293,26 +289,16 @@ const UserRole: React.FC = () => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
-
-    const options = partners.map(partner => ({
-        value: partner.toLowerCase().replace(/\s+/g, '-'),
-        label: partner
-    }));
     const Roleoptions = roles.map((role, index) => ({
         value: role.toLowerCase().replace(/\s+/g, '-'),
         label: role,
     }));
-    const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
-        setPartner(selectedOption);
-    };
-
     const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
         setRole(selectedOption);
     };
 
     const handleSubmit = () => {
         const errors: string[] = [];
-        if (!partner) errors.push('Partner is required.');
         if (!role) errors.push('Role is required.');
 
         setErrorMessages(errors);
@@ -323,92 +309,64 @@ const UserRole: React.FC = () => {
         else {
         }
     };
-    const handleDelete = (indexToDelete: any) => {
-        setCount((prevCount) => prevCount - 1);
-        // Optionally, you may remove associated state for the deleted item
-        // Example: Clear selectedModules and selectedFeatures for the deleted index
-        setSelectedModules((prevSelectedModules) => {
-            const updatedModules = { ...prevSelectedModules };
-            delete updatedModules[indexToDelete];
-            return updatedModules;
-        });
-        setSelectedFeatures((prevSelectedFeatures) => {
-            const updatedFeatures = { ...prevSelectedFeatures };
-            delete updatedFeatures[indexToDelete];
-            return updatedFeatures;
-        });
-    };
     return (
         <div className=' p-4'>
-          
-            <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 pr-4 py-2 flex justify-between items-center">
-                Module Access
-            </h3>
 
-
-
-                <div className="relative border border-gray-300 p-4 rounded-md mb-4">
-              
+            <h3 className="tabs-sub-headings">Module Access</h3>
+            <div className="relative border border-gray-300 p-4 rounded-md mb-4">
+                <div className="grid grid-cols-2 gap-4">
                     <div>
-
-                        <label className="block text-gray-700">
+                        <label className="field-label">
                             <span className="font-semibold text-lg">Role</span><span className="text-red-500">*</span>
                         </label>
                         <Select
                             value={role}
                             onChange={handlesetRole}
                             options={Roleoptions}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    width: '570px',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            styles={editableDrp}
                         />
                         {errorMessages.includes('Role is required.') && (
                             <span className="text-red-600 ml-1">Role is required.</span>
                         )}
                     </div>
-                    <div className="grid grid-cols-1 gap-4 mt-4">
-                       
-                        {Object.keys(data).map((category) => (
-                            <div key={category} className="col-span-1">
-                                <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                    <div>
-                                        <label className="block text-gray-700">Module</label>
-                                        <Select
-                                            isMulti
-                                            closeMenuOnSelect={false}
-                                            value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
-                                            onChange={(selected) => handleModuleChange(category, selected)}
-                                            options={data[category].Module.map(module => ({ value: module, label: module }))}
-                                            className="w-full mt-1"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-gray-700">Features</label>
-                                        <Select
-                                            isMulti
-                                            closeMenuOnSelect={false}
-                                            value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
-                                            onChange={(selected) => handleFeatureChange(category, selected)}
-                                            options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                                            className="w-full mt-1"
-                                            isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
-                                        />
-                                    </div>
+                </div>
+                <div className="grid grid-cols-1 gap-4 mt-4">
+
+                    {Object.keys(data).map((category) => (
+                        <div key={category} className="col-span-1">
+                            <h4 className="text-md font-medium text-blue-600">{category}</h4>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                                <div>
+                                    <label className="field-label">Module</label>
+                                    <Select
+                                        isMulti
+                                        closeMenuOnSelect={false}
+                                        value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
+                                        onChange={(selected) => handleModuleChange(category, selected)}
+                                        options={data[category].Module.map(module => ({ value: module, label: module }))}
+                                        styles={editableDrp}
+
+                                    />
+                                </div>
+                                <div>
+                                    <label className="field-label">Features</label>
+                                    <Select
+                                        isMulti
+                                        closeMenuOnSelect={false}
+                                        value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
+                                        onChange={(selected) => handleFeatureChange(category, selected)}
+                                        options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
+                                        className=""
+                                        styles={!selectedModules[category] || selectedModules[category].length === 0?nonEditableDrp:editableDrp}
+                                        isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
+                                    />
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
-            
+            </div>
+
 
 
             <div className="flex justify-end space-x-4">
