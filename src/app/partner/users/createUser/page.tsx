@@ -30,13 +30,13 @@ const CreateUser: React.FC = () => {
           className={`tab-headings ${activeTab === 'userrole' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('userrole')}
         >
-          User role
+          Edit User role
         </button>
         <button 
           className={`tab-headings ${activeTab === 'tenantInfo' ? 'active-tab-heading' : ''}`}
           onClick={() => setActiveTab('tenantInfo')}
         >
-          Tenant info
+          Customer info
         </button>
         
       </div>
