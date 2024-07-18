@@ -1,5 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
 import EditModal from '../../components/editPopup';
 import Pagination from '@/app/components/pagination';
@@ -14,7 +16,6 @@ import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-i
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
-import { useRouter } from 'next/navigation';
 
 
 interface TableComponentProps {
@@ -23,7 +24,7 @@ interface TableComponentProps {
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
-  allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick')[];
+  allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick'|'tabsEdit'|'tabsInfo')[];
   popupHeading: string;
   advancedFilters?: any
   infoColumns: any[]
@@ -32,6 +33,8 @@ interface TableComponentProps {
 }
 
 const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters,isSelectRowVisible= true }) => {
+  const router = useRouter();
+
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
@@ -48,9 +51,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
-
-  const router = useRouter();
-
+  const [tabsEdit,setTabsEdit]=useState(false)
   useEffect(() => {
     if (!router) {
       console.error('NextRouter is not available.');
@@ -114,6 +115,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setIsEditable(true);
         setEditModalOpen(true);
         break;
+        case 'tabsEdit':
+        setTabsEdit(true)
+        setEditRowIndex(rowIndex);
+        setIsEditable(true);
+        setEditModalOpen(true);
+        break;
       case 'delete':
         setDeleteRowIndex(rowIndex);
         setDeleteModalOpen(true);
@@ -140,6 +147,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const handleCloseModal = () => {
     setEditModalOpen(false);
     setIsEditable(false);
+    setTabsEdit(false)
     setEditRowIndex(null);
   };
 
@@ -415,6 +423,28 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         }
                       />
                     )}
+                    {allowedActions?.includes("tabsEdit") && (
+                      <PencilIcon
+                      className="h-5 w-5 text-blue-500 cursor-pointer"
+                      onClick={() =>
+                        handleActionClick(
+                          "tabsEdit",
+                          (currentPage - 1) * itemsPerPage + index
+                        )
+                      }
+                    />
+                    )}
+                    {allowedActions?.includes("tabsInfo") && (
+                      <InformationCircleIcon
+                      className="h-5 w-5 text-green-500 cursor-pointer"
+                      onClick={() =>
+                        handleActionClick(
+                          "tabsEdit",
+                          (currentPage - 1) * itemsPerPage + index
+                        )
+                      }
+                    />
+                    )}
                   </div>
                 </td>)}
                 
@@ -435,6 +465,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onSave={handleSaveModal}
         onClose={handleCloseModal}
         heading={popupHeading}
+        isTabEdit={tabsEdit}
       />
       <Modal
         title="Confirm Deletion"

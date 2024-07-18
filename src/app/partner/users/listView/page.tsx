@@ -105,7 +105,7 @@ const ListView: React.FC = () => {
               searchQuery={searchTerm}
               visibleColumns={visibleColumns}
               itemsPerPage={10}
-              allowedActions={["edit", "delete", "info"]}
+              allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
               infoColumns={[]}
               editColumns={[]}
