@@ -44,12 +44,6 @@ export const moduleData = [
         { child_module_name: 'Bandwidth Customers', queue_order: 2, sub_children: [] },
         { child_module_name: 'NetSapiens Customers', queue_order: 3, sub_children: [] },
         { child_module_name: 'E911 Customers', queue_order: 4, sub_children: [] },
-        { child_module_name: 'Customer Groups', queue_order: 5, sub_children: [] },
-        {
-          child_module_name: 'Users',
-          queue_order: 6,
-          sub_children: [],
-        },
       ],
     },
     {
