@@ -42,6 +42,11 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const pageNumbers = calculatePagesToShow();
 
+  // If there is only one page, do not display pagination
+  if (totalPages <= 1) {
+    return null;
+  }
+
   return (
     <div className="flex justify-center mb-4 pagination">
       <button
