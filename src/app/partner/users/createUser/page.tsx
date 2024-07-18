@@ -45,7 +45,7 @@ const CreateUser:React.FC<CreateUserProps> = ({ isPopup, rowData}) => {
         </button>
         
       </div>
-        <div className={`shadow-md pt-[70px] p-4 ${isPopup?'':'mt-[-10px]'}`}>
+        <div className={`shadow-md p-4 ${isPopup?'':'mt-[-10px] pt-[70px]'}`}>
           {activeTab === 'userInfo' && <UserInfo />}
           {activeTab ===  'tenantInfo' && <TenantInfo />}
           {activeTab ===  'userrole' && <UserRole />}
