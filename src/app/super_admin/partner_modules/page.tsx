@@ -30,6 +30,10 @@ const Page: React.FC = () => {
     }
   };
 
+  const defaultValues = [
+    { value: 'Atlantech - AWX', label: 'Atlantech - AWX' },
+    { value: 'GoTech - AWX', label: 'GoTech - AWX' }
+  ];
   return (
     <div className='bg-gray-50'>
       <div className='p-4 pl-2 pr-2'>
@@ -50,9 +54,9 @@ const Page: React.FC = () => {
         <div>
           <label className="field-label">Sub Partner</label>
           <Select
-            defaultValue={[subPartnersoptions[1]]}
-            
-            value={[subPartnersoptions[1]]}
+            defaultValue={defaultValues}
+            isMulti
+            // value={defaultValues}
             options={subPartnersoptions}
             // options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
             className="mt-1"
