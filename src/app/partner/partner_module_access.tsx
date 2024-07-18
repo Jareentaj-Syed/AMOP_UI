@@ -18,7 +18,6 @@ interface ExcelData {
         };
     };
 }
-
 const data: ExcelData = {
     "Sim Management": {
         "Module": [
@@ -32,44 +31,44 @@ const data: ExcelData = {
         ],
         "Feature": {
             "Inventory": [
-                "Update Customer Rate Plan",
-                "Update Status",
-                "Update Carrier Rate Plan",
-                "Export inventory",
-                "Advanced filter"
+                "Update Customer Rate Plan-Inventory",
+                "Update Status-Inventory",
+                "Update Carrier Rate Plan-Inventory",
+                "Export inventory-Inventory",
+                "Advanced filter-Inventory"
             ],
             "Bulk Change": [
-                "Activate New Service (POD, Jasper and VZN)",
-                "Archive",
-                "Assign Customer",
-                "Change Carrier Rate Plan",
-                "Change Customer Rate Plan",
-                "Change ICCID/IMEI",
-                "Create Rev Service",
-                "Update Device Status"
+                "Activate New Service (POD, Jasper and VZN)-Bulk Change",
+                "Archive-Bulk Change",
+                "Assign Customer-Bulk Change",
+                "Change Carrier Rate Plan-Bulk Change",
+                "Change Customer Rate Plan-Bulk Change",
+                "Change ICCID/IMEI-Bulk Change",
+                "Create Rev Service-Bulk Change",
+                "Update Device Status-Bulk Change"
             ],
             "SIM Order Form": ["SIM Order Form"],
             "Carrier Rate Plans": [
-                "Edit",
-                "Export",
-                "Optimize"
+                "Edit-Carrier Rate Plans",
+                "Export-Carrier Rate Plans",
+                "Optimize-Carrier Rate Plans"
             ],
             "Customer Rate Plans": [
-                "Create",
-                "Edit",
-                "Import",
-                "Export"
+                "Create-Customer Rate Plans",
+                "Edit-Customer Rate Plans",
+                "Import-Customer Rate Plans",
+                "Export-Customer Rate Plans"
             ],
             "Rev Assurance": [
-                "Add Service Line",
-                "Add Service Product",
-                "Disconnect Service Product"
+                "Add Service Line-Rev Assurance",
+                "Add Service Product-Rev Assurance",
+                "Disconnect Service Product-Rev Assurance"
             ],
             "Reports": [
-                "Zero Usage Report",
-                "Newly Activated Report",
-                "Status History Report",
-                "Usage By Line Report"
+                "Zero Usage Report-Reports",
+                "Newly Activated Report-Reports",
+                "Status History Report-Reports",
+                "Usage By Line Report-Reports"
             ]
         }
     },
@@ -79,8 +78,8 @@ const data: ExcelData = {
         ],
         "Feature": {
             "Optimization": [
-                "Optimize",
-                "Export"]
+                "Optimize-Optimization",
+                "Export-Optimization"]
         }
     },
     "Customer Charges": {
@@ -89,7 +88,7 @@ const data: ExcelData = {
         ],
         "Feature": {
             "Customer Charges": [
-                "Export"
+                "Export-Customer Charges"
             ]
         }
     },
@@ -101,17 +100,17 @@ const data: ExcelData = {
         ],
         "Feature": {
             "Inventory List": [
-                "Export"
+                "Export-nventory List"
             ],
             "NetSapiens Rev Assurance": [
-                "Export",
-                "Chain and Unchain",
-                "Ignore"
+                "Export-NetSapiens Rev Assurance",
+                "Chain and Unchain-NetSapiens Rev Assurance",
+                "Ignore-NetSapiens Rev Assurance"
             ],
             "Rev.IO Product Links": [
-                "Export",
-                "Edit",
-                "Delete"
+                "Export-Rev.IO Product Links",
+                "Edit-Rev.IO Product Links",
+                "Delete-Rev.IO Product Links"
             ]
         }
     },
@@ -169,13 +168,13 @@ const data: ExcelData = {
         ],
         "Feature": {
             "Automation rule": [
-                "Export",
-                "Edit",
-                "Delete"
+                "Export-Automation rule",
+                "Edit-Automation rule",
+                "Delete-Automation rule"
             ],
             "Notifications": [
-                "Add M2M Device Notifications",
-                "Add Mobility Device Notifications"
+                "Add M2M Device Notifications-Notifications",
+                "Add Mobility Device Notifications-Notifications"
             ]
         }
     },

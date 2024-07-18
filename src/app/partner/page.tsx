@@ -10,7 +10,7 @@ const PartnerAuthentication = dynamic(() => import('./partner_authentication'));
 const PartnerModuleAccess = dynamic(() => import('./partner_module_access'));
 const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
-// const Notification = dynamic(() => import('./notification/page'));
+const Notification = dynamic(() => import('./notification/page'));
 
 const Partner: React.FC = () => {
   const [activeTab, setActiveTab] = useState('partnerInfo');
@@ -67,7 +67,7 @@ const Partner: React.FC = () => {
         {activeTab === 'partnermoduleaccess' && <PartnerModuleAccess/>}
         {activeTab === 'customergroups' && <CustomerGroups/>}
         {activeTab === 'partnerusers' && <PartnerUsers/>}
-        {/* {activeTab === 'notification' && <Notification/>} */}
+        {activeTab === 'notification' && <Notification/>}
 
       </div>
     </div>
