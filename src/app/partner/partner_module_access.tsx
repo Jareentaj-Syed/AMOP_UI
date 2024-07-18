@@ -3,13 +3,11 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { partnerCarrierData, subPartnersData } from '@/app/constants/partnercarrier'
 type OptionType = {
     value: string;
     label: string;
 };
 
-const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 interface ExcelData {
     [key: string]: {
@@ -276,10 +274,7 @@ const UserRole: React.FC = () => {
     const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const [selectedPartner, setSelectedPartner] = useState<string>('');
-    const [subPartners, setSubPartners] = useState<string[]>([]);
-    const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
-    const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
+   
 
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
@@ -288,18 +283,7 @@ const UserRole: React.FC = () => {
     const handleAddSection = () => {
         setCount(prevCount => prevCount + 1); // Increment count on button click
     };
-    const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
-        if (selectedOption) {
-            const partner = selectedOption.value;
-            setSelectedPartner(partner);
-
-            setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
-        } else {
-            setSelectedPartner('');
-
-            setSubPartners([]);
-        }
-    };
+  
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
         setSelectedModules({ ...selectedModules, [category]: moduleValues });
@@ -356,54 +340,7 @@ const UserRole: React.FC = () => {
     };
     return (
         <div className=' p-4'>
-            <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
-                <div>
-                    <label className="block text-gray-700">Partner</label>
-                    <Select
-
-                        value={{ value: selectedPartner, label: selectedPartner }}
-                        onChange={handlePartnerChange}
-                        options={Partneroptions}
-                        className="mt-1"
-
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                marginTop: '5px',
-                                height: '2.6rem',
-                                borderRadius: '0.375rem',
-                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                            }),
-                        }}
-                    />
-                    {errorMessages.includes('Partner is required.') && (
-                        <span className="text-red-600 ml-1">Partner is required.</span>
-                    )}
-                </div>
-                <div>
-                    <label className="block text-gray-700">Sub Partner</label>
-                    <Select
-                        isMulti
-                        options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                        className="mt-1"
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                marginTop: '5px',
-                                height: '2.6rem',
-                                borderRadius: '0.375rem',
-                                borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                            }),
-                        }}
-                    />
-
-                    {errorMessages.includes('Role is required.') && (
-                        <span className="text-red-600 ml-1">Sub partner is required.</span>
-                    )}
-                </div>
-            </div>
+          
             <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-4 pr-4 py-2 flex justify-between items-center">
                 Module Access
                 {/* <button onClick={handleAddSection} className="text-blue-600 border border-blue-600 rounded-md px-2 py-1">
