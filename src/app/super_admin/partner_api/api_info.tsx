@@ -4,12 +4,14 @@ import * as XLSX from 'xlsx';
 import TableComponent from '../../components/TableComponent/page';
 import SearchInput from '../../components/Search-Input';
 import { partnerCarrierData } from '@/app/constants/partnercarrier';
+import { createModalData } from './api_constants';
 interface ExcelData {
   [key: string]: any;
 }
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 const CarrierInfo: React.FC = () => {
+  const editColumns=createModalData
   const [carrierData, setCarrierData] = useState<ExcelData[]>([]);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
@@ -166,8 +168,8 @@ const CarrierInfo: React.FC = () => {
                 itemsPerPage={10}
                 allowedActions={["edit"]}   
                 popupHeading='API'      
-                infoColumns={[]}  
-                editColumns={[]}
+                infoColumns={editColumns}  
+                editColumns={editColumns}
                 advancedFilters={[]}
               />
           )}

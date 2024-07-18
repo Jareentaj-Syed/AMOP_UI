@@ -5,12 +5,14 @@ import { TrashIcon, PencilIcon, InformationCircleIcon } from '@heroicons/react/2
 import SearchInput from '../../components/Search-Input';
 import { useEffect, useState } from 'react';
 import { partnerCarrierData } from '@/app/constants/partnercarrier';
+import { createModalData } from './carrier_constant';
 interface ExcelData {
   [key: string]: any;
 }
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 const CarrierInfo: React.FC = () => {
+  const editColumns=createModalData
   const [carrierData, setCarrierData] = useState<ExcelData[]>([]);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
@@ -169,8 +171,8 @@ const CarrierInfo: React.FC = () => {
                 itemsPerPage={10}
                 allowedActions={["edit"]}        
                 popupHeading='Carrier'  
-                infoColumns={[]}  
-                editColumns={[]}  
+                infoColumns={editColumns}  
+                editColumns={editColumns}  
                 advancedFilters={[]}        
                  />
           )}
