@@ -60,11 +60,12 @@ export const createModalData= [
     "mandatory": "false"
   },
   {
-    "label": "Customer Rate Plan",
+    "label": "Feature Codes",
     "type": "dropdown",
     "value": [
       "$3 Pooling Fee",
       "$5 Pooling Fee",
+      "100GB Hotspot",
       "100GB Hotspot"
     ],
     "mandatory": "false"
