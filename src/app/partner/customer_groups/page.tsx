@@ -77,15 +77,6 @@ const CustomerGroups: React.FC = () => {
   return (
     <div className="container">
       <div className=' p-4'>
-
-        <div className="flex items-center ml-4">
-          <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
-            Partner
-          </a>
-          <span className="mx-2 text-gray-500">/</span>
-          <span className="text-lg font-light text-black">Customer Groups</span>
-
-        </div>
         <div className="p-4 flex items-center justify-between  mb-4">
 
           <div className="flex space-x-2">

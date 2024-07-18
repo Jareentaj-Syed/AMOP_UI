@@ -19,7 +19,6 @@ const CreateUser: React.FC = () => {
 
   return (
     <div className="">
-      
       <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
         <button 
           className={`tab-headings ${activeTab === 'userInfo' ? 'active-tab-heading' : ''}`}

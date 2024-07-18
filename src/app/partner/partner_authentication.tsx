@@ -73,15 +73,7 @@ const PartnerAuthentication: React.FC<PartnerAuthentication> = ({ onSubmit }) =>
 
   return (
     <div className='p-2'>
-      <div className="mb-6">
-      <div className="flex items-center mb-4 mt-2">
-    <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
-    Partner
-</a>
-<span className="mx-2 text-gray-500">/</span>
-<span className="text-lg font-light text-black">Partner Authentication</span>
-
-</div>
+      <div className="">
         <form onSubmit={handleSubmit}>
         
           <h3 className="tabs-sub-headings">Partner Authentication</h3>

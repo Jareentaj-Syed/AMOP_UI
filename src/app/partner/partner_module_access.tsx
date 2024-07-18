@@ -356,18 +356,6 @@ const UserRole: React.FC = () => {
     };
     return (
         <div className=' p-4'>
-            <div className="flex items-center mb-4 mt-2">
-                <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline">
-                    Partner
-                </a>
-                <span className="mx-2 text-gray-500">/</span>
-                <span className="text-lg font-light text-black">Partner Module Access</span>
-
-            </div>
-
-
-
-
             <div className="grid grid-cols-2 gap-4 mb-4 mt-2">
                 <div>
                     <label className="block text-gray-700">Partner</label>

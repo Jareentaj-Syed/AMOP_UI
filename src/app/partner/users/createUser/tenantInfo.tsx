@@ -1,7 +1,8 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
-import Select from 'react-select';
+import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
+import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions, CustomerGroup2Options } from '@/app/constants/partnercarrier';
 interface ExcelData {
     [key: string]: {
@@ -15,7 +16,12 @@ interface Option {
     value: string;
     label: string;
 }
-
+type OptionType = {
+    value: string;
+    label: string;
+};
+const editableDrp=DropdownStyles;
+const nonEditableDrp=NonEditableDropdownStyles;
 const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
 // const Notificationoptions = [
@@ -263,6 +269,9 @@ const TenantInfo: React.FC = () => {
     const [selectedPartner, setSelectedPartner] = useState<string>('');
     const [carriers, setCarriers] = useState<string[]>([]);
     const [subPartners, setSubPartners] = useState<string[]>([]);
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
+    const [ServiceProvider,setServiceProvider]  = useState<MultiValue<OptionType>>([]);
     const [notificationValue, setNotificationValue] = useState<Option | null>(null);
     const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
     const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
@@ -293,112 +302,108 @@ const TenantInfo: React.FC = () => {
     const handleNotificationChange = (selectedOption: Option | null) => {
         setNotificationValue(selectedOption);
     };
+    const handleSubmit = () => {
+        const errors: string[] = [];
+        if (CarrierNotification.length === 0) errors.push('Carrier is required.');
+        if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
 
+        setErrorMessages(errors);
+
+        if (errors.length === 0) {
+            console.log('Saving...');
+        }
+        else {
+            scrollToTop()
+          }
+    };
+    const scrollToTop = () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto'  // Optional: Smooth scroll animation
+        });
+      };
+      const handleCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => { 
+        setCarrierNotification(newValue);
+        if (newValue.length > 0) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
+        }
+    };
+      const serviceProviderCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {        
+
+        setServiceProvider(newValue);
+        if (newValue.length > 0) {
+            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
+        }
+    };
     return (
         <div className='mt-4'>
-               <div className="flex items-center mb-4 mt-2">
-    <a href="/partner" className="flex items-center text-lg font-light text-black-300 hover:underline" >
-    Partner Users
-</a>
-<span className="mx-2 text-gray-500">/</span>
-<span className="text-lg font-light text-black">Tenant Info</span>
-
-</div>
             <div>
                 <h3 className="tabs-sub-headings">Tenant Info</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
-                        <label className="block text-gray-700">Partner</label>
+                        <label className="field-label">Partner</label>
                         <Select
                             
                             value={Partneroptions[0]}
                             onChange={handlePartnerChange}
                             options={Partneroptions}
-                            className="input"
+                            styles={nonEditableDrp}
                             
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
                         />
                     </div>
 
                     <div>
-                        <label className="block text-gray-700">Sub Partner</label>
+                        <label className="field-label">Sub Partner</label>
                         <Select
                         value={subPartnersoptions[0]}
                             isMulti
                             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            className="input"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            styles={nonEditableDrp}                            
                         />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Carrier <span className="text-red-500">*</span></label>
+                        <label className="field-label">Carrier <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
+                            value={CarrierNotification}
                             options={Carrieroptions}
-                            className="input"
+                            styles={selectedPartner?editableDrp:nonEditableDrp}                            
+                            onChange={handleCarrier}
                             isDisabled={!selectedPartner}
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                           
                         />
+                        {errorMessages.includes('Carrier is required.') && (
+                        <span className="text-red-600 ml-1">Carrier is required.</span>
+                    )}
                     </div>
                     <div>
-                        <label className="block text-gray-700">Service Provider <span className="text-red-500">*</span></label>
+                        <label className="field-label">Service Provider <span className="text-red-500">*</span></label>
                         <Select
                             isMulti
                             options={ServiceProviderOptions}
-                            className="input"
-                            styles={{
-                                control: (base, state) => ({
-                                    ...base,
-                                    marginTop: '5px',
-                                    height: '2.6rem',
-                                    borderRadius: '0.375rem',
-                                    borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-                                    boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-                                }),
-                            }}
+                            styles={editableDrp}                            
+                            value={ServiceProvider}
+                            onChange={serviceProviderCarrier}
+                           
                         />
+                        {errorMessages.includes('Service Provider is required.') && (
+                        <span className="text-red-600 ml-1">Service Provider is required.</span>
+                    )}
                     </div>
                     <div>
-                        <label className="block text-gray-700">Customer Group</label>
+                        <label className="field-label">Customer Group</label>
                         <Select
 
-                            className='input'
+                            styles={editableDrp}
                             options={Customeroptions}
                             onChange={handleNotificationChange} />
                     </div>
                     <div>
-                        <label className="block text-gray-700">Customers</label>
+                        <label className="field-label">Customers</label>
                         <Select
                             isMulti
                             options={CustomerGroup2Options}
-                            className="input"
+                            styles={editableDrp}
                         />
                     </div>
                 </div>
@@ -412,7 +417,7 @@ const TenantInfo: React.FC = () => {
                             <h4 className="text-md font-medium mb-2 text-blue-600">{category}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                 <div>
-                                    <label className="block text-gray-700">Module</label>
+                                    <label className="field-label">Module</label>
                                     <Select
                                         isMulti
                                         closeMenuOnSelect={false}
@@ -423,7 +428,7 @@ const TenantInfo: React.FC = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-gray-700">Features</label>
+                                    <label className="field-label">Features</label>
                                     <Select
                                         isMulti
                                         closeMenuOnSelect={false}
@@ -444,7 +449,7 @@ const TenantInfo: React.FC = () => {
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="save-btn" 
+                <button className="save-btn" onClick={handleSubmit}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2"  />
                     <span>Submit</span>

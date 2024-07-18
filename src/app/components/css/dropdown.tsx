@@ -11,7 +11,7 @@ export const NonEditableDropdownStyles = {
         textAlign: 'left',
         padding: '2px',
         '&:hover': {
-        backgroundColor: '#3B82F6'
+        borderColor: '#3B82F6'
         }
     }),
     singleValue: (provided: any) => ({
