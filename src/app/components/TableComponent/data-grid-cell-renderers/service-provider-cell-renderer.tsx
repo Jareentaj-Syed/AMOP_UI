@@ -6,9 +6,7 @@ interface ServiceProviderCellProps {
   value: string;
 }
 
-const ServiceProviderCellRenderer: FC<ServiceProviderCellProps> = ({
-  value,
-}) => {
+const ServiceProviderCellRenderer: FC<ServiceProviderCellProps> = ({ value }) => {
   const [hideImage, setHideImage] = useState(false);
 
   const getNetworkCarrierLogoUrl = (networkCarrier: string) => {
@@ -20,7 +18,7 @@ const ServiceProviderCellRenderer: FC<ServiceProviderCellProps> = ({
       case "AT&T - POD19":
       case "AT&T MOBILITY":
       case "AT&T WIRELESS":
-      case "CENTENNIAL PUERTO RIO LICENSE CORP":
+      case "CENTENNIAL PUERTO RICO LICENSE CORP":
         return `${basePublicAssetsUrl}/AT&T.png`;
       case "CENTENNIAL COMMUNICATIONS":
         return `${basePublicAssetsUrl}/centennial-comm.png`;

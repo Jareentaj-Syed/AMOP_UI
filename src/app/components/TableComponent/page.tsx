@@ -15,6 +15,9 @@ import { Modal, Checkbox } from 'antd';
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import StatusIndicator from './data-grid-cell-renderers/status-indicator';
+import QuantityCell, { STATUS_TYPE } from './data-grid-cell-renderers/quantity-cell-renderer';
+import { changeDetailCellRenderer } from './data-grid-cell-renderers/change-details-cell';
 
 
 
@@ -244,9 +247,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const renderUserStatus = (status: string) => {
     let textColorClass = '';
-    if (status === 'Active') {
+    if (status === 'Active' || status === 'PROCESSED' ) {
       textColorClass = 'text-blue-500';
-    } else if (status === 'Inactive') {
+    } else if (status === 'Inactive' || status === 'ERROR') {
       textColorClass = 'text-red-500';
     }
     return <span className={`${textColorClass}`}>{status}</span>;
@@ -336,38 +339,51 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     key={columnIndex}
     className="px-6 border-b border-gray-300 table-cell"
   >
-    {visibleColumns.includes(header) && (
-      // Check if the header is the selection column
-      header === "Select" ? (
-        <Checkbox
-          onChange={() => handleRowCheckboxChange(index as number)} // Assuming `index` is defined
-          checked={selectedRows.map(String).includes(String(index))}
-          style={{ fontSize: '2rem' }}
-        />
-      ) : // If not the selection column, render based on other headers
-      header === "API_state" || header === "Module_state"   || header === "Role_status"  ? (
-        renderApiState(row[header], index)
-      ) : header === "User status"? (
-        renderUserStatus(row[header])
-      ) : header === "DateAdded" || header === "DateActivated" ? (
-        <DateTimeCellRenderer value={row[header]} />
-      ) : header === "Username" ? (
-        <EditUsernameCellRenderer value={row[header]} />
-      ) : header === "SimStatus" ? (
-        <StatusCellRenderer
-          record={row}
-          value={row[header]}
-          index={index}
-          colorMap={colorMap}
-        />
-      ) : header === "StatusHistory" ? (
-        <StatusHistoryCellRenderer value={row[header]} />
-      ) : header === "Provider" ? (
-        <ServiceProviderCellRenderer value={row[header]} />
-      ) : (
-        row[header]
-      )
-    )}
+ {visibleColumns.includes(header) && (
+  // Check if the header is the selection column
+  header === "Select" ? (
+    <Checkbox
+      onChange={() => handleRowCheckboxChange(index)} // Assuming `index` is defined
+      checked={selectedRows.map(String).includes(String(index))}
+      style={{ fontSize: '2rem' }}
+    />
+  ) : // If not the selection column, render based on other headers
+  header === "API_state" || header === "Module_state" || header === "Role_status" ? (
+    renderApiState(row[header], index)
+  ) : header === "User status" ? (
+    renderUserStatus(row[header])
+  ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
+    <DateTimeCellRenderer value={row[header]} />
+  ) : header === "Username" ? (
+    <EditUsernameCellRenderer value={row[header]} />
+  ) : header === "SimStatus" ? (
+    <StatusCellRenderer
+      record={row}
+      value={row[header]}
+      index={index}
+      colorMap={colorMap}
+    />
+  ) : header === "StatusHistory" ? (
+    <StatusHistoryCellRenderer value={row[header]} />
+  ) :["Provider", "Service Provider"].includes(header) ? (
+    <ServiceProviderCellRenderer value={row[header]} />
+  ) : header === "Status" ? (
+    <StatusIndicator status={row[header]} />
+  ) : header === "Uploaded" ? (
+    <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
+  ) : header === "Successful" ? (
+    <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
+  ) : header === "Errors" ? (
+    <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
+  ) : header === "Change Details" ? (
+    changeDetailCellRenderer()
+  ):
+  (
+    row[header]
+  )
+)}
+
+
   </td>
 ))}
 
