@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
-import Select, { SingleValue } from 'react-select';
+import Select, { MultiValue, SingleValue } from 'react-select';
 import countries from '@/app/constants/locationdetails';
 import { Country, State, City } from '@/app/constants/locationdetails';
 import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
@@ -42,7 +42,11 @@ const Notificationoptions = [
   { value: 'no', label: 'No' }
 ];
 
-const UserInfo: React.FC = () => {
+interface UserInfoProps {
+  rowData?: any;
+}
+
+const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -56,25 +60,41 @@ const UserInfo: React.FC = () => {
   const [selectedZipCode, setSelectedZipCode] = useState<string>('');
   const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
   const [selectedPartner, setSelectedPartner] = useState<string>('');
+  const [selectedSubPartner, setSelectedSubPartner] = useState<string[]>([]);
   const [subPartners, setSubPartners] = useState<string[]>([]);
   const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
-  const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
+
+
+  useEffect(() => {
+    if (rowData) {
+      setUsername(rowData['User Name'] || '');
+      setEmail(rowData['Email Id'] || '');
+      setRole({ value: rowData['Role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['Role'] } || null);
+      setPartner({ value: rowData['Partner'], label: rowData['Partner'] } || null);
+      setSelectedPartner(rowData['Partner'] || '');
+      setSubPartners(subPartnersData[rowData['Partner']] || []);
+      setSelectedSubPartner(rowData['Sub Partner'] || '');
+    }
+  }, [rowData]);
+
+  const handlePartnerChange = (selectedOption: SingleValue<OptionType>) => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
-
       setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+      setSelectedSubPartner([]); // Reset sub-partner when partner changes
     } else {
       setSelectedPartner('');
-
       setSubPartners([]);
+      setSelectedSubPartner([]); // Reset sub-partner when no partner is selected
     }
   };
-  const options = partners.map(partner => ({
-    value: partner.toLowerCase().replace(/\s+/g, '-'),
-    label: partner
-  }));
+  
+  const handleSetSubPartner = (selectedOptions: MultiValue<OptionType>) => {
+    const selectedSubPartners = selectedOptions.map(option => option.value);
+    setSelectedSubPartner(selectedSubPartners);
+  };
 
   const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
     setPartner(selectedOption);
@@ -181,7 +201,6 @@ const UserInfo: React.FC = () => {
         <div>
           <label className="field-label">Partner</label>
           <Select
-
             value={{ value: selectedPartner, label: selectedPartner }}
             onChange={handlePartnerChange}
             options={Partneroptions}
@@ -193,10 +212,12 @@ const UserInfo: React.FC = () => {
           <label className="field-label">Sub Partner</label>
           <Select
             isMulti
+            value={subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
+            onChange={handleSetSubPartner}
             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-            className="mt-1"
             styles={editableDrp}
           />
+
         </div>
         <div>
           <label className="field-label">First Name</label>
@@ -242,7 +263,6 @@ const UserInfo: React.FC = () => {
             value={role}
             onChange={handlesetRole}
             options={Roleoptions}
-            className=''
             styles={editableDrp}
           />
           {errorMessages.includes('Role is required.') && (

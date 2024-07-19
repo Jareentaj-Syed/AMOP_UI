@@ -87,15 +87,16 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
         <>
         <Modal
         title={"Edit User"}
-        visible={isOpen}
+        open={isOpen}
         onCancel={handleCancel}
         width={modalWidth}
-        bodyStyle={{ height: modalHeight, padding: '4px' ,marginTop:''}}
+        styles={{ body: { height: modalHeight, padding: '4px' } }}
         footer={null}
         >
           <div className='popup'>
           <CreateUser 
           isPopup={true}
+          rowData={rowData}
           />
 
           </div>
@@ -105,7 +106,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       ) : (
         <>
           <Modal
-            visible={isOpen}
+            open={isOpen}
             onCancel={handleCancel}
             title={
               <h3 className='popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
@@ -124,7 +125,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
             ) : null
             }
             width={modalWidth}
-            bodyStyle={{ height: modalHeight, padding: '4px' }}
+            style={{ height: modalHeight, padding: '4px' }}
           >
             <div className='popup'>
               <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>

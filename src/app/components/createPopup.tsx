@@ -97,7 +97,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
         </div>
         }
         width={modalWidth}
-        bodyStyle={{ height: modalHeight }}
+        style={{ height: modalHeight }}
       >
         <div ref={modalContentRef} className="popup">
           <form>

@@ -1,8 +1,9 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import React, { useState } from 'react';
-import Select, { SingleValue } from 'react-select';
-import { NonEditableDropdownStyles,DropdownStyles } from '@/app/components/css/dropdown';
+import React, { useState, useEffect } from 'react';
+import Select, { ActionMeta, SingleValue } from 'react-select';
+import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
+import { partnerCarrierData } from '@/app/constants/partnercarrier';
 
 type OptionType = {
     value: string;
@@ -270,42 +271,55 @@ const roles = [
     "Super Admin",
     "User"
 ];
-const editableDrp=DropdownStyles;
-const nonEditableDrp=NonEditableDropdownStyles;
-const UserRole: React.FC = () => {
-    const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
-    const [role, setRole] = useState<SingleValue<OptionType>>(null);
+
+const Roleoptions = roles.map((role, index) => ({
+    value: role.toLowerCase().replace(/\s+/g, '-'),
+    label: role,
+  }));
+const editableDrp = DropdownStyles;
+const nonEditableDrp = NonEditableDropdownStyles;
+
+const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
+
+interface UserRoleProps {
+    rowData?: any;
+}
+
+const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
+    const [partner, setPartner] = useState<OptionType | null>(null);
+    const [role, setRole] = useState<OptionType | null>(null);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
+
+  console.log("rowData", rowData)
+
+    useEffect(() => {
+        if (rowData) {
+            setPartner({ value: rowData['Partner'], label: rowData['Partner'] } || null);
+            setRole({ value: rowData['Role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['Role'] } || null);
+        }
+    }, [rowData]);
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
         setSelectedModules({ ...selectedModules, [category]: moduleValues });
         setSelectedFeatures({ ...selectedFeatures, [category]: [] });
     };
+
     const handleFeatureChange = (category: string, features: any) => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
 
-    const options = partners.map(partner => ({
-        value: partner.toLowerCase().replace(/\s+/g, '-'),
-        label: partner
-    }));
-    const Roleoptions = roles.map((role, index) => ({
-        value: role.toLowerCase().replace(/\s+/g, '-'),
-        label: role,
-    }));
-    const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
+    const handleSetPartner = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
         setPartner(selectedOption);
         if (selectedOption) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Partner is required.'));
         }
-        
     };
 
-    const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
+    const handleSetRole = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
         setRole(selectedOption);
         if (selectedOption) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
@@ -321,29 +335,29 @@ const UserRole: React.FC = () => {
 
         if (errors.length === 0) {
             console.log('Saving...');
+        } else {
+            scrollToTop();
         }
-        else {
-            scrollToTop()
-          }
     };
+
     const scrollToTop = () => {
         window.scrollTo({
-          top: 0,
-          behavior: 'auto'  // Optional: Smooth scroll animation
+            top: 0,
+            behavior: 'auto' // Optional: Smooth scroll animation
         });
-      };
+    };
+
     return (
-        <div className=''>
+        <div>
             <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label className='field-label'>Partner<span className="text-red-500">*</span></label>
                     <Select
-                    defaultValue={[options[1]]}
-                        value={options[1]}
+                        value={partner}
                         onChange={handleSetPartner}
-                        options={options}
+                        options={Partneroptions}
                         styles={nonEditableDrp}
-                        />
+                    />
                     {errorMessages.includes('Partner is required.') && (
                         <span className="text-red-600 ml-1">Partner is required.</span>
                     )}
@@ -352,10 +366,9 @@ const UserRole: React.FC = () => {
                     <label className="field-label">Role<span className="text-red-500">*</span></label>
                     <Select
                         value={role}
-                        onChange={handlesetRole}
+                        onChange={handleSetRole}
                         options={Roleoptions}
                         styles={nonEditableDrp}
-
                     />
                     {errorMessages.includes('Role is required.') && (
                         <span className="text-red-600 ml-1">Role is required.</span>
@@ -376,7 +389,7 @@ const UserRole: React.FC = () => {
                                     value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                     onChange={(selected) => handleModuleChange(category, selected)}
                                     options={data[category].Module.map(module => ({ value: module, label: module }))}
-                                     styles={editableDrp}
+                                    styles={editableDrp}
                                 />
                             </div>
                             <div>
@@ -387,7 +400,7 @@ const UserRole: React.FC = () => {
                                     value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
                                     onChange={(selected) => handleFeatureChange(category, selected)}
                                     options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                                     styles={nonEditableDrp}
+                                    styles={nonEditableDrp}
                                     isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
                                 />
                             </div>
@@ -409,7 +422,7 @@ const UserRole: React.FC = () => {
                 </button>
             </div>
         </div>
-
     );
 };
+
 export default UserRole;

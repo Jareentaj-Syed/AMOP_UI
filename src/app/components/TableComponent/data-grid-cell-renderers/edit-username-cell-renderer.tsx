@@ -29,7 +29,7 @@ const EditUsernameModal: FC<EditUsernameProps> = ({
       </div>
       }
       centered
-      visible={true}
+      open={true}
       onCancel={onCancel}
       footer={[
         // <hr className="border-gray-300 mb-4 mt-8" />,
