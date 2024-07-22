@@ -2,18 +2,24 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { useSidebarStore } from '../stores/navBarStore';
 import { moduleIconMap } from '../constants/moduleiconmap';
 import { moduleData } from '../constants/moduleiconmap';
 
-// Define the type for moduleIconMap
+// Define types for the module data
+interface NavItem {
+  label: string;
+  icon?: React.ReactNode;
+  href?: string; // Optional href
+  subNav?: NavItem[];
+}
+
 type IconKey = keyof typeof moduleIconMap;
 
-// Utility function to generate nav items
-const generateNavItems = (modules: any[]) => {
+const generateNavItems = (modules: any[]): NavItem[] => {
   return modules.map((module) => {
     const { parent_module_name, children } = module;
-    const IconComponent = moduleIconMap[parent_module_name as IconKey];
+    const IconComponent = moduleIconMap[parent_module_name as IconKey] || null;
+
     const subNav = children.length > 0 ? children.map((child: any) => ({
       href: `/${parent_module_name.toLowerCase().replace(/[\s/.]/g, '_')}/${child.child_module_name.toLowerCase().replace(/[\s/.]/g, '_')}`,
       label: child.child_module_name,
@@ -21,7 +27,7 @@ const generateNavItems = (modules: any[]) => {
         href: `/${parent_module_name.toLowerCase().replace(/[\s/.]/g, '_')}/${child.child_module_name.toLowerCase().replace(/[\s/.]/g, '_')}/${subChild.sub_child_module_name.toLowerCase().replace(/[\s/.]/g, '_')}`,
         label: subChild.sub_child_module_name,
       })),
-    })) : null;
+    })) : [];
 
     return {
       label: parent_module_name,
@@ -33,9 +39,9 @@ const generateNavItems = (modules: any[]) => {
 
 const SideNav: React.FC = () => {
   const currentPath = usePathname();
-  const { isExpanded } = useSidebarStore();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [navItems, setNavItems] = useState<any[]>([]);
+  const [openSubDropdown, setOpenSubDropdown] = useState<string | null>(null);
+  const [navItems, setNavItems] = useState<NavItem[]>([]);
 
   useEffect(() => {
     setNavItems(generateNavItems(moduleData));
@@ -45,145 +51,81 @@ const SideNav: React.FC = () => {
     setOpenDropdown(openDropdown === label ? null : label);
   };
 
-  const isActive = (href: string) => currentPath.startsWith(href);
+  const handleSubDropdownClick = (label: string) => {
+    setOpenSubDropdown(openSubDropdown === label ? null : label);
+  };
+
+  const isActive = (href?: string) => href ? currentPath.startsWith(href) : false;
 
   return (
     <div className='navbar p-2 shadow-lg'>
-      {isExpanded ? (
-        <div>
-          <ul className="space-y-4 mt-4">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                {item.subNav !== null ? (
-                  <>
-                    <button
-                      onClick={() => handleDropdownClick(item.label)}
-                      className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`) || openDropdown === item.label ? 'nav-active-link' : ''
-                        }`}
-                    >
-                      {item.icon}
-                      <span>{item.label}</span>
-                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
-                    </button>
-                    {(openDropdown === item.label || isActive(`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`)) && (
-                      <ul className="pl-6 space-y-2 mt-2">
-                        {item.subNav.map((subItem: any) => (
-                          <li key={subItem.href}>
-                            {subItem.subNav ? (
-                              <>
-                                <button
-                                  onClick={() => handleDropdownClick(subItem.label)}
-                                  className={`flex items-center space-x-2 p-2 nav-link ${isActive(subItem.href) || openDropdown === subItem.label ? 'nav-active-link' : ''}`}
-                                >
-                                  <span>{subItem.label}</span>
-                                  {openDropdown === subItem.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
-                                </button>
-                                {(openDropdown === subItem.label || isActive(subItem.href)) && (
-                                  <ul className="pl-6 space-y-2 mt-2">
-                                    {subItem.subNav.map((subSubItem: any) => (
-                                      <li key={subSubItem.href}>
-                                        <Link href={subSubItem.href} className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subSubItem.href ? 'nav-active-link' : ''}`}>
-                                          <span>{subSubItem.label}</span>
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </>
-                            ) : (
-                              <Link href={subItem.href} className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subItem.href ? 'nav-active-link' : ''}`}>
-                                <span>{subItem.label}</span>
-                              </Link>
+      <ul className="space-y-4 mt-4">
+        {navItems.map((item) => (
+          <li key={item.label}>
+            {item.subNav ? (
+              <>
+                <button
+                  onClick={() => handleDropdownClick(item.label)}
+                  className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(item.href) || openDropdown === item.label ? 'nav-active-link' : ''}`}
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                  {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
+                </button>
+                {(openDropdown === item.label || isActive(item.href)) && (
+                  <ul className="pl-6 space-y-2 mt-2">
+                    {item.subNav.map((subItem) => (
+                      <li key={subItem.href || 'default'}>
+                        {subItem.subNav && subItem.subNav.length > 0 ? (
+                          <>
+                            <button
+                              onClick={() => handleSubDropdownClick(subItem.label)}
+                              className={`flex items-center space-x-2 p-2 nav-link ${isActive(subItem.href) || openSubDropdown === subItem.label ? 'nav-active-link' : ''}`}
+                            >
+                              <span>{subItem.label}</span>
+                              {openSubDropdown === subItem.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
+                            </button>
+                            {(openSubDropdown === subItem.label || isActive(subItem.href)) && (
+                              <ul className="pl-6 space-y-2 mt-2">
+                                {subItem.subNav?.map((subSubItem) => (
+                                  <li key={subSubItem.href || 'default'}>
+                                    <Link
+                                      href={subSubItem.href || '/'} // Provide a fallback value
+                                      className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subSubItem.href ? 'nav-active-link' : ''}`}
+                                    >
+                                      <span>{subSubItem.label}</span>
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
                             )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`}
-                    passHref
-                    className={`flex items-center space-x-2 p-2 nav-link ${currentPath === `/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`
-                      ? 'nav-active-link'
-                      : ''
-                      }`}
-                  >
-                    {item.icon}
-                    <span>{item.label}</span>
-                  </Link>
+                          </>
+                        ) : (
+                          <Link
+                            href={subItem.href || '/'} // Provide a fallback value
+                            className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subItem.href ? 'nav-active-link' : ''}`}
+                          >
+                            <span>{subItem.label}</span>
+                          </Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
                 )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : (
-        <div className='w-[80px]'>
-          <ul className="space-y-4">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                {item.subNav !== null ? (
-                  <>
-                    <button
-                      onClick={() => handleDropdownClick(item.label)}
-                      className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${isActive(`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`) || openDropdown === item.label ? 'nav-active-link' : ''
-                        }`}
-                    >
-                      {item.icon}
-                      {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
-                    </button>
-                    {(openDropdown === item.label || isActive(`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`)) && (
-                      <ul className="pl-4 space-y-2">
-                        {item.subNav.map((subItem: any) => (
-                          <li key={subItem.href}>
-                            {subItem.subNav ? (
-                              <>
-                                <button
-                                  onClick={() => handleDropdownClick(subItem.label)}
-                                  className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${isActive(subItem.href) || openDropdown === subItem.label ? 'nav-active-link' : ''}`}
-                                >
-                                  <span>{subItem.label}</span>
-                                  {openDropdown === subItem.label ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />}
-                                </button>
-                                {(openDropdown === subItem.label || isActive(subItem.href)) && (
-                                  <ul className="pl-4 space-y-2">
-                                    {subItem.subNav.map((subSubItem: any) => (
-                                      <li key={subSubItem.href}>
-                                        <Link href={subSubItem.href} className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${currentPath === subSubItem.href ? 'nav-active-link' : ''}`}>
-                                          <span>{subSubItem.label}</span>
-                                        </Link>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                )}
-                              </>
-                            ) : (
-                              <Link href={subItem.href} className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${currentPath === subItem.href ? 'nav-active-link' : ''}`}>
-                                <span>{subItem.label}</span>
-                              </Link>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </>
-                ) : (
-                  <Link
-                    href={`/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`}
-                    passHref
-                    className={`flex items-center justify-center pt-2 pb-2 rounded-md nav-link ${currentPath === `/${item.label.toLowerCase().replace(/[\s/.]/g, '_')}`
-                      ? 'nav-active-link'
-                      : ''
-                      }`}
-                  >
-                    {item.icon}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+              </>
+            ) : (
+              <Link
+                href={item.href || '/'} // Provide a fallback value
+                passHref
+                className={`flex items-center space-x-2 p-2 nav-link ${currentPath === item.href ? 'nav-active-link' : ''}`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
