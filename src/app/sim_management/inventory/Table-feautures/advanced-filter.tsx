@@ -21,10 +21,12 @@ const splitAndFilter = (input?: string): string[] => {
 };
 
 interface AdvancedFilterProps {
-  onFilter: (filters: FilterShape) => void; // Corrected function signature
+  onFilter: (filters: FilterShape) => void; 
+  onReset: (filters: FilterShape) => void; 
+  // Corrected function signature
 }
 
-const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
+const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<FilterShape>({});
   const [form] = Form.useForm();
@@ -62,7 +64,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
     );
   
     console.log("empty flters:", emptyFilters);
-    // onReset(emptyFilters)
+    onReset(emptyFilters)
     form.resetFields();
     setActiveFilters({});
     setShowAdvanced(false);

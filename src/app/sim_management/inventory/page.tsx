@@ -64,9 +64,14 @@ const sim_management: React.FC = () => {
   const EXPORT = " Export";
   const searchPlaceholder = "Search"
   const [filteredData, setFilteredData] = useState([]);
+
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
     setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
   };
   return (
     <div>
@@ -99,7 +104,7 @@ const sim_management: React.FC = () => {
       <div>
 
         <div className="">
-          <AdvancedFilter onFilter={handleFilter} />
+          <AdvancedFilter onFilter={handleFilter} onReset={handleReset} />
         </div>
 
       </div>
@@ -113,6 +118,7 @@ const sim_management: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         advancedFilters={filteredData}
+
         allowedActions={["Actions"]} 
         popupHeading={''} />
     </div>
