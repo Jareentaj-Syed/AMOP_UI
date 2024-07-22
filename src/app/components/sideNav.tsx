@@ -39,20 +39,18 @@ const generateNavItems = (modules: any[]): NavItem[] => {
 
 const SideNav: React.FC = () => {
   const currentPath = usePathname();
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [openSubDropdown, setOpenSubDropdown] = useState<string | null>(null);
+  const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const [navItems, setNavItems] = useState<NavItem[]>([]);
 
   useEffect(() => {
     setNavItems(generateNavItems(moduleData));
   }, []);
-
+console.log(navItems)
   const handleDropdownClick = (label: string) => {
-    setOpenDropdown(openDropdown === label ? null : label);
-  };
-
-  const handleSubDropdownClick = (label: string) => {
-    setOpenSubDropdown(openSubDropdown === label ? null : label);
+    setOpenDropdowns((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
   };
 
   const isActive = (href?: string) => href ? currentPath.startsWith(href) : false;
@@ -62,30 +60,30 @@ const SideNav: React.FC = () => {
       <ul className="space-y-4 mt-4">
         {navItems.map((item) => (
           <li key={item.label}>
-            {item.subNav && item.subNav.length > 0 ? ( // Check if item has subNav
+            {item.subNav && item.subNav.length > 0 ? (
               <>
                 <button
                   onClick={() => handleDropdownClick(item.label)}
-                  className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(item.href) || openDropdown === item.label ? 'nav-active-link' : ''}`}
+                  className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(item.href) || openDropdowns[item.label] ? 'nav-active-link' : ''}`}
                 >
                   {item.icon}
                   <span>{item.label}</span>
-                  {openDropdown === item.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
+                  {openDropdowns[item.label] ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
                 </button>
-                {(openDropdown === item.label || isActive(item.href)) && (
+                {(openDropdowns[item.label] || isActive(item.href)) && (
                   <ul className="pl-6 space-y-2 mt-2">
                     {item.subNav.map((subItem) => (
                       <li key={subItem.label}>
-                        {subItem.subNav && subItem.subNav.length > 0 ? ( // Check if subItem has subNav
+                        {subItem.subNav && subItem.subNav.length > 0 ? (
                           <>
                             <button
-                              onClick={() => handleSubDropdownClick(subItem.label)}
-                              className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(subItem.href) || openSubDropdown === subItem.label ? 'nav-active-link' : ''}`}
+                              onClick={() => handleDropdownClick(subItem.label)}
+                              className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(subItem.href) || openDropdowns[subItem.label] ? 'nav-active-link' : ''}`}
                             >
                               <span>{subItem.label}</span>
-                              {openSubDropdown === subItem.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
+                              {openDropdowns[subItem.label] ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
                             </button>
-                            {(openSubDropdown === subItem.label || isActive(subItem.href)) && (
+                            {(openDropdowns[subItem.label] || isActive(subItem.href)) && (
                               <ul className="pl-6 space-y-2 mt-2">
                                 {subItem.subNav.map((subSubItem) => (
                                   <li key={subSubItem.label}>

@@ -86,14 +86,14 @@
 
 .nav-link:hover,
 .nav-link-active:hover {
-  background-color: #E5E7EB;
+  background-color: #E6F4FF;
   color: black;
 }
 
 .nav-active-link {
-  background-color: #E5E7EB;
-  color: black;
-  font-weight: 700;
+  background-color: #E6F4FF;
+  color: #168BFF;
+  /* font-weight: 700; */
 }
 
 .active-icon {
