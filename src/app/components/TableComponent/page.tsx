@@ -93,19 +93,53 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    console.log(initialData)
+    // console.log(initialData)
   }, [initialData]);
 
+  // useEffect(() => {
+  //   // Filter row data based on search query
+  //   const filteredData = initialData.filter(row =>
+  //     Object.values(row).some(value =>
+  //       typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
+  //     )
+  //   );
+  //   setRowData(filteredData);
+  //   setCurrentPage(1);
+  // }, [searchQuery, initialData]);
+
   useEffect(() => {
-    // Filter row data based on search query
-    const filteredData = initialData.filter(row =>
-      Object.values(row).some(value =>
+    // Filter row data based on search query and advanced filters
+    const filteredData = initialData.filter(row => {
+      const matchesSearchQuery = Object.values(row).some(value =>
         typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+      );
+  
+      const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
+        ([key, values]) => {
+          const valuesArray = values as string[];
+          console.log("valuesArray[0]", valuesArray[0], "row[key]", row[key]);
+          // Always return true if valuesArray is empty
+          if (valuesArray.length === 0) return true;
+          // Check if row[key] is defined before comparing
+          if (valuesArray[0] && row[key]) {
+            return String(row[key]).toLowerCase().includes(valuesArray[0].toLowerCase());
+          }
+          // If the key does not exist in the row, return true
+          return true;
+        }
+      );
+
+      console.log("matchesSearchQuery",matchesAdvancedFilters)
+  
+      return matchesSearchQuery && matchesAdvancedFilters;
+    });
+  
     setRowData(filteredData);
     setCurrentPage(1);
-  }, [searchQuery, initialData]);
+  }, [searchQuery, initialData, advancedFilters]);
+  
+  
+  
 
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
@@ -284,7 +318,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     // Add more statuses and colors as needed
   };
 
-  console.log(advancedFilters)
+  // console.log(advancedFilters)
 
   return (
     <div className="relative">
