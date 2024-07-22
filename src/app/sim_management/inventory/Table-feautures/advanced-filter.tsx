@@ -35,6 +35,7 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
 
   const handleFilter = () => {
     const values = form.getFieldsValue();
+    console.log("values are:" , values)
     const advancedFilters = Object.entries(values).reduce<FilterShape>(
       (acc, [key, value]) => {
         acc[key as keyof FilterShape] =
@@ -52,10 +53,18 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
 
   const handleClear = () => {
     form.resetFields();
+    const values = form.getFieldsValue();
+    const emptyFilters = Object.keys(values).reduce<FilterShape>(
+      (acc, key) => {
+        acc[key as keyof FilterShape] = [];
+        return acc;
+      },
+      {} as FilterShape
+    );
+    console.log("emptyFilters", emptyFilters);
+  
     setActiveFilters({});
-    // onReset?.();
     setShowAdvanced(false);
-    // setTableKey?.(Math.random().toString());
   };
 
   const countActiveFilters = useMemo(() => {
@@ -116,8 +125,8 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
             filters={
               <>
                 <TextAreaFilterItem
-                  key="featureCode"
-                  name="featureCode"
+                  key="Feature Code"
+                  name="Feature Code"
                   label="Feature Code"
                   placeholder="One Feature Code per line"
                 />
@@ -129,32 +138,32 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
             filters={
               <>
                 <TextAreaFilterItem
-                  key="iccid"
-                  name="iccid"
+                  key="ICCID"
+                  name="ICCID"
                   label="ICCID"
                   placeholder="One ICCID per line"
                 />
                 <TextAreaFilterItem
-                  key="msisdn"
-                  name="msisdn"
+                  key="MSISDN"
+                  name="MSISDN"
                   label="MSISDN"
                   placeholder="One MSISDN per line"
                 />
                 <TextAreaFilterItem
-                  key="ip"
-                  name="ip"
+                  key="IP"
+                  name="IP"
                   label="IP Address"
                   placeholder="One IP Address per line"
                 />
                 <TextAreaFilterItem
-                  key="imei"
-                  name="imei"
+                  key="IMEI"
+                  name="IMEI"
                   label="IMEI"
                   placeholder="One IMEI per line"
                 />
                 <TextAreaFilterItem
-                  key="eid"
-                  name="eid"
+                  key="EID"
+                  name="EID"
                   label="EID"
                   placeholder="One EID per line"
                 />
@@ -166,14 +175,14 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
             filters={
               <>
                 <TextAreaFilterItem
-                  key="carrierRatePlan"
-                  name="carrierRatePlan"
+                  key="CarrierRatePlan"
+                  name="CarrierRatePlan"
                   label="Carrier Rate Plan"
                   placeholder="One Carrier Rate Plan per line"
                 />
                 <TextAreaFilterItem
-                  key="customerRatePlan"
-                  name="customerRatePlan"
+                  key="CustomerRatePlan"
+                  name="CustomerRatePlan"
                   label="Customer Rate Plan"
                   placeholder="One Customer Rate Plan per line"
                 />
@@ -185,8 +194,8 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
             filters={
               <>
                 <TextAreaFilterItem
-                  key="username"
-                  name="username"
+                  key="Username"
+                  name="Username"
                   label="Username"
                   placeholder="One Username per line"
                 />
