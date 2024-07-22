@@ -52,17 +52,18 @@ const AdvancedFilter: React.FC<AdvancedFilterProps> = ({ onFilter }) => {
   };
 
   const handleClear = () => {
-    form.resetFields();
-    const values = form.getFieldsValue();
-    const emptyFilters = Object.keys(values).reduce<FilterShape>(
+   
+    const emptyFilters = Object.keys(activeFilters).reduce<FilterShape>(
       (acc, key) => {
         acc[key as keyof FilterShape] = [];
         return acc;
       },
       {} as FilterShape
     );
-    console.log("emptyFilters", emptyFilters);
   
+    console.log("empty flters:", emptyFilters);
+    // onReset(emptyFilters)
+    form.resetFields();
     setActiveFilters({});
     setShowAdvanced(false);
   };
