@@ -77,10 +77,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   };
 
   const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
-  const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
-  const ediModalWidth = typeof window !== 'undefined' ? window.innerWidth: 0;
-  const editMmodalHeight = typeof window !== 'undefined' ? (window.innerHeight * 3) / 4 : 0;
-  
+  const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;  
   return (
     <div>
        {isTabEdit ? (
@@ -125,7 +122,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
             ) : null
             }
             width={modalWidth}
-            style={{ height: modalHeight, padding: '4px' }}
+            styles={{ body: { height: modalHeight, padding: '4px' } }}
           >
             <div className='popup'>
               <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>

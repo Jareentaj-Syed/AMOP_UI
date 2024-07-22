@@ -30,8 +30,8 @@ interface TableComponentProps {
   allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick'|'tabsEdit'|'tabsInfo')[];
   popupHeading: string;
   advancedFilters?: any
-  infoColumns: any[]
-  editColumns: any[]
+  infoColumns?: any[]
+  editColumns?: any[]
   isSelectRowVisible?:boolean
 }
 
@@ -507,8 +507,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
       <EditModal
-        infoColumns={infoColumns}
-        editColumns={infoColumns}
+        infoColumns={infoColumns||[]}
+        editColumns={infoColumns||[]}
         isOpen={editModalOpen}
         isEditable={isEditable}
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}

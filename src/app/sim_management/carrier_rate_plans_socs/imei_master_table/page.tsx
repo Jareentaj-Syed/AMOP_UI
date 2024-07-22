@@ -1,10 +1,8 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { PlusIcon, ArrowDownTrayIcon, AdjustmentsHorizontalIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
-import { Button, Popover } from 'antd';
+import { ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
 import TableComponent from '@/app/components/TableComponent/page';
-import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 
@@ -19,7 +17,7 @@ const IMEIMasterTable: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/rev_io_customers.xlsx');
+        const response = await fetch('/imei_master_table.xlsx');
         const arrayBuffer = await response.arrayBuffer();
         const data = new Uint8Array(arrayBuffer);
         const workbook = XLSX.read(data, { type: 'array' });
@@ -69,10 +67,6 @@ const IMEIMasterTable: React.FC = () => {
         
         <div className="flex space-x-2">
           <button className="save-btn">
-            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
-            <span>Export</span>
-          </button>
-          <button className="save-btn">
             <ArrowUpTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             Upload
           </button>
@@ -85,11 +79,7 @@ const IMEIMasterTable: React.FC = () => {
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
         itemsPerPage={10}
-        allowedActions={[]}
         popupHeading='Customer'    
-        infoColumns={[]}  
-        editColumns={[]}          
-
       />
     </div>
   );

@@ -80,7 +80,7 @@ const SideNav: React.FC = () => {
                           <>
                             <button
                               onClick={() => handleSubDropdownClick(subItem.label)}
-                              className={`flex items-center space-x-2 p-2 nav-link ${isActive(subItem.href) || openSubDropdown === subItem.label ? 'nav-active-link' : ''}`}
+                              className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(subItem.href) || openSubDropdown === subItem.label ? 'nav-active-link' : ''}`}
                             >
                               <span>{subItem.label}</span>
                               {openSubDropdown === subItem.label ? <ChevronDownIcon className="w-4 h-4 absolute " style={{ right: '20px' }} /> : <ChevronRightIcon className="w-4 h-4 absolute" style={{ right: '20px' }} />}
