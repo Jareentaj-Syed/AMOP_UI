@@ -62,7 +62,7 @@ const SideNav: React.FC = () => {
       <ul className="space-y-4 mt-4">
         {navItems.map((item) => (
           <li key={item.label}>
-            {item.subNav ? (
+            {item.subNav && item.subNav.length > 0 ? ( // Check if item has subNav
               <>
                 <button
                   onClick={() => handleDropdownClick(item.label)}
@@ -75,8 +75,8 @@ const SideNav: React.FC = () => {
                 {(openDropdown === item.label || isActive(item.href)) && (
                   <ul className="pl-6 space-y-2 mt-2">
                     {item.subNav.map((subItem) => (
-                      <li key={subItem.href || 'default'}>
-                        {subItem.subNav && subItem.subNav.length > 0 ? (
+                      <li key={subItem.label}>
+                        {subItem.subNav && subItem.subNav.length > 0 ? ( // Check if subItem has subNav
                           <>
                             <button
                               onClick={() => handleSubDropdownClick(subItem.label)}
@@ -87,8 +87,8 @@ const SideNav: React.FC = () => {
                             </button>
                             {(openSubDropdown === subItem.label || isActive(subItem.href)) && (
                               <ul className="pl-6 space-y-2 mt-2">
-                                {subItem.subNav?.map((subSubItem) => (
-                                  <li key={subSubItem.href || 'default'}>
+                                {subItem.subNav.map((subSubItem) => (
+                                  <li key={subSubItem.label}>
                                     <Link
                                       href={subSubItem.href || '/'} // Provide a fallback value
                                       className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subSubItem.href ? 'nav-active-link' : ''}`}
