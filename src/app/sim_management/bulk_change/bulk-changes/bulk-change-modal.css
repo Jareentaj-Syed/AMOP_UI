@@ -1,0 +1,32 @@
+.bulk-changes-modal-title-divider {
+  @apply mt-0;
+}
+.bulk-changes-modal-steps {
+  @apply mb-4 mx-auto w-max;
+}
+.bulk-changes-modal-steps-content {
+  @apply mx-auto;
+}
+.bulk-changes-modal-steps-content-form {
+  @apply max-w-3xl mx-auto;
+}
+
+.archive-bulk-change-confirmation-row {
+  @apply p-4;
+}
+
+.archive-bulk-change-validation-message {
+  @apply mb-2;
+}
+
+.field-label {
+  @apply font-bold;
+}
+
+.bulk-changes-summary-wrapper {
+  @apply flex flex-col lg:flex-row gap-6;
+}
+
+.bulk-changes-descriptions {
+  @apply p-4 shadow-md rounded-md border mb-2;
+}

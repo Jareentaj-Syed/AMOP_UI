@@ -1,5 +1,3 @@
-// src/app/components/ColumnFilter.tsx
-
 import React from 'react';
 import { Checkbox, Divider, Popover } from 'antd';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
@@ -11,12 +9,15 @@ interface ColumnFilterProps {
 }
 
 const ColumnFilter: React.FC<ColumnFilterProps> = ({ data, visibleColumns, setVisibleColumns }) => {
+  // Maintain the original order of columns
+  const allColumns = Object.keys(data.length > 0 ? data[0] : {});
+
   const handleColumnVisibilityChange = (checkedValues: string[]) => {
-    setVisibleColumns(checkedValues);
+    const orderedCheckedValues = allColumns.filter(col => checkedValues.includes(col));
+    setVisibleColumns(orderedCheckedValues);
   };
 
   const handleCheckAllChange = (e: { target: { checked: any } }) => {
-    const allColumns = Object.keys(data.length > 0 ? data[0] : {});
     if (e.target.checked) {
       handleColumnVisibilityChange(allColumns);
     } else {
@@ -28,13 +29,13 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({ data, visibleColumns, setVi
     <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '300px', overflowY: 'auto' }}>
       <Checkbox
         onChange={handleCheckAllChange}
-        checked={visibleColumns.length === Object.keys(data.length > 0 ? data[0] : {}).length}
+        checked={visibleColumns.length === allColumns.length}
         style={{ marginBottom: '4px' }}
       >
         All
       </Checkbox>
       <Divider style={{ margin: "0.5rem 0 0.2rem" }} />
-      {Object.keys(data.length > 0 ? data[0] : {}).map((column) => (
+      {allColumns.map((column) => (
         <Checkbox
           key={column}
           value={column}

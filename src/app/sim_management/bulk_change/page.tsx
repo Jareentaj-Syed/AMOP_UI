@@ -9,11 +9,9 @@ import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import AdvancedFilter from '../inventory/Table-feautures/advanced-filter';
 import { PlusIcon } from '@heroicons/react/16/solid';
-import { BulkChangeSteps } from './bulk-change-steps/bulk-change-modal-constants';
-import BulkChangeModal from './bulk-change-steps/bulk-change-modal';
-import { ChangeRequestTypeEnum } from './bulk-change-steps/bulk-change-modal-constants';
-import StepSelection from './bulk-change-steps/choose-service-provider';
 
+import { useBulkChangeModalStore } from './bulk-changes-store/bulk-change-modal.store';
+import { BulkChangeModal } from './bulk-changes/bulk-change-modal';
 interface ExcelDataRow {
     [key: string]: any;
 }
@@ -22,7 +20,8 @@ const BulkChange: React.FC = () => {
     const [data, setData] = useState<ExcelDataRow[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  
+    const { setVisible: setBulkChangeModalVisible } = useBulkChangeModalStore();
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -92,12 +91,13 @@ const BulkChange: React.FC = () => {
         <div className="p-5">
               <button
                 className="save-btn"
-                onClick={handleOpen}
+                onClick={() => setBulkChangeModalVisible(true)}
              
               >
                 <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
                 New Change
               </button>
+              <BulkChangeModal />
         <div className="flex justify-between items-center mt-5">
           <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
@@ -117,15 +117,7 @@ const BulkChange: React.FC = () => {
           popupHeading={''} 
         />
        </div>
-       <Modal
-        visible={visible}
-        title="Bulk Change"
-        onCancel={handleClose}
-        footer={null}
-        width={800}
-      >
-        <StepSelection onClose={handleClose} />
-      </Modal>
+     
       </div>
       
     );
