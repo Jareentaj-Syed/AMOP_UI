@@ -1,8 +1,9 @@
 
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '../stores/navBarStore';
+import { useRouter } from 'next/navigation';
 
 
 const PartnerInfo = dynamic(() => import('./partner_info'));
@@ -12,8 +13,16 @@ const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));
 
+
 const Partner: React.FC = () => {
+    const router = useRouter(); // Use the router hook to handle navigation
+
+    useEffect(() => {
+        // Ensure the URL is set to /login when the component mounts
+        router.push('/partner');
+    }, [router]);
   const [activeTab, setActiveTab] = useState('partnerInfo');
+
   const isExpanded = useSidebarStore((state:any) => state.isExpanded);
 
 
