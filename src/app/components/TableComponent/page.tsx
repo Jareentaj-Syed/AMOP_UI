@@ -112,7 +112,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     // Filter row data based on search query and advanced filters
     const filteredData = initialData.filter(row => {
       const matchesSearchQuery = Object.values(row).some(value =>
-        typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
+        String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
       );
   
       const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
