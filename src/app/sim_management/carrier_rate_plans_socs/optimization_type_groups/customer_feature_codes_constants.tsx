@@ -25,7 +25,7 @@ export const createModalData=[
       "mandatory": "true"
     },
     {
-      "label": "Service Provider",
+      "label": "Feature Codes",
       "type": "dropdown",
       "value": [
         "DTM Enterprise Application List (manifest) - ADTMCTIT",
