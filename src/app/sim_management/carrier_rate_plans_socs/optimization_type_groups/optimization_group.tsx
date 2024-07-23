@@ -7,7 +7,7 @@ import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
-import { createModalData } from '../rate_plans_socs/rate_plan_socs_constants';
+import { createModalData } from './optimization_group_constants';
 
 interface ExcelData {
   [key: string]: any;
