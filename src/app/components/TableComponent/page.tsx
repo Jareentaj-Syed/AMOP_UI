@@ -93,7 +93,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    // console.log(initialData)
+    console.log(initialData)
+    console.log(headers)
   }, [initialData]);
 
   // useEffect(() => {
@@ -117,7 +118,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
         ([key, values]) => {
           const valuesArray = values as string[];
-          console.log("valuesArray[0]", valuesArray[0], "row[key]", row[key]);
           // Always return true if valuesArray is empty
           if (valuesArray.length === 0) return true;
           // Check if row[key] is defined before comparing
@@ -128,8 +128,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           return true;
         }
       );
-
-      console.log("matchesSearchQuery",matchesAdvancedFilters)
   
       return matchesSearchQuery && matchesAdvancedFilters;
     });
@@ -318,7 +316,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     // Add more statuses and colors as needed
   };
 
-  // console.log(advancedFilters)
 
   return (
     <div className="relative">

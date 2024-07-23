@@ -75,7 +75,13 @@ const CustomerGroups: React.FC = () => {
     setData(updatedData);
     handleCreateModalClose();
   };
-
+  const handleExport = () => {
+    const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
+    const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
+    XLSX.writeFile(workbook, "CustomerGroups.xlsx");
+  };
   return (
     <div className="container">
       <div className=' p-4'>
@@ -98,7 +104,7 @@ const CustomerGroups: React.FC = () => {
               <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
               Add Customer Group
             </button>
-            <button className="save-btn">
+            <button className="save-btn" onClick={handleExport}>
               <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
               <span>Export</span>
             </button>

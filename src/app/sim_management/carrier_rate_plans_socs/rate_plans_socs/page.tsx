@@ -28,7 +28,7 @@ const RatePlanOptions = [
   { value: 'Active Rate Plans', label: 'Active Rate Plans' },
   { value: 'Retired Rate Plans', label: 'Retired Rate Plans' },
 ];
-const RevIOCustomers: React.FC = () => {
+const RatePlans_SOCs: React.FC = () => {
   const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
@@ -96,7 +96,13 @@ const RevIOCustomers: React.FC = () => {
     console.log('wsdf', selectedOption)
     setRatePlan(selectedOption);
   };
-
+  const handleExport = () => {
+    const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
+    const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
+    XLSX.writeFile(workbook, "RatePlans_SOCs.xlsx");
+  };
   return (
     <div className="container mx-auto">
     <div className="p-4">
@@ -111,7 +117,7 @@ const RevIOCustomers: React.FC = () => {
         <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
         <span>Export</span>
       </button>
-      <button className="save-btn">
+      <button className="save-btn" onClick={handleExport}>
         <ArrowUpTrayIcon className="h-5 w-5 text-black-500 mr-2" />
         Upload
       </button>
@@ -168,4 +174,4 @@ const RevIOCustomers: React.FC = () => {
   );
 };
 
-export default RevIOCustomers;
+export default RatePlans_SOCs;
