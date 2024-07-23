@@ -18,10 +18,10 @@
 .archive-bulk-change-validation-message {
   @apply mb-2;
 }
-
+/* 
 .field-label {
   @apply font-bold;
-}
+} */
 
 .bulk-changes-summary-wrapper {
   @apply flex flex-col lg:flex-row gap-6;

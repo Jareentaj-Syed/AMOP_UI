@@ -397,7 +397,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       index={index}
       colorMap={colorMap}
     />
-  ) : header === "StatusHistory" ? (
+  ) : header === "ActionHistory" ? (
     <StatusHistoryCellRenderer value={row[header]} />
   ) :["Provider", "Service Provider"].includes(header) ? (
     <ServiceProviderCellRenderer value={row[header]} />
