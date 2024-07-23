@@ -14,7 +14,7 @@ interface ExcelData {
   [key: string]: any;
 }
 
-const E911Customers: React.FC = () => {
+const CustomerFeatureCodes: React.FC = () => {
   const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
@@ -79,7 +79,7 @@ const E911Customers: React.FC = () => {
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
-    XLSX.writeFile(workbook, "E911Customers.xlsx");
+    XLSX.writeFile(workbook, "CustomerFeatureCodes.xlsx");
   };
 
   return (
@@ -100,7 +100,7 @@ const E911Customers: React.FC = () => {
             onClick={handleCreateModalOpen}
           >
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-            Add Customer
+            Add Customer Feature Codes
           </button>
           <button className="save-btn"  onClick={handleExport}>
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
@@ -117,7 +117,7 @@ const E911Customers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
-        popupHeading='Customer'  
+        popupHeading='Customer Feature Codes'  
         infoColumns={createColumns}  
         editColumns={createColumns}            
       />
@@ -127,10 +127,10 @@ const E911Customers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createModalData}
-        heading='Customer'
+        heading='Customer Feature Codes'
       />
     </div>
   );
 };
 
-export default E911Customers;
+export default CustomerFeatureCodes;

@@ -13,7 +13,7 @@ interface ExcelData {
   [key: string]: any;
 }
 
-const E911Customers: React.FC = () => {
+const RatePlanType: React.FC = () => {
   const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
@@ -99,13 +99,13 @@ const E911Customers: React.FC = () => {
             onClick={handleCreateModalOpen}
           >
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-            Add Customer
+            Create Rate Plan Type
           </button>
-          <button className="save-btn"  onClick={handleExport}>
+          {/* <button className="save-btn"  onClick={handleExport}>
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-          
+           */}
         </div>
       </div>
 
@@ -116,7 +116,7 @@ const E911Customers: React.FC = () => {
         visibleColumns={visibleColumns}
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
-        popupHeading='Customer'  
+        popupHeading='Rate Plan Type'  
         infoColumns={createColumns}  
         editColumns={createColumns}            
       />
@@ -126,10 +126,10 @@ const E911Customers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createModalData}
-        heading='Customer'
+        heading='Rate Plan Type'
       />
     </div>
   );
 };
 
-export default E911Customers;
+export default RatePlanType;
