@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLogoStore } from '@/app/stores/logoStore';
-import EmailModal from '../EmailModal';
+import { useLogoStore } from '../stores/logoStore';
+import EmailModal from './EmailModal';
 import { Modal } from 'antd';
 
 interface PartnerInfo {

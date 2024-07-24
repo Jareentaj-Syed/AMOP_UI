@@ -6,9 +6,9 @@ import { useSidebarStore } from '../stores/navBarStore';
 import { useRouter } from 'next/navigation';
 
 
-const PartnerInfo = dynamic(() => import('./partner_info/page'));
-const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
-const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'));
+const PartnerInfo = dynamic(() => import('./partner_info'));
+const PartnerAuthentication = dynamic(() => import('./partner_authentication'));
+const PartnerModuleAccess = dynamic(() => import('./partner_module_access'));
 const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));

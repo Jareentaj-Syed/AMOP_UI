@@ -27,18 +27,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return (
     <div className="min-h-screen grid">
-           <div className="fixed top-0 left-0 right-0 bg-white" style={{ zIndex: 999 }}>
-     <Header />
-   </div>
-   <div className="flex mt-[70px] bg-gray-50 overflow-hidden">
-     <div className={`fixed top-[70px] bottom-0 bg-gray-800 text-white ${isExpanded ? 'w-[17%]' : 'w-[110px]'}`}>
-       <SideNav />
-     </div>
-     <div className={`flex-1 overflow-y-auto overflow-x-hidden ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}>
-       {children}
-     </div>
-   </div>
-      {/* {isAuthenticated ? (
+      {isAuthenticated ? (
         <ChooseTenant />
       ) : (
         <>
@@ -54,9 +43,8 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
             </div>
           </div>
         </>
-      )} */}
+      )}
     </div>
-
   );
 
 
