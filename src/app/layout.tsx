@@ -8,6 +8,7 @@ import SideNav from "./components/sideNav";
 import { useSidebarStore } from './stores/navBarStore';
 import { AuthProvider, useAuth } from '.././app/components/auth_context';
 import Login from '../app/components/login_page';
+import ChooseTenant from "./components/choose_tenant";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,26 +21,37 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     document.body.style.fontFamily = 'Calibri';
   }, []);
 
-  // if (!isAuthenticated) {
-  //   return <Login />;
-  // }
+  if (!isAuthenticated) {
+    return <Login />;
+  }
 
   return (
     <div className="min-h-screen grid">
-      <div className="fixed top-0 left-0 right-0 bg-white" style={{ zIndex: 999 }}>
-        <Header />
-      </div>
-      <div className="flex mt-[70px] bg-gray-50 overflow-hidden">
-        <div className={`fixed top-[70px] bottom-0 bg-gray-800 text-white ${isExpanded ? 'w-[17%]' : 'w-[110px]'}`}>
-          <SideNav />
-        </div>
-        <div className={`flex-1 overflow-y-auto overflow-x-hidden children ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}>
-          {children}
-        </div>
-      </div>
+      {isAuthenticated ? (
+        <ChooseTenant />
+      ) : (
+        <>
+          <div className="fixed top-0 left-0 right-0 bg-white" style={{ zIndex: 999 }}>
+            <Header />
+          </div>
+          <div className="flex mt-[70px] bg-gray-50 overflow-hidden">
+            <div className={`fixed top-[70px] bottom-0 bg-gray-800 text-white ${isExpanded ? 'w-[17%]' : 'w-[110px]'}`}>
+              <SideNav />
+            </div>
+            <div className={`flex-1 overflow-y-auto overflow-x-hidden ${isExpanded ? 'ml-[17%]' : 'ml-[110px]'}`}>
+              {children}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
-};
+
+
+}
+  
+  
+
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

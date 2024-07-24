@@ -9,6 +9,8 @@ import Select from 'react-select';
 import { RevenueAssuranceList } from './revenue_assurance_constants';
 import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
+import MyModal from './assign_revio/assign_revio_modal';
+import AssignService from './assign_revio/assign_revio_modal';
 
 type OptionType = {
   value: string;
@@ -23,9 +25,13 @@ const RevenueAssurance: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredItems, setFilteredItems] = useState(rev_items);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const { Search } = Input;
   const editableDrp = DropdownStyles;
+  const showModal = () => setIsModalVisible(true);
+  const handleOk = () => setIsModalVisible(false);
+  const handleCancel = () => setIsModalVisible(false);
   const FilterOptions = [
     { value: 'All', label: 'All' },
     { value: 'Assigned', label: 'Assigned' },
@@ -68,6 +74,7 @@ const RevenueAssurance: React.FC = () => {
       const workbook = XLSX.read(data, { type: 'array' });
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
+    
 
       const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
         header: 1,
@@ -190,6 +197,7 @@ const RevenueAssurance: React.FC = () => {
                     {!item.title.toLowerCase().includes('unassigned') && (
                       <Button
                         type="default"
+                        onClick={showModal}
                         icon={<PlusOutlined />}
                         className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semibold hover:bg-[#00C1F1] font-normal"
                       >
@@ -213,7 +221,13 @@ const RevenueAssurance: React.FC = () => {
           </div>
         </div>
       ))}
+       <AssignService
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      />
     </div>
+    
   );
 };
 

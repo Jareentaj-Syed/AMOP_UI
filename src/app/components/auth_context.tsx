@@ -1,6 +1,6 @@
 // src/context/AuthContext.tsx
 import React, { createContext, useState, useContext, ReactNode } from 'react';
-
+import axios from 'axios';
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => void;
@@ -12,12 +12,32 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const login = (username: string, password: string) => {
-    // Implement your authentication logic here.
-    // For now, we simulate a successful login.
+
+  const login = async (username: string, password: string) => {
     console.log('Logging in with:', username, password);
     setIsAuthenticated(true);
+    // try {
+    //   console.log('Logging in with:', username, password);
+    //   const url = 'https://example.com/api/login';
+    //   const response = await axios.post(url, {
+    //     username,
+    //     password
+    //   });
+
+    //   // Handle the response
+    //   if (response.status === 200) {
+    //     console.log('Login successful:', response.data);
+    //     setIsAuthenticated(true);
+    //   } else {
+    //     console.log('Login failed:', response.data);
+    //     setIsAuthenticated(false);
+    //   }
+    // } catch (error) {
+    //   console.error('Error during login:', error);
+    //   setIsAuthenticated(false);
+    // }
   };
+
 
   const logout = () => setIsAuthenticated(false);
 
