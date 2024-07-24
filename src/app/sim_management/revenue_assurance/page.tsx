@@ -3,7 +3,7 @@ import { DropdownStyles } from '@/app/components/css/dropdown';
 import { ArrowDownTrayIcon } from '@heroicons/react/16/solid';
 import { Button, Input, Switch } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SingleValue } from 'react-select';
 import Select from 'react-select';
 import { RevenueAssuranceList } from './revenue_assurance_constants';
@@ -21,6 +21,8 @@ const RevenueAssurance: React.FC = () => {
   const [openStates, setOpenStates] = useState<boolean[]>(Array(rev_items.length).fill(false));
   const [data, setData] = useState<any[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [filteredItems, setFilteredItems] = useState(rev_items);
 
   const { Search } = Input;
   const editableDrp = DropdownStyles;
@@ -29,12 +31,18 @@ const RevenueAssurance: React.FC = () => {
     { value: 'Assigned', label: 'Assigned' },
     { value: 'UnAssigned', label: 'UnAssigned' },
   ];
+
   const handleRatePlanChange = (selectedOption: SingleValue<OptionType>) => {
     console.log('wsdf', selectedOption);
     setRatePlan(selectedOption);
   };
-  const onSearch = (value: any) => {
-    console.log(value);
+
+  const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchValue = event.target.value;
+    setSearchValue(searchValue);
+
+    const filtered = rev_items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()));
+    setFilteredItems(filtered);
   };
 
   const handleSwitchChange = (checked: any) => {
@@ -118,7 +126,7 @@ const RevenueAssurance: React.FC = () => {
         </div>
       </div>
 
-      {rev_items.map((item, index) => (
+      {filteredItems.map((item, index) => (
         <div key={index} className="mb-5">
           <h3 className="mb-2 font-semibold hover:bg-gray-200">{item.title}</h3>
           <div className="mb-5 border rounded border-[#ED5565] hover:bg-gray-100">
