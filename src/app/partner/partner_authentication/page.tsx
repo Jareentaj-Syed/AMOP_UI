@@ -2,14 +2,12 @@
 
 "use client";
 import React, { useState, useEffect } from 'react';
-
+import { client_id,client_secret } from './partner_authentication_constants';
 interface PartnerAuthentication {
   onSubmit: () => void;
 }
 
 const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
-  const [clientId, setClientId] = useState<string>('');
-  const [clientSecret, setClientSecret] = useState<string>('');
   return (
     <div className='p-2'>
       <form>
@@ -22,8 +20,7 @@ const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
             <input
               type="text"
               className="non-editable-input "
-              value={'135791113151719'}
-              onChange={(e) => setClientId(e.target.value)}
+              value={client_id}
               readOnly
             />
           </div>
@@ -34,8 +31,7 @@ const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
             <input
               type="text"
               className="non-editable-input "
-              value={'zyxwvutsrqponmlkjihgfedcba987654'}
-              onChange={(e) => setClientSecret(e.target.value)}
+              value={client_secret}
               readOnly
             />
           </div>

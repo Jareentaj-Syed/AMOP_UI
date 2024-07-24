@@ -3,7 +3,8 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState, useEffect } from 'react';
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-import { partnerCarrierData, subPartnersData, serviceProviders, Customeroptions, CustomerGroup2Options } from '@/app/constants/partnercarrier';
+import { partnerCarrierData, serviceProviders, Customeroptions } from '@/app/constants/partnercarrier';
+import { partners ,customergroups_drp,subPartnersData} from '../users_constants';
 interface Option {
     value: string;
     label: string;
@@ -14,7 +15,8 @@ type OptionType = {
 };
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
-const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
+const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
+const CustomerGroup2Options=customergroups_drp.map(group => ({ value: group, label: group }));
 const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
 
 interface TenantInfoProps {
@@ -36,9 +38,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
 
     useEffect(() => {
         if (rowData) {
-            setSelectedPartner(rowData['Partner'] || '');
-            setSubPartners(subPartnersData[rowData['Partner']] || []);
-            setSelectedSubPartner(rowData['Sub Partner'] || '');
+            setSelectedPartner(rowData['tenant_name'] || '');
+            setSubPartners(subPartnersData[rowData['tenant_name']] || []);
+            setSelectedSubPartner(rowData['subtenant_name'] || '');
         }
     }, [rowData]);
     const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
@@ -46,7 +48,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             const partner = selectedOption.value;
             setSelectedPartner(partner);
             setCarriers(partnerCarrierData[partner] || []);
-            setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+            setSubPartners(subPartnersData[partner] || []);
             setSelectedSubPartner([]); // Reset sub-partner when partner changes
 
         } else {
@@ -153,14 +155,14 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                         <Select
 
                             styles={editableDrp}
-                            options={Customeroptions}
+                            options={CustomerGroup2Options}
                         />
                     </div>
                     <div>
                         <label className="field-label">Customers</label>
                         <Select
                             isMulti
-                            options={CustomerGroup2Options}
+                            options={Customeroptions}
                             styles={editableDrp}
                         />
                     </div>

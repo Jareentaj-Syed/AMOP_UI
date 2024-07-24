@@ -4,32 +4,16 @@ import Select, { MultiValue, SingleValue } from 'react-select';
 import countries from '@/app/constants/locationdetails';
 import { Country, State, City } from '@/app/constants/locationdetails';
 import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
-import { partnerCarrierData, subPartnersData } from '@/app/constants/partnercarrier';
+import { partnerCarrierData } from '@/app/constants/partnercarrier';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
+import { partners ,roles_drp,subPartnersData} from '../users_constants';
 type OptionType = {
   value: string;
   label: string;
 };
 
-const partners = [
-  "AWX",
-  "Altawork-GT",
-  "AWX-AWX",
-  "AWX Test",
-  "CSV RS AG",
-  "Go-Tech-AWX-Test",
-  "GT"
-];
-
-const roles = [
-  "Agent",
-  "Agent Partner Admin",
-  "Notification Only User",
-  "Partner Admin",
-  "Super Admin",
-  "User"
-];
-const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
+const roles =roles_drp
+const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 const Roleoptions = roles.map((role, index) => ({
@@ -67,14 +51,15 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
 
 
   useEffect(() => {
+    console.log("partners",partners)
     if (rowData) {
-      setUsername(rowData['User Name'] || '');
-      setEmail(rowData['Email Id'] || '');
-      setRole({ value: rowData['Role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['Role'] } || null);
-      setPartner({ value: rowData['Partner'], label: rowData['Partner'] } || null);
-      setSelectedPartner(rowData['Partner'] || '');
-      setSubPartners(subPartnersData[rowData['Partner']] || []);
-      setSelectedSubPartner(rowData['Sub Partner'] || '');
+      setUsername(rowData['username'] || '');
+      setEmail(rowData['email'] || '');
+      setRole({ value: rowData['role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['role'] } || null);
+      setPartner({ value: rowData['tenant_name'], label: rowData['tenant_name'] } || null);
+      setSelectedPartner(rowData['tenant_name'] || '');
+      setSubPartners(subPartnersData[rowData['tenant_name']] || []);
+      setSelectedSubPartner(rowData['subtenant_name'] || '');
     }
   }, [rowData]);
 
@@ -82,7 +67,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
-      setSubPartners(partner === 'Altaworx' ? subPartnersData[partner] || [] : []);
+      setSubPartners(subPartnersData[partner] || []);
       setSelectedSubPartner([]); // Reset sub-partner when partner changes
     } else {
       setSelectedPartner('');

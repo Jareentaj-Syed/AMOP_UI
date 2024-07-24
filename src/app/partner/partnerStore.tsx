@@ -93,7 +93,198 @@ export const  PartnerData= {
             ]
           }
         ],
-        "module": []
+        "module": [
+          {
+            "module_name": "Inventory",
+            "id": 1,
+            "parent_module_name": "Sim Management"
+          },
+          {
+            "module_name": "Bulk change",
+            "id": 2,
+            "parent_module_name": "Sim Management"
+          },
+          {
+            "module_name": "Sim Order Form",
+            "id": 3,
+            "parent_module_name": "Sim Management"
+          },
+          {
+            "module_name": "Carrier Rate Plans/SOCs",
+            "id": 4,
+            "parent_module_name": "Sim Management"
+          },
+          {
+            "module_name": "Revenue Assurance",
+            "id": 5,
+            "parent_module_name": "Sim Management"
+          },
+          {
+            "module_name": "Dashboard",
+            "id": 6,
+            "parent_module_name": "Device Management"
+          },
+          {
+            "module_name": "Inventory",
+            "id": 7,
+            "parent_module_name": "Device Management"
+          },
+          {
+            "module_name": "Provisioning",
+            "id": 8,
+            "parent_module_name": "Device Management"
+          },
+          {
+            "module_name": "Carrier Credentials",
+            "id": 9,
+            "parent_module_name": "Device Management"
+          },
+          {
+            "module_name": "Zero Usage Report",
+            "id": 10,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Newly Activated Report",
+            "id": 11,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Status History Report",
+            "id": 12,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Pool or Group Summary Report",
+            "id": 13,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Customer Rate Pool Usage Report",
+            "id": 14,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Tax Reports",
+            "id": 15,
+            "parent_module_name": "Optimization"
+          },
+          {
+            "module_name": "Inventory List",
+            "id": 16,
+            "parent_module_name": "Net Sapiens"
+          },
+          {
+            "module_name": "NetSapiens Rev Assurance",
+            "id": 17,
+            "parent_module_name": "Net Sapiens"
+          },
+          {
+            "module_name": "Rev.IO Product Links",
+            "id": 18,
+            "parent_module_name": "Net Sapiens"
+          },
+          {
+            "module_name": "Phone Numbers",
+            "id": 19,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Bulk change",
+            "id": 20,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Number Port-In",
+            "id": 21,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Number Orders",
+            "id": 22,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Locations",
+            "id": 23,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Revenue Assurance",
+            "id": 24,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Rev.IO Product Links",
+            "id": 25,
+            "parent_module_name": "LNP"
+          },
+          {
+            "module_name": "Automation Rule",
+            "id": 26,
+            "parent_module_name": "Automation"
+          },
+          {
+            "module_name": "Notifications",
+            "id": 27,
+            "parent_module_name": "Automation"
+          },
+          {
+            "module_name": "Rev.IO Customers",
+            "id": 28,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "Bandwidth Customers",
+            "id": 29,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "NetSapiens Customers",
+            "id": 30,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "E911 Customers",
+            "id": 31,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "Customer Groups",
+            "id": 32,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "Users",
+            "id": 33,
+            "parent_module_name": "People"
+          },
+          {
+            "module_name": "Provider Charge Mapping",
+            "id": 34,
+            "parent_module_name": "Settings"
+          },
+          {
+            "module_name": "Application Settings",
+            "id": 35,
+            "parent_module_name": "Settings"
+          },
+          {
+            "module_name": "Partners",
+            "id": 36,
+            "parent_module_name": "Settings"
+          },
+          {
+            "module_name": "Roles",
+            "id": 37,
+            "parent_module_name": "Settings"
+          },
+          {
+            "module_name": "Modules",
+            "id": 38,
+            "parent_module_name": "Settings"
+          }
+        ]
       },
       "pages": {
         "Customer groups": {
@@ -104,7 +295,7 @@ export const  PartnerData= {
         "Partner users": {
           "start": 0,
           "end": 10,
-          "total": 0
+          "total": 4
         },
         "Notifications": {
           "start": 0,
@@ -774,7 +965,104 @@ export const  PartnerData= {
             "isdeleted": false,
             "lastmodifiedby": null
           }
-        ]
+        ],
+        "customergroups": [
+          {
+            "name": "Breezeline / ABB"
+          },
+          {
+            "name": "Bandwidth Site Test"
+          },
+          {
+            "name": "CS Vizion"
+          },
+          {
+            "name": "Purple Ventures"
+          },
+          {
+            "name": "Bluezoo (Bluefox)"
+          },
+          {
+            "name": "Tricom Technology Solutions"
+          },
+          {
+            "name": "Your Company Name"
+          },
+          {
+            "name": "Altaworx"
+          },
+          {
+            "name": "Hillary Test [DELETED ON 2021-01-22T15:24:00.4301183Z]"
+          },
+          {
+            "name": "Netverta"
+          }
+        ],
+        "customerrateplan": [
+          {
+            "rateplanname": "ALTARR001 0 kB"
+          },
+          {
+            "rateplanname": "ALTARR001 500 kB"
+          },
+          {
+            "rateplanname": "ALTARR001 1 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 3 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 4 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 5 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 10 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 25 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 300 MB"
+          },
+          {
+            "rateplanname": "ALTARR001 500 MB"
+          }
+        ],
+        "Roles": [
+          {
+            "rolename": "Super Admin"
+          },
+          {
+            "rolename": "Partner Admin"
+          },
+          {
+            "rolename": "User"
+          },
+          {
+            "rolename": "Agent"
+          },
+          {
+            "rolename": "Agent Partner Admin"
+          },
+          {
+            "rolename": "Notification Only User"
+          }
+        ],
+        "tenant": {
+          "Altaworx": [
+            "SI Connect Test",
+            "SI Connect Test",
+            "SI Connect",
+            "Demo Tenant"
+          ],
+          "Go Technologies": [],
+          "ADCom": [],
+          "SI Connect Test": [
+            "SI Connect Test2"
+          ]
+        }
       },
       "Notifications": {
         "role_notification": []

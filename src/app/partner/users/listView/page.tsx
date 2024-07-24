@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import ChartsPage from '../charts/page';
@@ -8,15 +8,17 @@ import SearchInput from '../../../components/Search-Input';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
+import { users_table } from '../users_constants';
+import { headers } from '../users_constants';
 
 interface ExcelDataRow {
   [key: string]: any;
 }
 
 const ListView: React.FC = () => {
-  const [data, setData] = useState<ExcelDataRow[]>([]);
+  const [data, setData] = useState<ExcelDataRow[]>(users_table); // Initialize data with users_table
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers); // Initialize visibleColumns with headers
   const [showCreateUser, setShowCreateUser] = useState(false); // State to toggle create user view
   const router = useRouter();
 
@@ -26,46 +28,6 @@ const ListView: React.FC = () => {
     setShowCreateUser(true);
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/users.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-        const data = new Uint8Array(arrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1, // Use first row as header
-          blankrows: false // Include cells with blank values
-        });
-
-        if (jsonData.length === 0) {
-          throw new Error('No data found in the Excel sheet.');
-        }
-
-        const columnNames = jsonData[0];
-
-        const filledData = jsonData.slice(1).map(row => {
-          const filledRow: any = {};
-          columnNames.forEach((header: any, index: number) => {
-            filledRow[header] = row[index] || '';
-          });
-          return filledRow;
-        });
-
-        setData(filledData);
-        setVisibleColumns(columnNames);
-      } catch (error) {
-        console.error('Error fetching data from Excel:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  const headers = visibleColumns;
   const handleExport = () => {
     const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);

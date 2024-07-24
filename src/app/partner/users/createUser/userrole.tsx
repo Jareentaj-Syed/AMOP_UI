@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Select, { ActionMeta, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerCarrierData } from '@/app/constants/partnercarrier';
+import { partners,roles_drp } from '../users_constants';
 
 type OptionType = {
     value: string;
@@ -253,24 +254,7 @@ const data: ExcelData = {
         }
     }
 }
-const partners = [
-    "AWX",
-    "Altawork-GT",
-    "AWX-AWX",
-    "AWX Test",
-    "CSV RS AG",
-    "Go-Tech-AWX-Test",
-    "GT"
-];
-
-const roles = [
-    "Agent",
-    "Agent Partner Admin",
-    "Notification Only User",
-    "Partner Admin",
-    "Super Admin",
-    "User"
-];
+const roles = roles_drp
 
 const Roleoptions = roles.map((role, index) => ({
     value: role.toLowerCase().replace(/\s+/g, '-'),
@@ -279,7 +263,7 @@ const Roleoptions = roles.map((role, index) => ({
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 
-const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
+const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
 
 interface UserRoleProps {
     rowData?: any;
@@ -296,8 +280,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
 
     useEffect(() => {
         if (rowData) {
-            setPartner({ value: rowData['Partner'], label: rowData['Partner'] } || null);
-            setRole({ value: rowData['Role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['Role'] } || null);
+            setPartner({ value: rowData['tenant_name'], label: rowData['tenant_name'] } || null);
+            setRole({ value: rowData['role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['role'] } || null);
         }
     }, [rowData]);
 
