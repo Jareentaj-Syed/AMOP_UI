@@ -5,12 +5,11 @@ import { Footer } from './footer-nested';
 import { useRouter } from 'next/navigation';
 import PasswordReset from './password_reset';
 const Login: React.FC = () => {
-    // const router = useRouter(); // Use the router hook to handle navigation
+    const router = useRouter(); 
 
-    // useEffect(() => {
-    //     // Ensure the URL is set to /login when the component mounts
-    //     router.push('/login');
-    // }, [router]);
+    useEffect(() => {
+        router.push('/login');
+    }, [router]);
 
     const { login } = useAuth(); // Assuming useAuth provides a login function
     const [username, setUsername] = useState('');

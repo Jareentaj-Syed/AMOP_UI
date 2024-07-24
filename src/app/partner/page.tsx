@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '../stores/navBarStore';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
@@ -17,10 +18,37 @@ const Notification = dynamic(() => import('./notification/page'));
 const Partner: React.FC = () => {
     const router = useRouter(); // Use the router hook to handle navigation
 
-    useEffect(() => {
-        // Ensure the URL is set to /login when the component mounts
-        router.push('/partner');
-    }, [router]);
+  //   useEffect(() => {
+  //     // Redirect to the /partner route when the component mounts
+     
+
+  //     // Define the parameters to send
+  //     const params = {
+  //         tenant_name: "Altaworx",
+  //         module_list: [
+  //             "Partner info",
+  //             "Partner authentication",
+  //             "Partner module access",
+  //             "Customer groups",
+  //             "Partner users",
+  //             "Notifications"
+  //         ],
+  //         pages: {
+  //             "Customer groups": { start: 0, end: 10 },
+  //             "Partner users": { start: 0, end: 10 }
+  //         }
+  //     };
+
+  //     // Make an Axios request
+  //     axios.post('https://example.com/api/your-endpoint', params)
+  //         .then(response => {
+  //             console.log('Response:', response.data);
+  //         })
+  //         .catch(error => {
+  //             console.error('Error:', error);
+  //         });
+
+  // }, [router]);
   const [activeTab, setActiveTab] = useState('partnerInfo');
 
   const isExpanded = useSidebarStore((state:any) => state.isExpanded);

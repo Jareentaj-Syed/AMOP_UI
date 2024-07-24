@@ -1,6 +1,7 @@
-import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon, HomeIcon } from '@heroicons/react/24/outline';
 
 export const moduleIconMap = {
+  'Home':HomeIcon,
   'Partner': ClipboardDocumentCheckIcon,
   'SIM Management': WifiIcon,
   'Device Management': DevicePhoneMobileIcon,
@@ -11,9 +12,14 @@ export const moduleIconMap = {
 };
 
 export const moduleData = [
+  // {
+  //   parent_module_name: 'Home',
+  //   queue_order: 1,
+  //   children: [],
+  // },
   {
     parent_module_name: 'Partner',
-    queue_order: 1,
+    queue_order: 2,
     children: [],
   },
   {

@@ -1,9 +1,11 @@
 // pages/choose_tenant.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Button } from 'antd';
 import { Footer } from './footer-nested';
-
+import axios from 'axios';
+import { useAuth } from './auth_context';
+import { useRouter } from 'next/navigation';
 const partners: string[] = [
   'Altaworx-GT',
   'AWX',
@@ -16,12 +18,36 @@ const partners: string[] = [
 ];
 
 const ChooseTenant: React.FC = () => {
-  const [partner, setPartner] = useState<string | null>(null);
-
-  const handleSelectedPartner = (partnerName: string) => {
+ 
+  const { setSelectedPartner, setPartner } = useAuth(); // Extract both setters from context
+  const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
+  const router = useRouter();
+  const handleSelectedPartner = async (partnerName: string) => {
     console.log('Selected Partner:', partnerName);
-    setPartner(partnerName);
+    setSelectedPartner(true);
+    setPartner(partnerName); 
+    setSelectedPartnerName(partnerName);
+    router.push('/partner');
+    // try {
+    //   console.log('Selected Partner:', partnerName);
+    //   const url = 'https://example.com/api/login';
+    //   const response = await axios.post(url, {
+    //     Tenantname: partnerName
+    //   });
+  
+    //   // Handle the response
+    //   if (response.status === 200) {
+    //     console.log('Login successful:', response.data);
+    //     setSelectedPartner(true)
+    //     setPartner(partnerName);
+    //   } else {
+    //     console.log('Login failed:', response.data);
+    //   }
+    // } catch (error) {
+    //   console.error('Error during login:', error);
+    // }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
