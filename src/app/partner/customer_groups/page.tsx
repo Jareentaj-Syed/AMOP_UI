@@ -8,13 +8,14 @@ import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import { createModalData } from './customer_groups_constants';
+import { customer_table } from './customer_groups_constants';
+import { headers } from './customer_groups_constants';
 
 interface ExcelData {
   [key: string]: any;
 }
-
 const CustomerGroups: React.FC = () => {
-  const [data, setData] = useState<ExcelData[]>([]);
+  const [data, setData] = useState<ExcelData[]>(customer_table);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');

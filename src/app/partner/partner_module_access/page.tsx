@@ -3,7 +3,7 @@
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
-import { DropdownStyles, NonEditableDropdownStyles } from '../components/css/dropdown';
+import { DropdownStyles,NonEditableDropdownStyles } from '@/app/components/css/dropdown';
 type OptionType = {
     value: string;
     label: string;

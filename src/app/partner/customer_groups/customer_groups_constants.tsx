@@ -1,3 +1,4 @@
+import { PartnerData } from "../partnerStore"
 export const createModalData= [
   {
     "label": "Name",
@@ -58,3 +59,5 @@ export const createModalData= [
     "mandatory": "false"
   }
 ]
+export const customer_table:any[]=PartnerData.data["Customer groups"]["customergroups"]
+export const headers=["name","tenantname","modifiedby","modifieddate"]
