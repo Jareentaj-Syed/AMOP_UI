@@ -29,13 +29,17 @@ const generateNavItems = (modules: any[]): NavItem[] => {
       })),
     })) : [];
 
+    const href = children.length === 0 ? `/${parent_module_name.toLowerCase().replace(/[\s/.]/g, '_')}` : undefined;
+
     return {
       label: parent_module_name,
       icon: IconComponent ? <IconComponent className="w-4 h-4" /> : null,
+      href, // Add href for main menu items without subNav
       subNav,
     };
   });
 };
+
 
 const SideNav: React.FC = () => {
   const currentPath = usePathname();
@@ -115,7 +119,7 @@ console.log(navItems)
               <Link
                 href={item.href || '/'} // Provide a fallback value
                 passHref
-                className={`flex items-center space-x-2 p-2 nav-link ${currentPath === item.href ? 'nav-active-link' : ''}`}
+                className={`flex items-center space-x-2 p-2 nav-link ${isActive(item.href)? 'nav-active-link' : ''}`}
               >
                 {item.icon}
                 <span>{item.label}</span>
