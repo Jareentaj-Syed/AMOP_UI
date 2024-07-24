@@ -399,6 +399,12 @@
   font-weight: 300;
 }
 
+
+.custom-switch.ant-switch-checked {
+  background-color: #64BD63 !important;
+  
+}
+
 /*
 Gray 50: #F9FAFB
 Gray 100: #F3F4F6
