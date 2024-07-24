@@ -1,8 +1,7 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
-import { PlusIcon, ArrowDownTrayIcon, AdjustmentsHorizontalIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
-import { Button, Popover } from 'antd';
+import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
@@ -14,53 +13,14 @@ import { headers } from './customer_groups_constants';
 interface ExcelData {
   [key: string]: any;
 }
+
 const CustomerGroups: React.FC = () => {
   const [data, setData] = useState<ExcelData[]>(customer_table);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const createColumns = createModalData
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('/customer_groups.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-        const data = new Uint8Array(arrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-          blankrows: false,
-        });
-
-        if (jsonData.length === 0) {
-          throw new Error('No data found in the Excel sheet.');
-        }
-
-        const columnNames = jsonData[0];
-        const filledData = jsonData.slice(1).map((row) => {
-          const filledRow: any = {};
-          columnNames.forEach((header: any, index: number) => {
-            filledRow[header] = row[index] || '';
-          });
-          return filledRow;
-        });
-
-        setData(filledData);
-        setVisibleColumns(columnNames);
-      } catch (error) {
-        console.error('Error fetching data from Excel:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-  const headers = visibleColumns;
-
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
+  const createColumns = createModalData;
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -76,6 +36,7 @@ const CustomerGroups: React.FC = () => {
     setData(updatedData);
     handleCreateModalClose();
   };
+
   const handleExport = () => {
     const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);
@@ -83,11 +44,11 @@ const CustomerGroups: React.FC = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
     XLSX.writeFile(workbook, "CustomerGroups.xlsx");
   };
+
   return (
     <div className="container">
-      <div className=' p-4'>
-        <div className="p-4 flex items-center justify-between  mb-4">
-
+      <div className='p-4'>
+        <div className="p-4 flex items-center justify-between mb-4">
           <div className="flex space-x-2">
             <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <ColumnFilter
@@ -109,7 +70,6 @@ const CustomerGroups: React.FC = () => {
               <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
               <span>Export</span>
             </button>
-
           </div>
         </div>
 
