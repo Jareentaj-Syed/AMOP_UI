@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '../EmailModal';
 import { Modal } from 'antd';
+import { partner,sub_partner } from './partner_info_constants';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -9,27 +10,12 @@ interface PartnerInfo {
 
 const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [logoError, setLogoError] = useState<string | null>(null);
-  const [formValid, setFormValid] = useState<boolean>(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
-  const [partnerName, setPartnerName] = useState<string>('');
-  const [subPartnerName, setSubPartnerName] = useState<string>('');
   const [emailList, setEmailList] = useState<string[]>([]);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (
-      partnerName.trim() !== '' &&
-      subPartnerName.trim() !== '' &&
-      emailList.length > 0
-    ) {
-      setFormValid(true);
-    } else {
-      setFormValid(false);
-    }
-  }, [partnerName, subPartnerName, emailList]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -70,8 +56,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   };
 
   const resetForm = () => {
-    setPartnerName('');
-    setSubPartnerName('');
     setEmailList([]);
     setLogoError(null);
     if (logoFileRef.current) {
@@ -92,8 +76,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={'Altaworx'}
-                onChange={(e) => setPartnerName(e.target.value)}
+                value={partner}
                 readOnly
               />
                {/* value={partnerName} */}
@@ -105,8 +88,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={'Altantech-AWX'}
-                onChange={(e) => setSubPartnerName(e.target.value)}
+                value={sub_partner}
                 readOnly
               />
               {/* value={subPartnerName} */}

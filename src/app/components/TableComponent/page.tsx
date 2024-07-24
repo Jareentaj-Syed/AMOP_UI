@@ -140,8 +140,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   
 
   const formatColumnName = (name: string) => {
-    return name.replace(/_/g, ' ');
+    return name
+      .replace(/_/g, ' ')          // Replace underscores with spaces
+      .split(' ')                  // Split the string into words
+      .map(word =>                 // Capitalize each word
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(' ');                  // Join the words back into a single string
   };
+  
 
   const handleActionClick = (action: string, rowIndex: number) => {
     switch (action) {

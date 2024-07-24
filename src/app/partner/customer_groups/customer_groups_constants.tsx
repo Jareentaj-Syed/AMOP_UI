@@ -1,7 +1,19 @@
 import { PartnerData } from "../partnerStore"
+const customers_drp = Object.values(PartnerData.data["Customer groups"]["Customer_names"]).map(
+  (customer) => customer.customer_name
+);
+
+const customerrateplan_drp = Object.values(PartnerData.data["Customer groups"]["customerrateplan"]).map(
+  (plan) => plan.rateplanname 
+);
+
+const billingaccountnumber_drp = Object.values(PartnerData.data["Customer groups"]["BAN"]).map(
+  (ban) => ban.billingaccountnumber 
+);
+
 export const createModalData= [
   {
-    "label": "Name",
+    "label": "name",
     "type": "text",
     "value":"",
     "mandatory": "true"
@@ -15,36 +27,19 @@ export const createModalData= [
   {
     "label": "Customers",
     "type": "dropdown",
-    "value": [
-      "KeySys",
-      "KQA",
-      "QA Customer",
-      "Belcom Inc",
-      "Mitzi Gilchrist"
-    ],
+    "value":customers_drp,
     "mandatory": "true"
   },
   {
     "label": "BAN",
     "type": "dropdown",
-    "value": [
-      "287342370228",
-      "287277612222",
-      "287256845357",
-      "287294130093",
-      "287260128567"
-    ],
+    "value": billingaccountnumber_drp,
     "mandatory": "false"
   },
   {
     "label": "Customer Rate Plan",
     "type": "dropdown",
-    "value": [
-      "!aasrte",
-      "100 GB 10W Pooled Data",
-      "10005",
-      "PORT -1714"
-    ],
+    "value": customerrateplan_drp,
     "mandatory": "false"
   },
   {

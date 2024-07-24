@@ -113,48 +113,6 @@ export const  PartnerData= {
         }
       },
       "Customer groups": {
-        "Customers": [
-          {
-            "billingaccountnumber": null,
-            "customer_name": "Bluezoo (Bluefox) (300006635)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": "Office Equipment Co. (300005669)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": "Secured Mobility (300005989)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": "Freddy's Frozen Custard & Steakburgers - FFC 10 (300006151)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": "LED Cents, Inc (300006682)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": "Total Radiology (300005662)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": " (300005992)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": " (300005996)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": " (300006208)"
-          },
-          {
-            "billingaccountnumber": null,
-            "customer_name": " (300006258)"
-          }
-        ],
         "customergroups": [
           {
             "id": 1,
@@ -397,6 +355,70 @@ export const  PartnerData= {
           },
           {
             "rateplanname": "ALTARR001 500 MB"
+          }
+        ],
+        "Customer_names": [
+          {
+            "customer_name": "Bluezoo (Bluefox) (300006635)"
+          },
+          {
+            "customer_name": "Office Equipment Co. (300005669)"
+          },
+          {
+            "customer_name": "Secured Mobility (300005989)"
+          },
+          {
+            "customer_name": "Freddy's Frozen Custard & Steakburgers - FFC 10 (300006151)"
+          },
+          {
+            "customer_name": "LED Cents, Inc (300006682)"
+          },
+          {
+            "customer_name": "Total Radiology (300005662)"
+          },
+          {
+            "customer_name": " (300005992)"
+          },
+          {
+            "customer_name": " (300005996)"
+          },
+          {
+            "customer_name": " (300006208)"
+          },
+          {
+            "customer_name": " (300006258)"
+          }
+        ],
+        "BAN": [
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
+          },
+          {
+            "billingaccountnumber": null
           }
         ]
       },
