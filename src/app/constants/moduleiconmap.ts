@@ -10,13 +10,13 @@ export const moduleIconMap = {
   'Settings': CogIcon,
   'Super Admin': UserCircleIcon
 };
-
-export const moduleData = [
-  // {
+ // {
   //   parent_module_name: 'Home',
   //   queue_order: 1,
   //   children: [],
   // },
+export const moduleData = [
+ 
   {
     parent_module_name: 'Partner',
     queue_order: 2,

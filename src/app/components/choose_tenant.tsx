@@ -6,6 +6,7 @@ import { Footer } from './footer-nested';
 import axios from 'axios';
 import { useAuth } from './auth_context';
 import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
 const partners: string[] = [
   'Altaworx-GT',
   'AWX',
@@ -23,11 +24,12 @@ const ChooseTenant: React.FC = () => {
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
   const handleSelectedPartner = async (partnerName: string) => {
+    // router.push('/partner');
     console.log('Selected Partner:', partnerName);
     setSelectedPartner(true);
     setPartner(partnerName); 
     setSelectedPartnerName(partnerName);
-    router.push('/partner');
+    
     // try {
     //   console.log('Selected Partner:', partnerName);
     //   const url = 'https://example.com/api/login';
@@ -46,6 +48,7 @@ const ChooseTenant: React.FC = () => {
     // } catch (error) {
     //   console.error('Error during login:', error);
     // }
+    redirect("/components/partner");
   };
   
 

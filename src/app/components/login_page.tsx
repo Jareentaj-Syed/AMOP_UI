@@ -7,9 +7,9 @@ import PasswordReset from './password_reset';
 const Login: React.FC = () => {
     const router = useRouter(); 
 
-    useEffect(() => {
-        router.push('/login');
-    }, [router]);
+    // useEffect(() => {
+    //     router.push('/login');
+    // }, [router]);
 
     const { login } = useAuth(); // Assuming useAuth provides a login function
     const [username, setUsername] = useState('');

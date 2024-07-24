@@ -25,29 +25,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // console.log(selectedPartner)
   const login = async (username: string, password: string) => {
 
-    console.log('Logging in with:', username, password);
-    setUsername(username); 
-    setIsAuthenticated(true);
-    // try {
-    //   console.log('Logging in with:', username, password);
-    //   const url = 'https://example.com/api/login';
-    //   const response = await axios.post(url, {
-    //     username,
-    //     password
-    //   });
+    // console.log('Logging in with:', username, password);
+    // setUsername(username); 
+    // setIsAuthenticated(true);
+   const param2 = {
+      "httpMethod": "GET",
+      "path": "/dev/api-function1",
+      "param1": "value1",
+  }
+  // const queryString = new URLSearchParams(param2).toString();
+  const queryString = encodeURIComponent(JSON.stringify(param2));
 
-    //   // Handle the response
-    //   if (response.status === 200) {
-    //     console.log('Login successful:', response.data);
-    //     setIsAuthenticated(true);
-    //   } else {
-    //     console.log('Login failed:', response.data);
-    //     setIsAuthenticated(false);
-    //   }
-    // } catch (error) {
-    //   console.error('Error during login:', error);
-    //   setIsAuthenticated(false);
-    // }
+  try {
+    console.log('Logging in with:', username, password);
+    const url = `https://vlzal62wmg.execute-api.ap-south-1.amazonaws.com/dev/api-function1?param2=${queryString}`;
+      // const response = await axios.post(url, {
+    
+      //   "param2": param2
+    
+      // });
+      const response = await axios.post(url);
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+        setIsAuthenticated(true);
+      } else {
+        console.log('Login failed:', response.data);
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      setIsAuthenticated(false);
+    }
   };
 
   const logout = () => {

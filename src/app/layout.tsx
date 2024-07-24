@@ -26,12 +26,6 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   if (!isAuthenticated) {
     return <Login />;
   }
-  
-    // if(selectedPartner){
-    //   router.push('/partner');
-    // }
-   
-  
 
 
   return (
