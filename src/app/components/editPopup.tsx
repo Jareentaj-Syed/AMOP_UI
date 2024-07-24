@@ -76,6 +76,17 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
     setIsCreateUserOpen(true);
   };
 
+  const formatColumnName = (name: string) => {
+    return name
+      .replace(/_/g, ' ')          // Replace underscores with spaces
+      .split(' ')                  // Split the string into words
+      .map(word =>                 // Capitalize each word
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(' ');                  // Join the words back into a single string
+  };
+  
+
   const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;  
   return (
@@ -130,7 +141,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
                   ? infoColumns.map((column: Column) => (
                     <div key={column.label} className="flex flex-col mb-4">
                       <label className="field-label">
-                        {column.label} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
+                        {formatColumnName(column.label)} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
                       </label>
                       <Input
                         type="text"
@@ -144,7 +155,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
                   : editColumns.map((column: Column) => (
                     <div key={column.label} className="flex flex-col mb-4">
                       <label className="field-label">
-                        {column.label} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
+                      {formatColumnName(column.label)} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
                       </label>
                       {column.type === 'text' && (
                         <Input

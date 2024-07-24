@@ -72,7 +72,16 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   const handleCancel = () => {
     setIsConfirmationOpen(false);
   };
-
+  const formatColumnName = (name: string) => {
+    return name
+      .replace(/_/g, ' ')          // Replace underscores with spaces
+      .split(' ')                  // Split the string into words
+      .map(word =>                 // Capitalize each word
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(' ');                  // Join the words back into a single string
+  };
+  
   const modalWidth = (window.innerWidth * 2.5) / 4;
   const modalHeight = (window.innerHeight * 2.5) / 4;
 
@@ -105,12 +114,12 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
               {columnNames.map(({ label, type, value, mandatory }) => (
                 <div key={label} className="flex flex-col mb-4">
                   <label className="field-label">
-                    {label} {mandatory === 'true' && <span className="text-red-500">*</span>}
+                  {formatColumnName(label)} {mandatory === 'true' && <span className="text-red-500">*</span>}
                   </label>
                   {type === 'text' && (
                     <Input
                       type="text"
-                      name={label}
+                      name={formatColumnName(label)}
                       value={formData[label] || ''}
                       onChange={(e) => handleChange(label, e.target.value)}
                       className="input"
