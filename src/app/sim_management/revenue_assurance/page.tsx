@@ -17,7 +17,7 @@ type OptionType = {
 
 const rev_items = RevenueAssuranceList;
 const RevenueAssurance: React.FC = () => {
-  const [rateplan, setRatePlan] = useState<SingleValue<OptionType>>(null);
+  const [filterState, setFilterState] = useState<SingleValue<OptionType>>(null);
   const [openStates, setOpenStates] = useState<boolean[]>(Array(rev_items.length).fill(false));
   const [data, setData] = useState<any[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
@@ -32,16 +32,17 @@ const RevenueAssurance: React.FC = () => {
     { value: 'UnAssigned', label: 'UnAssigned' },
   ];
 
-  const handleRatePlanChange = (selectedOption: SingleValue<OptionType>) => {
-    console.log('wsdf', selectedOption);
-    setRatePlan(selectedOption);
+  const handleFilterState = (selectedOption: SingleValue<OptionType>) => {
+    setFilterState(selectedOption);
   };
 
   const onSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchValue = event.target.value;
     setSearchValue(searchValue);
 
-    const filtered = rev_items.filter(item => item.title.toLowerCase().includes(searchValue.toLowerCase()));
+    const filtered = rev_items.filter(item =>
+      item.title.toLowerCase().includes(searchValue.toLowerCase())
+    );
     setFilteredItems(filtered);
   };
 
@@ -93,6 +94,23 @@ const RevenueAssurance: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const filterItems = () => {
+      if (!filterState || filterState.value === 'All') {
+        setFilteredItems(rev_items);
+      } else {
+        const filtered = rev_items.filter((item) =>
+          filterState.value === 'UnAssigned'
+            ? item.title.toLowerCase().includes('unassigned')
+            : !item.title.toLowerCase().includes('unassigned')
+        );
+        setFilteredItems(filtered);
+      }
+    };
+
+    filterItems();
+  }, [filterState]);
+
   return (
     <div className="p-4 space-y-4">
       <div className="flex items-center justify-between">
@@ -118,10 +136,10 @@ const RevenueAssurance: React.FC = () => {
         <div className="w-60">
           <Select
             styles={editableDrp}
-            value={rateplan}
+            value={filterState}
             placeholder="Select Filter"
             options={FilterOptions}
-            onChange={handleRatePlanChange}
+            onChange={handleFilterState}
           />
         </div>
       </div>
