@@ -2,14 +2,13 @@
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { ArrowDownTrayIcon } from '@heroicons/react/16/solid';
 import { Button, Input, Switch } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { SingleValue } from 'react-select';
 import Select from 'react-select';
 import { RevenueAssuranceList } from './revenue_assurance_constants';
 import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
-import { PlusOutlined } from '@ant-design/icons';
 
 type OptionType = {
   value: string;
@@ -19,7 +18,7 @@ type OptionType = {
 const rev_items = RevenueAssuranceList;
 const RevenueAssurance: React.FC = () => {
   const [rateplan, setRatePlan] = useState<SingleValue<OptionType>>(null);
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [openStates, setOpenStates] = useState<boolean[]>(Array(rev_items.length).fill(false));
   const [data, setData] = useState<any[]>([]);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
@@ -43,10 +42,11 @@ const RevenueAssurance: React.FC = () => {
   };
 
   const handleToggle = (index: number, url: string) => {
-    if (activeIndex === index) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(index);
+    const newOpenStates = [...openStates];
+    newOpenStates[index] = !newOpenStates[index];
+    setOpenStates(newOpenStates);
+
+    if (newOpenStates[index]) {
       fetchData(url);
     }
   };
@@ -120,44 +120,62 @@ const RevenueAssurance: React.FC = () => {
 
       {rev_items.map((item, index) => (
         <div key={index} className="mb-5">
-          <h3 className="mb-2 font-[600]">{item.title}</h3>
-          <div className="mb-5 border rounded border-[#ED5565]">
+          <h3 className="mb-2 font-semibold hover:bg-gray-200">{item.title}</h3>
+          <div className="mb-5 border rounded border-[#ED5565] hover:bg-gray-100">
             <div className="flex items-left bg-[#ED5565] text-white p-2 relative">
               <button
                 onClick={() => handleToggle(index, item.url)}
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#ED5565] text-white border-none cursor-pointer text-lg w-8 h-8 rounded-full font-[24px] font-bold hover:bg-[#E5071F]"
+                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#ED5565] text-white border-none cursor-pointer text-lg w-8 h-8 rounded-full font-bold hover:bg-[#E5071F]"
               >
-                {activeIndex === index ? '-' : '+'}
+                {openStates[index] ? '-' : '+'}
               </button>
               <div className="flex-grow text-left ml-14">
                 Total Devices ({item.total_devices}) Charged Devices ({item.charged_devices})
               </div>
             </div>
-            {activeIndex === index && (
+            {openStates[index] && (
               <div className="mb-5 border rounded border-[#ED5565] mx-10 my-5">
                 <div className="flex items-left bg-[#ED5565] text-white p-2 relative">
                   <div className="flex-grow text-left">
                     Service Products ({item.service_products.active} active / {item.service_products.total} total)
                   </div>
-                  <div className='flex space-x-2'>
-                    <Button type="default" icon={<PlusOutlined />} className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semi-bold hover:bg-[#00C1F1] font-[400]">
+                  <div className="flex space-x-2">
+                    <Button
+                      type="default"
+                      icon={<PlusOutlined />}
+                      className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semibold hover:bg-[#00C1F1] font-normal"
+                    >
                       Add Service Line
                     </Button>
-                    <Button type="default" icon={<PlusOutlined />} className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semi-bold hover:bg-[#00C1F1] font-[400]">
+                    <Button
+                      type="default"
+                      icon={<PlusOutlined />}
+                      className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semibold hover:bg-[#00C1F1] font-normal"
+                    >
                       Add Service Product
                     </Button>
-                    <Button type="default" icon={<PlusOutlined />} className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semi-bold hover:bg-[#00C1F1] font-[400]">
+                    <Button
+                      type="default"
+                      icon={<PlusOutlined />}
+                      className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semibold hover:bg-[#00C1F1] font-normal"
+                    >
                       Disconnect Service Product
                     </Button>
-                    <Button type="default" icon={<PlusOutlined/>} className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4  font-semi-bold hover:bg-[#00C1F1] font-[400]">
-                      Assign Service
-                    </Button>
+                    {!item.title.toLowerCase().includes('unassigned') && (
+                      <Button
+                        type="default"
+                        icon={<PlusOutlined />}
+                        className="flex items-center border-[#00C1F1] text-[#00C1F1] border-3 rounded-3xl py-4 px-4 font-semibold hover:bg-[#00C1F1] font-normal"
+                      >
+                        Assign Service
+                      </Button>
+                    )}
                   </div>
                 </div>
                 <TableComponent
                   headers={visibleColumns}
                   initialData={data}
-                  searchQuery={""}
+                  searchQuery={''}
                   visibleColumns={visibleColumns}
                   itemsPerPage={10}
                   popupHeading="Customer"
@@ -172,4 +190,5 @@ const RevenueAssurance: React.FC = () => {
     </div>
   );
 };
+
 export default RevenueAssurance;
