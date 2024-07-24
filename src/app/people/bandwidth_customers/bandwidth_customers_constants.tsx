@@ -3,12 +3,13 @@ export const createModalData= [
     "label": "Partner",
     "type": "dropdown",
     "value": [
-      "Agent",
-      "Agent Partner Admin",
-      "Notification Only User",
-      "Partner Admin",
-      "Super Admin",
-      "User"
+      "AWX",
+      "Altawork-GT",
+      "AWX-AWX",
+      "AWX Test",
+      "CSV RS AG",
+      "Go-Tech-AWX-Test",
+      "GT"
     ],
     "mandatory": "true"
   },
