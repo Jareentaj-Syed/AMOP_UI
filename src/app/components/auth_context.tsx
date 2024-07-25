@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
-
+import{AUTHENTICATION_ROUTES} from '../components/routes/route_constants'
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => void;
@@ -17,6 +17,7 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [partner, setPartner] = useState<string | null>(null);
@@ -24,17 +25,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [selectedPartner, setSelectedPartner] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false); // Add showPassword state
-
+  console.log("baseurl",BASE_URL);
   const login = async (username: string, password: string) => {
-    setUsername(username)
+    setUsername(username);
     const data = {
-      http: 'get',
-      api: 'success',
+      username: username,
+      password: password,
     };
+   
+
     try {
       console.log('Logging in with:', username, password);
-      const url = `https://vlzal62wmg.execute-api.ap-south-1.amazonaws.com/dev/api-function1`;
-      const response = await axios.post(url, { body: data }, {
+      const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.AMOP_LOGIN}`;
+      console.log("url", url)
+      const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
         }}
