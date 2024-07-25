@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   try {
       console.log('Logging in with:', username, password);
       const url = `https://vlzal62wmg.execute-api.ap-south-1.amazonaws.com/dev/api-function1`;
-      const response = await axios.post(url, { param2: data }, {
+      const response = await axios.post(url, { body: data }, {
         headers: {
           'Content-Type': 'application/json'
         }
