@@ -24,27 +24,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [username, setUsername] = useState<string | null>(null);
   // console.log(selectedPartner)
   const login = async (username: string, password: string) => {
-
-    // console.log('Logging in with:', username, password);
-    // setUsername(username); 
-    // setIsAuthenticated(true);
-   const param2 = {
-      "httpMethod": "GET",
-      "path": "/dev/api-function1",
-      "param1": "value1",
-  }
-  // const queryString = new URLSearchParams(param2).toString();
-  const queryString = encodeURIComponent(JSON.stringify(param2));
-
+    const data = {
+      "http": "get",
+      "api": "success"
+    }
   try {
-    console.log('Logging in with:', username, password);
-    const url = `https://vlzal62wmg.execute-api.ap-south-1.amazonaws.com/dev/api-function1?param2=${queryString}`;
-      // const response = await axios.post(url, {
-    
-      //   "param2": param2
-    
-      // });
-      const response = await axios.post(url);
+      console.log('Logging in with:', username, password);
+      const url = `https://vlzal62wmg.execute-api.ap-south-1.amazonaws.com/dev/api-function1`;
+      const response = await axios.post(url, { param2: data }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       if (response.status === 200) {
         console.log('Login successful:', response.data);
         setIsAuthenticated(true);
@@ -57,11 +48,36 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setIsAuthenticated(false);
     }
   };
+  // const login = async (username: string, password: string) => {
 
+  //  setUsername(username)
+  //  try {
+  //    console.log('Logging in with:', username, password);
+  //      const url = `https://example.com/api/login`;
+  //      const response = await axios.post(url, {
+
+  //       "username": username,
+  //       "password": password
+
+  //      });
+
+
+  //      if (response.status === 200) {
+  //        console.log('Login successful:', response.data);
+  //        setIsAuthenticated(true);
+  //      } else {
+  //        console.log('Login failed:', response.data);
+  //        setIsAuthenticated(false);
+  //      }
+  //    } catch (error) {
+  //      console.error('Error during login:', error);
+  //      setIsAuthenticated(false);
+  //    }
+  //  };
   const logout = () => {
     setIsAuthenticated(false);
-    setUsername(null); // Clear the username on logout
-    setPartner(null); // Clear the partner on logout
+    setUsername(null);
+    setPartner(null);
     setSelectedPartner(false);
   };
   const handleSelectedPartner = async (partnerName: string) => {
