@@ -35,7 +35,6 @@ const PasswordReset: React.FC = () => {
             <Image
               src="/amop_logo_header.png"
               alt="AMOP Core Logo"
-              layout="responsive"
               width={300}
               height={55}
             />

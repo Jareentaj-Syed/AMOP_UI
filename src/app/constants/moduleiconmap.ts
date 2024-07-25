@@ -40,16 +40,16 @@ export const moduleData = [
       { child_module_name: 'Revenue Assurance', queue_order: 4, sub_children: [] },
     ],
   },
-  {
-    parent_module_name: 'Device Management',
-    queue_order: 3,
-    children: [],
-  },
-  {
-    parent_module_name: 'Optimization',
-    queue_order: 4,
-    children: [],
-  },
+  // {
+  //   parent_module_name: 'Device Management',
+  //   queue_order: 3,
+  //   children: [],
+  // },
+  // {
+  //   parent_module_name: 'Optimization',
+  //   queue_order: 4,
+  //   children: [],
+  // },
   {
     parent_module_name: 'People',
     queue_order: 5,
@@ -60,11 +60,11 @@ export const moduleData = [
       { child_module_name: 'E911 Customers', queue_order: 4, sub_children: [] },
     ],
   },
-  {
-    parent_module_name: 'Settings',
-    queue_order: 6,
-    children: [],
-  },
+  // {
+  //   parent_module_name: 'Settings',
+  //   queue_order: 6,
+  //   children: [],
+  // },
   {
     parent_module_name: 'Super Admin',
     queue_order: 7,

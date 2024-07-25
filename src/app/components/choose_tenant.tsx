@@ -48,7 +48,7 @@ const ChooseTenant: React.FC = () => {
     // } catch (error) {
     //   console.error('Error during login:', error);
     // }
-    redirect("/components/partner");
+    // redirect("/components/partner");
   };
   
 
@@ -58,7 +58,6 @@ const ChooseTenant: React.FC = () => {
         <Image
           src="/amop_logo_header.png"
           alt="AMOP Core Logo"
-          layout="responsive"
           width={300}
           height={55}
         />
