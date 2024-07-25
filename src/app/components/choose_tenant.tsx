@@ -7,47 +7,42 @@ import axios from 'axios';
 import { useAuth } from './auth_context';
 import { useRouter } from 'next/navigation';
 import { redirect } from "next/navigation";
-const partners: string[] = [
-  'Altaworx-GT',
-  'AWX',
-  'AWX-AWX',
-  'AWX Test',
-  'CSV RS AG',
-  'Go Tech - AWX Test',
-  'GT',
-  'Test Theme',
-];
+
 
 const ChooseTenant: React.FC = () => {
  
   const { setSelectedPartner, setPartner } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
+  const {username, tenantNames}=useAuth()
+  console.log("partners",tenantNames)
+  const partners=tenantNames
   const handleSelectedPartner = async (partnerName: string) => {
-    // router.push('/partner');
+
     console.log('Selected Partner:', partnerName);
     setSelectedPartner(true);
     setPartner(partnerName); 
     setSelectedPartnerName(partnerName);
     
-    // try {
-    //   console.log('Selected Partner:', partnerName);
-    //   const url = 'https://example.com/api/login';
-    //   const response = await axios.post(url, {
-    //     Tenantname: partnerName
-    //   });
-  
-    //   // Handle the response
-    //   if (response.status === 200) {
-    //     console.log('Login successful:', response.data);
-    //     setSelectedPartner(true)
-    //     setPartner(partnerName);
-    //   } else {
-    //     console.log('Login failed:', response.data);
-    //   }
-    // } catch (error) {
-    //   console.error('Error during login:', error);
-    // }
+    try {
+      console.log('Selected Partner:', partnerName);
+      const url = 'https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_modules';
+      const response = await axios.post(url, {
+        username: username,
+        tenantname: partnerName
+      });
+      if (response.status === 200) {
+        console.log('Login successful:', response.data);
+        setSelectedPartner(true)
+        setPartner(partnerName);
+        
+      } else {
+        console.log('Login failed:', response.data);
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
+    // router.push('/partner');
     // redirect("/components/partner");
   };
   
@@ -70,7 +65,7 @@ const ChooseTenant: React.FC = () => {
             onClick={() => handleSelectedPartner(partner)}
             className="rounded-full"
             style={{
-              width: '150px',
+              width: '200px',
               height: '35px',
               borderColor: '#00C1F1',
               color: '#00C1F1',

@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
-import{AUTHENTICATION_ROUTES} from '../components/routes/route_constants'
+import { AUTHENTICATION_ROUTES } from '../components/routes/route_constants';
+
 interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => void;
@@ -14,6 +15,8 @@ interface AuthContextType {
   handleSelectedPartner: (partnerName: string) => void;
   showPassword: boolean;
   setShowPassword: (value: boolean) => void;
+  tenantNames: string[];
+  setTenantNames: (tenantNames: string[]) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,27 +27,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState<boolean>(false); // Add showPassword state
-  console.log("baseurl",BASE_URL);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [tenantNames, setTenantNames] = useState<string[]>([]); // Add tenantNames state
+
   const login = async (username: string, password: string) => {
     setUsername(username);
     const data = {
-      username: username,
+      path: "/login_using_database",
+      user_name: username,
       password: password,
     };
-   
-
     try {
       console.log('Logging in with:', username, password);
       const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.AMOP_LOGIN}`;
-      console.log("url", url)
+      console.log("url", url);
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
         }}
       );
       if (response.status === 200) {
-        console.log('Login successful:', response.data);
+        const resp = JSON.parse(response.data.body);
+        console.log('Login successful:', resp["tenant_names"]);
+        const tenant_names = resp["tenant_names"];
+        setTenantNames(tenant_names); // Set tenant names
         setIsAuthenticated(true);
       } else {
         console.log('Login failed:', response.data);
@@ -61,7 +67,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUsername(null);
     setPartner(null);
     setSelectedPartner(false);
-    setShowPassword(false); // Reset showPassword on logout
+    setShowPassword(false);
+    setTenantNames([]); // Reset tenant names on logout
   };
 
   const handleSelectedPartner = async (partnerName: string) => {
@@ -85,6 +92,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         handleSelectedPartner,
         showPassword,
         setShowPassword,
+        tenantNames,
+        setTenantNames,
       }}
     >
       {children}
