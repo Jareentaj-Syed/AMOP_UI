@@ -17,6 +17,8 @@ interface AuthContextType {
   setShowPassword: (value: boolean) => void;
   tenantNames: string[];
   setTenantNames: (tenantNames: string[]) => void;
+  role: string | null;
+  setRole: (role: string | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,6 +31,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [username, setUsername] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [tenantNames, setTenantNames] = useState<string[]>([]); // Add tenantNames state
+  const [role, setRole] = useState<string | null>(null);// Add tenantNames state
 
   const login = async (username: string, password: string) => {
     setUsername(username);
@@ -50,6 +53,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         const resp = JSON.parse(response.data.body);
         console.log('Login successful:', resp["tenant_names"]);
         const tenant_names = resp["tenant_names"];
+        const role=resp["role"]
+        setRole(role)
         setTenantNames(tenant_names); // Set tenant names
         setIsAuthenticated(true);
       } else {
@@ -94,6 +99,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setShowPassword,
         tenantNames,
         setTenantNames,
+        role,
+        setRole
       }}
     >
       {children}

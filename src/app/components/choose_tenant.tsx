@@ -4,9 +4,10 @@ import Image from 'next/image';
 import { Button } from 'antd';
 import { Footer } from './footer-nested';
 import axios from 'axios';
-import { useAuth } from './auth_context';
+import { BASE_URL, useAuth } from './auth_context';
 import { useRouter } from 'next/navigation';
 import { redirect } from "next/navigation";
+import { AUTHENTICATION_ROUTES } from './routes/route_constants';
 
 
 const ChooseTenant: React.FC = () => {
@@ -14,7 +15,7 @@ const ChooseTenant: React.FC = () => {
   const { setSelectedPartner, setPartner } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
-  const {username, tenantNames}=useAuth()
+  const {username, tenantNames, role}=useAuth()
   console.log("partners",tenantNames)
   const partners=tenantNames
   const handleSelectedPartner = async (partnerName: string) => {
@@ -26,11 +27,17 @@ const ChooseTenant: React.FC = () => {
     
     try {
       console.log('Selected Partner:', partnerName);
-      const url = 'https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_modules';
-      const response = await axios.post(url, {
-        username: username,
-        tenantname: partnerName
-      });
+      const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.GET_MODULES}`;
+      const data = {
+        role: role,
+        user_name: username,
+        tenant_name: partnerName
+      };
+      const response = await axios.post(url, { data: data }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }}
+      );
       if (response.status === 200) {
         console.log('Login successful:', response.data);
         setSelectedPartner(true)
