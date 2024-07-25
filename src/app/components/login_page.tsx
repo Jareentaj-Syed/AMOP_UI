@@ -4,29 +4,37 @@ import { useAuth } from '../components/auth_context';
 import { Footer } from './footer-nested';
 import { useRouter } from 'next/navigation';
 import PasswordReset from './password_reset';
+
 const Login: React.FC = () => {
-    const router = useRouter(); 
+  const router = useRouter();
 
-    // useEffect(() => {
-    //     router.push('/login');
-    // }, [router]);
+  // useEffect(() => {
+  //     router.push('/login');
+  // }, [router]);
 
-    const { login } = useAuth(); // Assuming useAuth provides a login function
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+  const { login } = useAuth(); // Assuming useAuth provides a login function
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        login(username, password); 
-    };
+  // const {isAuthenticated}=useAuth();
+  const {showPassword}=useAuth();
+ const isAuthenticated=true
 
-    const [showPasswordReset, setShowPasswordReset] = useState(false);
+ 
 
-    const handleForgotPasswordClick = () => {
-      setShowPasswordReset(true);
-    };
-    return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    login(username, password);
+  };
+
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+
+  const handleForgotPasswordClick = () => {
+    setShowPasswordReset(true);
+  };
+  console.log("password:", showPassword)
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
       {showPasswordReset ? (
         <PasswordReset />
       ) : (
@@ -35,11 +43,18 @@ const Login: React.FC = () => {
             <Image
               src="/amop_logo_header.png"
               alt="AMOP Core Logo"
-              layout="responsive"
               width={300}
               height={55}
             />
           </div>
+          {showPassword && (
+            <div className='bg-[#DFF0D8] p-4 mb-2 border border-green-600 rounded text-center'>
+              <h3 className='text-[#3C763D] font-[13px]'>Password Reset. Please Check your email.</h3>
+            </div>)}
+          {!isAuthenticated && (
+            <div className='bg-[#F2DEDE] p-4 mb-2 border border-red-600 rounded text-center'>
+              <h3 className='text-[#A94442] font-[13px]'>Invalid Login</h3>
+            </div>)}
           <h1 className="text-2xl font-bold mb-4" style={{ color: '#00C1F1' }}>
             Login
           </h1>
@@ -88,7 +103,7 @@ const Login: React.FC = () => {
         </div>
       )}
     </div>
-    );
+  );
 };
 
 export default Login;

@@ -6,15 +6,20 @@ import Link from 'next/link';
 import { Footer } from './footer-nested';
 import Login from './login_page';
 import axios from 'axios';
+import { useAuth } from './auth_context';
+
 
 const PasswordReset: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
+  const { setShowPassword } = useAuth();
   const [email, setEmail] = useState(''); // State variable for input value
 
   const handleBackClick = () => {
     setShowLogin(true);
   };
   const handleReset = async () => {
+    setShowPassword(true)
+    setShowLogin(true)
     try {
       const response = await axios.post('/api/password-reset', {
         username: email // Send the email as username
