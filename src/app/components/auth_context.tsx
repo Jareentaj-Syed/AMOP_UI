@@ -24,6 +24,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [username, setUsername] = useState<string | null>(null);
   // console.log(selectedPartner)
   const login = async (username: string, password: string) => {
+    setUsername(username)
     const data = {
       "http": "get",
       "api": "success"
