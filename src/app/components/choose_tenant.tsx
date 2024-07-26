@@ -12,7 +12,7 @@ import { AUTHENTICATION_ROUTES } from './routes/route_constants';
 
 const ChooseTenant: React.FC = () => {
  
-  const { setSelectedPartner, setPartner } = useAuth(); // Extract both setters from context
+  const { setSelectedPartner, setPartner,setModules } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
   const {username, tenantNames, role}=useAuth()
@@ -32,7 +32,7 @@ const ChooseTenant: React.FC = () => {
     };
    
     try {
-      console.log('Selected Partner:', partnerName);
+      // console.log('Selected Partner:', partnerName);
       const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_modules`;
      
    
@@ -42,15 +42,17 @@ const ChooseTenant: React.FC = () => {
         }}
       );
       if (response.status === 200) {
-        console.log('Login successful:', response.data);
+        console.log('Login successful:',response.data);
         setSelectedPartner(true)
+        const parsedData = JSON.parse(response.data.body); // Parse the response body
+        setModules(parsedData.Modules); // Set the modules state
         setPartner(partnerName);
         
       } else {
-        console.log('Login failed:', response.data);
+        // console.log('Login failed:', response.data);
       }
     } catch (error) {
-      console.error('Error during login:', error);
+      // console.error('Error during login:', error);
     }
     // router.push('/partner');
     // redirect("/components/partner");

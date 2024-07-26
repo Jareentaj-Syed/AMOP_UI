@@ -19,6 +19,8 @@ interface AuthContextType {
   setTenantNames: (tenantNames: string[]) => void;
   role: string | null;
   setRole: (role: string | null) => void;
+  modules: any[]; // Add modules to context
+  setModules: (modules: any[]) => void; // Method to set modules
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [tenantNames, setTenantNames] = useState<string[]>([]); // Add tenantNames state
   const [role, setRole] = useState<string | null>(null);// Add tenantNames state
+  const [modules, setModules] = useState<any[]>([]); // Initialize modules state
 
   const login = async (username: string, password: string) => {
     setUsername(username);
@@ -100,7 +103,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         tenantNames,
         setTenantNames,
         role,
-        setRole
+        setRole,
+        modules,
+        setModules,
       }}
     >
       {children}
