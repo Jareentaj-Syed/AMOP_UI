@@ -19,7 +19,7 @@ export const moduleData = [
  
   {
     parent_module_name: 'Partner',
-    queue_order: 2,
+    queue_order: 1,
     children: [],
   },
   {
@@ -75,3 +75,4 @@ export const moduleData = [
     ],
   },
 ];
+

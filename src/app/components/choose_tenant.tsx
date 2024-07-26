@@ -18,21 +18,24 @@ const ChooseTenant: React.FC = () => {
   const {username, tenantNames, role}=useAuth()
   console.log("partners",tenantNames)
   const partners=tenantNames
+  // console.log('Selected Partner:', partnerName);
+  // setSelectedPartner(true);
+  // setPartner(partnerName); 
+  // setSelectedPartnerName(partnerName);
+  
   const handleSelectedPartner = async (partnerName: string) => {
-
-    console.log('Selected Partner:', partnerName);
-    setSelectedPartner(true);
-    setPartner(partnerName); 
-    setSelectedPartnerName(partnerName);
-    
+    const data = {
+      path:"/get_modules",
+      role_name: role,
+      username: username,
+      tenant_name: partnerName
+    };
+   
     try {
       console.log('Selected Partner:', partnerName);
-      const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.GET_MODULES}`;
-      const data = {
-        role: role,
-        user_name: username,
-        tenant_name: partnerName
-      };
+      const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_modules`;
+     
+   
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
