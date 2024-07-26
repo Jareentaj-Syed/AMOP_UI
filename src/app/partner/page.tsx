@@ -16,43 +16,44 @@ const Notification = dynamic(() => import('./notification/page'));
 
 const Partner: React.FC = () => {
     const router = useRouter(); 
-    const { partner } = useAuth();
-
-    const [loading, setLoading] = useState(false); // State to manage loading
+    const { username, partner } = useAuth();
+    const [loading, setLoading] = useState(true); // State to manage loading
     const [activeTab, setActiveTab] = useState('partnerInfo');
     const isExpanded = useSidebarStore((state:any) => state.isExpanded);
 
-    // useEffect(() => {
-    //     const data = {
-    //         tenant_name: partner || "default_value",
-    //         module_list: [
-    //             "Partner info",
-    //             "Partner authentication",
-    //             "Partner module access",
-    //             "Customer groups",
-    //             "Partner users",
-    //             "Notifications"
-    //         ],
-    //         pages: {
-    //             "Customer groups": { start: 0, end: 10 },
-    //             "Partner users": { start: 0, end: 10 }
-    //         }
-    //     };
+    useEffect(() => {
+        const data = {
+            tenant_name: partner || "default_value",
+            username:username,
+            path:"/get_partner_info",
+            module_list: [
+                "Partner info",
+                "Partner authentication",
+                "Partner module access",
+                "Customer groups",
+                "Partner users",
+                "Notifications"
+            ],
+            pages: {
+                "Customer groups": { start: 0, end: 10 },
+                "Partner users": { start: 0, end: 10 }
+            }
+        };
 
 
-    //     axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', data)
-    //         .then(response => {
-    //           setLoading(true);
-    //             console.log('Response:', response.data);
-    //         })
-    //         .catch(error => {
-    //             console.error('Error:', error);
-    //         })
-    //         .finally(() => {
-    //             setLoading(false); // Set loading to false after API call completes
-    //         });
+        axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', data)
+            .then(response => {
+            //   setLoading(true);
+                console.log('Response:', response.data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            })
+            .finally(() => {
+                // setLoading(false); /
+            });
 
-    // }, [router, partner]);
+    }, [router, partner]);
 
     const switchToCarrierInfoTab = () => {
         setActiveTab('carrierInfo');
