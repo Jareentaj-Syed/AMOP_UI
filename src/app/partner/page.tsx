@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../components/auth_context';
 import { Spin } from 'antd'; // Import Ant Design Spin component
+import { usePartnerStore } from './partnerStore';
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
 const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
@@ -15,45 +16,72 @@ const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));
 
 const Partner: React.FC = () => {
-    const router = useRouter(); 
-    const { username, partner } = useAuth();
+    const router = useRouter();
+    const { username, partner, role } = useAuth();
     const [loading, setLoading] = useState(true); // State to manage loading
     const [activeTab, setActiveTab] = useState('partnerInfo');
-    const isExpanded = useSidebarStore((state:any) => state.isExpanded);
+    const [partnerInfoLoaded, setPartnerInfoLoaded] = useState(false);
+    const [partnerAuthenticationLoaded, setPartnerAuthenticationLoaded] = useState(false);
+    const [partnerModuleAccessLoaded, setPartnerModuleAccessLoaded] = useState(false);
+    const [customerGroupsLoaded, setCustomerGroupsLoaded] = useState(false);
+    const [partnerUsersLoaded, setPartnerUsersLoaded] = useState(false);
+    const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+
+    const isExpanded = useSidebarStore((state: any) => state.isExpanded);
+    const setPartnerInfo = usePartnerStore((state) => state.setPartnerInfo);
+    const setPartnerAuthentication = usePartnerStore((state) => state.setPartnerAuthentication);
+    const setPartnerModuleAccess = usePartnerStore((state) => state.setPartnerModuleAccess);
+    const setCustomerGroups = usePartnerStore((state) => state.setCustomerGroups);
+    const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
+    const setNotifications = usePartnerStore((state) => state.setNotifications);
 
     useEffect(() => {
-        const data = {
-            tenant_name: partner || "default_value",
-            username:username,
-            path:"/get_partner_info",
-            module_list: [
-                "Partner info",
-                "Partner authentication",
-                "Partner module access",
-                "Customer groups",
-                "Partner users",
-                "Notifications"
-            ],
-            pages: {
-                "Customer groups": { start: 0, end: 10 },
-                "Partner users": { start: 0, end: 10 }
+        const fetchData = async () => {
+            try {
+                const tabs = [
+                    { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
+                    { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
+                    { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
+                    { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
+                    { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
+                    { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
+                ];
+
+                const promises = tabs.map(async (tab) => {
+                    const data = {
+                        tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: [tab.module],
+                        pages: {
+                            "Customer groups": { start: 0, end: 10 },
+                            "Partner users": { start: 0, end: 10 }
+                        }
+                    };
+
+                    try {
+                        const response = await axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', { data });
+                        const parseddata=JSON.parse(response.data.body).data
+                        console.log("response.data",response.data)
+                        console.log("parseddata[tab.module]",parseddata)
+                        tab.setter(parseddata[tab.module]);
+                        tab.setLoaded(true); // Set the loaded flag to true
+                    } catch (error) {
+                        console.error('Error fetching', tab.module, ':', error);
+                    }
+                });
+
+                await Promise.all(promises); // Wait until all requests are complete
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
-
-        axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', data)
-            .then(response => {
-            //   setLoading(true);
-                console.log('Response:', response.data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // setLoading(false); /
-            });
-
-    }, [router, partner]);
+        fetchData();
+    }, [router, partner, username, role, setPartnerInfo, setPartnerAuthentication, setPartnerModuleAccess, setCustomerGroups, setPartnerUsers, setNotifications]);
 
     const switchToCarrierInfoTab = () => {
         setActiveTab('carrierInfo');
@@ -70,37 +98,37 @@ const Partner: React.FC = () => {
     return (
         <div className="">
             <div className={`bg-white shadow-md tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'partnerInfo' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('partnerInfo')}
                 >
                     Partner info
                 </button>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'partnerRegistration' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('partnerRegistration')}
                 >
                     Partner authentication
                 </button>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'partnermoduleaccess' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('partnermoduleaccess')}
                 >
                     Partner module access
                 </button>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'customergroups' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('customergroups')}
                 >
                     Customer groups
                 </button>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'partnerusers' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('partnerusers')}
                 >
                     Partner users
                 </button>
-                <button 
+                <button
                     className={`tab-headings ${activeTab === 'notification' ? 'active-tab-heading' : ''}`}
                     onClick={() => setActiveTab('notification')}
                 >
