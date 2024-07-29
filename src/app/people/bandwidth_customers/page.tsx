@@ -1,99 +1,62 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import * as XLSX from 'xlsx';
-import { PlusIcon, ArrowDownTrayIcon, AdjustmentsHorizontalIcon, ArrowUpTrayIcon } from '@heroicons/react/24/outline';
-import { Button, Popover } from 'antd';
-import TableComponent from '@/app/components/TableComponent/page';
-import CreateModal from '@/app/components/createPopup';
-import SearchInput from '@/app/components/Search-Input';
-import ColumnFilter from '@/app/components/columnfilter';
-import { createModalData } from './bandwidth_customers_constants';
-import { useAuth } from '@/app/components/auth_context';
-import axios from 'axios';
-
-interface ExcelData {
-  [key: string]: any;
-}
+import React, { useEffect, useState } from "react";
+import * as XLSX from "xlsx";
+import {
+  PlusIcon,
+  ArrowDownTrayIcon,
+  AdjustmentsHorizontalIcon,
+  ArrowUpTrayIcon,
+} from "@heroicons/react/24/outline";
+import { Button, Popover } from "antd";
+import TableComponent from "@/app/components/TableComponent/page";
+import CreateModal from "@/app/components/createPopup";
+import SearchInput from "@/app/components/Search-Input";
+import ColumnFilter from "@/app/components/columnfilter";
+import { createModalData, headers } from "./bandwidth_customers_constants";
+import { useAuth } from "@/app/components/auth_context";
+import axios from "axios";
+import { useBandWidthStore } from "./bandwidth_customers_constants";
 
 const BandWidthCustomers: React.FC = () => {
-  const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const createColumns=createModalData
+  const [searchTerm, setSearchTerm] = useState("");
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
+  const createColumns = createModalData;
   const { username, partner, role } = useAuth();
+  const [tableData, setTableData] = useState<any[]>([]);
+  const { customers_table, setTable } = useBandWidthStore();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/bandwidth_customers.xlsx');
-        const arrayBuffer = await response.arrayBuffer();
-        const data = new Uint8Array(arrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-          blankrows: false,
-        });
-
-        if (jsonData.length === 0) {
-          throw new Error('No data found in the Excel sheet.');
-        }
-
-        const columnNames = jsonData[0];
-        const filledData = jsonData.slice(1).map((row) => {
-          const filledRow: any = {};
-          columnNames.forEach((header: any, index: number) => {
-            filledRow[header] = row[index] || '';
-          });
-          return filledRow;
-        });
-
-        setData(filledData);
-        setVisibleColumns(columnNames);
-      } catch (error) {
-        console.error('Error fetching data from Excel:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-     
-      try {
-        const url=`https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+        const url =
+          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
         const data = {
           tenant_name: partner || "default_value",
           username: username,
           path: "/get_module_data",
           role_name: role,
-          "parent_module_name": "poeple",
-          "module_name": "Customer Groups",
-          "mod_pages": {
-            "start": 0,
-            "end": 500
-          }
-      };
-        const response = await axios.post(url, {
-         data
-        });
-        console.log(response.data);
+          parent_module_name: "poeple",
+          module_name: "Bandwidth Customers",
+          mod_pages: {
+            start: 0,
+            end: 500,
+          },
+        };
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+        const tableData = parsedData.data.customers;
+        console.log("response.data-revio", tableData);
+        setTable(tableData);
+        setTableData(tableData);
       } catch (err) {
-       
-      } finally {
-        
+        console.error("Error fetching data:", err);
       }
     };
 
     fetchData();
-  }, []);
-  const headers = visibleColumns;
-
+  }, [username, partner, role, setTable]);
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -105,15 +68,20 @@ const BandWidthCustomers: React.FC = () => {
   };
 
   const handleCreateRow = (newRow: any) => {
-    const updatedData = [...data, newRow];
-    setData(updatedData);
+    const updatedData = [...tableData, newRow];
+    setTable(updatedData);
+    setTableData(updatedData);
     handleCreateModalClose();
   };
+
   const handleExport = () => {
-    const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
+    const exportData = [
+      headers,
+      ...tableData.map((row) => headers.map((header) => row[header])),
+    ];
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "BandWidthCustomers");
     XLSX.writeFile(workbook, "BandWidthCustomers.xlsx");
   };
 
@@ -121,18 +89,15 @@ const BandWidthCustomers: React.FC = () => {
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
-        <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-        <ColumnFilter
-                data={data}
-                visibleColumns={visibleColumns}
-                setVisibleColumns={setVisibleColumns}
-              />
+          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <ColumnFilter
+            data={tableData}
+            visibleColumns={visibleColumns}
+            setVisibleColumns={setVisibleColumns}
+          />
         </div>
         <div className="flex space-x-2">
-          <button
-            className="save-btn"
-            onClick={handleCreateModalOpen}
-          >
+          <button className="save-btn" onClick={handleCreateModalOpen}>
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
           </button>
@@ -140,29 +105,31 @@ const BandWidthCustomers: React.FC = () => {
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
-            
         </div>
       </div>
 
-      <TableComponent
-        headers={headers}
-        initialData={data}
-        searchQuery={searchTerm}
-        visibleColumns={visibleColumns}
-        itemsPerPage={10}
-        allowedActions={["info"]}
-        popupHeading='Customer'      
-        infoColumns={createColumns}  
-        editColumns={createColumns}    
-
-      />
+      {tableData.length > 0 ? (
+        <TableComponent
+          headers={headers}
+          initialData={tableData}
+          searchQuery={searchTerm}
+          visibleColumns={visibleColumns}
+          itemsPerPage={10}
+          allowedActions={["info"]}
+          popupHeading="Customer"
+          infoColumns={createColumns}
+          editColumns={createColumns}
+        />
+      ) : (
+        <div>Loading data, please wait...</div>
+      )}
 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createColumns}
-        heading='Customer'
+        heading="Customer"
       />
     </div>
   );

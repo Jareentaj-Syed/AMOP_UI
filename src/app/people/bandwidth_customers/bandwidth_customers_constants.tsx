@@ -1,3 +1,18 @@
+import create from 'zustand';
+
+interface BandwidthState {
+  customers_table: any[]; 
+  setTable: (data: any[]) => void;
+}
+
+export const useBandWidthStore = create<BandwidthState>((set) => ({
+  customers_table: [], 
+  setTable: (data) => set({ customers_table: data }),
+}));
+
+export const headers=["billingaccountnumber","customer_name","tenantname","customerbillperiodendday","customerbillperiodendhour","modifiedby","modifieddate"]
+
+
 export const createModalData= [
   {
     "label": "Partner",

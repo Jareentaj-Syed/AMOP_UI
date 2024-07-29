@@ -1,3 +1,18 @@
+import create from 'zustand';
+
+interface RevIOState {
+  customers_table: any[]; 
+  setTable: (data: any[]) => void;
+}
+
+export const useRevIOStore = create<RevIOState>((set) => ({
+  customers_table: [], 
+  setTable: (data) => set({ customers_table: data }),
+}));
+
+export const headers=["billingaccountnumber","customer_name","tenantname","customerbillperiodendday","customerbillperiodendhour","modifiedby","modifieddate"]
+
+
 export const createModalData= [
     {
       "label":"Status",

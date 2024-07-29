@@ -27,15 +27,15 @@ interface TableComponentProps {
   searchQuery: string;
   visibleColumns: string[];
   itemsPerPage: number;
-  allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick'|'tabsEdit'|'tabsInfo')[];
+  allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick' | 'tabsEdit' | 'tabsInfo')[];
   popupHeading: string;
   advancedFilters?: any
   infoColumns?: any[]
   editColumns?: any[]
-  isSelectRowVisible?:boolean
+  isSelectRowVisible?: boolean
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters,isSelectRowVisible= true }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters, isSelectRowVisible = true }) => {
   const router = useRouter();
 
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
@@ -54,7 +54,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
-  const [tabsEdit,setTabsEdit]=useState(false)
+  const [tabsEdit, setTabsEdit] = useState(false)
   useEffect(() => {
     if (!router) {
       console.error('NextRouter is not available.');
@@ -93,7 +93,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    console.log(initialData)
+    // console.log("initialdata",initialData)
     console.log(headers)
   }, [initialData]);
 
@@ -114,7 +114,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       const matchesSearchQuery = Object.values(row).some(value =>
         String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
       );
-  
+
       const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
         ([key, values]) => {
           const valuesArray = values as string[];
@@ -128,16 +128,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           return true;
         }
       );
-  
+
       return matchesSearchQuery && matchesAdvancedFilters;
     });
-  
+
     setRowData(filteredData);
     setCurrentPage(1);
   }, [searchQuery, initialData, advancedFilters]);
-  
-  
-  
+
+
+
 
   const formatColumnName = (name: string) => {
     return name
@@ -148,7 +148,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       )
       .join(' ');                  // Join the words back into a single string
   };
-  
+
 
   const handleActionClick = (action: string, rowIndex: number) => {
     switch (action) {
@@ -157,7 +157,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setIsEditable(true);
         setEditModalOpen(true);
         break;
-        case 'tabsEdit':
+      case 'tabsEdit':
         setTabsEdit(true)
         setEditRowIndex(rowIndex);
         setIsEditable(true);
@@ -216,12 +216,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     updatedData[rowIndex].Role_status = roleState[rowIndex] === 'Active' ? 'Inactive' : 'Active'; // Toggle Module state
 
     setRowData(updatedData);
-    
+
     setApiState(prevState => ({
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
     }));
-  
+
     setModuleState(prevState => ({
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
@@ -231,7 +231,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       ...prevState,
       [rowIndex]: prevState[rowIndex] === 'Active' ? 'Inactive' : 'Active'
     }));
-  
+
     if (updatedData[rowIndex].API_state === 'enable') {
       setEnableModalOpen(true);
       setDisableModalOpen(false);
@@ -253,22 +253,22 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       setEnableModalOpen(false);
     }
   };
-  
+
   const confirmSubmit = () => {
     setEnableModalOpen(false);
     setDisableModalOpen(false);
   };
   const renderApiState = (apiState: string, index: number) => {
     return (
-      
+
       <div className="flex items-center space-x-2">
         <button
-          className={`${apiState === 'enable' || apiState === 'Active'? 'active-btn' : 'inactive-btn'
+          className={`${apiState === 'enable' || apiState === 'Active' ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-           {`${apiState === 'enable' || apiState === 'disable' ? 'Enable' : 'Active'}`}
+          {`${apiState === 'enable' || apiState === 'disable' ? 'Enable' : 'Active'}`}
 
         </button>
         <button
@@ -277,7 +277,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-        {`${apiState === 'enable' || apiState === 'disable' ? 'Disable' : 'Inactive'}`}
+          {`${apiState === 'enable' || apiState === 'disable' ? 'Disable' : 'Inactive'}`}
 
         </button>
       </div>
@@ -286,7 +286,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const renderUserStatus = (status: string) => {
     let textColorClass = '';
-    if (status === 'Active' || status === 'PROCESSED' ) {
+    if (status === 'Active' || status === 'PROCESSED') {
       textColorClass = 'text-blue-500';
     } else if (status === 'Inactive' || status === 'ERROR') {
       textColorClass = 'text-red-500';
@@ -330,41 +330,44 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>
-            {headers.map((header, index) => (
-  <th
-    key={index}
-    className="px-6 border-b border-gray-300 text-left font-semibold table-header"
-    onClick={() => handleSort(header)}
-    style={{ cursor: 'pointer' }}
-  >
-    {formatColumnName(header)}
-    {sortConfig && sortConfig.key === header ? (
-      sortConfig.direction === 'ascending' ? (
-        <ArrowUpOutlined style={{ marginLeft: 8 }} />
-      ) : (
-        <ArrowDownOutlined style={{ marginLeft: 8 }} />
-      )
-    ) : (
-      <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
-    )}
+              {headers.map((header, index) => (
+                visibleColumns.includes(header) ? (
+                  <th
+                    key={index}
+                    className="px-6 border-b border-gray-300 text-left font-semibold table-header"
+                    onClick={() => handleSort(header)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {formatColumnName(header)}
+                    {sortConfig && sortConfig.key === header ? (
+                      sortConfig.direction === 'ascending' ? (
+                        <ArrowUpOutlined style={{ marginLeft: 8 }} />
+                      ) : (
+                        <ArrowDownOutlined style={{ marginLeft: 8 }} />
+                      )
+                    ) : (
+                      <ArrowUpOutlined style={{ marginLeft: 8, opacity: 0.5 }} />
+                    )}
 
-    {/* Check if the header is 'select', render the Checkbox */}
-    {header === 'Select' && (
-      <Checkbox
-        onChange={handleSelectAllChange}
-        checked={selectAll}
-        indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedData.length}
-        style={{ fontSize: '1rem', marginLeft: 8 }}
-      />
-    )}
-  </th>
-))}
+                    {/* Check if the header is 'Select', render the Checkbox */}
+                    {header === 'Select' && (
+                      <Checkbox
+                        onChange={handleSelectAllChange}
+                        checked={selectAll}
+                        indeterminate={selectedRows.length > 0 && selectedRows.length < paginatedData.length}
+                        style={{ fontSize: '1rem', marginLeft: 8 }}
+                      />
+                    )}
+                  </th>
+                ) : null // Ensure non-visible columns return null
+              ))}
 
-                {allowedActions && (
-      <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
-    )}
-  
+              {/* Render actions column if allowedActions is true */}
+              {allowedActions && (
+                <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
+              )}
             </tr>
+
           </thead>
           <tbody>
             {paginatedData.map((row, index) => (
@@ -372,60 +375,60 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 key={index}
                 className={index % 2 === 0 ? "bg-gray-50" : ""}
               >
-              {headers.map((header, columnIndex) => (
-  <td
-    key={columnIndex}
-    className="px-6 border-b border-gray-300 table-cell"
-  >
- {visibleColumns.includes(header) && (
-  // Check if the header is the selection column
-  header === "Select" ? (
-    <Checkbox
-      onChange={() => handleRowCheckboxChange(index)} // Assuming `index` is defined
-      checked={selectedRows.map(String).includes(String(index))}
-      style={{ fontSize: '2rem' }}
-    />
-  ) : // If not the selection column, render based on other headers
-  header === "API_state" || header === "Module_state" || header === "Role_status" ? (
-    renderApiState(row[header], index)
-  ) : header === "User status" ? (
-    renderUserStatus(row[header])
-  ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
-    <DateTimeCellRenderer value={row[header]} />
-  ) : header === "Username" ? (
-    <EditUsernameCellRenderer value={row[header]} />
-  ) : header === "SimStatus" ? (
-    <StatusCellRenderer
-      record={row}
-      value={row[header]}
-      index={index}
-      colorMap={colorMap}
-    />
-  ) : header === "ActionHistory" ? (
-    <StatusHistoryCellRenderer value={row[header]} />
-  ) :["Provider", "Service Provider"].includes(header) ? (
-    <ServiceProviderCellRenderer value={row[header]} />
-  ) : header === "Status" ? (
-    <StatusIndicator status={row[header]} />
-  ) : header === "Uploaded" ? (
-    <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
-  ) : header === "Successful" ? (
-    <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
-  ) : header === "Errors" ? (
-    <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
-  ) : header === "Change Details" ? (
-    changeDetailCellRenderer()
-  ):
-  (
-    row[header]
-  )
-)}
+                {headers.map((header, columnIndex) => (
+                  <td
+                    key={columnIndex}
+                    className="px-6 border-b border-gray-300 table-cell"
+                  >
+                    {visibleColumns.includes(header) && (
+                      // Check if the header is the selection column
+                      header === "Select" ? (
+                        <Checkbox
+                          onChange={() => handleRowCheckboxChange(index)} // Assuming `index` is defined
+                          checked={selectedRows.map(String).includes(String(index))}
+                          style={{ fontSize: '2rem' }}
+                        />
+                      ) : // If not the selection column, render based on other headers
+                        header === "API_state" || header === "Module_state" || header === "Role_status" ? (
+                          renderApiState(row[header], index)
+                        ) : header === "User status" ? (
+                          renderUserStatus(row[header])
+                        ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
+                          <DateTimeCellRenderer value={row[header]} />
+                        ) : header === "Username" ? (
+                          <EditUsernameCellRenderer value={row[header]} />
+                        ) : header === "SimStatus" ? (
+                          <StatusCellRenderer
+                            record={row}
+                            value={row[header]}
+                            index={index}
+                            colorMap={colorMap}
+                          />
+                        ) : header === "ActionHistory" ? (
+                          <StatusHistoryCellRenderer value={row[header]} />
+                        ) : ["Provider", "Service Provider"].includes(header) ? (
+                          <ServiceProviderCellRenderer value={row[header]} />
+                        ) : header === "Status" ? (
+                          <StatusIndicator status={row[header]} />
+                        ) : header === "Uploaded" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
+                        ) : header === "Successful" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
+                        ) : header === "Errors" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
+                        ) : header === "Change Details" ? (
+                          changeDetailCellRenderer()
+                        ) :
+                          (
+                            row[header]
+                          )
+                    )}
 
 
-  </td>
-))}
+                  </td>
+                ))}
 
-{allowedActions && (<td className="px-6 border-b border-gray-300 table-cell">
+                {allowedActions && (<td className="px-6 border-b border-gray-300 table-cell">
                   <div className="flex items-center space-x-2">
                     {allowedActions?.includes("edit") && (
                       <PencilIcon
@@ -469,7 +472,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         handleActionClick={handleActionClick}
                       />
                     )}
-                     {allowedActions?.includes("SingleClick") && (
+                    {allowedActions?.includes("SingleClick") && (
                       <PencilIcon
                         className="h-5 w-5 text-blue-500 cursor-pointer"
                         onClick={() =>
@@ -479,29 +482,29 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     )}
                     {allowedActions?.includes("tabsEdit") && (
                       <PencilIcon
-                      className="h-5 w-5 text-blue-500 cursor-pointer"
-                      onClick={() =>
-                        handleActionClick(
-                          "tabsEdit",
-                          (currentPage - 1) * itemsPerPage + index
-                        )
-                      }
-                    />
+                        className="h-5 w-5 text-blue-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionClick(
+                            "tabsEdit",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
+                      />
                     )}
                     {allowedActions?.includes("tabsInfo") && (
                       <InformationCircleIcon
-                      className="h-5 w-5 text-green-500 cursor-pointer"
-                      onClick={() =>
-                        handleActionClick(
-                          "tabsEdit",
-                          (currentPage - 1) * itemsPerPage + index
-                        )
-                      }
-                    />
+                        className="h-5 w-5 text-green-500 cursor-pointer"
+                        onClick={() =>
+                          handleActionClick(
+                            "tabsEdit",
+                            (currentPage - 1) * itemsPerPage + index
+                          )
+                        }
+                      />
                     )}
                   </div>
                 </td>)}
-                
+
               </tr>
             ))}
           </tbody>
@@ -511,8 +514,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       </div>
       <EditModal
-        infoColumns={infoColumns||[]}
-        editColumns={infoColumns||[]}
+        infoColumns={infoColumns || []}
+        editColumns={infoColumns || []}
         isOpen={editModalOpen}
         isEditable={isEditable}
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
@@ -549,7 +552,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       </Modal>
     </div>
   );
-  
+
 };
 
 export default TableComponent;

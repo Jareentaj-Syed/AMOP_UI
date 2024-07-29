@@ -1,36 +1,52 @@
-import React from 'react';
-import { Checkbox, Divider, Popover } from 'antd';
-import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
+import React from "react";
+import { Checkbox, Divider, Popover } from "antd";
+import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 
 interface ColumnFilterProps {
-  data: any[];
+  headers: string[];
   visibleColumns: string[];
   setVisibleColumns: (columns: string[]) => void;
 }
 
-const ColumnFilter: React.FC<ColumnFilterProps> = ({ data, visibleColumns, setVisibleColumns }) => {
-  // Maintain the original order of columns
-  const allColumns = Object.keys(data.length > 0 ? data[0] : {});
+const ColumnFilter: React.FC<ColumnFilterProps> = ({
+  headers,
+  visibleColumns,
+  setVisibleColumns,
+}) => {
+  // Use headers passed as props for the list of all columns
+  const allColumns = headers;
 
-  const handleColumnVisibilityChange = (checkedValues: string[]) => {
-    const orderedCheckedValues = allColumns.filter(col => checkedValues.includes(col));
-    setVisibleColumns(orderedCheckedValues);
+  const handleColumnVisibilityChange = (checked: boolean, column: string) => {
+    // Update visibleColumns based on whether the checkbox is checked or not
+    const updatedVisibleColumns = checked
+      ? [...visibleColumns, column] // Add column if checked
+      : visibleColumns.filter((col) => col !== column); // Remove column if unchecked
+    // Set updated visible columns in parent component
+    setVisibleColumns(updatedVisibleColumns);
   };
 
   const handleCheckAllChange = (e: { target: { checked: any } }) => {
+    // Check or uncheck all columns
     if (e.target.checked) {
-      handleColumnVisibilityChange(allColumns);
+      setVisibleColumns(allColumns);
     } else {
-      handleColumnVisibilityChange([]);
+      setVisibleColumns([]);
     }
   };
 
   const columnContent = (
-    <div style={{ display: 'flex', flexDirection: 'column', maxHeight: '300px', overflowY: 'auto' }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        maxHeight: "300px",
+        overflowY: "auto",
+      }}
+    >
       <Checkbox
         onChange={handleCheckAllChange}
         checked={visibleColumns.length === allColumns.length}
-        style={{ marginBottom: '4px' }}
+        style={{ marginBottom: "4px" }}
       >
         All
       </Checkbox>
@@ -41,13 +57,9 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({ data, visibleColumns, setVi
           value={column}
           checked={visibleColumns.includes(column)}
           onChange={(e) =>
-            handleColumnVisibilityChange(
-              e.target.checked
-                ? [...visibleColumns, column]
-                : visibleColumns.filter((col) => col !== column)
-            )
+            handleColumnVisibilityChange(e.target.checked, column)
           }
-          style={{ marginBottom: '4px', whiteSpace: 'nowrap' }}
+          style={{ marginBottom: "4px", whiteSpace: "nowrap" }}
         >
           {column}
         </Checkbox>
