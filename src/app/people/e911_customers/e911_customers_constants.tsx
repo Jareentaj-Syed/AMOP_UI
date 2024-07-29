@@ -10,7 +10,13 @@ export const useE911CustomersStore = create<E911CustomersState>((set) => ({
   setTable: (data) => set({ customers_table: data }),
 }));
 
-export const headers=["customer_name","e911_customerid","modifiedby","modifieddate"]
+export const headers=["accountname","accountid","modifiedby","modifieddate"]
+export const headerMap={
+  "accountname":"Account Name",
+  "accountid":"Account Id",
+  "modifiedby":"Last Modified By",
+  "modifieddate":"Last Modified Date & Time"
+}
 export const createModalData= [
     {
       "label":"Account Name",

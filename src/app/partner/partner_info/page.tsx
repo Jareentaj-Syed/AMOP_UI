@@ -3,6 +3,7 @@ import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '../EmailModal';
 import { Modal } from 'antd';
 import { partner,sub_partner } from './partner_info_constants';
+import axios from 'axios';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -30,8 +31,23 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     setEmailList(newEmailList);
   };
 
-  const confirmSubmit = () => {
+  const confirmSubmit = async () => {
     const file = logoFileRef.current?.files?.[0];
+    if(emailList &&file){
+      try {
+        const url =
+          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
+        const data = {
+          email:emailList
+        };
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+        const tableData = parsedData.data.customers;
+        console.log(response);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
 
     if (file) {
       const validTypes = ['image/png', 'image/jpeg'];

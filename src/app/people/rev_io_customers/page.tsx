@@ -12,7 +12,7 @@ import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
-import { createModalData, headers } from "./rev_io_customers_constants";
+import { createModalData, headers ,headerMap} from "./rev_io_customers_constants";
 import axios from "axios";
 import { useAuth } from "@/app/components/auth_context";
 import { useRevIOStore } from "./rev_io_customers_constants";
@@ -121,6 +121,7 @@ console.log('visibleColumns',visibleColumns)
       {tableData.length > 0 ? (
         <TableComponent
           headers={headers}
+          headerMap={headerMap}
           initialData={tableData}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns} // Ensure visibleColumns are used in TableComponent

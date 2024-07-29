@@ -6,7 +6,7 @@ import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
-import { createModalData } from './customer_groups_constants';
+import { createModalData, headerMap } from './customer_groups_constants';
 import { customer_table } from './customer_groups_constants';
 import { headers } from './customer_groups_constants';
 
@@ -75,6 +75,7 @@ const CustomerGroups: React.FC = () => {
 
         <TableComponent
           headers={headers}
+          headerMap={headerMap}
           initialData={data}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}

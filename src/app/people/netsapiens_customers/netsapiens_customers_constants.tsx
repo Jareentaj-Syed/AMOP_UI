@@ -11,6 +11,16 @@ export const useNetSapiensStore = create<netSapiensState>((set) => ({
 }));
 
 export const headers=["billingaccountnumber","customer_name","tenantname","customerbillperiodendday","customerbillperiodendhour","modifiedby","modifieddate"]
+export const headerMap={
+  "billingaccountnumber":"Account No",
+  "customer_id":"Agent",
+  "customer_name":"Customer Name",
+  "tenantname":"Partner",
+  "customerbillperiodendday":"Bill Period End Day",
+  "customerbillperiodendhour":"Bill Period End Hour",
+  "modifiedby":"Last Modified By",
+  "modifieddate":"Last Modified Date & Time"
+}
 
 export const createModalData= [
   {

@@ -8,7 +8,7 @@ import SearchInput from '../../../components/Search-Input';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
-import { users_table } from '../users_constants';
+import { headerMap, users_table } from '../users_constants';
 import { headers } from '../users_constants';
 import { useUserStore } from '../createUser/createUserStore';
 
@@ -81,6 +81,7 @@ const ListView: React.FC = () => {
           <div className="">
             <TableComponent
               headers={headers}
+              headerMap={headerMap}
               initialData={data}
               searchQuery={searchTerm}
               visibleColumns={visibleColumns}

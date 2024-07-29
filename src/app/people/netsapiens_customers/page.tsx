@@ -7,7 +7,7 @@ import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
-import { createModalData, headers } from "./netsapiens_customers_constants";
+import { createModalData, headerMap, headers } from "./netsapiens_customers_constants";
 import axios from "axios";
 import { useAuth } from "@/app/components/auth_context";
 import { useNetSapiensStore } from "./netsapiens_customers_constants";
@@ -106,6 +106,7 @@ const NetSapiensCustomers: React.FC = () => {
       {tableData.length > 0 ? (
         <TableComponent
           headers={headers}
+          headerMap={headerMap}
           initialData={tableData}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}

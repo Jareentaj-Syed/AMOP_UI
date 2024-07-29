@@ -11,7 +11,7 @@ import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
-import { createModalData, headers } from "./e911_customers_constants";
+import { createModalData, headerMap, headers } from "./e911_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useE911CustomersStore } from "./e911_customers_constants";
@@ -51,7 +51,7 @@ const E911Customers: React.FC = () => {
           data,
         });
         const parsedData = JSON.parse(response.data.body);
-        const tableData = parsedData.data.customers;
+        const tableData = parsedData.data.WestE911Customer;
         console.log("response.data-revio", tableData);
         setTable(tableData);
         setTableData(tableData);
@@ -117,6 +117,7 @@ const E911Customers: React.FC = () => {
       {tableData.length > 0 ? (
         <TableComponent
           headers={headers}
+          headerMap={headerMap}
           initialData={tableData}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}

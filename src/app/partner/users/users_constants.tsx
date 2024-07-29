@@ -16,7 +16,18 @@ console.log(partner, sub_partner);
 
 // Accessing specific data for tables and dropdowns
 export const users_table: any[] = partnerData.data["Partner users"]["users"];
-export const headers = ["username", "role", "email", "tenant_name", "subtenant_name", "lastlogin", "modifiedby", "modifieddate"];
+export const headers = ["username", "role", "email", "tenant_name", "subtenant_name", "lastlogin","isactive", "modifiedby", "modifieddate"];
+export const headerMap={
+  "username":"Username",
+  "role":"Role",
+  "email":"Email Id",
+  "tenant_name":"Partner",
+  "subtenant_name":"Sub Partner",
+  "lastlogin":"Last Login",
+  "modifiedby":"Last Modified By",
+  "modifieddate":"Last Modified Date & Time",
+  "isactive":"User status"
+}
 export const customergroups_drp = Object.values(partnerData.data["Partner users"]["customergroups"]).map(
   (group: any) => group.name
 );

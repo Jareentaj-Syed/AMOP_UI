@@ -18,6 +18,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 import StatusIndicator from './data-grid-cell-renderers/status-indicator';
 import QuantityCell, { STATUS_TYPE } from './data-grid-cell-renderers/quantity-cell-renderer';
 import { changeDetailCellRenderer } from './data-grid-cell-renderers/change-details-cell';
+import { useAuth } from '../auth_context';
 
 
 
@@ -33,9 +34,10 @@ interface TableComponentProps {
   infoColumns?: any[]
   editColumns?: any[]
   isSelectRowVisible?: boolean
+  headerMap?:any
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters, isSelectRowVisible = true }) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters, isSelectRowVisible = true ,headerMap}) => {
   const router = useRouter();
 
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
@@ -55,6 +57,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
+  const {username, tenantNames, role}=useAuth()
+
   useEffect(() => {
     if (!router) {
       console.error('NextRouter is not available.');
@@ -93,8 +97,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    // console.log("initialdata",initialData)
-    console.log(headers)
+    console.log("initialdata",initialData)
+    // console.log(headers)
   }, [initialData]);
 
   // useEffect(() => {
@@ -203,8 +207,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const handleDelete = (rowIndex: number) => {
     if (rowIndex >= 0 && rowIndex < rowData.length) {
-      const updatedData = [...rowData];
-      updatedData.splice(rowIndex, 1);
+      const updatedData:any = [...rowData];
+      updatedData["deletedby"]=username
+      updatedData["isdeleted"]=true
       setRowData(updatedData);
     }
   };
@@ -286,12 +291,20 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const renderUserStatus = (status: string) => {
     let textColorClass = '';
-    if (status === 'Active' || status === 'PROCESSED') {
+    if (status === 'True' || status === 'PROCESSED') {
       textColorClass = 'text-blue-500';
     } else if (status === 'Inactive' || status === 'ERROR') {
       textColorClass = 'text-red-500';
     }
+    if(status === 'True'){
+      return <span className={`${textColorClass}`}>Active</span>;
+    }
+    else if(status === 'False'){
+      return <span className={`${textColorClass}`}>Inactive</span>;
+    }
+    else{
     return <span className={`${textColorClass}`}>{status}</span>;
+    }
   };
 
   const handleSort = (key: string) => {
@@ -338,7 +351,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     onClick={() => handleSort(header)}
                     style={{ cursor: 'pointer' }}
                   >
-                    {formatColumnName(header)}
+                    {headerMap && headerMap[header] ? headerMap[header] : formatColumnName(header)}
                     {sortConfig && sortConfig.key === header ? (
                       sortConfig.direction === 'ascending' ? (
                         <ArrowUpOutlined style={{ marginLeft: 8 }} />
@@ -390,7 +403,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               />
             ) : header === "API_state" || header === "Module_state" || header === "Role_status" ? (
               renderApiState(row[header], index)
-            ) : header === "User status" ? (
+            ) : (headerMap && headerMap[header] === "User status") || header === "User status" ? (
               renderUserStatus(row[header])
             ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
               <DateTimeCellRenderer value={row[header]} />

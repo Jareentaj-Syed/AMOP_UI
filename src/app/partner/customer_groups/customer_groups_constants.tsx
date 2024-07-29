@@ -44,19 +44,19 @@ export const createModalData = [
     "mandatory": "true"
   },
   {
-    "label": "BAN",
+    "label": "billingaccountnumber",
     "type": "dropdown",
     "value": billingaccountnumber_drp,
     "mandatory": "false"
   },
   {
-    "label": "Customer Rate Plan",
+    "label": "customerrateplan",
     "type": "dropdown",
     "value": customerrateplan_drp,
     "mandatory": "false"
   },
   {
-    "label": "Feature Codes",
+    "label": "featurecodes",
     "type": "dropdown",
     "value": [
       "$3 Pooling Fee",
@@ -71,3 +71,9 @@ export const createModalData = [
 // Extract customer table data and headers
 export const customer_table: any[] = partnerData.data["Customer groups"]["customergroups"];
 export const headers = ["name", "tenantname", "modifiedby", "modifieddate"];
+export const headerMap={
+  "name":"Name",
+  "tenantname":"Partner",
+  "modifiedby":"Last Modified By",
+  "modifieddate":"Last Modified Date & Time"
+}

@@ -12,7 +12,7 @@ import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
-import { createModalData, headers } from "./bandwidth_customers_constants";
+import { createModalData, headerMap, headers } from "./bandwidth_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useBandWidthStore } from "./bandwidth_customers_constants";
@@ -111,6 +111,7 @@ const BandWidthCustomers: React.FC = () => {
       {tableData.length > 0 ? (
         <TableComponent
           headers={headers}
+          headerMap={headerMap}
           initialData={tableData}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}

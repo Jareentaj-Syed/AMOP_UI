@@ -4,6 +4,8 @@ import { Checkbox, Input, Modal } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
 import CreateUser from '../partner/users/createUser/page';
+import axios from 'axios';
+import { useAuth } from './auth_context';
 
 interface Column {
   label: string;
@@ -29,7 +31,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
-
+  const {username, tenantNames, role}=useAuth()
   useEffect(() => {
     setFormData(rowData || {});
   }, [rowData]);
@@ -46,7 +48,6 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       [name]: value,
     }));
   };
-
   const handleSave = () => {
     onSave(formData);
     onClose();
@@ -59,7 +60,23 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
     setIsConfirmationOpen(true);
   };
 
-  const handleConfirmSave = () => {
+  const handleConfirmSave = async() => {
+    formData["modifiedby"]=username
+    if(formData){
+      try {
+        const url =
+          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
+        const data = {
+          table:formData
+        };
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+        const tableData = parsedData.data.customers;
+        console.log(response);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
     handleSave();
     setIsConfirmationOpen(false);
   };
