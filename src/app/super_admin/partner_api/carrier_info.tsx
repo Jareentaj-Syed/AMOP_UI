@@ -45,7 +45,6 @@ const CarrierInfo: React.FC = () => {
           role_name: role,
           "sub_module": "Partner API", 
           "sub_tab": "Carrier APIs",
-          flag: "withoutparameters",
         };
         const response = await axios.post(url, { data: data });
         const resp = JSON.parse(response.data.body);
@@ -64,7 +63,7 @@ const CarrierInfo: React.FC = () => {
 
         console.error(err);
       }finally {
-        setLoading(false); // Set loading to false after the request is done
+        setLoading(false); 
       }
     
     };
@@ -85,7 +84,6 @@ const CarrierInfo: React.FC = () => {
             role_name: role,
             "sub_module": "Partner API", 
             "sub_tab": "Carrier APIs",
-            flag: "withparameters",
             "Environment": environment.value,
             "Partner": selectedPartner.value
           };

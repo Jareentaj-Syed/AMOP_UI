@@ -19,6 +19,7 @@ import StatusIndicator from './data-grid-cell-renderers/status-indicator';
 import QuantityCell, { STATUS_TYPE } from './data-grid-cell-renderers/quantity-cell-renderer';
 import { changeDetailCellRenderer } from './data-grid-cell-renderers/change-details-cell';
 import { useAuth } from '../auth_context';
+import axios from 'axios';
 
 
 
@@ -58,7 +59,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const {username, tenantNames, role}=useAuth()
+  const {username, tenantNames, role, partner}=useAuth()
 
   useEffect(() => {
     if (!router) {
@@ -199,6 +200,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
 
   const confirmDelete = () => {
+    
     if (deleteRowIndex !== null) {
       handleDelete(deleteRowIndex);
     }
@@ -214,12 +216,34 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       setRowData(updatedData);
     }
   };
-
+  const ConfirmStateChange= (apiState:boolean,rowIndex: number)=>{
+    if(apiState===true){
+      setEnableModalOpen(false);
+    }
+    else{
+      setDisableModalOpen(true);
+    }
+    if(apiState===false){
+      setEnableModalOpen(false);
+    }
+    else{
+      setDisableModalOpen(true);
+    }
+    
+    
+    handleToggle(rowIndex)
+  }
   const handleToggle = (rowIndex: number) => {
     const updatedData = [...rowData];
-    updatedData[rowIndex].api_state = apiState[rowIndex] === true ? false : true; 
+    if(updatedData[rowIndex].api_state){
+      updatedData[rowIndex].api_state = apiState[rowIndex] === true ? false : true; 
+    }
+   if(  updatedData[rowIndex].apistate ){
     updatedData[rowIndex].apistate = apiState[rowIndex] === true ? false : true; 
+   }
+   if (updatedData[rowIndex].isactive){
     updatedData[rowIndex].isactive = moduleState[rowIndex] === true ? false : true;
+   }
    
     setRowData(updatedData);
 
@@ -238,24 +262,85 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       [rowIndex]: prevState[rowIndex] ===true ? false : true,
     }));
 
-    if (
-      updatedData[rowIndex].api_state === true ||
-      updatedData[rowIndex].apistate === true ||
-      updatedData[rowIndex].isactive === true
-    ) {
-      setEnableModalOpen(true);
-      setDisableModalOpen(false);
-      setCurrentRowData(updatedData[rowIndex]);
-    } else {
-      setDisableModalOpen(true);
-      setEnableModalOpen(false);
-      setCurrentRowData(updatedData[rowIndex]);
-    }
+  
   };
 
-  const confirmSubmit = () => {
-    if (currentRowData) {
+  const confirmSubmit = async () => {
+    
+    console.log(currentRowData);
+    if(currentRowData){
       console.log(currentRowData);
+      try {
+        const url =
+          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
+
+        let data;
+        if(popupHeading==="Carrier"){
+          if(currentRowData){
+            currentRowData["lastmodifiedby"]=username
+          }
+           data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API", 
+            "sub_tab": "Carrier APIs",
+            "table_name": "carrier_apis",
+           "changed_data":currentRowData
+          };
+        }
+        
+        if(popupHeading==="API"){
+          if(currentRowData){
+            currentRowData["last_modified_by"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API", 
+            "sub_tab": "Amop APIs",
+            "table_name": "amop_apis",
+            "changed_data":currentRowData
+          };
+        }
+        if(popupHeading==="User"){
+          if(currentRowData){
+            currentRowData["modifiedby"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            sub_module: "Partner Modules",
+            "table_name": "roles",
+            "changed_data":currentRowData
+          };
+        }
+        if(popupHeading==="UserModule"){
+          if(currentRowData){
+            currentRowData["modifiedby"]=username
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            sub_module: "Partner Modules",
+            "table_name": "tenant_module",
+            "changed_data":currentRowData
+          };
+        }
+        const response = await axios.post(url, { data });
+       
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
     }
     setEnableModalOpen(false);
     setDisableModalOpen(false);
@@ -268,7 +353,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index)}
+          onClick={() => ConfirmStateChange(apiState,index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Enable</span>
@@ -280,7 +365,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index)}
+          onClick={() => ConfirmStateChange(apiState,index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Disable</span>

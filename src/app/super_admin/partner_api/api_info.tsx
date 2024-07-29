@@ -77,7 +77,7 @@ const CarrierInfo: React.FC = () => {
             role_name: role,
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
-            flag: "withparameters",
+      
             "Environment": environment.value,
             "Partner": selectedPartner.value
           };

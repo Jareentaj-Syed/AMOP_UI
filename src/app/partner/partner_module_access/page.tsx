@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { DropdownStyles,NonEditableDropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
+import {mockRoleData} from './partner_module_access_constants'
 type OptionType = {
     value: string;
     label: string;
@@ -252,6 +253,8 @@ const data: ExcelData = {
         }
     }
 }
+
+const result = mockRoleData
 const partners = [
     "AWX",
     "Altawork-GT",
@@ -279,7 +282,8 @@ const UserRole: React.FC = () => {
     const nonEditableDrp = NonEditableDropdownStyles
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
-console.log("partnerModuleData",partnerModuleData)
+    const [map,setMap]=useState<ExcelData>({});
+    console.log("partnerModuleData",partnerModuleData)
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
@@ -290,12 +294,16 @@ console.log("partnerModuleData",partnerModuleData)
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
-    const Roleoptions = roles.map((role, index) => ({
-        value: role.toLowerCase().replace(/\s+/g, '-'),
+    const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
+        value: role,
         label: role,
     }));
     const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
-        setRole(selectedOption);
+        if (selectedOption) {
+            const role = selectedOption.value;
+            setRole(selectedOption);
+            setMap(mockRoleData[role]);
+        }
     };
 
     const handleSubmit = () => {
@@ -333,7 +341,7 @@ console.log("partnerModuleData",partnerModuleData)
                 </div>
                 <div className="grid grid-cols-1 gap-4 mt-4">
 
-                    {Object.keys(data).map((category) => (
+                    {Object.keys(map).map((category) => (
                         <div key={category} className="col-span-1">
                             <h4 className="text-md font-medium text-blue-600">{category}</h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
@@ -344,7 +352,7 @@ console.log("partnerModuleData",partnerModuleData)
                                         closeMenuOnSelect={false}
                                         value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                         onChange={(selected) => handleModuleChange(category, selected)}
-                                        options={data[category].Module.map(module => ({ value: module, label: module }))}
+                                        options={map[category].Module.map(module => ({ value: module, label: module }))}
                                         styles={editableDrp}
 
                                     />
@@ -356,7 +364,7 @@ console.log("partnerModuleData",partnerModuleData)
                                         closeMenuOnSelect={false}
                                         value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
                                         onChange={(selected) => handleFeatureChange(category, selected)}
-                                        options={(selectedModules[category] || []).flatMap(module => data[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
+                                        options={(selectedModules[category] || []).flatMap(module => map[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
                                         className=""
                                         styles={!selectedModules[category] || selectedModules[category].length === 0?nonEditableDrp:editableDrp}
                                         isDisabled={!selectedModules[category] || selectedModules[category].length === 0}

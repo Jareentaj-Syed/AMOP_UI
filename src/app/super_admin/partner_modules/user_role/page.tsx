@@ -84,7 +84,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
                         searchQuery={searchTerm}
                         visibleColumns={headers2}
                         itemsPerPage={10}
-                        popupHeading='User'
+                        popupHeading='UserModule'
                         infoColumns={[]}
                         editColumns={[]}
                         headerMap={headermap2}
