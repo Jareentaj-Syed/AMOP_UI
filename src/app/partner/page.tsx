@@ -63,8 +63,6 @@ const Partner: React.FC = () => {
                     try {
                         const response = await axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', { data });
                         const parseddata=JSON.parse(response.data.body).data
-                        console.log("response.data",response.data)
-                        console.log("parseddata[tab.module]",parseddata)
                         tab.setter(parseddata[tab.module]);
                         tab.setLoaded(true); // Set the loaded flag to true
                     } catch (error) {

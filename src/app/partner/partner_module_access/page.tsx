@@ -4,6 +4,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { DropdownStyles,NonEditableDropdownStyles } from '@/app/components/css/dropdown';
+import { partnerModuleData } from './partner_module_access_constants';
 type OptionType = {
     value: string;
     label: string;
@@ -275,9 +276,9 @@ const UserRole: React.FC = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const editableDrp = DropdownStyles
     const nonEditableDrp = NonEditableDropdownStyles
-
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
+console.log("partnerModuleData",partnerModuleData)
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];

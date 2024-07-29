@@ -1,3 +1,12 @@
+import { usePartnerStore } from "../partnerStore";
+export const getPartnerData = () => {
+  const { partnerData } = usePartnerStore.getState();
+  return partnerData;
+};
+const partnerData = getPartnerData();
+
+export const partnerModuleData=partnerData.data["Partner module access"]
+
 type Feature = {
     [module: string]: string[];
   };
