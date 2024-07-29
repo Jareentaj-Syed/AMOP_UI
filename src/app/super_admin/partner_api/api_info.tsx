@@ -1,170 +1,179 @@
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
-import * as XLSX from 'xlsx';
 import TableComponent from '../../components/TableComponent/page';
 import SearchInput from '../../components/Search-Input';
-import { partnerCarrierData } from '@/app/constants/partnercarrier';
+import axios from 'axios';
+import { useAuth } from '@/app/components/auth_context';
+import { DropdownStyles } from '@/app/components/css/dropdown';
+import { Spin } from 'antd'; // Import Ant Design Spin component
 import { createModalData } from './api_constants';
+
 interface ExcelData {
   [key: string]: any;
 }
-const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: partner, label: partner }));
 
 const CarrierInfo: React.FC = () => {
-  const editColumns=createModalData
-  const [carrierData, setCarrierData] = useState<ExcelData[]>([]);
-  const [apiState, setApiState] = useState<{ [key: number]: string }>({});
-  const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
+  const { username, partner, role } = useAuth();
+  const editableDrp = DropdownStyles;
+  const [environmentOptions, setEnvironmentOptions] = useState<{ value: string; label: string }[]>([]);
+  const [loading, setLoading] = useState(true); // State to manage loading
+  const [Partneroptions, setPartnerOptions] = useState<{ value: string; label: string }[]>([]);
+  const [tableData, setTableData] = useState<any>([]);
+  const editColumns = createModalData; // Initialize as empty array or with appropriate columns if needed
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
-  const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedPartner, setSelectedPartner] = useState<{ value: string; label: string } | null>(null);
-  const environmentOptions = [
-    { value: 'Sandbox', label: 'Sandbox' },
-    { value: 'QA', label: 'QA' },
-    { value: 'UAT', label: 'UAT' },
-    { value: 'Prod', label: 'Prod' }
-  ];
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const fetchExcelData = async (url: string) => {
+    const fetchData = async () => {
       try {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const data = new Uint8Array(arrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-
-        const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-          blankrows: false
-        });
-
-        if (jsonData.length === 0) {
-          throw new Error('No data found in the Excel sheet.');
-        }
-
-        const columnNames = jsonData[0];
-
-        const filledData = jsonData.slice(1).map(row => {
-          const filledRow: any = {};
-          columnNames.forEach((header: any, index: number) => {
-            filledRow[header] = row[index] || '';
-          });
-          return filledRow;
-        });
-
-        return {
-          filledData,
-          columnNames
+        setLoading(true); // Set loading to true before the request
+        const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+        const data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/get_superadmin_info",
+          role_name: role,
+          "sub_module": "Partner API",
+          "sub_tab": "Amop APIs"
         };
-      } catch (error) {
-        console.error('Error fetching data from Excel:', error);
-        throw error;
+        const response = await axios.post(url, { data: data });
+        // console.log(response.data);
+        const resp = JSON.parse(response.data.body);
+        // console.log(resp);
+        // console.log("Environment:", resp.data.Environment);
+        // console.log("Partner:", resp.data.Partner);
+        // console.log("amop_apis_data:", resp.data.amop_apis_data.amop_apis);
+       
+        const carrierApis = resp.data.amop_apis_data.amop_apis;
+        
+        setTableData(carrierApis);
+        const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
+        setEnvironmentOptions(environments);
+        
+        const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
+        setPartnerOptions(partners);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false); // Set loading to false after the request is done
+      }
+    };
+  
+    fetchData();
+  }, [username, partner, role]); // Add dependencies if necessary
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (environment && selectedPartner) {
+        try {
+          setLoading(true); // Set loading to true before the request
+          const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+          const data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/get_superadmin_info",
+            role_name: role,
+            "sub_module": "Partner API",
+            "sub_tab": "Amop APIs",
+            flag: "withparameters",
+            "Environment": environment.value,
+            "Partner": selectedPartner.value
+          };
+          const response = await axios.post(url, { data });
+          const resp = JSON.parse(response.data.body);
+          // console.log(resp)
+          // console.log("Environment:", resp.data.partners_and_subpartners);
+          // console.log("Partner:", resp.data.role_module_data);
+          // console.log("amop_apis_data:", resp.data.amop_apis_data);
+          const carrierApis = resp.data.amop_apis_data.amop_apis;
+        
+          setTableData(carrierApis);
+          setLoading(false);
+          const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
+          setEnvironmentOptions(environments);
+          
+          const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
+          setPartnerOptions(partners);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setLoading(false); // Set loading to false after the request is done
+        }
       }
     };
 
-    const fetchData = async () => {
-      const { filledData } = await fetchExcelData('/api_info.xlsx');
-      setCarrierData(filledData);
-      setOriginalCarrierData([...filledData]);
-      const initialApiState: { [key: number]: string } = {};
-      filledData.forEach((row, index) => {
-        initialApiState[index] = row.API_state;
-      });
-      setApiState(initialApiState);
-    };
-
     fetchData();
-  }, []);
+  }, [environment, selectedPartner]); // Add dependencies if necessary
 
-  const formatColumnName = (name: string) => {
-    return name.replace(/_/g, ' ');
-  };
+  const headers = ["module_name", "api_name", "api_url", "api_params", "api_state", "last_modified_by", "last_modified_date_time"];
+  const headersmap = {
+      "module_name":"Module name",
+     "api_name":"API name",
+    "api_url": "API url",
+     "api_params":"API params",
+     "api_state": "API_state", 
+     "last_modified_by":"Last modified by", 
+     "last_modified_date_time":"Last modified date & time"
+  }
+  
 
-  const handleOpenEditModal = (index: number) => {
-    setEditRowIndex(index);
-  };
-
-
-  const handleSaveModal = (updatedRow: any) => {
-    const updatedData = [...carrierData];
-    updatedData[editRowIndex as number] = updatedRow;
-    setCarrierData(updatedData);
-    setEditRowIndex(null);
-  };
-
-  const columnNames = Object.keys(carrierData[0] || {});
+  // Show loader until data is fully loaded
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className=''>
-   
       <div className="">
-      <div className="p-4 flex items-center justify-between mb-2">
-      <div className="flex space-x-4">
-    <div>
-      <label className="block text-gray-700">
-        Environment<span className="text-red-500">*</span>
-      </label>
-      <Select
-        value={environment}
-        onChange={(selectedOption) => setEnvironment(selectedOption)}
-        options={environmentOptions}
-         
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            minWidth: '250px',
-            marginTop: '4px',
-            height: '2.4rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-    <div>
-      <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
-      <Select
-        value={selectedPartner}
-        onChange={(selectedOption) => setSelectedPartner(selectedOption)}
-        options={Partneroptions}
-        className="mt-1"
-        styles={{
-          control: (base, state) => ({
-            ...base,
-            minWidth: '250px',
-            marginTop: '4px',
-            height: '2.4rem',
-            borderRadius: '0.375rem',
-            borderColor: state.isFocused ? '#1640ff' : '#D1D5DB',
-            boxShadow: state.isFocused ? '0 0 0 1px #93C5FD' : 'none',
-          }),
-        }}
-      />
-    </div>
-  </div>
-  <div className="ml-auto mt-4">
-    <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-  </div>
-</div>
+        <div className="p-4 flex items-center justify-between mb-2">
+          <div className="flex space-x-4">
+            <div className='w-[250px]'>
+              <label className="block text-gray-700">
+                Environment<span className="text-red-500">*</span>
+              </label>
+              <Select
+                value={environment}
+                onChange={(selectedOption) => setEnvironment(selectedOption)}
+                options={environmentOptions}
+                styles={editableDrp}
+              />
+            </div>
+            <div className='w-[250px] '>
+              <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+              <Select
+                value={selectedPartner}
+                onChange={(selectedOption) => setSelectedPartner(selectedOption)}
+                options={Partneroptions}
+                styles={editableDrp}
+              />
+            </div>
+          </div>
+          <div className="ml-auto mt-4">
+            <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
+        </div>
 
         <div className="container mx-auto">
-          {carrierData.length > 0 && (
-              <TableComponent
-                headers={columnNames}
-                initialData={carrierData}
-                searchQuery={searchTerm}
-                visibleColumns={columnNames} 
-                itemsPerPage={10}
-                allowedActions={["edit"]}   
-                popupHeading='API'      
-                infoColumns={editColumns}  
-                editColumns={editColumns}
-                advancedFilters={[]}
-              />
+          {tableData.length > 0 && (
+            <TableComponent
+              headers={headers}
+              headerMap={headersmap}
+              initialData={tableData}
+              searchQuery={searchTerm}
+              visibleColumns={headers}
+              itemsPerPage={10}
+              allowedActions={["edit"]}
+              popupHeading='API'
+              infoColumns={editColumns}
+              editColumns={editColumns}
+              advancedFilters={[]}
+            />
           )}
         </div>
       </div>

@@ -1,24 +1,24 @@
 export const createModalData= [
     {
-      "label": "Module name",
+      "label": "module_name",
       "type": "text",
       "value": "",
       "mandatory": "false"
     },
     {
-      "label": "API name",
+      "label": "api_name",
       "type": "text",
       "value":"",
       "mandatory": "true"
     },
     {
-      "label": "API url",
+      "label": "api_url",
       "type": "text",
       "value": "",
       "mandatory": "false"
     },
     {
-      "label": "API params",
+      "label": "api_params",
       "type": "text",
       "value":"",
       "mandatory": "false"

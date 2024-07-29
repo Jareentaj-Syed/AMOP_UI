@@ -31,7 +31,8 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
-  const {username, tenantNames, role}=useAuth()
+  const {username, tenantNames, role, partner}=useAuth()
+  
   useEffect(() => {
     setFormData(rowData || {});
   }, [rowData]);
@@ -48,10 +49,41 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       [name]: value,
     }));
   };
+  const fetchData = async () => {
+    try {
+    
+      const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+      const data = {
+        tenant_name: partner || "default_value",
+        username: username,
+        path:"/update_superadmin_data",
+        role_name: role,
+        "sub_module": "Partner API", 
+        "sub_tab": "Carrier APIs",
+        flag: "withoutparameters",
+       "changed_data":" "
+      };
+      const response = await axios.post(url, { data: data });
+      const resp = JSON.parse(response.data.body);
+
+      const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+
+     
+    } catch (err) {
+
+      console.error(err);
+    }finally {
+      // Set loading to false after the request is done
+    }
+  
+  };
   const handleSave = () => {
+    console.log("form data:",formData)
     onSave(formData);
+    
     onClose();
   };
+
 
   const handleCancel = () => {
     onClose();
@@ -61,18 +93,48 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   };
 
   const handleConfirmSave = async() => {
-    formData["modifiedby"]=username
+    formData["lastmodifiedby"]=username
     if(formData){
       try {
         const url =
           "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
-        const data = {
-          table:formData
-        };
+
+        let data;
+        if(heading==="Carrier"){
+          if(formData){
+            formData["lastmodifiedby"]=username
+          }
+           data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API", 
+            "sub_tab": "Carrier APIs",
+            "table_name": "carrier_apis",
+           "changed_data":formData
+          };
+        }
+        
+        if(heading==="API"){
+          if(formData){
+            formData["last_modified_by"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API", 
+            "sub_tab": "Amop APIs",
+            "table_name": "amop_apis",
+            "changed_data":formData
+          };
+        }
+     
         const response = await axios.post(url, { data });
-        const parsedData = JSON.parse(response.data.body);
-        const tableData = parsedData.data.customers;
-        console.log(response);
+       
       } catch (err) {
         console.error("Error fetching data:", err);
       }

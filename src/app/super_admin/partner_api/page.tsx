@@ -1,8 +1,9 @@
-
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '@/app/stores/navBarStore';
+import { useAuth } from '@/app/components/auth_context';
+import axios from 'axios';
 
 
 const CarrierInfo = dynamic(() => import('./carrier_info'));
@@ -11,8 +12,12 @@ const APIInfo = dynamic(() => import('./api_info'));
 
 
 const PartnerInfoForm: React.FC = () => {
+
     const [activeTab, setActiveTab] = useState('carrierInfo');
     const isExpanded = useSidebarStore((state:any) => state.isExpanded);
+
+
+
   
   
     return (

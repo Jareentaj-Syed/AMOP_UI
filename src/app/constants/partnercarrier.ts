@@ -60,6 +60,16 @@ export const partnerCarrierData: Record<string, string[]>={
       "Local IT - AWX",
       "Peace Communications-AWX",
       "Titanium - AWX"
+    ],
+    Dynalink: [
+      "AT&T - Telegence",
+      "Verizon - ThingSpace 4G",
+      "Verizon - ThingSpace 5G"
+    ],
+    For2Fi: [
+      "AT&T - Telegence",
+      "Verizon - ThingSpace IoT",
+      "Verizon - ThingSpace PN"
     ]
   };
 

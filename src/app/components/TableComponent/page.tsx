@@ -45,14 +45,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
   const [isEditable, setIsEditable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [apiState, setApiState] = useState<{ [key: number]: string }>({});
-  const [moduleState, setModuleState] = useState<{ [key: number]: string }>({});
-  const [roleState, setRoleState] = useState<{ [key: number]: string }>({});
+  const [apiState, setApiState] = useState<{ [key: number]: any }>({});
+  const [moduleState, setModuleState] = useState<{ [key: number]: any }>({});
+  const [roleState, setRoleState] = useState<{ [key: number]: any }>({});
 
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [EnableModalOpen, setEnableModalOpen] = useState(false); // State for Enable Modal
   const [DisableModalOpen, setDisableModalOpen] = useState(false);
+  const [currentRowData, setCurrentRowData] = useState<any>({});
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
@@ -97,7 +98,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    console.log("initialdata",initialData)
+    // console.log("initialdata",initialData)
     // console.log(headers)
   }, [initialData]);
 
@@ -216,73 +217,75 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const handleToggle = (rowIndex: number) => {
     const updatedData = [...rowData];
-    updatedData[rowIndex].API_state = apiState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle API state
-    updatedData[rowIndex].Module_state = moduleState[rowIndex] === 'enable' ? 'disable' : 'enable'; // Toggle Module state
-    updatedData[rowIndex].Role_status = roleState[rowIndex] === 'Active' ? 'Inactive' : 'Active'; // Toggle Module state
-
+    updatedData[rowIndex].api_state = apiState[rowIndex] === true ? false : true; 
+    updatedData[rowIndex].apistate = apiState[rowIndex] === true ? false : true; 
+    updatedData[rowIndex].isactive = moduleState[rowIndex] === true ? false : true;
+   
     setRowData(updatedData);
 
     setApiState(prevState => ({
       ...prevState,
-      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+      [rowIndex]: prevState[rowIndex] === true ? false : true,
     }));
 
     setModuleState(prevState => ({
       ...prevState,
-      [rowIndex]: prevState[rowIndex] === 'enable' ? 'disable' : 'enable'
+      [rowIndex]: prevState[rowIndex] ===true ? false : true,
     }));
 
     setRoleState(prevState => ({
       ...prevState,
-      [rowIndex]: prevState[rowIndex] === 'Active' ? 'Inactive' : 'Active'
+      [rowIndex]: prevState[rowIndex] ===true ? false : true,
     }));
 
-    if (updatedData[rowIndex].API_state === 'enable') {
+    if (
+      updatedData[rowIndex].api_state === true ||
+      updatedData[rowIndex].apistate === true ||
+      updatedData[rowIndex].isactive === true
+    ) {
       setEnableModalOpen(true);
       setDisableModalOpen(false);
-    } else if (updatedData[rowIndex].API_state === 'disable') {
+      setCurrentRowData(updatedData[rowIndex]);
+    } else {
       setDisableModalOpen(true);
       setEnableModalOpen(false);
-    } else if (updatedData[rowIndex].Module_state === 'enable') {
-      setEnableModalOpen(true);
-      setDisableModalOpen(false);
-    } else if (updatedData[rowIndex].Module_state === 'disable') {
-      setDisableModalOpen(true);
-      setEnableModalOpen(false);
-    }
-    else if (updatedData[rowIndex].Role_status === 'enable') {
-      setEnableModalOpen(true);
-      setDisableModalOpen(false);
-    } else if (updatedData[rowIndex].Role_status === 'disable') {
-      setDisableModalOpen(true);
-      setEnableModalOpen(false);
+      setCurrentRowData(updatedData[rowIndex]);
     }
   };
 
   const confirmSubmit = () => {
+    if (currentRowData) {
+      console.log(currentRowData);
+    }
     setEnableModalOpen(false);
     setDisableModalOpen(false);
   };
-  const renderApiState = (apiState: string, index: number) => {
+  const renderApiState = (apiState: any, index: number,col:any) => {
+    // console.log("apiState",apiState)
     return (
-
       <div className="flex items-center space-x-2">
         <button
-          className={`${apiState === 'enable' || apiState === 'Active' ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          {`${apiState === 'enable' || apiState === 'disable' ? 'Enable' : 'Active'}`}
+          {col==="Module_state" || col === "API_state"?(
+            <span>Enable</span>
+          ):
+          <span>Active</span>}
 
         </button>
         <button
-          className={`${apiState === 'disable' || apiState === 'Inactive' ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          {`${apiState === 'enable' || apiState === 'disable' ? 'Disable' : 'Inactive'}`}
+          {col==="Module_state" || col === "API_state"?(
+            <span>Disable</span>
+          ):
+          <span>Inactive</span>}
 
         </button>
       </div>
@@ -401,8 +404,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 checked={selectedRows.map(String).includes(String(index))}
                 style={{ fontSize: '2rem' }}
               />
-            ) : header === "API_state" || header === "Module_state" || header === "Role_status" ? (
-              renderApiState(row[header], index)
+            ) : (headerMap && headerMap[header]  === "Module_state") ||(headerMap && headerMap[header]  ==="Role_status") || (headerMap && headerMap[header]  ==="API_state") ? (
+              renderApiState(row[header], index,headerMap[header])
             ) : (headerMap && headerMap[header] === "User status") || header === "User status" ? (
               renderUserStatus(row[header])
             ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
