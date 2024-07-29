@@ -91,7 +91,7 @@ const BandWidthCustomers: React.FC = () => {
         <div className="flex space-x-2">
           <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <ColumnFilter
-            data={tableData}
+            headers={headers}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
           />

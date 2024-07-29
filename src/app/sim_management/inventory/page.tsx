@@ -80,7 +80,7 @@ const sim_management: React.FC = () => {
           <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </div>
         <div className="flex items-center space-x-5">
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+          <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
 
           <button className="flex items-center p-2 save-btn">
             <DownloadOutlined className="h-5 w-5 text-black-500 mr-2" />

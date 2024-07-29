@@ -363,156 +363,157 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               ))}
 
               {/* Render actions column if allowedActions is true */}
-              {allowedActions && (
+              {allowedActions&&visibleColumns.length>0 && (
                 <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
               )}
             </tr>
 
           </thead>
           <tbody>
-            {paginatedData.map((row, index) => (
-              <tr
-                key={index}
-                className={index % 2 === 0 ? "bg-gray-50" : ""}
-              >
-                {headers.map((header, columnIndex) => (
-                  <td
-                    key={columnIndex}
-                    className="px-6 border-b border-gray-300 table-cell"
-                  >
-                    {visibleColumns.includes(header) && (
-                      // Check if the header is the selection column
-                      header === "Select" ? (
-                        <Checkbox
-                          onChange={() => handleRowCheckboxChange(index)} // Assuming `index` is defined
-                          checked={selectedRows.map(String).includes(String(index))}
-                          style={{ fontSize: '2rem' }}
-                        />
-                      ) : // If not the selection column, render based on other headers
-                        header === "API_state" || header === "Module_state" || header === "Role_status" ? (
-                          renderApiState(row[header], index)
-                        ) : header === "User status" ? (
-                          renderUserStatus(row[header])
-                        ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
-                          <DateTimeCellRenderer value={row[header]} />
-                        ) : header === "Username" ? (
-                          <EditUsernameCellRenderer value={row[header]} />
-                        ) : header === "SimStatus" ? (
-                          <StatusCellRenderer
-                            record={row}
-                            value={row[header]}
-                            index={index}
-                            colorMap={colorMap}
-                          />
-                        ) : header === "ActionHistory" ? (
-                          <StatusHistoryCellRenderer value={row[header]} />
-                        ) : ["Provider", "Service Provider"].includes(header) ? (
-                          <ServiceProviderCellRenderer value={row[header]} />
-                        ) : header === "Status" ? (
-                          <StatusIndicator status={row[header]} />
-                        ) : header === "Uploaded" ? (
-                          <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
-                        ) : header === "Successful" ? (
-                          <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
-                        ) : header === "Errors" ? (
-                          <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
-                        ) : header === "Change Details" ? (
-                          changeDetailCellRenderer()
-                        ) :
-                          (
-                            row[header]
-                          )
-                    )}
+  {paginatedData.map((row, index) => (
+    <tr
+      key={index}
+      className={index % 2 === 0 ? "bg-gray-50" : ""}
+    >
+      {headers.map((header, columnIndex) => (
+        visibleColumns.includes(header) ? (
+          <td
+            key={columnIndex}
+            className="px-6 border-b border-gray-300 table-cell"
+          >
+            {/* Check if the header is the selection column */}
+            {header === "Select" ? (
+              <Checkbox
+                onChange={() => handleRowCheckboxChange(index)}
+                checked={selectedRows.map(String).includes(String(index))}
+                style={{ fontSize: '2rem' }}
+              />
+            ) : header === "API_state" || header === "Module_state" || header === "Role_status" ? (
+              renderApiState(row[header], index)
+            ) : header === "User status" ? (
+              renderUserStatus(row[header])
+            ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
+              <DateTimeCellRenderer value={row[header]} />
+            ) : header === "Username" ? (
+              <EditUsernameCellRenderer value={row[header]} />
+            ) : header === "SimStatus" ? (
+              <StatusCellRenderer
+                record={row}
+                value={row[header]}
+                index={index}
+                colorMap={colorMap}
+              />
+            ) : header === "ActionHistory" ? (
+              <StatusHistoryCellRenderer value={row[header]} />
+            ) : ["Provider", "Service Provider"].includes(header) ? (
+              <ServiceProviderCellRenderer value={row[header]} />
+            ) : header === "Status" ? (
+              <StatusIndicator status={row[header]} />
+            ) : header === "Uploaded" ? (
+              <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
+            ) : header === "Successful" ? (
+              <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
+            ) : header === "Errors" ? (
+              <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
+            ) : header === "Change Details" ? (
+              changeDetailCellRenderer()
+            ) : (
+              row[header]
+            )}
+          </td>
+        ) : null // Ensure non-visible columns return null
+      ))}
+      
+      {allowedActions&&visibleColumns.length>0 && (
+        <td className="px-6 border-b border-gray-300 table-cell">
+          <div className="flex items-center space-x-2">
+            {allowedActions.includes("edit") && (
+              <PencilIcon
+                className="h-5 w-5 text-blue-500 cursor-pointer"
+                onClick={() =>
+                  handleActionClick(
+                    "edit",
+                    (currentPage - 1) * itemsPerPage + index
+                  )
+                }
+              />
+            )}
+            {allowedActions.includes("delete") && (
+              <TrashIcon
+                className="h-5 w-5 text-red-500 cursor-pointer"
+                onClick={() =>
+                  handleActionClick(
+                    "delete",
+                    (currentPage - 1) * itemsPerPage + index
+                  )
+                }
+              />
+            )}
+            {allowedActions.includes("info") && (
+              <InformationCircleIcon
+                className="h-5 w-5 text-green-500 cursor-pointer"
+                onClick={() =>
+                  handleActionClick(
+                    "info",
+                    (currentPage - 1) * itemsPerPage + index
+                  )
+                }
+              />
+            )}
+            {allowedActions.includes("Actions") && (
+              <ActionItems
+                initialData={initialData}
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                index={index}
+                handleActionClick={handleActionClick}
+              />
+            )}
+            {allowedActions.includes("SingleClick") && (
+              <PencilIcon
+                className="h-5 w-5 text-blue-500 cursor-pointer"
+                onClick={() =>
+                  handleActionSingleClick()
+                }
+              />
+            )}
+            {allowedActions.includes("tabsEdit") && (
+              <PencilIcon
+                className="h-5 w-5 text-blue-500 cursor-pointer"
+                onClick={() =>
+                  handleActionClick(
+                    "tabsEdit",
+                    (currentPage - 1) * itemsPerPage + index
+                  )
+                }
+              />
+            )}
+            {allowedActions.includes("tabsInfo") && (
+              <InformationCircleIcon
+                className="h-5 w-5 text-green-500 cursor-pointer"
+                onClick={() =>
+                  handleActionClick(
+                    "tabsInfo",
+                    (currentPage - 1) * itemsPerPage + index
+                  )
+                }
+              />
+            )}
+          </div>
+        </td>
+      )}
+    </tr>
+  ))}
+</tbody>
 
-
-                  </td>
-                ))}
-
-                {allowedActions && (<td className="px-6 border-b border-gray-300 table-cell">
-                  <div className="flex items-center space-x-2">
-                    {allowedActions?.includes("edit") && (
-                      <PencilIcon
-                        className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "edit",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
-                      />
-                    )}
-                    {allowedActions?.includes("delete") && (
-                      <TrashIcon
-                        className="h-5 w-5 text-red-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "delete",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
-                      />
-                    )}
-                    {allowedActions?.includes("info") && (
-                      <InformationCircleIcon
-                        className="h-5 w-5 text-green-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "info",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
-                      />
-                    )}
-                    {allowedActions?.includes("Actions") && (
-                      <ActionItems
-                        initialData={initialData}
-                        currentPage={currentPage}
-                        itemsPerPage={itemsPerPage}
-                        index={index}
-                        handleActionClick={handleActionClick}
-                      />
-                    )}
-                    {allowedActions?.includes("SingleClick") && (
-                      <PencilIcon
-                        className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionSingleClick()
-                        }
-                      />
-                    )}
-                    {allowedActions?.includes("tabsEdit") && (
-                      <PencilIcon
-                        className="h-5 w-5 text-blue-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "tabsEdit",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
-                      />
-                    )}
-                    {allowedActions?.includes("tabsInfo") && (
-                      <InformationCircleIcon
-                        className="h-5 w-5 text-green-500 cursor-pointer"
-                        onClick={() =>
-                          handleActionClick(
-                            "tabsEdit",
-                            (currentPage - 1) * itemsPerPage + index
-                          )
-                        }
-                      />
-                    )}
-                  </div>
-                </td>)}
-
-              </tr>
-            ))}
-          </tbody>
         </table>
       </div>
-      <div className="flex justify-center mt-5">
-        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-      </div>
+      {visibleColumns.length>0 &&(
+         <div className="flex justify-center mt-5">
+         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+       </div>
+      )}
+
       <EditModal
         infoColumns={infoColumns || []}
         editColumns={infoColumns || []}

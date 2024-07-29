@@ -74,7 +74,7 @@ const ListView: React.FC = () => {
       <div className="p-4 flex items-center justify-between mt-2 mb-2">
         <div className="flex space-x-4">
           <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+          <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
         </div>
 
         <div className="flex space-x-4">

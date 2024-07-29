@@ -100,7 +100,7 @@ const BulkChange: React.FC = () => {
               <BulkChangeModal />
         <div className="flex justify-between items-center mt-5">
           <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <ColumnFilter data={data} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+          <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
         </div>
        <div className='mt-6'>
        <TableComponent

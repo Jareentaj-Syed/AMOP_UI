@@ -59,7 +59,7 @@ const IMEIMasterTable: React.FC = () => {
         <div className="flex space-x-2">
         <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         <ColumnFilter
-                data={data}
+                headers={headers}
                 visibleColumns={visibleColumns}
                 setVisibleColumns={setVisibleColumns}
               />
