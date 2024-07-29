@@ -3,14 +3,18 @@ import create from 'zustand';
 interface RevIOState {
   customers_table: any[]; 
   setTable: (data: any[]) => void;
+  bill_profile_drp:string[]
+  setBillProfile:(data: string[]) => void;
 }
 
 export const useRevIOStore = create<RevIOState>((set) => ({
   customers_table: [], 
   setTable: (data) => set({ customers_table: data }),
+  bill_profile_drp:[],
+  setBillProfile: (data) => set({ bill_profile_drp: data }),
 }));
 
-export const headers=["billingaccountnumber","customer_name","tenantname","customerbillperiodendday","customerbillperiodendhour","modifiedby","modifieddate"]
+export const headers=["billingaccountnumber","agentname","customer_name","tenantname","customerbillperiodendday","customerbillperiodendhour","modifiedby","modifieddate"]
 
 export const headerMap={
   "billingaccountnumber":"Account No",
@@ -20,9 +24,10 @@ export const headerMap={
   "customerbillperiodendday":"Bill Period End Day",
   "customerbillperiodendhour":"Bill Period End Hour",
   "modifiedby":"Last Modified By",
-  "modifieddate":"Last Modified Date & Time"
+  "modifieddate":"Last Modified Date & Time",
+  "agentname":"Agent"
 }
-export const createModalData= [
+export const createModalData= (billProfiles: string[])=>[
     {
       "label":"Status",
       "type":"text",
@@ -32,14 +37,14 @@ export const createModalData= [
     {
       "label":"Rev.IO Account",
       "type":"dropdown",
-      "value":["AMOPToRevio@altaworx_sandbox","GoTech API@Catput"],
+      "value":[],
       "mandatory":"true"
       
     },
     {
       "label":"Bill Profile",
       "type":"dropdown",
-      "value":["Annually","Bi-Annually","Catapult","Monthly","Prepay","Re-bill","Reseller","Saas Reseller","Tri-Annually"],
+      "value":billProfiles,
       "mandatory":"true"
     },
     {

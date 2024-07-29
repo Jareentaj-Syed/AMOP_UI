@@ -94,6 +94,7 @@ const BandWidthCustomers: React.FC = () => {
             headers={headers}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            headerMap={headerMap}
           />
         </div>
         <div className="flex space-x-2">

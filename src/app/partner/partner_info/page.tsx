@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '../EmailModal';
 import { Modal } from 'antd';
-import { partner,sub_partner } from './partner_info_constants';
+import { partner_name, sub_partner } from './partner_info_constants';
 import axios from 'axios';
+import { useAuth } from "@/app/components/auth_context";
+
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -14,6 +16,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [emailList, setEmailList] = useState<string[]>([]);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
+  const { username, partner, role } = useAuth();
+  const[logo,setLogo]=useState<string | null>(null);
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
@@ -33,12 +37,24 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 
   const confirmSubmit = async () => {
     const file = logoFileRef.current?.files?.[0];
-    if(emailList &&file){
       try {
         const url =
           "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
         const data = {
-          email:emailList
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/update_partner_info",
+          role_name: role,
+          module_name: "Partner info",
+          pages: {
+            "Customer groups": { start: 0, end: 10 },
+            "Partner users": { start: 0, end: 10 }
+          },
+          updated_data:{
+            email_ids: emailList,
+            logo:"Logo-design-illustration-on-transparent-background-PNG"
+
+          }
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
@@ -47,7 +63,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       } catch (err) {
         console.error("Error fetching data:", err);
       }
-    }
 
     if (file) {
       const validTypes = ['image/png', 'image/jpeg'];
@@ -92,10 +107,10 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={partner}
+                value={partner_name}
                 readOnly
               />
-               {/* value={partnerName} */}
+              {/* value={partnerName} */}
             </div>
             <div>
               <label className="field-label">
@@ -104,7 +119,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={sub_partner}
+                value={sub_partner || "NA"}
                 readOnly
               />
               {/* value={subPartnerName} */}
@@ -112,7 +127,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
             <div>
               <label className="field-label">
                 Email ids<span className="text-red-500">*</span>
-              </label> 
+              </label>
               <div className="flex items-center">
                 <input
                   type="text"
@@ -120,9 +135,9 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                   className="input"
                   value={emailList.join(', ')}
                   readOnly
-                  required 
+                  required
                 />
-                
+
                 <button
                   type="button"
                   className="save-btn email-plus"

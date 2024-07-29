@@ -27,9 +27,9 @@ const RevIOCustomers: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers); // Initialize with all headers
-  const createColumns = createModalData;
+  const [createColumns,setcreateColumns ]= useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const { customers_table, setTable } = useRevIOStore();
+  const { customers_table, setTable ,setBillProfile} = useRevIOStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,9 +52,14 @@ const RevIOCustomers: React.FC = () => {
         });
         const parsedData = JSON.parse(response.data.body);
         const tableData = parsedData.data.customers;
+        const bill_profile=parsedData.data.revbillprofile
+        const bill_profile_options=bill_profile.map((bill:any) => bill.description)
+        const createColumns = createModalData(bill_profile_options)
+        setcreateColumns(createColumns)
         // console.log("response.data-revio", tableData);
         setTable(tableData);
         setTableData(tableData);
+        setBillProfile(bill_profile_options)
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -99,6 +104,7 @@ console.log('visibleColumns',visibleColumns)
             headers={headers} // Pass headers directly
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns} // Ensure setVisibleColumns is passed down
+            headerMap={headerMap}
           />
         </div>
 

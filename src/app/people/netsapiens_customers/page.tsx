@@ -88,6 +88,7 @@ const NetSapiensCustomers: React.FC = () => {
             headers={headers}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            headerMap={headerMap}
           />
         </div>
 

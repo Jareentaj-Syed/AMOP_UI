@@ -32,7 +32,7 @@ export const createModalData = [
     "mandatory": "true"
   },
   {
-    "label": "Include Child Accounts?",
+    "label": "childaccount",
     "type": "checkbox",
     "value": "",
     "mandatory": "false"
@@ -58,12 +58,7 @@ export const createModalData = [
   {
     "label": "featurecodes",
     "type": "dropdown",
-    "value": [
-      "$3 Pooling Fee",
-      "$5 Pooling Fee",
-      "100GB Hotspot",
-      "100GB Hotspot"
-    ],
+    "value": [],
     "mandatory": "false"
   }
 ];

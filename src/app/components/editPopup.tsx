@@ -49,34 +49,6 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       [name]: value,
     }));
   };
-  const fetchData = async () => {
-    try {
-    
-      const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
-      const data = {
-        tenant_name: partner || "default_value",
-        username: username,
-        path:"/update_superadmin_data",
-        role_name: role,
-        "sub_module": "Partner API", 
-        "sub_tab": "Carrier APIs",
-        flag: "withoutparameters",
-       "changed_data":" "
-      };
-      const response = await axios.post(url, { data: data });
-      const resp = JSON.parse(response.data.body);
-
-      const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-
-     
-    } catch (err) {
-
-      console.error(err);
-    }finally {
-      // Set loading to false after the request is done
-    }
-  
-  };
   const handleSave = () => {
     console.log("form data:",formData)
     onSave(formData);
@@ -93,13 +65,26 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
   };
 
   const handleConfirmSave = async() => {
-    formData["lastmodifiedby"]=username
     if(formData){
       try {
         const url =
           "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
 
         let data;
+        if(heading="Customer Group"){
+          if(formData){
+            formData["modifiedby"]=username
+          }
+          data = {
+            tenant_name: partner || "default_value",
+          username: username,
+          path: "/update_partner_info",
+          role_name: role,
+          module_name: "Customer groups",
+          action:"edit",
+          updated_data:formData
+          };
+        }
         if(heading==="Carrier"){
           if(formData){
             formData["lastmodifiedby"]=username

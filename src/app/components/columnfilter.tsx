@@ -6,12 +6,14 @@ interface ColumnFilterProps {
   headers: string[];
   visibleColumns: string[];
   setVisibleColumns: (columns: string[]) => void;
+  headerMap?:any
 }
 
 const ColumnFilter: React.FC<ColumnFilterProps> = ({
   headers,
   visibleColumns,
   setVisibleColumns,
+  headerMap
 }) => {
   // Use headers passed as props for the list of all columns
   const allColumns = headers;
@@ -34,6 +36,15 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({
     }
   };
 
+  const formatColumnName = (name: string) => {
+    return name
+      .replace(/_/g, ' ')          // Replace underscores with spaces
+      .split(' ')                  // Split the string into words
+      .map(word =>                 // Capitalize each word
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      )
+      .join(' ');                  // Join the words back into a single string
+  };
   const columnContent = (
     <div
       style={{
@@ -61,7 +72,7 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({
           }
           style={{ marginBottom: "4px", whiteSpace: "nowrap" }}
         >
-          {column}
+          {headerMap && headerMap[column] ? headerMap[column] : formatColumnName(column)}
         </Checkbox>
       ))}
     </div>

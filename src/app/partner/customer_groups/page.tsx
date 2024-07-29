@@ -55,6 +55,7 @@ const CustomerGroups: React.FC = () => {
               headers={headers}
               visibleColumns={visibleColumns}
               setVisibleColumns={setVisibleColumns}
+              headerMap={headerMap}
             />
           </div>
 
@@ -81,7 +82,7 @@ const CustomerGroups: React.FC = () => {
           visibleColumns={visibleColumns}
           itemsPerPage={10}
           allowedActions={["edit", "delete"]}
-          popupHeading='Customer'
+          popupHeading='Customer Group'
           infoColumns={createColumns}
           editColumns={createColumns}
         />

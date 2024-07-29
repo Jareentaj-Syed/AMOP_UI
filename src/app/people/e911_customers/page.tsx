@@ -99,6 +99,7 @@ const E911Customers: React.FC = () => {
             headers={headers}
             visibleColumns={visibleColumns}
             setVisibleColumns={setVisibleColumns}
+            headerMap={headerMap}
           />
         </div>
 

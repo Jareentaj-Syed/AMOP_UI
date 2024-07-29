@@ -21,11 +21,10 @@ const ListView: React.FC = () => {
   const [data, setData] = useState<ExcelDataRow[]>(users_table); // Initialize data with users_table
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers); // Initialize visibleColumns with headers
-  const [showCreateUser, setShowCreateUser] = useState(false); // State to toggle create user view
+  const [showCreateUser, setShowCreateUser] = useState(false);
   const router = useRouter();
 
   const createUser = dynamic(() => import('../createUser/page'));
-
   const handleCreateClick = useCallback(() => {
     setShowCreateUser(true);
   }, []);
@@ -43,7 +42,7 @@ const ListView: React.FC = () => {
     const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
     XLSX.writeFile(workbook, "Users.xlsx");
   };
 
@@ -60,7 +59,7 @@ const ListView: React.FC = () => {
           <div className="p-4 flex items-center justify-between mt-2 mb-2">
             <div className="flex space-x-4">
               <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-              <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} />
+              <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={headerMap}/>
             </div>
 
             <div className="flex space-x-4">
