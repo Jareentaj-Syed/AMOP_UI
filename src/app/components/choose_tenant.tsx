@@ -16,7 +16,7 @@ const ChooseTenant: React.FC = () => {
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
   const {username, tenantNames, role}=useAuth()
-  console.log("partners",tenantNames)
+  // console.log("partners",tenantNames)
   const partners=tenantNames
   // console.log('Selected Partner:', partnerName);
   // setSelectedPartner(true);
@@ -42,7 +42,8 @@ const ChooseTenant: React.FC = () => {
         }}
       );
       if (response.status === 200) {
-        console.log('Login successful:',response.data);
+        // console.log('Login successful:',response.data);
+        
         setSelectedPartner(true)
         const parsedData = JSON.parse(response.data.body); // Parse the response body
         setModules(parsedData.Modules); // Set the modules state

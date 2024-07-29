@@ -8,18 +8,21 @@ import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import { createModalData } from './rev_io_customers_constants';
+import axios from 'axios';
+import { useAuth } from '@/app/components/auth_context';
 
 interface ExcelData {
   [key: string]: any;
 }
 
 const RevIOCustomers: React.FC = () => {
+  const { username, partner, role } = useAuth();
   const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-const createColumns=createModalData
+  const createColumns=createModalData
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -52,6 +55,37 @@ const createColumns=createModalData
         setVisibleColumns(columnNames);
       } catch (error) {
         console.error('Error fetching data from Excel:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+     
+      try {
+        const url=`https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+        const data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/get_module_data",
+          role_name: role,
+          "parent_module_name": "poeple",
+          "module_name": "REV.Io Customers",
+          "mod_pages": {
+          "start": 0,
+          "end": 500
+        }
+      };
+        const response = await axios.post(url, {
+         data
+        });
+        console.log(response.data);
+      } catch (err) {
+       
+      } finally {
+        
       }
     };
 

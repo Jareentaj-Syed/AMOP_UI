@@ -1,14 +1,15 @@
-import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon, HomeIcon } from '@heroicons/react/24/outline';
+import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon, HomeIcon,GlobeAltIcon} from '@heroicons/react/24/outline';
 
 export const moduleIconMap = {
   'Home':HomeIcon,
   'Partner': ClipboardDocumentCheckIcon,
-  'SIM Management': WifiIcon,
+  'Sim Management': WifiIcon,
   'Device Management': DevicePhoneMobileIcon,
   'Optimization': ChartBarIcon,
   'People': UserGroupIcon,
   'Settings': CogIcon,
-  'Super Admin': UserCircleIcon
+  'Super Admin': UserCircleIcon,
+  'Net Sapiens':GlobeAltIcon
 };
  // {
   //   parent_module_name: 'Home',

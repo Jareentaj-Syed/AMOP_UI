@@ -44,9 +44,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       password: password,
     };
     try {
-      console.log('Logging in with:', username, password);
+      // console.log('Logging in with:', username, password);
       const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.AMOP_LOGIN}`;
-      console.log("url", url);
+      // console.log("url", url);
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
       if (response.status === 200) {
         const resp = JSON.parse(response.data.body);
-        console.log('Login successful:', resp["tenant_names"]);
+        // console.log('Login successful:', resp["tenant_names"]);
         const tenant_names = resp["tenant_names"];
         const role=resp["role"]
         setRole(role)
@@ -80,7 +80,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const handleSelectedPartner = async (partnerName: string) => {
-    console.log('Selected Partner:', partnerName);
+    // console.log('Selected Partner:', partnerName);
     setSelectedPartner(true);
     setPartner(partnerName);
   };

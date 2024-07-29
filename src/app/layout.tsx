@@ -17,7 +17,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
   const { isAuthenticated } = useAuth();
   const {selectedPartner}= useAuth();
   const router = useRouter();
-  console.log(selectedPartner)
+  // console.log(selectedPartner)
   useEffect(() => {
     // Set Calibri as the default font for the entire application
     document.body.style.fontFamily = 'Calibri';
