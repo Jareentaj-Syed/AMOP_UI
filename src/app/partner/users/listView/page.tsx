@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback,useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import ChartsPage from '../charts/page';
@@ -10,6 +10,8 @@ import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
 import { users_table } from '../users_constants';
 import { headers } from '../users_constants';
+import { useUserStore } from '../createUser/createUserStore';
+
 
 interface ExcelDataRow {
   [key: string]: any;
@@ -27,7 +29,16 @@ const ListView: React.FC = () => {
   const handleCreateClick = useCallback(() => {
     setShowCreateUser(true);
   }, []);
-
+  const {
+    setTenant,
+    setRoleName,
+    setSubTenant
+  } = useUserStore();
+  useEffect(() => {
+    setTenant('')
+    setSubTenant([])
+    setRoleName('')
+}, []);
   const handleExport = () => {
     const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
     const worksheet = XLSX.utils.aoa_to_sheet(exportData);

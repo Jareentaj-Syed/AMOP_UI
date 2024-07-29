@@ -18,10 +18,16 @@ console.log(partner, sub_partner);
 export const users_table: any[] = partnerData.data["Partner users"]["users"];
 export const headers = ["username", "role", "email", "tenant_name", "subtenant_name", "lastlogin", "modifiedby", "modifieddate"];
 export const customergroups_drp = Object.values(partnerData.data["Partner users"]["customergroups"]).map(
-  (plan: any) => plan.name
+  (group: any) => group.name
 );
 export const roles_drp = Object.values(partnerData.data["Partner users"]["Roles"]).map(
-  (plan: any) => plan.rolename
+  (role: any) => role.rolename
+);
+export const service_provider_drp = Object.values(partnerData.data["Partner users"]["serviceprovider"]).map(
+  (service_provider: any) => service_provider.name
+);
+export const customers_drp = Object.values(partnerData.data["Partner users"]["Customers"]).map(
+  (customer: any) => customer.customer_name
 );
 export const partners = Object.keys(partnerData.data["Partner users"]["tenant"]);
 export const subPartnersData: any = partnerData.data["Partner users"]["tenant"];

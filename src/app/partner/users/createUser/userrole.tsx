@@ -1,16 +1,9 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState, useEffect } from 'react';
-import Select, { ActionMeta, SingleValue } from 'react-select';
+import Select from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-import { partnerCarrierData } from '@/app/constants/partnercarrier';
-import { partners,roles_drp } from '../users_constants';
-
-type OptionType = {
-    value: string;
-    label: string;
-};
-
+import { useUserStore } from './createUserStore';
 
 interface ExcelData {
     [key: string]: {
@@ -254,34 +247,33 @@ const data: ExcelData = {
         }
     }
 }
-const roles = roles_drp
-
-const Roleoptions = roles.map((role, index) => ({
-    value: role.toLowerCase().replace(/\s+/g, '-'),
-    label: role,
-  }));
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 
-const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
 
 interface UserRoleProps {
     rowData?: any;
 }
 
 const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
-    const [partner, setPartner] = useState<OptionType | null>(null);
-    const [role, setRole] = useState<OptionType | null>(null);
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [partner, setPartner] = useState<string>('');
+    const [role, setRole] = useState<string>('');
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
 
-  console.log("rowData", rowData)
+    const {
+        tenant,
+        role_name,
+        sub_tenant,
+        setTenant,
+        setRoleName,
+        setSubTenant
+    } = useUserStore();
 
     useEffect(() => {
         if (rowData) {
-            setPartner({ value: rowData['tenant_name'], label: rowData['tenant_name'] } || null);
-            setRole({ value: rowData['role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['role'] } || null);
+            setPartner(rowData['tenant_name'] ? rowData['tenant_name'] : null);
+            setRole(rowData['role'] ? rowData['role'] : null);
         }
     }, [rowData]);
 
@@ -295,33 +287,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
-
-    const handleSetPartner = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        setPartner(selectedOption);
-        if (selectedOption) {
-            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Partner is required.'));
-        }
-    };
-
-    const handleSetRole = (selectedOption: SingleValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        setRole(selectedOption);
-        if (selectedOption) {
-            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
-        }
-    };
-
     const handleSubmit = () => {
-        const errors: string[] = [];
-        if (!partner) errors.push('Partner is required.');
-        if (!role) errors.push('Role is required.');
-
-        setErrorMessages(errors);
-
-        if (errors.length === 0) {
-            console.log('Saving...');
-        } else {
-            scrollToTop();
-        }
+        scrollToTop()
     };
 
     const scrollToTop = () => {
@@ -335,28 +302,20 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         <div>
             <div className="grid grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label className='field-label'>Partner<span className="text-red-500">*</span></label>
-                    <Select
-                        value={partner}
-                        onChange={handleSetPartner}
-                        options={Partneroptions}
-                        styles={nonEditableDrp}
+                    <label className='field-label'>Partner</label>
+                    <input
+                        type="text"
+                        value={tenant}
+                        className="non-editable-input"
                     />
-                    {errorMessages.includes('Partner is required.') && (
-                        <span className="text-red-600 ml-1">Partner is required.</span>
-                    )}
                 </div>
                 <div>
-                    <label className="field-label">Role<span className="text-red-500">*</span></label>
-                    <Select
-                        value={role}
-                        onChange={handleSetRole}
-                        options={Roleoptions}
-                        styles={nonEditableDrp}
+                    <label className="field-label">Role</label>
+                    <input
+                        type="text"
+                        value={role_name}
+                        className="non-editable-input"
                     />
-                    {errorMessages.includes('Role is required.') && (
-                        <span className="text-red-600 ml-1">Role is required.</span>
-                    )}
                 </div>
             </div>
             <h3 className="tabs-sub-headings">Module Info</h3>

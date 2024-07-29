@@ -3,65 +3,44 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState, useEffect } from 'react';
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-import { partnerCarrierData, serviceProviders, Customeroptions } from '@/app/constants/partnercarrier';
-import { partners ,customergroups_drp,subPartnersData} from '../users_constants';
-interface Option {
-    value: string;
-    label: string;
-}
+import {customergroups_drp,service_provider_drp,customers_drp} from '../users_constants';
+import { useUserStore } from './createUserStore';
+
 type OptionType = {
     value: string;
     label: string;
 };
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
-const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
-const CustomerGroup2Options=customergroups_drp.map(group => ({ value: group, label: group }));
-const ServiceProviderOptions = serviceProviders.map(provider => ({ value: provider, label: provider }));
+const CustomerGroupOptions=customergroups_drp.map(group => ({ value: group, label: group }));
+const ServiceProviderOptions = service_provider_drp.map(provider => ({ value: provider, label: provider }));
+const customerOptions=customers_drp.map(customer => ({ value: customer, label: customer }));
 
 interface TenantInfoProps {
     rowData?: any;
 }
 
 const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
-    const [selectedPartner, setSelectedPartner] = useState<string>('');
-    const [selectedSubPartner, setSelectedSubPartner] = useState<string[]>([]);
     const [carriers, setCarriers] = useState<string[]>([]);
-    const [subPartners, setSubPartners] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
     const [ServiceProvider, setServiceProvider] = useState<MultiValue<OptionType>>([]);
-    const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
-    const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
-
+    const {
+        tenant,
+        role_name,
+        sub_tenant,
+        setTenant,
+        setRoleName,
+        setSubTenant
+      } = useUserStore();
 
     useEffect(() => {
         if (rowData) {
-            setSelectedPartner(rowData['tenant_name'] || '');
-            setSubPartners(subPartnersData[rowData['tenant_name']] || []);
-            setSelectedSubPartner(rowData['subtenant_name'] || '');
+            setTenant(rowData['tenant_name'] || '');
+            setSubTenant(rowData['subtenant_name'] || '');
         }
     }, [rowData]);
-    const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
-        if (selectedOption) {
-            const partner = selectedOption.value;
-            setSelectedPartner(partner);
-            setCarriers(partnerCarrierData[partner] || []);
-            setSubPartners(subPartnersData[partner] || []);
-            setSelectedSubPartner([]); // Reset sub-partner when partner changes
-
-        } else {
-            setSelectedPartner('');
-            setCarriers([]);
-            setSubPartners([]);
-            setSelectedSubPartner([]); // Reset sub-partner when no partner is selected
-        }
-    };
-    const handleSetSubPartner = (selectedOptions: MultiValue<OptionType>) => {
-        const selectedSubPartners = selectedOptions.map(option => option.value);
-        setSelectedSubPartner(selectedSubPartners);
-    };
     const handleSubmit = () => {
         const errors: string[] = [];
         if (CarrierNotification.length === 0) errors.push('Carrier is required.');
@@ -102,24 +81,20 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
                         <label className="field-label">Partner</label>
-                        <Select
-
-                            value={{ value: selectedPartner, label: selectedPartner }}
-                            onChange={handlePartnerChange}
-                            options={Partneroptions}
-                            styles={nonEditableDrp}
-
-                        />
+                        <input
+                        type="text"
+                        value={tenant}
+                        className="non-editable-input"
+                    />
                     </div>
 
                     <div>
                         <label className="field-label">Sub Partner</label>
-                        <Select
-                            value={subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
-                            isMulti
-                            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-                            styles={nonEditableDrp}
-                        />
+                        <input
+                        type="text"
+                        value={sub_tenant}
+                        className="non-editable-input"
+                    />
                     </div>
                     <div>
                         <label className="field-label">Carrier <span className="text-red-500">*</span></label>
@@ -127,9 +102,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                             isMulti
                             value={CarrierNotification}
                             options={Carrieroptions}
-                            styles={selectedPartner ? editableDrp : nonEditableDrp}
+                            styles={tenant ? editableDrp : nonEditableDrp}
                             onChange={handleCarrier}
-                            isDisabled={!selectedPartner}
+                            isDisabled={!tenant}
 
                         />
                         {errorMessages.includes('Carrier is required.') && (
@@ -155,14 +130,14 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                         <Select
 
                             styles={editableDrp}
-                            options={CustomerGroup2Options}
+                            options={CustomerGroupOptions}
                         />
                     </div>
                     <div>
                         <label className="field-label">Customers</label>
                         <Select
                             isMulti
-                            options={Customeroptions}
+                            options={customerOptions}
                             styles={editableDrp}
                         />
                     </div>

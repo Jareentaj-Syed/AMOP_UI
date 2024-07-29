@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Select, { MultiValue, SingleValue } from 'react-select';
-import countries from '@/app/constants/locationdetails';
-import { Country, State, City } from '@/app/constants/locationdetails';
-import { getCities, getCityDetails, getStates } from '@/app/constants/locationdetails';
-import { partnerCarrierData } from '@/app/constants/partnercarrier';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { partners ,roles_drp,subPartnersData} from '../users_constants';
+import { useUserStore } from './createUserStore';
 type OptionType = {
   value: string;
   label: string;
@@ -17,7 +14,7 @@ const Partneroptions = partners.map(partner => ({ value: partner, label: partner
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 const Roleoptions = roles.map((role, index) => ({
-  value: role.toLowerCase().replace(/\s+/g, '-'),
+  value: role,
   label: role,
 }));
 
@@ -38,39 +35,43 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   const [notification, setNotification] = useState<SingleValue<OptionType>>(null);
   const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
-  const [selectedCountry, setSelectedCountry] = useState<number | null>(null);
-  const [selectedState, setSelectedState] = useState<number | null>(null);
-  const [selectedCity, setSelectedCity] = useState<number | null>(null);
-  const [selectedZipCode, setSelectedZipCode] = useState<string>('');
-  const [selectedTimeZone, setSelectedTimeZone] = useState<string>('');
-  const [selectedPartner, setSelectedPartner] = useState<string>('');
   const [selectedSubPartner, setSelectedSubPartner] = useState<string[]>([]);
   const [subPartners, setSubPartners] = useState<string[]>([]);
   const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
 
 
+  const {
+    tenant,
+    role_name,
+    sub_tenant,
+    setTenant,
+    setRoleName,
+    setSubTenant
+  } = useUserStore();
+
   useEffect(() => {
     console.log("partners",partners)
     if (rowData) {
       setUsername(rowData['username'] || '');
       setEmail(rowData['email'] || '');
-      setRole({ value: rowData['role'].toLowerCase().replace(/\s+/g, '-'), label: rowData['role'] } || null);
-      setPartner({ value: rowData['tenant_name'], label: rowData['tenant_name'] } || null);
-      setSelectedPartner(rowData['tenant_name'] || '');
+      setRole(rowData['role'] ? { value: rowData['role'], label: rowData['role'] } : null);
+      setPartner(rowData['tenant_name'] ? { value: rowData['tenant_name'], label: rowData['tenant_name'] } : null);
       setSubPartners(subPartnersData[rowData['tenant_name']] || []);
       setSelectedSubPartner(rowData['subtenant_name'] || '');
+      setSubTenant(rowData['subtenant_name'] || '');
     }
   }, [rowData]);
 
   const handlePartnerChange = (selectedOption: SingleValue<OptionType>) => {
     if (selectedOption) {
       const partner = selectedOption.value;
-      setSelectedPartner(partner);
+      setTenant(partner);
       setSubPartners(subPartnersData[partner] || []);
       setSelectedSubPartner([]); // Reset sub-partner when partner changes
+      setSubTenant([])
     } else {
-      setSelectedPartner('');
+      setTenant('');
       setSubPartners([]);
       setSelectedSubPartner([]); // Reset sub-partner when no partner is selected
     }
@@ -80,13 +81,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     const selectedSubPartners = selectedOptions.map(option => option.value);
     setSelectedSubPartner(selectedSubPartners);
   };
-
-  const handleSetPartner = (selectedOption: SingleValue<OptionType>) => {
-    setPartner(selectedOption);
-  };
   const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
-    setRole(selectedOption);
     if (selectedOption) {
+      const role=selectedOption.value
+      setRole(selectedOption);
+      setRoleName(role)
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
     }
   };
@@ -117,34 +116,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     }
   };
 
-  const handleCountryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const countryId = parseInt(event.target.value);
-    setSelectedCountry(countryId);
-    setSelectedState(null); // Reset selected state when country changes
-    setSelectedCity(null); // Reset selected city when country changes
-  };
-
-  const handleStateChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const stateId = parseInt(event.target.value);
-    setSelectedState(stateId);
-    setSelectedCity(null); // Reset selected city when state changes
-  };
-
-  const handleCityChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const cityId = parseInt(event.target.value);
-    setSelectedCity(cityId);
-    try {
-      if (selectedCountry !== null && selectedState !== null && cityId !== null) {
-        const cityDetails = await getCityDetails(selectedCountry, selectedState, cityId);
-        if (cityDetails) {
-          setSelectedZipCode(cityDetails.zipCode);
-          setSelectedTimeZone(cityDetails.timeZone);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching city details:', error);
-    }
-  };
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -186,7 +157,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Partner</label>
           <Select
-            value={{ value: selectedPartner, label: selectedPartner }}
+            value={{value:tenant,label:tenant}}
             onChange={handlePartnerChange}
             options={Partneroptions}
             styles={editableDrp}
@@ -245,7 +216,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
           <Select
-            value={role}
+            value={{value:role_name,label:role_name}}
             onChange={handlesetRole}
             options={Roleoptions}
             styles={editableDrp}
@@ -339,73 +310,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input" />
           </div>
-          {/*   
-    <div>
-            <label className="field-label">Country</label>
-            <select
-              value={selectedCountry || ''}
-              onChange={handleCountryChange}
-              className="input"
-              style={{ height: '2.6rem' }}
-            >
-              <option value="">Select Country</option>
-              {countries.map((country) => (
-                <option key={country.id} value={country.id.toString()}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="field-label">State</label>
-            <select
-              value={selectedState || ''}
-              onChange={handleStateChange}
-              className="input"
-              style={{ height: '2.6rem' }}
-            >
-              <option value="">Select State</option>
-              {selectedCountry && getStates(selectedCountry)?.map((state) => (
-                <option key={state.id} value={state.id.toString()}>
-                  {state.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="field-label">City</label>
-            <select
-              value={selectedCity || ''}
-              onChange={handleCityChange}
-              className="input"
-              style={{ height: '2.6rem' }}
-            >
-              <option value="">Select City</option>
-              {selectedState && getCities(selectedCountry!, selectedState!)?.map((city) => (
-                <option key={city.id} value={city.id.toString()}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="field-label">Time zone</label>
-            <input
-              type="text"
-              value={selectedTimeZone}
-              readOnly
-              className="input"
-            />
-          </div>
-          <div>
-            <label className="field-label">Zip</label>
-            <input
-              type="text"
-              value={selectedZipCode}
-              readOnly
-              className="input block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300"
-            />
-          </div> */}
         </div>
       </div>
 
