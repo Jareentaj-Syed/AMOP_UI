@@ -208,12 +208,48 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setDeleteRowIndex(null);
   };
 
-  const handleDelete = (rowIndex: number) => {
+  const handleDelete = async(rowIndex: number) => {
     if (rowIndex >= 0 && rowIndex < rowData.length) {
       const updatedData:any = [...rowData];
-      updatedData["deletedby"]=username
-      updatedData["isdeleted"]=true
+      const row=rowData[rowIndex]
+      row["deletedby"]=username
+      row["isdeleted"]=true
+      row["isactive"]=false
+      try {
+        const url =
+          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
+
+        let data={};
+        console.log("popupHeading",popupHeading)
+        if(popupHeading==="Customer Group"){
+          data = {
+            tenant_name: partner || "default_value",
+          username: username,
+          path: "/update_partner_info",
+          role_name: role,
+          module_name: "Customer groups",
+          action:"delete",
+          updated_data:row
+          };
+        }
+        if(popupHeading==="User"){
+          data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/update_partner_info",
+          role_name: role,
+          module_name: "Partner users",
+          action:"delete",
+          updated_data:row
+          };
+        }
+      const response = await axios.post(url, { data });
+       
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
       setRowData(updatedData);
+
     }
   };
   const ConfirmStateChange= (rowIndex: number)=>{
