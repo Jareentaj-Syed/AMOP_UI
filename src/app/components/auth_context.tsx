@@ -80,7 +80,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const handleSelectedPartner = async (partnerName: string) => {
-    // console.log('Selected Partner:', partnerName);
+    console.log('Selected Partner:', partnerName);
     setSelectedPartner(true);
     setPartner(partnerName);
   };

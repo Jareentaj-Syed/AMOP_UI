@@ -216,21 +216,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       setRowData(updatedData);
     }
   };
-  const ConfirmStateChange= (apiState:boolean,rowIndex: number)=>{
-    if(apiState===true){
-      setEnableModalOpen(false);
-    }
-    else{
-      setDisableModalOpen(true);
-    }
-    if(apiState===false){
-      setEnableModalOpen(false);
-    }
-    else{
-      setDisableModalOpen(true);
-    }
+  const ConfirmStateChange= (rowIndex: number)=>{
+    setEnableModalOpen(true);
     
-    
+    setDisableModalOpen(false);
     handleToggle(rowIndex)
   }
   const handleToggle = (rowIndex: number) => {
@@ -262,7 +251,18 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       [rowIndex]: prevState[rowIndex] ===true ? false : true,
     }));
 
-  
+    if (
+      updatedData[rowIndex].api_state === true ||
+      updatedData[rowIndex].apistate === true ||
+      updatedData[rowIndex].isactive === true
+    ) {
+      
+      setCurrentRowData(updatedData[rowIndex]);
+    } else {
+      setDisableModalOpen(true);
+      setEnableModalOpen(false);
+      setCurrentRowData(updatedData[rowIndex]);
+    }
   };
 
   const confirmSubmit = async () => {
@@ -353,7 +353,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => ConfirmStateChange(apiState,index)}
+          onClick={() => ConfirmStateChange(index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Enable</span>
@@ -365,7 +365,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => ConfirmStateChange(apiState,index)}
+          onClick={() => ConfirmStateChange(index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Disable</span>
