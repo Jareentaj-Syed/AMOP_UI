@@ -22,7 +22,17 @@ const EmailModal: React.FC<EmailModalProps> = ({
       onAddEmail(emailInput);
       setEmailInput('');
     }
+ 
   };
+
+  const  SaveEmail = () => {
+    if (emailInput.trim() !== '') {
+      onAddEmail(emailInput);
+      setEmailInput('');
+    }
+    onClose()
+  };
+  
 
   return isOpen ? (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 " style={{ zIndex: 9999 }}>
@@ -65,13 +75,27 @@ const EmailModal: React.FC<EmailModalProps> = ({
             </div>
           ))}
         </div>
-        <button
-          type="button"
-          className="w-full bg-gray-300 text-black p-2 rounded-lg hover:bg-gray-400"
-          onClick={onClose}
-        >
-          Close
-        </button>
+        <div className="flex justify-center space-x-2">
+  <button
+    type="button"
+    className="bg-gray-300 text-black p-2 rounded-lg hover:bg-gray-400 save-btn"
+    onClick={() => {
+    
+      SaveEmail();
+    }}
+  >
+  
+    Save
+  </button>
+  <button
+    type="button"
+    className="bg-gray-300 text-black p-2 rounded-lg hover:bg-gray-400 cancel-btn "
+    onClick={onClose}
+  >
+    Cancel
+  </button>
+</div>
+
       </div>
     </div>
   ) : null;

@@ -6,6 +6,8 @@ import { ChartBarIcon, ChevronDownIcon, ChevronRightIcon, CogIcon, DevicePhoneMo
 import Link from 'next/link';
 import { moduleIconMap } from '../constants/moduleiconmap';
 import { useAuth } from './auth_context';
+import { getHeaderTitleByPathName } from './header_constants';
+import { useLogoStore } from '../stores/logoStore';
 
 interface NavItem {
   label: string;
@@ -48,10 +50,14 @@ const SideNav: React.FC = () => {
   const { modules } = useAuth(); // Access modules from context
   const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const [navItems, setNavItems] = useState<NavItem[]>([]);
+  const setTitle = useLogoStore((state) => state.setTitle);
+ 
 
   useEffect(() => {
     setNavItems(generateNavItems(modules));
-  }, [modules]);
+    const title = getHeaderTitleByPathName(currentPath);
+    setTitle(title);
+  }, [modules, currentPath, setTitle]);
 
   const handleDropdownClick = (label: string) => {
     setOpenDropdowns((prev) => ({

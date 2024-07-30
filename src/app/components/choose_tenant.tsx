@@ -6,7 +6,7 @@ import { Footer } from './footer-nested';
 import axios from 'axios';
 import { BASE_URL, useAuth } from './auth_context';
 import { useRouter } from 'next/navigation';
-import { redirect } from "next/navigation";
+
 import { AUTHENTICATION_ROUTES } from './routes/route_constants';
 
 
@@ -16,13 +16,7 @@ const ChooseTenant: React.FC = () => {
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const router = useRouter();
   const {username, tenantNames, role}=useAuth()
-  // console.log("partners",tenantNames)
   const partners=tenantNames
-  // console.log('Selected Partner:', partnerName);
-  // setSelectedPartner(true);
-  // setPartner(partnerName); 
-  // setSelectedPartnerName(partnerName);
-  
   const handleSelectedPartner = async (partnerName: string) => {
     const data = {
       path:"/get_modules",
@@ -32,7 +26,7 @@ const ChooseTenant: React.FC = () => {
     };
    
     try {
-      // console.log('Selected Partner:', partnerName);
+   
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
      
    
@@ -42,21 +36,21 @@ const ChooseTenant: React.FC = () => {
         }}
       );
       if (response.status === 200) {
-        // console.log('Login successful:',response.data);
-        
+      
         setSelectedPartner(true)
         const parsedData = JSON.parse(response.data.body); // Parse the response body
         setModules(parsedData.Modules); // Set the modules state
         setPartner(partnerName);
         
       } else {
-        // console.log('Login failed:', response.data);
+        console.log('Login failed:', response.data);
       }
     } catch (error) {
-      // console.error('Error during login:', error);
+      console.error('Error during login:', error);
     }
-    // router.push('/partner');
-    // redirect("/components/partner");
+    router.push('/partner');
+    
+    
   };
   
 

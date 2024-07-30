@@ -1,16 +1,33 @@
 import { ClipboardDocumentCheckIcon, WifiIcon, DevicePhoneMobileIcon, ChartBarIcon, UserGroupIcon, CogIcon, UserCircleIcon, HomeIcon,GlobeAltIcon} from '@heroicons/react/24/outline';
+import {
+  GlobalOutlined,
+  DollarOutlined,
+  WifiOutlined,
+  HomeOutlined,
+  SettingOutlined,
+  TeamOutlined,
+  PhoneOutlined,
+  NodeExpandOutlined,
+  Loading3QuartersOutlined,
+  FilterOutlined,
+} from "@ant-design/icons";
 
 export const moduleIconMap = {
-  'Home':HomeIcon,
+  'Sim Management': WifiOutlined,
+  'Device Management': NodeExpandOutlined,
+  'Dashboard': HomeOutlined,
+  'Optimization': FilterOutlined,
+  'People': TeamOutlined,
+  'Settings': SettingOutlined,
+  'LNP': PhoneOutlined,
+  'Customer Charges': DollarOutlined,
+  'Automation': Loading3QuartersOutlined,
+  'Net Sapiens': GlobalOutlined,
   'Partner': ClipboardDocumentCheckIcon,
-  'Sim Management': WifiIcon,
-  'Device Management': DevicePhoneMobileIcon,
-  'Optimization': ChartBarIcon,
-  'People': UserGroupIcon,
-  'Settings': CogIcon,
-  'Super Admin': UserCircleIcon,
-  'Net Sapiens':GlobeAltIcon
+'Super Admin': UserCircleIcon
 };
+
+// 
  // {
   //   parent_module_name: 'Home',
   //   queue_order: 1,

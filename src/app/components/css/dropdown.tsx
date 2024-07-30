@@ -10,27 +10,27 @@ export const NonEditableDropdownStyles = {
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         textAlign: 'left',
         padding: '2px',
+        cursor: 'not-allowed',
         '&:hover': {
-        borderColor: '#3B82F6'
+            borderColor: '#3B82F6'
         }
     }),
     singleValue: (provided: any) => ({
         ...provided,
         color: 'gray',
+        cursor: 'not-allowed',
     }),
-    // menu: (provided: any) => ({
-    //     ...provided,
-    //     backgroundColor: '#F9FAFB',
-    // }),
     option: (provided: any, state: any) => ({
         ...provided,
         backgroundColor: state.isSelected ? '#BFDBFE' : '',
         color: 'black',
+        cursor: 'not-allowed',
         ':hover': {
-        backgroundColor: '#BFDBFE',
-    },
+            backgroundColor: '#BFDBFE',
+        },
     }),
 };
+
 
 export const DropdownStyles = {
     control: (base: any, state: any) => ({

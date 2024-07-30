@@ -32,8 +32,8 @@ const Login: React.FC = () => {
   const handleForgotPasswordClick = () => {
     setShowPasswordReset(true);
   };
-  const currentUrl = window.location.href;
-  console.log("currentUrl",currentUrl)
+  // const currentUrl = window.location.href;
+  // console.log("currentUrl",currentUrl)
   // console.log("password:", showPassword)
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
