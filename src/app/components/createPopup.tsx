@@ -3,6 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Checkbox, Input, Modal } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
+import axios from 'axios';
+import { useAuth } from './auth_context';
 
 interface Column {
   label: string;
@@ -27,6 +29,7 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   const [isScrollable, setIsScrollable] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const modalContentRef = useRef<HTMLDivElement>(null);
+  const {username, tenantNames, role, partner}=useAuth()
   const editableDrp=DropdownStyles
   useEffect(() => {
     if (modalContentRef.current) {
@@ -47,16 +50,89 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   const handleChange = (name: string, value: any) => {
     setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
   };
-  const handleSave = () => {
+  const handleSave= async() => {
     // Validate mandatory fields
     const missingFields = columnNames
       .filter(column => column.mandatory === 'true' && !formData[column.label])
       .map(column => column.label);
 
-    // if (missingFields.length > 0) {
-    //   alert(`Please fill in the mandatory fields: ${missingFields.join(', ')}`);
-    //   return;
-    // }
+      if(formData){
+        try {
+          const url =
+            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+  
+          let data;
+          if(heading==="E911 Customer"){
+            if(formData){
+              formData["modifiedby"]=username
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_poeple_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": "E9 Customer Customer",
+              "table_name": "customers",
+              "changed_data":formData
+            };
+          }
+          if(heading===" NetSapien Customer"){
+            if(formData){
+              formData["modifiedby"]=username
+              
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_poeple_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": " NetSapien Customer",
+              "table_name": "customers",
+              "changed_data":formData
+            };
+          }
+          if(heading==="RevIO Customer"){
+            if(formData){
+              formData["modifiedby"]=username
+              
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_poeple_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": "RevIO Customer",
+              "table_name": "customers",
+              "changed_data":formData
+            };
+          }
+          if(heading===" Bandwidth Customer"){
+            if(formData){
+              formData["modifiedby"]=username
+              
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_poeple_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": "Bandwidth Customer",
+              "table_name": "customers",
+              "changed_data":formData
+            };
+          }
+         
+       
+          const response = await axios.post(url, { data });
+         
+        } catch (err) {
+          console.error("Error fetching data:", err);
+        }
+      }
 
     onSave(formData);
     onClose();

@@ -45,7 +45,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     };
     try {
       // console.log('Logging in with:', username, password);
-      const url = `${BASE_URL}/${AUTHENTICATION_ROUTES.AMOP_LOGIN}`;
+      const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
       // console.log("url", url);
       const response = await axios.post(url, { data: data }, {
         headers: {

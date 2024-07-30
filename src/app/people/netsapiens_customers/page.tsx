@@ -9,6 +9,7 @@ import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
 import { createModalData, headerMap, headers } from "./netsapiens_customers_constants";
 import axios from "axios";
+import { Spin } from 'antd';
 import { useAuth } from "@/app/components/auth_context";
 import { useNetSapiensStore } from "./netsapiens_customers_constants";
 
@@ -16,6 +17,8 @@ const NetSapiensCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true); // State to manage loading
+
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
   const createColumns = createModalData;
   const { username, partner, role } = useAuth();
@@ -24,8 +27,9 @@ const NetSapiensCustomers: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
-        const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
         const data = {
           tenant_name: partner || "default_value",
           username: username,
@@ -44,8 +48,12 @@ const NetSapiensCustomers: React.FC = () => {
         console.log("response.data-revio", tableData);
         setTable(tableData);
         setTableData(tableData);
+        setLoading(false)
       } catch (err) {
         console.error("Error fetching data:", err);
+      }
+      finally {
+        setLoading(false); // Set loading to false after the request is done
       }
     };
 
@@ -79,6 +87,13 @@ const NetSapiensCustomers: React.FC = () => {
     XLSX.writeFile(workbook, "NetSapiensCustomers.xlsx");
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
@@ -104,7 +119,6 @@ const NetSapiensCustomers: React.FC = () => {
         </div>
       </div>
 
-      {tableData.length > 0 ? (
         <TableComponent
           headers={headers}
           headerMap={headerMap}
@@ -117,9 +131,7 @@ const NetSapiensCustomers: React.FC = () => {
           infoColumns={createColumns}
           editColumns={createColumns}
         />
-      ) : (
-        <div>Loading data, please wait...</div>
-      )}
+     
 
       <CreateModal
         isOpen={isCreateModalOpen}

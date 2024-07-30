@@ -6,7 +6,7 @@ import {
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -27,6 +27,7 @@ const E911Customers: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
   const createColumns = createModalData;
   const { username, partner, role } = useAuth();
+  const [loading, setLoading] = useState(true); // State to manage loading
 
   const [tableData, setTableData] = useState<any>([]);
   const { customers_table, setTable } = useE911CustomersStore();
@@ -34,7 +35,8 @@ const E911Customers: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+        setLoading(true)
+        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
         const data = {
           tenant_name: partner || "default_value",
           username: username,
@@ -55,9 +57,13 @@ const E911Customers: React.FC = () => {
         console.log("response.data-revio", tableData);
         setTable(tableData);
         setTableData(tableData);
+        setLoading(false)
       } catch (err) {
         console.error("Error fetching data:", err);
+      }finally{
+        setLoading(false)
       }
+      
     };
 
     fetchData();
@@ -90,6 +96,15 @@ const E911Customers: React.FC = () => {
     XLSX.writeFile(workbook, "E911Customers.xlsx");
   };
 
+  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
@@ -115,7 +130,7 @@ const E911Customers: React.FC = () => {
         </div>
       </div>
 
-      {tableData.length > 0 ? (
+  
         <TableComponent
           headers={headers}
           headerMap={headerMap}
@@ -128,16 +143,14 @@ const E911Customers: React.FC = () => {
           infoColumns={createColumns}
           editColumns={createColumns}
         />
-      ) : (
-        <div>Loading data, please wait...</div>
-      )}
+     
 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createModalData}
-        heading="E9 Customer"
+        heading="E911 Customer"
         header={Object.keys(tableData[0])}
       />
     </div>

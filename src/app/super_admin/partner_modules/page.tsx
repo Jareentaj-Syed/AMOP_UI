@@ -26,7 +26,7 @@ const Page: React.FC = () => {
     const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info `;
+        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
         const data = {
           tenant_name: partner || "default_value",
           username: username,
@@ -61,7 +61,7 @@ const Page: React.FC = () => {
   const fetchData = async (selectedPartner: string, selectedSubPartner: string) => {
     setLoading(true);
     try {
-      const url = `https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info`;
+      const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
       const data = {
         tenant_name: partner || "default_value",
         username: username,

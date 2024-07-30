@@ -68,10 +68,10 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
     if(formData){
       try {
         const url =
-          "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
+          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
         let data;
-        if(heading="Customer Group"){
+        if(heading==="Customer Group"){
           if(formData){
             formData["modifiedby"]=username
           }
@@ -126,11 +126,11 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path:"/update_people_data",
             role_name: role,
             "parent_module": "People", 
             "module": "E9 Customer Customer",
-            "table_name": "E9 Customer_Customer",
+            "table_name": "customers",
             "changed_data":formData
           };
         }
@@ -142,11 +142,11 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path:"/update_people_data",
             role_name: role,
             "parent_module": "People", 
             "module": " NetSapien Customer",
-            "table_name": " NetSapien Customer",
+            "table_name": "customers",
             "changed_data":formData
           };
         }
@@ -158,11 +158,11 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path:"/update_people_data",
             role_name: role,
             "parent_module": "People", 
             "module": "RevIO Customer",
-            "table_name": "RevIO Customer",
+            "table_name": "customers",
             "changed_data":formData
           };
         }
