@@ -9,7 +9,7 @@ interface Column {
   type: string;
   value: any[];
   mandatory: string;
-  header?:any[]
+  header?:string[]
 }
 
 interface CreateModalProps {
@@ -18,10 +18,11 @@ interface CreateModalProps {
   onSave: (newRow: any) => void;
   columnNames: any[];
   heading: string;
-  header?:any[]
+  header?:string[]
+
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading ,header}) => {
+const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading ,header=[]}) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isScrollable, setIsScrollable] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -36,31 +37,30 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
 
   useEffect(() => {
     if (!isOpen) {
-      setFormData({});
+      const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
+      setFormData(initialFormData);
     }
   }, [isOpen]);
 
   if (!isOpen) return null;
 
   const handleChange = (name: string, value: any) => {
-    setFormData({ ...formData, [name]: value });
+    setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
   };
-
   const handleSave = () => {
-    const headers=header
-    console.log(header)
+    // Validate mandatory fields
     const missingFields = columnNames
       .filter(column => column.mandatory === 'true' && !formData[column.label])
       .map(column => column.label);
 
-    console.log(formData)
     // if (missingFields.length > 0) {
     //   alert(`Please fill in the mandatory fields: ${missingFields.join(', ')}`);
     //   return;
     // }
-    
+
     onSave(formData);
     onClose();
+    console.log("formData",formData)
   };
 
   const handleSaveClick = () => {
