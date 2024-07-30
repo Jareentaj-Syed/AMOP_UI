@@ -72,37 +72,37 @@ export const createModalData= (billProfiles: string[])=>[
       "mandatory":"true"
     },
     {
-      "label":"Address Line 1",
+      "label":"address1",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Address Line 2",
+      "label":"address2",
       "type":"text",
       "value":"",
       "mandatory":"false"
     },
     {
-      "label":"City",
+      "label":"city",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"State",
+      "label":"state",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Postal Code",
+      "label":"postalcode",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Postal Code Extension",
+      "label":"postalcode_extension",
       "type":"text",
       "value":"",
       "mandatory":"true"

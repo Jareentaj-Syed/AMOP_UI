@@ -71,7 +71,6 @@ const RevIOCustomers: React.FC = () => {
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
-console.log('visibleColumns',visibleColumns)
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
     setNewRowData({});

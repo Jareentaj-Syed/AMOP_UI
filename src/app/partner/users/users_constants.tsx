@@ -28,17 +28,17 @@ export const headerMap={
   "modifieddate":"Last Modified Date & Time",
   "isactive":"User status"
 }
-export const customergroups_drp = Object.values(partnerData.data["Partner users"]["customergroups"]).map(
+export const customergroups_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["customergroups"]).map(
   (group: any) => group.name
-);
-export const roles_drp = Object.values(partnerData.data["Partner users"]["Roles"]).map(
+):[];
+export const roles_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["Roles"]).map(
   (role: any) => role.rolename
-);
-export const service_provider_drp = Object.values(partnerData.data["Partner users"]["serviceprovider"]).map(
+):[];
+export const service_provider_drp = partnerData.data["Partner users"]?Object.values(partnerData.data["Partner users"]["serviceprovider"]).map(
   (service_provider: any) => service_provider.name
-);
-export const customers_drp = Object.values(partnerData.data["Partner users"]["Customers"]).map(
+):[];
+export const customers_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["Customers"]).map(
   (customer: any) => customer.customer_name
-);
-export const partners = Object.keys(partnerData.data["Partner users"]["tenant"]);
-export const subPartnersData: any = partnerData.data["Partner users"]["tenant"];
+):[];
+export const partners = partnerData.data["Partner users"]?Object.keys(partnerData.data["Partner users"]["tenant"]):[];
+export const subPartnersData: any = partnerData.data["Partner users"]?partnerData.data["Partner users"]["tenant"]:[];

@@ -99,7 +99,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    // console.log("initialdata",initialData)
+    console.log("initialdata",initialData)
     // console.log(headers)
   }, [initialData]);
 
@@ -220,7 +220,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
 
         let data={};
-        console.log("popupHeading",popupHeading)
         if(popupHeading==="Customer Group"){
           data = {
             tenant_name: partner || "default_value",
@@ -303,9 +302,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   const confirmSubmit = async () => {
     
-    console.log(currentRowData);
     if(currentRowData){
-      console.log(currentRowData);
       try {
         const url =
           "https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info";
@@ -382,7 +379,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setDisableModalOpen(false);
   };
   const renderApiState = (apiState: any, index: number,col:any) => {
-    // console.log("apiState",apiState)
     return (
       <div className="flex items-center space-x-2">
         <button
