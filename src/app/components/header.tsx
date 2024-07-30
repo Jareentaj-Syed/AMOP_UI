@@ -54,13 +54,20 @@ const Header: React.FC = () => {
           </div>
 
           {showLogout && (
-          <button
-          onClick={handleLogout}
-          className="absolute top-full mt-2 px-2 py-4 bg-white text-red-500 rounded shadow-md whitespace-normal text-sm"
-        >
-          Logout ({username})
-        </button>
-        
+            <div
+            className="absolute top-full mt-2 px-2 py-4 bg-white text-red-500 rounded shadow-md whitespace-normal text-sm"
+            >
+              <button
+                onClick={handleLogout}
+              >
+                Logout ({username})
+              </button>
+              <button
+                onClick={handleLogout}
+              >
+                Change Partner ({username})
+              </button>
+            </div>
           )}
         </div>
 
