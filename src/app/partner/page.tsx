@@ -61,7 +61,7 @@ const Partner: React.FC = () => {
                     };
 
                     try {
-                        const response = await axios.post('https://zff5caoge3.execute-api.ap-south-1.amazonaws.com/dev/get_partner_info', { data });
+                        const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
                         const parseddata=JSON.parse(response.data.body).data
                         tab.setter(parseddata[tab.module]);
                         tab.setLoaded(true); // Set the loaded flag to true
