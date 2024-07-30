@@ -15,7 +15,7 @@ import ColumnFilter from "@/app/components/columnfilter";
 import { createModalData, headerMap, headers } from "./bandwidth_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
-const [loading, setLoading] = useState(true); // State to manage loading
+// State to manage loading
 
 import { useBandWidthStore } from "./bandwidth_customers_constants";
 
@@ -23,6 +23,7 @@ const BandWidthCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true); 
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
   const createColumns = createModalData;
   const { username, partner, role } = useAuth();

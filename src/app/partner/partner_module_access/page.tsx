@@ -5,13 +5,28 @@ import React, { useState } from 'react';
 import Select, { SingleValue } from 'react-select';
 import { DropdownStyles,NonEditableDropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
-import {mockRoleData} from './partner_module_access_constants'
+// import {mockRoleData} from './partner_module_access_constants';
 type OptionType = {
     value: string;
     label: string;
 };
-
-
+type Feature = {
+    [module: string]: string[];
+  };
+  
+  type ModuleData = {
+    Module: string[];
+    Feature: Feature;
+  };
+  
+  type CategoryData = {
+    [category: string]: ModuleData;
+  };
+  
+  type Data = {
+    [role: string]: CategoryData;
+  };
+  
 interface ExcelData {
     [key: string]: {
         Module: string[];
@@ -254,7 +269,6 @@ const data: ExcelData = {
     }
 }
 
-const result = mockRoleData
 const partners = [
     "AWX",
     "Altawork-GT",
@@ -283,7 +297,32 @@ const UserRole: React.FC = () => {
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [map,setMap]=useState<ExcelData>({});
-    console.log("partnerModuleData",partnerModuleData)
+    console.log("partnerModuleData",partnerModuleData.role_module)
+    const rawData=partnerModuleData.role_module;
+      const transformData = (data: typeof rawData): Data => {
+        const transformedData: Data = {};
+      
+        data.forEach((item: { role: any; module: string; sub_module: string; module_features: string; }) => {
+          const role = item.role;
+          const modules = item.module !== "None" ? JSON.parse(item.module) : [];
+          const subModules = item.sub_module !== "None" ? JSON.parse(item.sub_module) : {};
+          const moduleFeatures = item.module_features !== "None" ? JSON.parse(item.module_features) : {};
+      
+          transformedData[role] = {};
+      
+          modules.forEach((module: string) => {
+            transformedData[role][module] = {
+              Module: subModules[module] || [],
+              Feature: moduleFeatures[module] || {}
+            };
+          });
+        });
+      
+        return transformedData;
+      };
+      
+      const mockRoleData: Data = transformData(rawData);
+      console.log(mockRoleData);
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
@@ -294,17 +333,21 @@ const UserRole: React.FC = () => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
         setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
     };
-    const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
-        value: role,
-        label: role,
-    }));
+ 
     const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
             setMap(mockRoleData[role]);
+            setSelectedModules({});
+            setSelectedFeatures({});
         }
     };
+
+const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
+    value: role,
+    label: role,
+}));
 
     const handleSubmit = () => {
         const errors: string[] = [];

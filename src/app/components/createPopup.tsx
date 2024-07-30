@@ -62,6 +62,20 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
             "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
   
           let data;
+          if(heading==="Customer Group"){
+            if(formData){
+              formData["modifiedby"]=username
+            }
+            data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Customer groups",
+            action:"create",
+            updated_data:formData
+            };
+          }
           if(heading==="E911 Customer"){
             if(formData){
               formData["modifiedby"]=username
