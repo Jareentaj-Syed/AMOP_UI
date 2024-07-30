@@ -65,17 +65,20 @@
 .header {
   color: black;
   height: 70px;
+  position: relative;
 }
 
 .navbar {
   color: black;
   font-weight: 500;
-  height: calc(100vh - 70px);
+  /* height: calc(100vh - 70px); */
   position: fixed;
   background-color: white;
   width: 17%;
   z-index: 999;
   overflow-y: auto;
+  top: 0;
+  bottom: 0;
 }
 
 .navbar::-webkit-scrollbar {

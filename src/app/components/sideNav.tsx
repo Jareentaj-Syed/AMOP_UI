@@ -8,6 +8,8 @@ import { moduleIconMap } from '../constants/moduleiconmap';
 import { useAuth } from './auth_context';
 import { getHeaderTitleByPathName } from './header_constants';
 import { useLogoStore } from '../stores/logoStore';
+import Image from 'next/image';
+
 
 interface NavItem {
   label: string;
@@ -52,11 +54,12 @@ const SideNav: React.FC = () => {
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const setTitle = useLogoStore((state) => state.setTitle);
  
+  const { logoUrl } = useLogoStore();
 
   useEffect(() => {
     setNavItems(generateNavItems(modules));
     const title = getHeaderTitleByPathName(currentPath);
-    setTitle(title);
+    // setTitle(title);
   }, [modules, currentPath, setTitle]);
 
   const handleDropdownClick = (label: string) => {
@@ -64,12 +67,22 @@ const SideNav: React.FC = () => {
       ...prev,
       [label]: !prev[label],
     }));
+    // setTitle(label)
   };
 
   const isActive = (href?: string) => (href ? currentPath.startsWith(href) : false);
-
+const getTitle =(title:string)=>{
+  setTitle(title)
+}
   return (
     <div className="navbar p-2 shadow-lg">
+       <div className="flex items-center space-x-2">
+        {logoUrl ? (
+          <img src={logoUrl} alt="Uploaded Logo" width={150} height={40} className="logo" />
+        ) : (
+          <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} className="logo" />
+        )}
+      </div >
       <ul className="space-y-4 mt-4">
         {navItems.map((item) => (
           <li key={item.label}>
@@ -117,6 +130,8 @@ const SideNav: React.FC = () => {
                                       className={`flex items-center space-x-2 p-2 nav-link ${
                                         currentPath === subSubItem.href ? 'nav-active-link' : ''
                                       }`}
+                  onClick={() => getTitle(item.label)}
+
                                     >
                                       <span>{subSubItem.label}</span>
                                     </Link>
@@ -131,6 +146,8 @@ const SideNav: React.FC = () => {
                             className={`flex items-center space-x-2 p-2 nav-link ${
                               isActive(subItem.href) ? 'nav-active-link' : ''
                             }`}
+                  onClick={() => getTitle(item.label)}
+
                           >
                             <span>{subItem.label}</span>
                           </Link>
@@ -144,9 +161,11 @@ const SideNav: React.FC = () => {
               <Link
                 href={item.href || '/'}
                 passHref
-                className={`flex items-center space-x-2 p-2 nav-link ${isActive(item.href) ? 'nav-active-link' : ''}`}
-              >
+                className={`flex items-center space-x-2 p-2 nav-link ${isActive(item.href) ? 'nav-active-link' : ''}`} 
+                onClick={() => getTitle(item.label)}
+                >
                 {item.icon}
+                
                 <span>{item.label}</span>
               </Link>
             )}

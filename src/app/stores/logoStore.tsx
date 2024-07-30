@@ -10,7 +10,7 @@ interface LogoState {
 
 export const useLogoStore = create<LogoState>((set) => ({
   logoUrl: null,
-  title: '',
+  title: 'Partner',
   setLogoUrl: (url: string) => set({ logoUrl: url }),
   setTitle: (title: string) => set({ title }),
 }));

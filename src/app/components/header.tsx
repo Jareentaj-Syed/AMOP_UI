@@ -29,23 +29,17 @@ const Header: React.FC = () => {
   };
   return (
     <div className="p-2 flex justify-between items-left shadow-md header">
-      <div className="flex items-center space-x-2 w-[17%]">
-        {/* <button
-          className="p-2 rounded-full hover:bg-gray-200 hover:text-gray-800"
-          onClick={toggleSidebar}
-        >
-          <Bars3Icon className="w-6 h-6" />
-        </button> */}
+      {/* <div className="flex items-center space-x-2 w-[17%]">
         {logoUrl ? (
           <img src={logoUrl} alt="Uploaded Logo" width={150} height={40} className="logo" />
         ) : (
           <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} className="logo" />
         )}
-      </div >
-      <div className='absolute left-[17%] p-2'>
+      </div > */}
+      <div className='absolute left-[5px] p-2 '>
       <span className=" p-4 font-[100] text-[24px]">{title}</span>
       </div>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 absolute right-[20px]">
         <div className="relative">
           <div
             className="flex items-center cursor-pointer ml-5"

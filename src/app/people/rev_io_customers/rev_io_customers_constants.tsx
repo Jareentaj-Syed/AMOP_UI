@@ -18,14 +18,13 @@ export const headers=["billingaccountnumber","agentname","customer_name","tenant
 
 export const headerMap={
   "billingaccountnumber":"Account No",
-  "customer_id":"Agent",
+  "agentname":"Agent",
   "customer_name":"Customer Name",
   "tenantname":"Partner",
   "customerbillperiodendday":"Bill Period End Day",
   "customerbillperiodendhour":"Bill Period End Hour",
   "modifiedby":"Last Modified By",
-  "modifieddate":"Last Modified Date & Time",
-  "agentname":"Agent"
+  "modifieddate":"Last Modified Date & Time"
 }
 export const createModalData= (billProfiles: string[])=>[
     {
