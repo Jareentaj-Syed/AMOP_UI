@@ -24,7 +24,7 @@ export const headerMap={
 
 export const createModalData= [
   {
-    "label": "Partner",
+    "label": "tenantname",
     "type": "dropdown",
     "value": [
       "Agent",
@@ -43,7 +43,7 @@ export const createModalData= [
     "mandatory": "false"
   },
   {
-    "label": "Name",
+    "label": "customer_name",
     "type": "text",
     "value":"",
     "mandatory": "true"
@@ -61,31 +61,30 @@ export const createModalData= [
     "mandatory": "false"
   },
   {
-    "label": "Address Line 1",
+    "label": "address1",
+    "value": "",
+    "mandatory": "false"
+  },
+  {
+    "label": "address2",
     "type": "text",
     "value": "",
     "mandatory": "false"
   },
   {
-    "label": "Address Line 2",
+    "label": "apt_suite",
     "type": "text",
     "value": "",
     "mandatory": "false"
   },
   {
-    "label": "Apt or Suite",
+    "label": "city",
     "type": "text",
     "value": "",
     "mandatory": "false"
   },
   {
-    "label": "City",
-    "type": "text",
-    "value": "",
-    "mandatory": "false"
-  },
-  {
-    "label": "State",
+    "label": "state",
     "type": "text",
     "value": "",
     "mandatory": "false"
@@ -97,19 +96,18 @@ export const createModalData= [
     "mandatory": "false"
   },
   {
-    "label": "Country",
+    "label": "country",
+    "value": "",
+    "mandatory": "false"
+  },
+  {
+    "label": "customerbillperiodendday",
     "type": "text",
     "value": "",
     "mandatory": "false"
   },
   {
-    "label": "Bill Period Day(1-28)",
-    "type": "text",
-    "value": "",
-    "mandatory": "false"
-  },
-  {
-    "label": "Bill Period Day(0-23)",
+    "label": "customerbillperiodendhour",
     "type": "text",
     "value": "",
     "mandatory": "false"
