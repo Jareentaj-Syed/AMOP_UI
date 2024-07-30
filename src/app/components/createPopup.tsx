@@ -9,6 +9,7 @@ interface Column {
   type: string;
   value: any[];
   mandatory: string;
+  header?:any[]
 }
 
 interface CreateModalProps {
@@ -17,15 +18,16 @@ interface CreateModalProps {
   onSave: (newRow: any) => void;
   columnNames: any[];
   heading: string;
+  header?:any[]
+
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading }) => {
+const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading ,header}) => {
   const [formData, setFormData] = useState<Record<string, any>>({});
   const [isScrollable, setIsScrollable] = useState(false);
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const editableDrp=DropdownStyles
-
   useEffect(() => {
     if (modalContentRef.current) {
       const isOverflowing = modalContentRef.current.scrollHeight > modalContentRef.current.clientHeight;

@@ -93,6 +93,7 @@ const CustomerGroups: React.FC = () => {
           onSave={handleCreateRow}
           columnNames={createColumns}
           heading='Customer Group'
+          header={Object.keys(data[0])}
         />
       </div>
     </div>
