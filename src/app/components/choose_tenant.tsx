@@ -88,7 +88,7 @@ const ChooseTenant: React.FC = () => {
           </Button>
         ))}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

@@ -29,7 +29,7 @@ export const headerMap={
 }
 export const createModalData= (billProfiles: string[])=>[
     {
-      "label":"Status",
+      "label":"status",
       "type":"text",
       "value":"",
       "mandatory":"true"
@@ -48,25 +48,25 @@ export const createModalData= (billProfiles: string[])=>[
       "mandatory":"true"
     },
     {
-      "label":"First Name",
+      "label":"First_Name",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Middle Initial",
+      "label":"Middle_Initial",
       "type":"text",
       "value":"",
       "mandatory":"false"
     },
     {
-      "label":"Last Name",
+      "label":"Last_Name",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Company Name",
+      "label":"Company_Name",
       "type":"text",
       "value":"",
       "mandatory":"true"

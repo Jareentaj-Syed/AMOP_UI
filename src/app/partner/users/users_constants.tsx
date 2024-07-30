@@ -28,17 +28,31 @@ export const headerMap={
   "modifieddate":"Last Modified Date & Time",
   "isactive":"User status"
 }
-export const customergroups_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["customergroups"]).map(
-  (group: any) => group.name
-):[];
-export const roles_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["Roles"]).map(
-  (role: any) => role.rolename
-):[];
-export const service_provider_drp = partnerData.data["Partner users"]?Object.values(partnerData.data["Partner users"]["serviceprovider"]).map(
-  (service_provider: any) => service_provider.name
-):[];
-export const customers_drp =partnerData.data["Partner users"]? Object.values(partnerData.data["Partner users"]["Customers"]).map(
-  (customer: any) => customer.customer_name
-):[];
-export const partners = partnerData.data["Partner users"]?Object.keys(partnerData.data["Partner users"]["tenant"]):[];
-export const subPartnersData: any = partnerData.data["Partner users"]?partnerData.data["Partner users"]["tenant"]:[];
+console.log("partnerData.data",partnerData.data)
+console.log("partnerData.data[Partner users]",partnerData.data["Partner users"])
+console.log("partnerData.data[Partner users][customergroups]",partnerData.data["Partner users"]["customergroups"])
+
+
+export const customergroups_drp = Array.isArray(partnerData.data["Partner users"]["customergroups"])
+  ? partnerData.data["Partner users"]["customergroups"].map((group: any) => group.name)
+  : []; 
+
+export const roles_drp = Array.isArray(partnerData.data["Partner users"]["Roles"])
+  ? partnerData.data["Partner users"]["Roles"].map((role: any) => role.rolename)
+  : []; 
+// Ensure partnerData.data["Partner users"]["serviceprovider"] is an array
+export const service_provider_drp = Array.isArray(partnerData.data["Partner users"]["serviceprovider"])
+  ? partnerData.data["Partner users"]["serviceprovider"].map((provider: any) => provider.name)
+  : []; // Provide a fallback empty array if not an array
+
+// Ensure partnerData.data["Partner users"]["Customers"] is an array
+export const customers_drp = Array.isArray(partnerData.data["Partner users"]["Customers"])
+  ? partnerData.data["Partner users"]["Customers"].map((customer: any) => customer.customer_name)
+  : []; // Provide a fallback empty array if not an array
+
+export const partners =Object.keys(partnerData.data["Partner users"]["tenant"]);
+export const subPartnersData: any =partnerData.data["Partner users"]["tenant"];
+export const total_users:any=partnerData.data["Partner users"]["total_count"]
+export const active_users:any=partnerData.data["Partner users"]["active_user_count"]
+export const migrated_users:any=partnerData.data["Partner users"]["migrated_count"]
+

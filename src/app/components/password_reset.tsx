@@ -85,7 +85,7 @@ const PasswordReset: React.FC = () => {
               </a>
             </div>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       )}
     </div>

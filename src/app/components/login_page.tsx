@@ -97,9 +97,9 @@ const Login: React.FC = () => {
               </a>
             </div>
           </form>
-          <div className="mx-auto">
+          {/* <div className="mx-auto">
             <Footer />
-          </div>
+          </div> */}
         </div>
       )}
     </div>
