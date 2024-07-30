@@ -19,13 +19,13 @@ export const headerMap={
 }
 export const createModalData= [
     {
-      "label":"Account Name",
+      "label":"accountname",
       "type":"text",
       "value":"",
       "mandatory":"true"
     },
     {
-      "label":"Account Id",
+      "label":"accountid",
       "type":"text",
       "value":"",
       "mandatory":"true"
