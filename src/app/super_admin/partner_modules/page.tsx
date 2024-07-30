@@ -69,7 +69,7 @@ const Page: React.FC = () => {
         role_name: role,
         sub_module: "Partner Modules",
         flag: "withparameters",
-        partner: selectedPartner,
+        Partner: selectedPartner,
         sub_partner: selectedSubPartner // Send selected sub-partner
       };
 

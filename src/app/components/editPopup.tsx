@@ -76,7 +76,7 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
             formData["modifiedby"]=username
           }
           data = {
-            tenant_name: partner || "default_value",
+          tenant_name: partner || "default_value",
           username: username,
           path: "/update_partner_info",
           role_name: role,
@@ -117,6 +117,56 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
             "changed_data":formData
           };
         }
+
+        if(heading==="E911 Customer"){
+          if(formData){
+            formData["modifiedby"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "parent_module": "People", 
+            "module": "E9 Customer Customer",
+            "table_name": "E9 Customer_Customer",
+            "changed_data":formData
+          };
+        }
+        if(heading===" NetSapien Customer"){
+          if(formData){
+            formData["modifiedby"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "parent_module": "People", 
+            "module": " NetSapien Customer",
+            "table_name": " NetSapien Customer",
+            "changed_data":formData
+          };
+        }
+        if(heading==="RevIO Customer"){
+          if(formData){
+            formData["modifiedby"]=username
+            
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "parent_module": "People", 
+            "module": "RevIO Customer",
+            "table_name": "RevIO Customer",
+            "changed_data":formData
+          };
+        }
+    
      
         const response = await axios.post(url, { data });
        

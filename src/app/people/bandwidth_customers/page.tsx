@@ -118,7 +118,7 @@ const BandWidthCustomers: React.FC = () => {
           visibleColumns={visibleColumns}
           itemsPerPage={10}
           allowedActions={["info"]}
-          popupHeading="Customer"
+          popupHeading="Bandwidth Customer"
           infoColumns={createColumns}
           editColumns={createColumns}
         />
@@ -131,7 +131,8 @@ const BandWidthCustomers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createColumns}
-        heading="Customer"
+        heading="Bandwidth Customer"
+        header={Object.keys(tableData[0])}
       />
     </div>
   );

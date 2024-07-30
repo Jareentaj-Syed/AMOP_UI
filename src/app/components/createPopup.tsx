@@ -19,7 +19,6 @@ interface CreateModalProps {
   columnNames: any[];
   heading: string;
   header?:any[]
-
 }
 
 const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading ,header}) => {
@@ -48,16 +47,18 @@ const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, colu
   };
 
   const handleSave = () => {
-    // Validate mandatory fields
+    const headers=header
+    console.log(header)
     const missingFields = columnNames
       .filter(column => column.mandatory === 'true' && !formData[column.label])
       .map(column => column.label);
 
-    if (missingFields.length > 0) {
-      alert(`Please fill in the mandatory fields: ${missingFields.join(', ')}`);
-      return;
-    }
-
+    console.log(formData)
+    // if (missingFields.length > 0) {
+    //   alert(`Please fill in the mandatory fields: ${missingFields.join(', ')}`);
+    //   return;
+    // }
+    
     onSave(formData);
     onClose();
   };

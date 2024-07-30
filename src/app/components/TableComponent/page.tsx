@@ -242,6 +242,32 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           updated_data:row
           };
         }
+        
+        if(popupHeading==="E911 Customer"){
+
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "parent_module": "People", 
+            "module": "E9 Customer Customer",
+            "table_name": "E9 Customer_Customer",
+            "changed_data":row
+          };
+        }
+        if(popupHeading===" NetSapien Customer"){
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path:"/update_superadmin_data",
+            role_name: role,
+            "parent_module": "People", 
+            "module": " NetSapien Customer",
+            "table_name": " NetSapien Customer",
+            "changed_data":row
+          };
+        }
       const response = await axios.post(url, { data });
        
       } catch (err) {
@@ -251,57 +277,66 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
     }
   };
-  const ConfirmStateChange= (rowIndex: number)=>{
-    setEnableModalOpen(true);
+  // const ConfirmStateChange= (rowIndex: number)=>{
+  //   setEnableModalOpen(true);
     
-    setDisableModalOpen(false);
-    handleToggle(rowIndex)
-  }
+  //   setDisableModalOpen(false);
+  //   handleToggle(rowIndex)
+  // }
   const handleToggle = (rowIndex: number) => {
+
     const updatedData = [...rowData];
-    if(updatedData[rowIndex].api_state){
-      updatedData[rowIndex].api_state = apiState[rowIndex] === true ? false : true; 
+    const apiStateUpdated = apiState[rowIndex] === true ? false : true;
+    const moduleStateUpdated = moduleState[rowIndex] === true ? false : true;
+  
+    if (updatedData[rowIndex].api_state !== undefined) {
+      updatedData[rowIndex].api_state = apiStateUpdated;
     }
-   if(  updatedData[rowIndex].apistate ){
-    updatedData[rowIndex].apistate = apiState[rowIndex] === true ? false : true; 
-   }
-   if (updatedData[rowIndex].isactive){
-    updatedData[rowIndex].isactive = moduleState[rowIndex] === true ? false : true;
-   }
-   
-    setRowData(updatedData);
-
-    setApiState(prevState => ({
-      ...prevState,
-      [rowIndex]: prevState[rowIndex] === true ? false : true,
-    }));
-
-    setModuleState(prevState => ({
-      ...prevState,
-      [rowIndex]: prevState[rowIndex] ===true ? false : true,
-    }));
-
-    setRoleState(prevState => ({
-      ...prevState,
-      [rowIndex]: prevState[rowIndex] ===true ? false : true,
-    }));
-
+    if (updatedData[rowIndex].apistate !== undefined) {
+      updatedData[rowIndex].apistate = apiStateUpdated;
+    }
+    if (updatedData[rowIndex].isactive !== undefined) {
+      updatedData[rowIndex].isactive = moduleStateUpdated;
+    }
     if (
       updatedData[rowIndex].api_state === true ||
       updatedData[rowIndex].apistate === true ||
       updatedData[rowIndex].isactive === true
     ) {
-      
-      setCurrentRowData(updatedData[rowIndex]);
-    } else {
-      setDisableModalOpen(true);
       setEnableModalOpen(false);
-      setCurrentRowData(updatedData[rowIndex]);
+      setDisableModalOpen(true);
+    } else {
+      setEnableModalOpen(true);
+      setDisableModalOpen(false);
     }
+  
+    setCurrentRowData(updatedData[rowIndex]);
+  
+    setRowData(updatedData);
+  
+    setApiState(prevState => ({
+      ...prevState,
+      [rowIndex]: apiStateUpdated,
+    }));
+  
+    setModuleState(prevState => ({
+      ...prevState,
+      [rowIndex]: moduleStateUpdated,
+    }));
+  
+    setRoleState(prevState => ({
+      ...prevState,
+      [rowIndex]: apiStateUpdated, // Assuming roleState is similar to apiState and moduleState
+    }));
+  
+   
   };
+  
 
   const confirmSubmit = async () => {
-    
+    setEnableModalOpen(false);
+    setDisableModalOpen(false);
+    console.log(currentRowData);
     if(currentRowData){
       try {
         const url =
@@ -375,8 +410,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         console.error("Error fetching data:", err);
       }
     }
-    setEnableModalOpen(false);
-    setDisableModalOpen(false);
+   
   };
   const renderApiState = (apiState: any, index: number,col:any) => {
     return (
@@ -385,7 +419,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => ConfirmStateChange(index)}
+          onClick={() => handleToggle(index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Enable</span>
@@ -397,7 +431,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => ConfirmStateChange(index)}
+          onClick={() => handleToggle(index)}
         >
           {col==="Module_state" || col === "API_state"?(
             <span>Disable</span>
@@ -673,7 +707,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onCancel={() => setEnableModalOpen(false)}
         centered
       >
-        <p>Do you want to <strong>Enable</strong> this State?</p>
+        <p>Do you want to <strong>Disable</strong> this State?</p>
       </Modal>
       <Modal
         title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
@@ -682,7 +716,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onCancel={() => setDisableModalOpen(false)}
         centered
       >
-        <p>Do you want to <strong>Disable</strong> this State?</p>
+        <p>Do you want to <strong>Enable</strong> this State?</p>
       </Modal>
     </div>
   );

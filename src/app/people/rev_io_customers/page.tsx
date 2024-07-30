@@ -132,7 +132,7 @@ const RevIOCustomers: React.FC = () => {
           visibleColumns={visibleColumns} // Ensure visibleColumns are used in TableComponent
           itemsPerPage={10}
           allowedActions={["edit", "info"]}
-          popupHeading="Customer"
+          popupHeading="RevIO Customer"
           infoColumns={createColumns}
           editColumns={createColumns}
         />
@@ -145,7 +145,8 @@ const RevIOCustomers: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={createColumns}
-        heading="Customer"
+        heading="RevIO Customer"
+        header={Object.keys(tableData[0])}
       />
     </div>
   );
