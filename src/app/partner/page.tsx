@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useAuth } from '../components/auth_context';
 import { Spin } from 'antd'; // Import Ant Design Spin component
 import { usePartnerStore } from './partnerStore';
+import { useLogoStore } from '../stores/logoStore';
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
 const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
@@ -14,6 +15,7 @@ const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page')
 const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));
+
 
 const Partner: React.FC = () => {
     const router = useRouter();
@@ -26,6 +28,8 @@ const Partner: React.FC = () => {
     const [customerGroupsLoaded, setCustomerGroupsLoaded] = useState(false);
     const [partnerUsersLoaded, setPartnerUsersLoaded] = useState(false);
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+    const title = useLogoStore((state) => state.title);
+
 
     const isExpanded = useSidebarStore((state: any) => state.isExpanded);
     const setPartnerInfo = usePartnerStore((state) => state.setPartnerInfo);
@@ -34,6 +38,11 @@ const Partner: React.FC = () => {
     const setCustomerGroups = usePartnerStore((state) => state.setCustomerGroups);
     const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
     const setNotifications = usePartnerStore((state) => state.setNotifications);
+    useEffect(() => {
+        if(title!="Partner"){
+            setLoading(true)
+        }
+    },[title])
 
     useEffect(() => {
         const fetchData = async () => {

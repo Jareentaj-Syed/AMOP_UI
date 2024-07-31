@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Badge } from 'antd';
+import { Input, Button, Badge, Spin } from 'antd';
 import { DownloadOutlined } from "@ant-design/icons";
 import { SearchOutlined } from '@ant-design/icons';
 import AdvancedFilter from './Table-feautures/advanced-filter';
@@ -8,6 +8,8 @@ import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
+import { useLogoStore } from "@/app/stores/logoStore";
+
 interface ExcelDataRow {
   [key: string]: any;
 }
@@ -16,6 +18,13 @@ const sim_management: React.FC = () => {
   const [data, setData] = useState<ExcelDataRow[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false); // State to manage loading
+  const title = useLogoStore((state) => state.title);
+  useEffect(() => {
+    if(title!="Sim Management"){
+        setLoading(true)
+    }
+},[title])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +35,7 @@ const sim_management: React.FC = () => {
         const workbook = XLSX.read(data, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
+
 
         // Adjusting sheet_to_json options to include empty cells
         const jsonData: any[] = XLSX.utils.sheet_to_json(worksheet, {
@@ -73,6 +83,13 @@ const sim_management: React.FC = () => {
     console.log(EmptyFilters)
     setFilteredData(EmptyFilters);
   };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div>
       <div className="flex justify-end items-center mt-5 mr-6">

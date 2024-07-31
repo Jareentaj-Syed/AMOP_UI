@@ -15,6 +15,8 @@ import { createModalData, headerMap, headers } from "./e911_customers_constants"
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useE911CustomersStore } from "./e911_customers_constants";
+import { useLogoStore } from "@/app/stores/logoStore";
+
 
 interface ExcelData {
   [key: string]: any;
@@ -28,9 +30,15 @@ const E911Customers: React.FC = () => {
   const createColumns = createModalData;
   const { username, partner, role } = useAuth();
   const [loading, setLoading] = useState(true); // State to manage loading
-
+  const title = useLogoStore((state) => state.title);
   const [tableData, setTableData] = useState<any>([]);
   const { customers_table, setTable } = useE911CustomersStore();
+
+  useEffect(() => {
+    if(title!="People"){
+        setLoading(true)
+    }
+},[title])
 
   useEffect(() => {
     const fetchData = async () => {

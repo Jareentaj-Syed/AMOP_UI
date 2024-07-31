@@ -1,9 +1,11 @@
 "use client"
-import React, { useState } from 'react';
-import { Form, Input, Checkbox, Button, Select, Col, Row } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Form, Input, Checkbox, Button, Select, Col, Row, Spin } from 'antd';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { PlusOutlined, CheckOutlined, StopOutlined, CloseOutlined } from '@ant-design/icons'; // Import the PlusOutlined icon
 import { PlusIcon } from '@heroicons/react/16/solid';
+import { useLogoStore } from "@/app/stores/logoStore";
+
 const { Option } = Select;
 
 const SimOrderForm: React.FC = () => {
@@ -12,6 +14,13 @@ const SimOrderForm: React.FC = () => {
     const [form] = Form.useForm();
     const [count, setCount] = useState(1);
     const [blocks, setBlocks] = useState<number[]>([0]);
+    const [loading, setLoading] = useState(false); // State to manage loading
+    const title = useLogoStore((state) => state.title);
+    useEffect(() => {
+        if(title!="Sim Management"){
+            setLoading(true)
+        }
+    },[title])
     const handleAddMore = () => {
         setBlocks([...blocks, blocks.length]);
         setCount(count + 1);
@@ -77,7 +86,13 @@ const SimOrderForm: React.FC = () => {
 
         console.log(formData);
     };
-
+    if (loading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <Spin size="large" />
+          </div>
+        );
+      }
     return (
        
       

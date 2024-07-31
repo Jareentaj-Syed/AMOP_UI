@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '@/app/partner/EmailModal';
-import { Modal } from 'antd';
+import { Modal, Spin } from 'antd';
 
 interface PartnerInfo {
   onSubmit: () => void;
@@ -17,9 +17,16 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [subPartnerName, setSubPartnerName] = useState<string>('');
   const [emailList, setEmailList] = useState<string[]>([]);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
+  const title = useLogoStore((state) => state.title);
+  const [loading, setLoading] = useState(false);
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if(title!="Super Admin"){
+        setLoading(true)
+    }
+},[title])
 
   useEffect(() => {
     if (
@@ -89,6 +96,13 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       logoFileRef.current.value = '';
     }
   };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-2">
@@ -146,20 +160,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 </button>
               </div>
             </div>
-            {/* <div>
-              <label className={`field-label ${activeElement === 'partnerLogo' ? 'text-blue-500' : 'text-gray-700'}`}>
-                Partner Logo
-              </label>
-              <input
-                type="file"
-                className={`input ${activeElement === 'partnerLogo' ? 'border-sky-500' : ''}`}
-                accept=".png, .jpg"
-                ref={logoFileRef}
-                onFocus={() => handleFocus('partnerLogo')}
-                onBlur={handleBlur}
-              />
-              {logoError && <p className="text-red-500 text-sm mt-1">{logoError}</p>}
-            </div> */}
           </div>
           <div className="flex justify-end space-x-4">
             <button

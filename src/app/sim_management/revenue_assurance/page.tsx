@@ -1,7 +1,7 @@
 "use client";
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { ArrowDownTrayIcon } from '@heroicons/react/16/solid';
-import { Button, Input, Switch } from 'antd';
+import { Button, Input, Spin, Switch } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { SingleValue } from 'react-select';
@@ -11,6 +11,7 @@ import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
 import MyModal from './assign_revio/assign_revio_modal';
 import AssignService from './assign_revio/assign_revio_modal';
+import { useLogoStore } from "@/app/stores/logoStore";
 
 type OptionType = {
   value: string;
@@ -26,12 +27,18 @@ const RevenueAssurance: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [filteredItems, setFilteredItems] = useState(rev_items);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [loading, setLoading] = useState(false); // State to manage loading
   const { Search } = Input;
   const editableDrp = DropdownStyles;
   const showModal = () => setIsModalVisible(true);
   const handleOk = () => setIsModalVisible(false);
   const handleCancel = () => setIsModalVisible(false);
+  const title = useLogoStore((state) => state.title);
+  useEffect(() => {
+    if(title!="Sim Management"){
+        setLoading(true)
+    }
+},[title])
   const FilterOptions = [
     { value: 'All', label: 'All' },
     { value: 'Assigned', label: 'Assigned' },
@@ -117,6 +124,14 @@ const RevenueAssurance: React.FC = () => {
 
     filterItems();
   }, [filterState]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 space-y-4">

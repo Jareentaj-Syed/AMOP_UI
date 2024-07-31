@@ -15,6 +15,8 @@ import ColumnFilter from "@/app/components/columnfilter";
 import { createModalData, headerMap, headers } from "./bandwidth_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
+import { useLogoStore } from "@/app/stores/logoStore";
+
 // State to manage loading
 
 import { useBandWidthStore } from "./bandwidth_customers_constants";
@@ -29,6 +31,12 @@ const BandWidthCustomers: React.FC = () => {
   const { username, partner, role } = useAuth();
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
+  const title = useLogoStore((state) => state.title);
+  useEffect(() => {
+    if(title!="People"){
+        setLoading(true)
+    }
+},[title])
 
   useEffect(() => {
     const fetchData = async () => {

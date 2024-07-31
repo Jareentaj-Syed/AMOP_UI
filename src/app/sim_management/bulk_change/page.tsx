@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
-import { Input, Button, Modal, Steps } from 'antd';
+import { Input, Button, Modal, Steps, Spin } from 'antd';
 import { DownloadOutlined, SearchOutlined } from "@ant-design/icons";
 import * as XLSX from 'xlsx';
 import TableComponent from '@/app/components/TableComponent/page';
@@ -12,6 +12,8 @@ import { PlusIcon } from '@heroicons/react/16/solid';
 
 import { useBulkChangeModalStore } from './bulk-changes-store/bulk-change-modal.store';
 import { BulkChangeModal } from './bulk-changes/bulk-change-modal';
+import { useLogoStore } from "@/app/stores/logoStore";
+
 interface ExcelDataRow {
     [key: string]: any;
 }
@@ -21,7 +23,14 @@ const BulkChange: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
     const { setVisible: setBulkChangeModalVisible } = useBulkChangeModalStore();
+    const [loading, setLoading] = useState(false); // State to manage loading
+    const title = useLogoStore((state) => state.title);
 
+    useEffect(() => {
+      if(title!="Sim Management"){
+          setLoading(true)
+      }
+  },[title])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -86,7 +95,13 @@ const BulkChange: React.FC = () => {
       };
     
       // const steps = BulkChangeSteps.get(requestType) || [];
-   
+      if (loading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <Spin size="large" />
+          </div>
+        );
+      }
     return (
         <div className="p-5">
               <button

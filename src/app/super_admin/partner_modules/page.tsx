@@ -8,6 +8,8 @@ import UserRole from './user_role/page';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { Spin } from 'antd';
+import { useLogoStore } from "@/app/stores/logoStore";
+
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 
@@ -21,6 +23,13 @@ const Page: React.FC = () => {
   const [moduleData, setModuleData] = useState(null);
   const [loading, setLoading] = useState(true);
   const { username, partner, role } = useAuth();
+  
+  const title = useLogoStore((state) => state.title);
+  useEffect(() => {
+    if(title!="Super Admin"){
+        setLoading(true)
+    }
+},[title])
 
   useEffect(() => {
     const fetchInitialData = async () => {

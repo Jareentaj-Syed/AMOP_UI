@@ -17,6 +17,8 @@ import { createModalData, headers ,headerMap} from "./rev_io_customers_constants
 import axios from "axios";
 import { useAuth } from "@/app/components/auth_context";
 import { useRevIOStore } from "./rev_io_customers_constants";
+import { useLogoStore } from "@/app/stores/logoStore";
+
 
 interface ExcelData {
   [key: string]: any;
@@ -32,7 +34,13 @@ const RevIOCustomers: React.FC = () => {
   const [createColumns,setcreateColumns ]= useState<any>([]);
   const [tableData, setTableData] = useState<any>([]);
   const { customers_table, setTable ,setBillProfile} = useRevIOStore();
+  const title = useLogoStore((state) => state.title);
 
+  useEffect(() => {
+    if(title!="People"){
+        setLoading(true)
+    }
+},[title])
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)

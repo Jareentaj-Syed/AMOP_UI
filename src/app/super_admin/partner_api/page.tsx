@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import { useSidebarStore } from '@/app/stores/navBarStore';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
+import { useLogoStore } from "@/app/stores/logoStore";
+import { Spin } from 'antd';
 
 
 const CarrierInfo = dynamic(() => import('./carrier_info'));
@@ -15,11 +17,23 @@ const PartnerInfoForm: React.FC = () => {
 
     const [activeTab, setActiveTab] = useState('carrierInfo');
     const isExpanded = useSidebarStore((state:any) => state.isExpanded);
+    const title = useLogoStore((state) => state.title);
+    const [loading, setLoading] = useState(false); // State to manage loading
 
 
+    useEffect(() => {
+      if(title!="Super Admin"){
+          setLoading(true)
+      }
+  },[title])
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
-  
-  
     return (
       <div className="">
         <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>

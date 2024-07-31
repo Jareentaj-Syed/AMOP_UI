@@ -12,6 +12,8 @@ import axios from "axios";
 import { Spin } from 'antd';
 import { useAuth } from "@/app/components/auth_context";
 import { useNetSapiensStore } from "./netsapiens_customers_constants";
+import { useLogoStore } from "@/app/stores/logoStore";
+
 
 const NetSapiensCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -24,7 +26,13 @@ const NetSapiensCustomers: React.FC = () => {
   const { username, partner, role } = useAuth();
   const { customers_table, setTable } = useNetSapiensStore();
   const [tableData, setTableData] = useState<any[]>([]);
+  const title = useLogoStore((state) => state.title);
 
+  useEffect(() => {
+    if(title!="People"){
+        setLoading(true)
+    }
+},[title])
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
