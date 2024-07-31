@@ -117,17 +117,16 @@ const RatePlanType: React.FC = () => {
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
         popupHeading='Rate Plan Type'  
-        infoColumns={createColumns}  
-        editColumns={createColumns}            
+        createModalData={createColumns}  
+                
       />
 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={createModalData}
-        heading='Rate Plan Type'
-      />
+        columnNames={[]}
+        heading='Rate Plan Type' header={[]}      />
     </div>
   );
 };

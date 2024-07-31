@@ -148,8 +148,8 @@ const E911Customers: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["edit", "delete"]}
           popupHeading="E9 Customer"
-          infoColumns={createColumns}
-          editColumns={createColumns}
+          createModalData={createColumns}
+        
         />
      
 
@@ -157,7 +157,7 @@ const E911Customers: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={createModalData}
+        columnNames={[]}
         heading="E911 Customer"
         header={Object.keys(tableData[0])}
       />

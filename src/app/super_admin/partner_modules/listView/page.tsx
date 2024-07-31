@@ -102,9 +102,8 @@ const ListView: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["SingleClick"]}
           popupHeading='User'    
-          infoColumns={[]}  
-          editColumns={[]}          
-
+          createModalData={[]}  
+        
         />
       </div>
     </div>

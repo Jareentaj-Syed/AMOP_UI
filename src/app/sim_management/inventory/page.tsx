@@ -126,8 +126,8 @@ const sim_management: React.FC = () => {
 
       </div>
       <TableComponent
-        infoColumns={[]}
-        editColumns={[]}
+        createModalData={[]}
+     
         isSelectRowVisible={false}
         headers={headers}
         initialData={data}

@@ -228,8 +228,8 @@ const RevenueAssurance: React.FC = () => {
                   visibleColumns={visibleColumns}
                   itemsPerPage={10}
                   popupHeading="Customer"
-                  infoColumns={[]}
-                  editColumns={[]}
+                  createModalData={[]}
+                  
                 />
               </div>
             )}

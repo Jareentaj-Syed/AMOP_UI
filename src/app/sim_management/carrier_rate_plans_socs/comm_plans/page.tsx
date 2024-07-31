@@ -111,8 +111,8 @@ const CommPlans: React.FC = () => {
         itemsPerPage={10}
         allowedActions={["edit"]}
         popupHeading='Carrier Rate Plan'  
-        infoColumns={createColumns}  
-        editColumns={createColumns}            
+        createModalData={createColumns}  
+                
       />
 
     </div>

@@ -87,8 +87,8 @@ const ListView: React.FC = () => {
               itemsPerPage={10}
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
-              infoColumns={[]}
-              editColumns={[]}
+              createModalData={[]}
+             
             />
           </div>
         </>

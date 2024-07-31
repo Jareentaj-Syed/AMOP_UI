@@ -203,8 +203,7 @@ const CarrierInfo: React.FC = () => {
               itemsPerPage={10}
               allowedActions={["edit"]}
               popupHeading='Carrier'
-              infoColumns={editColumns}
-              editColumns={editColumns}
+              createModalData={editColumns}
               advancedFilters={[]}        
             />
           )}

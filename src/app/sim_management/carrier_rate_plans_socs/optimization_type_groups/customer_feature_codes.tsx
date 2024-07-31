@@ -118,17 +118,16 @@ const CustomerFeatureCodes: React.FC = () => {
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
         popupHeading='Customer Feature Codes'  
-        infoColumns={createColumns}  
-        editColumns={createColumns}            
+        createModalData={createColumns}  
+              
       />
 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={createModalData}
-        heading='Customer Feature Codes'
-      />
+        columnNames={[]}
+        heading='Customer Feature Codes' header={[]}      />
     </div>
   );
 };

@@ -119,8 +119,8 @@ const BulkChange: React.FC = () => {
         </div>
        <div className='mt-6'>
        <TableComponent
-          infoColumns={[]}
-          editColumns={[]}
+          createModalData={[]}
+      
           isSelectRowVisible={false}
           headers={headers}
           initialData={data}

@@ -68,8 +68,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
                         visibleColumns={headers1}
                         itemsPerPage={10}
                         popupHeading='User'
-                        infoColumns={[]}
-                        editColumns={[]}
+                        createModalData={[]}
+                       
                         headerMap={headermap1}
                     />
                 </div>
@@ -85,8 +85,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
                         visibleColumns={headers2}
                         itemsPerPage={10}
                         popupHeading='UserModule'
-                        infoColumns={[]}
-                        editColumns={[]}
+                        createModalData={[]}
+                     
                         headerMap={headermap2}
                     />
                 </div>

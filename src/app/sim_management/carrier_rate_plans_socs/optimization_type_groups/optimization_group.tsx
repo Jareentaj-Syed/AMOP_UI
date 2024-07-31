@@ -117,17 +117,16 @@ const OptimizationGroup: React.FC = () => {
         itemsPerPage={10}
         allowedActions={["edit","delete"]}
         popupHeading='Optimization Group'  
-        infoColumns={createColumns}  
-        editColumns={createColumns}            
+        createModalData={createColumns}  
+               
       />
 
       <CreateModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={createModalData}
-        heading='Optimization Group'
-      />
+        columnNames={[]}
+        heading='Optimization Group' header={[]}      />
     </div>
   );
 };

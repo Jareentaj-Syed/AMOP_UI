@@ -136,8 +136,8 @@ const NetSapiensCustomers: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["info", "edit"]}
           popupHeading="NetSapien Customer"
-          infoColumns={createColumns}
-          editColumns={createColumns}
+          createModalData={createColumns}
+         
         />
      
 
@@ -145,9 +145,8 @@ const NetSapiensCustomers: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={createColumns}
-        heading="NetSapien Customer"
-      />
+        columnNames={[]}
+        heading="NetSapien Customer" header={[]}      />
     </div>
   );
 };
