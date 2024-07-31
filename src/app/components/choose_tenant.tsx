@@ -17,6 +17,14 @@ const ChooseTenant: React.FC = () => {
   const router = useRouter();
   const {username, tenantNames, role}=useAuth()
   const partners=tenantNames
+
+  // useEffect(() => {
+
+  // // const pathname = window.location.pathname;
+  // // const url = `components/choose_tenant`;
+  // // window.location.href = url;
+   
+  // }, []);
   const handleSelectedPartner = async (partnerName: string) => {
     setSelectedPartnerName(partnerName)
     const data = {
@@ -76,7 +84,7 @@ const ChooseTenant: React.FC = () => {
               width: '200px',
               height: '35px',
               borderColor: selectedPartnerName === partner ? 'black' : '#00C1F1',
-              borderWidth: selectedPartnerName === partner ? '2px' : '1px',
+              borderWidth: selectedPartnerName === partner ? '3px' : '1px',
               color: '#00C1F1',
             }}
           >

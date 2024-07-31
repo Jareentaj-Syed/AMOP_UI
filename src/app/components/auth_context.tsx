@@ -6,6 +6,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (username: string, password: string) => void;
   logout: () => void;
+  LogoutChooseTenant: () => void;
   partner: string | null;
   setPartner: (partnerName: string | null) => void;
   selectedPartner: boolean;
@@ -70,14 +71,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUsername(null);
+  const  LogoutChooseTenant  = () => {
+    // setIsAuthenticated(false);
+    // setUsername(null);
     setPartner(null);
     setSelectedPartner(false);
     setShowPassword(false);
-    setTenantNames([]); // Reset tenant names on logout
+    // setTenantNames([]); // Reset tenant names on logout
   };
+
+  const logout = () =>{
+     setIsAuthenticated(false);
+     setUsername(null);
+     setPartner(null);
+     setSelectedPartner(false);
+     setShowPassword(false);
+     setTenantNames([]);
+  }
 
   const handleSelectedPartner = async (partnerName: string) => {
     console.log('Selected Partner:', partnerName);
@@ -91,6 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isAuthenticated,
         login,
         logout,
+        LogoutChooseTenant,
         partner,
         setPartner,
         selectedPartner,

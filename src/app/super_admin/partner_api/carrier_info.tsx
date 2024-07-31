@@ -121,15 +121,18 @@ const CarrierInfo: React.FC = () => {
     );
   }
 
-  const headers = ["serviceprovidername", "apiname", "apiurl", "apiparams", "apistate", "lastmodifiedby", "lastmodifieddatetime"];
+  const headers = ["id","service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
   const headersmap = {
-    "serviceprovidername":"Service provider name",
-   "apiname":"API name",
-  "apiurl": "API url",
-   "apiparams":"API params",
-   "apistate": "API_state", 
-   "lastmodifiedby":"Last modified by", 
-   "lastmodifieddatetime":"Last modified date & time"
+    "id":"S.no",
+    "service_provider_name":"Service provider name",
+   "api_name":"API name",
+  "api_url": "API url",
+   "api_params":"API params",
+   "api_state": "API_state", 
+   "env": "Environment",
+   "partner":"Partner",
+   "last_modified_by":"Last modified by", 
+   "last_modified_datetime":"Last modified date & time"
 }
 
   const formatColumnName = (name: string) => {

@@ -6,27 +6,36 @@ import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingO
 import { useSidebarStore } from '../stores/navBarStore';
 import { useLogoStore } from '../stores/logoStore';
 import { useAuth } from './auth_context';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 const Header: React.FC = () => {
   const { username, partner } = useAuth();
   const { toggleSidebar } = useSidebarStore();
   const { logoUrl } = useLogoStore();
   const title = useLogoStore((state) => state.title);
+  const [showChooseTenant, setShowChooseTenant] = useState(false);
   console.log(title)
+  const pathname=usePathname()
   const router = useRouter();
   const [showLogout, setShowLogout] = useState(false);
-
+  const { logout , LogoutChooseTenant} = useAuth(); 
   const handleClick = () => {
     setShowLogout(!showLogout);
   };
  
   const handleLogout = () => {
-    router.push('/components/login');
+    logout()
+    const pathname = window.location.pathname;
+      const url = `/auth/logout?redirect=${pathname}&action=logout`;
+      window.location.href = url;
+    // router.push('/components/login_page');
   };
 
   const handleChoosePartner = () => {
-    router.push('/components/choose_tenent');
-  };
+    LogoutChooseTenant() 
+    // const pathname = window.location.pathname;
+    // const url = `/Choose_tenant`;
+    // window.location.href = url;
+  }
   return (
     <div className="p-2 flex justify-between items-left shadow-md header">
       {/* <div className="flex items-center space-x-2 w-[17%]">
@@ -42,7 +51,7 @@ const Header: React.FC = () => {
       <div className="flex items-center space-x-2 absolute right-[20px]">
         <div className="relative">
           <div
-            className="flex items-center cursor-pointer ml-5"
+            className="flex items-center cursor-pointer ml-5 mt-2"
             onClick={handleClick}
           >
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 text-white">
