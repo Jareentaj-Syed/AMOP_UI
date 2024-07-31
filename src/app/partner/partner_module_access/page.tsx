@@ -1,32 +1,36 @@
-
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState } from 'react';
-import Select, { SingleValue } from 'react-select';
-import { DropdownStyles,NonEditableDropdownStyles } from '@/app/components/css/dropdown';
+import Select, { SingleValue, StylesConfig } from 'react-select';
+import { DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
-// import {mockRoleData} from './partner_module_access_constants';
+
 type OptionType = {
     value: string;
     label: string;
 };
+
+type Role = {
+    rolename: string;
+};
+
 type Feature = {
     [module: string]: string[];
-  };
-  
-  type ModuleData = {
+};
+
+type ModuleData = {
     Module: string[];
     Feature: Feature;
-  };
-  
-  type CategoryData = {
+};
+
+type CategoryData = {
     [category: string]: ModuleData;
-  };
-  
-  type Data = {
+};
+
+type Data = {
     [role: string]: CategoryData;
-  };
-  
+};
+
 interface ExcelData {
     [key: string]: {
         Module: string[];
@@ -35,335 +39,190 @@ interface ExcelData {
         };
     };
 }
-const data: ExcelData = {
-    "Sim Management": {
-        "Module": [
-            "Inventory",
-            "Bulk Change",
-            "SIM Order Form",
-            "Carrier Rate Plans",
-            "Customer Rate Plans",
-            "Rev Assurance",
-            "Reports"
-        ],
-        "Feature": {
-            "Inventory": [
-                "Update Customer Rate Plan-Inventory",
-                "Update Status-Inventory",
-                "Update Carrier Rate Plan-Inventory",
-                "Export inventory-Inventory",
-                "Advanced filter-Inventory"
-            ],
-            "Bulk Change": [
-                "Activate New Service (POD, Jasper and VZN)-Bulk Change",
-                "Archive-Bulk Change",
-                "Assign Customer-Bulk Change",
-                "Change Carrier Rate Plan-Bulk Change",
-                "Change Customer Rate Plan-Bulk Change",
-                "Change ICCID/IMEI-Bulk Change",
-                "Create Rev Service-Bulk Change",
-                "Update Device Status-Bulk Change"
-            ],
-            "SIM Order Form": ["SIM Order Form"],
-            "Carrier Rate Plans": [
-                "Edit-Carrier Rate Plans",
-                "Export-Carrier Rate Plans",
-                "Optimize-Carrier Rate Plans"
-            ],
-            "Customer Rate Plans": [
-                "Create-Customer Rate Plans",
-                "Edit-Customer Rate Plans",
-                "Import-Customer Rate Plans",
-                "Export-Customer Rate Plans"
-            ],
-            "Rev Assurance": [
-                "Add Service Line-Rev Assurance",
-                "Add Service Product-Rev Assurance",
-                "Disconnect Service Product-Rev Assurance"
-            ],
-            "Reports": [
-                "Zero Usage Report-Reports",
-                "Newly Activated Report-Reports",
-                "Status History Report-Reports",
-                "Usage By Line Report-Reports"
-            ]
-        }
-    },
-    "Optimization": {
-        "Module": [
-            "Optimization"
-        ],
-        "Feature": {
-            "Optimization": [
-                "Optimize-Optimization",
-                "Export-Optimization"]
-        }
-    },
-    "Customer Charges": {
-        "Module": [
-            "Customer Charges"
-        ],
-        "Feature": {
-            "Customer Charges": [
-                "Export-Customer Charges"
-            ]
-        }
-    },
-    "NetSapiens": {
-        "Module": [
-            "Inventory List",
-            "Rev.IO Product Links",
-            "NetSapiens Rev Assurance"
-        ],
-        "Feature": {
-            "Inventory List": [
-                "Export-nventory List"
-            ],
-            "NetSapiens Rev Assurance": [
-                "Export-NetSapiens Rev Assurance",
-                "Chain and Unchain-NetSapiens Rev Assurance",
-                "Ignore-NetSapiens Rev Assurance"
-            ],
-            "Rev.IO Product Links": [
-                "Export-Rev.IO Product Links",
-                "Edit-Rev.IO Product Links",
-                "Delete-Rev.IO Product Links"
-            ]
-        }
-    },
-    "LNP": {
-        "Module": [
-            "Phone Numbers",
-            "Bulk Change",
-            "Number Port In",
-            "Number Orders",
-            "Locations",
-            "Revenue Assurance",
-            "Rev.IO Product Links"
-        ],
-        "Feature": {
-            "Phone Numbers": [
-                "Export",
-                "Add E911",
-                "Move Phone Number",
-                "Create DL/DA Order",
-                "Update LIDB Order",
-                "Update Line Options",
-                "Update SMS Settings"
-            ],
-            "Bulk Change": [
-                "Archive"
-            ],
-            "Number Port In": [
-                "Check Eligibility",
-                "Edit",
-                "View Subscriber"
-            ],
-            "Number Orders": [
-                "Order Phone Number",
-                "Edit",
-                "Check Status",
-                "Add E911"
-            ],
-            "Locations": [
-                "Update CNAM"
-            ],
-            "Revenue Assurance": [
-                "Export"
-            ],
-            "Rev.IO Product Links": [
-                "Export",
-                "Edit",
-                "Delete"
-            ]
-        }
-    },
-    "Automation": {
-        "Module": [
-            "Automation rule",
-            "Notifications"
-        ],
-        "Feature": {
-            "Automation rule": [
-                "Export-Automation rule",
-                "Edit-Automation rule",
-                "Delete-Automation rule"
-            ],
-            "Notifications": [
-                "Add M2M Device Notifications-Notifications",
-                "Add Mobility Device Notifications-Notifications"
-            ]
-        }
-    },
-    "People": {
-        "Module": [
-            "Rev.IO Customers",
-            "BandwithCustomers",
-            "NetSapiens Customers",
-            "E911 Customers",
-            "Customer Groups",
-            "Users"
-        ],
-        "Feature": {
-            "Rev.IO Customers": [
-                "Export",
-                "Add Customers"
-            ],
-            "BandwithCustomers": [
-                "Export",
-                "Add Customers"
-            ],
-            "NetSapiens Customers": [
-                "Export",
-                "Add Customers"
-            ],
-            "E911 Customers": [
-                "Create E911 Customer",
-                "Edit",
-                "Delete"
-            ],
-            "Customer Groups": [
-                "Add Customer Groups",
-                "Edit",
-                "Delete"
-            ],
-            "Users": [
-                "CreateNew User",
-                "Edit",
-                "Delete",
-                "Impersonate"
-            ]
-        }
-    },
-    "Settings": {
-        "Module": [
-            "Provider Charge Mapping",
-            "Application Settings",
-            "Partners",
-            "Roles",
-            "Modules"
-        ],
-        "Feature": {
-            "Provider Charge Mapping": [
-                "Charge Mapping"
-            ],
-            "Application Settings": [
-                "Edit"
-            ],
-            "Partners": [
-                "Add Partner",
-                "Edit",
-                "Details",
-                "Delete"
-            ],
-            "Roles": [
-                "Add roles",
-                "Edit",
-                "Delete"
-            ],
-            "Modules": [
-                "Edit",
-                "Delete"
-            ]
-        }
-    }
-}
-
-const partners = [
-    "AWX",
-    "Altawork-GT",
-    "AWX-AWX",
-    "AWX Test",
-    "CSV RS AG",
-    "Go-Tech-AWX-Test",
-    "GT"
-];
-
-const roles = [
-    "Agent",
-    "Agent Partner Admin",
-    "Notification Only User",
-    "Partner Admin",
-    "Super Admin",
-    "User"
-];
-
 
 const UserRole: React.FC = () => {
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
-    const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const editableDrp = DropdownStyles
-    const nonEditableDrp = NonEditableDropdownStyles
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
-    const [map,setMap]=useState<ExcelData>({});
-    console.log("partnerModuleData",partnerModuleData.role_module)
-    const rawData=partnerModuleData.role_module;
-      const transformData = (data: typeof rawData): Data => {
-        const transformedData: Data = {};
-      
-        data.forEach((item: { role: any; module: string; sub_module: string; module_features: string; }) => {
-          const role = item.role;
-          const modules = item.module !== "None" ? JSON.parse(item.module) : [];
-          const subModules = item.sub_module !== "None" ? JSON.parse(item.sub_module) : {};
-          const moduleFeatures = item.module_features !== "None" ? JSON.parse(item.module_features) : {};
-      
-          transformedData[role] = {};
-      
-          modules.forEach((module: string) => {
-            transformedData[role][module] = {
-              Module: subModules[module] || [],
-              Feature: moduleFeatures[module] || {}
-            };
-          });
-        });
-      
-        return transformedData;
-      };
-      
-      const mockRoleData: Data = transformData(rawData);
-      console.log(mockRoleData);
+    const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const [map, setMap] = useState<ExcelData>({});
+    console.log("partner module data:", partnerModuleData)
+    const editableDrp = DropdownStyles;
+    const colorPalette = [
+        '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
+        '#3366E6', '#999966', '#99FF99', '#B34D4D', '#FF4D4D', '#C2C2F0',
+        '#FFCC99', '#C2F0C2', '#FF99E6', '#FFB3E6', '#80BFFF', '#FFCC00',
+        '#FF6666', '#C2C2F0', '#6699FF'
+    ];
+
+    const getColor = (index: number) => colorPalette[index % colorPalette.length];
 
     const handleModuleChange = (category: string, modules: any) => {
         const moduleValues = modules ? modules.map((module: any) => module.value) : [];
-        setSelectedModules({ ...selectedModules, [category]: moduleValues });
-        setSelectedFeatures({ ...selectedFeatures, [category]: [] });
+        const newColors = { ...moduleColors };
+    
+        moduleValues.forEach((module: string | number, index: number) => {
+            if (!newColors[module]) {
+                newColors[module] = getColor(index);
+            }
+    
+            // Assign the same color to the features of the module
+            const features = map[category]?.Feature[module] || [];
+            features.forEach((feature: string) => {
+                newColors[feature] = newColors[module]; // Assign module color to features
+            });
+        });
+    
+        const defaultFeatures = moduleValues.flatMap((module: any) => {
+            const features = map[category]?.Feature[module] || [];
+            return features.map((feature: string) => ({
+                feature,
+                color: newColors[module], // Keep the same color for features
+            }));
+        });
+    
+        setModuleColors(newColors);
+        setSelectedModules(prevState => ({
+            ...prevState,
+            [category]: moduleValues
+        }));
+    
+        setSelectedFeatures(prevState => {
+            const updatedFeatures = {
+                ...prevState,
+                [category]: defaultFeatures.map((item: { feature: any; }) => item.feature)
+            };
+            return updatedFeatures;
+        });
     };
+    
+    const customStyles = (category: string): StylesConfig<OptionType, true> => ({
+        option: (provided, { data }) => ({
+            ...provided,
+            color: 'black', // Keep options in default black color
+        }),
+        multiValue: (provided, { data }) => {
+            const moduleColor = moduleColors[data.value] || 'black'; // Get color for selected module or feature
+    
+            return {
+                ...provided,
+                backgroundColor: moduleColor,
+                color: 'white',
+            };
+        },
+        multiValueLabel: (provided) => ({
+            ...provided,
+            color: 'white',
+        }),
+        multiValueRemove: (provided) => ({
+            ...provided,
+            color: 'white',
+            ':hover': {
+                backgroundColor: 'red',
+                color: 'white',
+            },
+        }),
+    });
+    
+    
+    const rawData = partnerModuleData.role_module;
+
+    const transformData = (data: typeof rawData): Data => {
+        const transformedData: Data = {};
+
+        data.forEach((item: { role: any; module: string; sub_module: string; module_features: string; }) => {
+            const role = item.role;
+            const modules = item.module !== "None" ? JSON.parse(item.module) : [];
+            const subModules = item.sub_module !== "None" ? JSON.parse(item.sub_module) : {};
+            const moduleFeatures = item.module_features !== "None" ? JSON.parse(item.module_features) : {};
+
+            if (!transformedData[role]) {
+                transformedData[role] = {};
+            }
+
+            modules.forEach((module: string) => {
+                transformedData[role][module] = {
+                    Module: subModules[module] || [],
+                    Feature: moduleFeatures[module] || {}
+                };
+            });
+        });
+
+        return transformedData;
+    };
+
+    const mockRoleData: Data = transformData(rawData);
+
+
+
     const handleFeatureChange = (category: string, features: any) => {
         const featureValues = features ? features.map((feature: any) => feature.value) : [];
-        setSelectedFeatures({ ...selectedFeatures, [category]: featureValues });
+        setSelectedFeatures(prevState => ({
+            ...prevState,
+            [category]: featureValues,
+        }));
     };
- 
+
     const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
-            setMap(mockRoleData[role]);
+            const selectedRoleData = mockRoleData[role] || {};
+            setMap(selectedRoleData);
             setSelectedModules({});
             setSelectedFeatures({});
+            setModuleColors({}); // Reset colors when role changes
         }
     };
 
-const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
-    value: role,
-    label: role,
-}));
+
+
+    const Roleoptions = partnerModuleData.Roles.map((role: Role) => ({
+        value: role.rolename,
+        label: role.rolename,
+    }));
 
     const handleSubmit = () => {
         const errors: string[] = [];
-        if (!role) errors.push('Role is required.');
-
-        setErrorMessages(errors);
-
-        if (errors.length === 0) {
-            console.log('Saving...');
+        // Check if role is null and push an error if it is
+        if (!role) {
+            errors.push('Role is required.');
         }
-        else {
+    
+        setErrorMessages(errors);
+    
+        if (errors.length === 0) {
+            // Check that role is defined before accessing its value
+            const formattedData: { [key: string]: any } = {
+                [role!.value]: {} // Use non-null assertion if you are sure it won't be null
+            };
+    
+            Object.keys(selectedModules).forEach(category => {
+                const selectedModulesForCategory = selectedModules[category];
+                const selectedFeaturesForCategory = selectedFeatures[category] || [];
+    
+                formattedData[role!.value][category] = {
+                    Module: selectedModulesForCategory,
+                    Feature: {}
+                };
+    
+                selectedModulesForCategory.forEach(module => {
+                    formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
+                        map[category]?.Feature[module]?.includes(feature)
+                    );
+                });
+            });
+    
+            console.log("Formatted Data:", formattedData);
+        } else {
+            console.log("Errors:", errors);
         }
     };
-    return (
-        <div className=' p-4'>
+    
 
+    return (
+        <div className='p-4'>
             <h3 className="tabs-sub-headings">Module Access</h3>
             <div className="relative border border-gray-300 p-4 rounded-md mb-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -383,7 +242,6 @@ const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 mt-4">
-
                     {Object.keys(map).map((category) => (
                         <div key={category} className="col-span-1">
                             <h4 className="text-md font-medium text-blue-600">{category}</h4>
@@ -396,20 +254,21 @@ const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
                                         value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                         onChange={(selected) => handleModuleChange(category, selected)}
                                         options={map[category].Module.map(module => ({ value: module, label: module }))}
-                                        styles={editableDrp}
-
+                                        styles={customStyles(category)} // Use customStyles for module colors
                                     />
+
                                 </div>
                                 <div>
                                     <label className="field-label">Features</label>
                                     <Select
                                         isMulti
                                         closeMenuOnSelect={false}
-                                        value={selectedFeatures[category]?.map(feature => ({ value: feature, label: feature })) || []}
+                                        value={selectedFeatures[category]?.map((feature: any) => ({ value: feature, label: feature })) || []}
+                                        options={(selectedModules[category] || []).flatMap((module: any) =>
+                                            map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
+                                        )}
                                         onChange={(selected) => handleFeatureChange(category, selected)}
-                                        options={(selectedModules[category] || []).flatMap(module => map[category].Feature[module]?.map(feature => ({ value: feature, label: feature })) || [])}
-                                        className=""
-                                        styles={!selectedModules[category] || selectedModules[category].length === 0?nonEditableDrp:editableDrp}
+                                        styles={customStyles(category)}
                                         isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
                                     />
                                 </div>
@@ -418,8 +277,6 @@ const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
                     ))}
                 </div>
             </div>
-
-
 
             <div className="flex justify-end space-x-4">
                 <button className="cancel-btn">
@@ -431,11 +288,11 @@ const Roleoptions =  Object.keys(mockRoleData).map((role, index) => ({
                     onClick={handleSubmit}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-                    <span>Submit</span>
+                    <span>Save</span>
                 </button>
             </div>
         </div>
-
     );
 };
+
 export default UserRole;
