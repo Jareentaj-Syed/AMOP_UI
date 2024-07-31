@@ -1,7 +1,7 @@
 // app/createUser/page.tsx
 
 "use client";
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '@/app/stores/navBarStore';
 import Page from '../page';
@@ -22,9 +22,9 @@ const CreateUser: React.FC<CreateUserProps> = ({ isPopup, rowData }) => {
   const [activeTab, setActiveTab] = useState('userInfo');
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
   const [hideCreateUser, setHideCreateUser] = useState(false);
-  const handleCloseClick = useCallback(() => {
+  const handleCloseClick = () => {
     setHideCreateUser(true);
-  }, []);
+  };
 
   return (
     <div>

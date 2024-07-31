@@ -1,4 +1,4 @@
-import React, { useState, useCallback,useEffect } from 'react';
+import React, { useState,useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import ChartsPage from '../charts/page';
@@ -25,9 +25,9 @@ const ListView: React.FC = () => {
   const router = useRouter();
 
   const createUser = dynamic(() => import('../createUser/page'));
-  const handleCreateClick = useCallback(() => {
+  const handleCreateClick = () => {
     setShowCreateUser(true);
-  }, []);
+  };
   const {
     setTenant,
     setRoleName,
