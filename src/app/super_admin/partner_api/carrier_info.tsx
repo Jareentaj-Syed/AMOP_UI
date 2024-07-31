@@ -34,43 +34,43 @@ const CarrierInfo: React.FC = () => {
   const [loading, setLoading] = useState(true); // State to manage loading
   const module_name= "Carrier Api"
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-        const data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/get_superadmin_info",
-          role_name: role,
-          "sub_module": "Partner API", 
-          "sub_tab": "Carrier APIs",
-        };
-        const response = await axios.post(url, { data: data });
-        const resp = JSON.parse(response.data.body);
-
-        const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-        console.log(carrierApis)
-        setTableData(carrierApis);
-    
-        const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
-        setEnvironmentOptions(environments);
-
-        const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
-        setPartnerOptions(partners);
-        setLoading(false);
-      } catch (err) {
-
-        console.error(err);
-      }finally {
-        setLoading(false); 
-      }
-    
-    };
+ 
 
     fetchData();
   }, []); // Fetch initial data once on mount
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+      const data = {
+        tenant_name: partner || "default_value",
+        username: username,
+        path: "/get_superadmin_info",
+        role_name: role,
+        "sub_module": "Partner API", 
+        "sub_tab": "Carrier APIs",
+      };
+      const response = await axios.post(url, { data: data });
+      const resp = JSON.parse(response.data.body);
 
+      const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+      console.log(carrierApis)
+      setTableData(carrierApis);
+  
+      const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
+      setEnvironmentOptions(environments);
+
+      const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
+      setPartnerOptions(partners);
+      setLoading(false);
+    } catch (err) {
+
+      console.error(err);
+    }finally {
+      setLoading(false); 
+    }
+  
+  };
   useEffect(() => {
     if (environment && selectedPartner) {
       const fetchData = async () => {
@@ -128,7 +128,7 @@ const CarrierInfo: React.FC = () => {
    "api_name":"API name",
   "api_url": "API url",
    "api_params":"API params",
-   "api_state": "API_state", 
+   "api_state": "API state", 
    "env": "Environment",
    "partner":"Partner",
    "last_modified_by":"Last modified by", 
@@ -178,6 +178,15 @@ const CarrierInfo: React.FC = () => {
               />
             </div>
           </div>
+          <div className='mt-5 ml-3'>
+          <button
+              className='save-btn'
+              type="submit"
+              onClick={() => fetchData()}
+            >
+              Clear
+            </button>
+            </div>
           <div className="ml-auto mt-4">
             <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>

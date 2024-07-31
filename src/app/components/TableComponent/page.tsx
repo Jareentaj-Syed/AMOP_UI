@@ -421,7 +421,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          {col==="Module_state" || col === "API_state"?(
+          {col==="Module_state" || col === "API state"?(
             <span>Enable</span>
           ):
           <span>Active</span>}
@@ -433,7 +433,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ width: '100%' }}
           onClick={() => handleToggle(index)}
         >
-          {col==="Module_state" || col === "API_state"?(
+          {col==="Module_state" || col === "API state"?(
             <span>Disable</span>
           ):
           <span>Inactive</span>}
@@ -555,7 +555,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 checked={selectedRows.map(String).includes(String(index))}
                 style={{ fontSize: '2rem' }}
               />
-            ) : (headerMap && headerMap[header]  === "Module_state") ||(headerMap && headerMap[header]  ==="Role_status") || (headerMap && headerMap[header]  ==="API_state") ? (
+            ) : (headerMap && headerMap[header]  === "Module_state") ||(headerMap && headerMap[header]  ==="Role_status") || (headerMap && headerMap[header]  ==="API state") ? (
               renderApiState(row[header], index,headerMap[header])
             ) : (headerMap && headerMap[header] === "User status") || header === "User status" ? (
               renderUserStatus(row[header])
