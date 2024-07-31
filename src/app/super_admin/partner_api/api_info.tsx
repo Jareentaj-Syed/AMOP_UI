@@ -108,9 +108,9 @@ const CarrierInfo: React.FC = () => {
     fetchData();
   }, [environment, selectedPartner]); // Add dependencies if necessary
 
-  const headers = ["id","module_name", "api_name", "api_url", "api_params", "api_state", "env", "partner", "last_modified_by", "last_modified_date_time"];
+  const headers = ["module_name", "api_name", "api_url", "api_params", "api_state", "env", "partner", "last_modified_by", "last_modified_date_time"];
   const headersmap = {
-    "id":"S.no",
+  
       "module_name":"Module name",
      "api_name":"API name",
     "api_url": "API url",

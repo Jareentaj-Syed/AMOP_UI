@@ -26,49 +26,55 @@ const billingaccountnumber_drp = Object.values(partnerData.data["Customer groups
 // Define modal data
 export const createModalData = [
   {
-    "label": "name",
+    "display_name": "name",
+    "unique_name":"",
     "type": "text",
-    "value": "",
+    "default": "",
     "mandatory": "true"
   },
   {
-    "label": "childaccount",
+      "display_name":"child_account",
+      "unique_name":"",
     "type": "checkbox",
-    "value": "",
+    "default": "",
     "mandatory": "false"
   },
   {
-    "label": "Customers",
+    "display_name": "Customers",
+    "unique_name":"",
     "type": "dropdown",
-    "value": customers_drp,
+    "default": "",
     "mandatory": "true"
   },
   {
-    "label": "billingaccountnumber",
+   "display_name":"billing_account_number",
+   "unique_name":"",
     "type": "dropdown",
-    "value": billingaccountnumber_drp,
+    "default": "",
     "mandatory": "false"
   },
   {
-    "label": "customerrateplan",
+   "display_name":"customer_rate_plan",
+   "unique_name":"",
     "type": "dropdown",
-    "value": customerrateplan_drp,
+    "default": "",
     "mandatory": "false"
   },
   {
-    "label": "featurecodes",
+    "display_name": "feature_codes",
+    "unique_name":"",
     "type": "dropdown",
-    "value": [],
+    "default": "",
     "mandatory": "false"
   }
 ];
 
 // Extract customer table data and headers
 export const customer_table: any[] = partnerData.data["Customer groups"]["customergroups"];
-export const headers = ["name", "tenantname", "modifiedby", "modifieddate"];
+export const headers = ["name", "tenant_name", "modified_by", "modified_date"];
 export const headerMap={
   "name":"Name",
-  "tenantname":"Partner",
-  "modifiedby":"Last Modified By",
-  "modifieddate":"Last Modified Date & Time"
+  "tenant_name":"Partner",
+  "modified_by":"Last Modified By",
+  "modified_date":"Last Modified Date & Time"
 }

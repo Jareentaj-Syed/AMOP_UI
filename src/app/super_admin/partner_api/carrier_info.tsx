@@ -121,9 +121,9 @@ const CarrierInfo: React.FC = () => {
     );
   }
 
-  const headers = ["id","service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
+  const headers = ["service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
   const headersmap = {
-    "id":"S.no",
+  
     "service_provider_name":"Service provider name",
    "api_name":"API name",
   "api_url": "API url",

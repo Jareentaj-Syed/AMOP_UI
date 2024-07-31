@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { EnvelopeIcon, QuestionMarkCircleIcon, Bars3Icon, UserIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingOutlined} from '@ant-design/icons';
+import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingOutlined, DownloadOutlined, DownOutlined} from '@ant-design/icons';
 import { useSidebarStore } from '../stores/navBarStore';
 import { useLogoStore } from '../stores/logoStore';
 import { useAuth } from './auth_context';
@@ -13,7 +13,7 @@ const Header: React.FC = () => {
   const { logoUrl } = useLogoStore();
   const title = useLogoStore((state) => state.title);
   const [showChooseTenant, setShowChooseTenant] = useState(false);
-  console.log(title)
+  // console.log(title)
   const pathname=usePathname()
   const router = useRouter();
   const [showLogout, setShowLogout] = useState(false);
@@ -50,18 +50,22 @@ const Header: React.FC = () => {
       </div>
       <div className="flex items-center space-x-2 absolute right-[20px]">
         <div className="relative">
-          <div
-            className="flex items-center cursor-pointer ml-5 mt-2"
-            onClick={handleClick}
-          >
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 text-white">
-              <UserIcon className="w-5 h-5" />
-            </div>
-            <div className="ml-2">
-              <p className="text-base font-medium">{username}</p>
-              <p className="text-xs text-gray-500">{partner}</p>
-            </div>
-          </div>
+        <div
+  className="flex items-center cursor-pointer ml-5 mt-2"
+  onClick={handleClick}
+>
+  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-500 text-white">
+    <UserIcon className="w-5 h-5" />
+  </div>
+  <div className="ml-2 flex flex-col justify-center">
+    <p className="text-base font-medium">{username}</p>
+    <p className="text-xs text-gray-500">{partner}</p>
+  </div>
+  <div className="ml-2">
+    <DownOutlined className='w-3 h-3'/>
+  </div>
+</div>
+
           
           {showLogout && (
       <div className="absolute top-full mt-2 bg-white text-red-500 rounded shadow-md whitespace-normal text-sm w-[200px] flex flex-col ">

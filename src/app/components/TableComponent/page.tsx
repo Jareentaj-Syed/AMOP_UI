@@ -497,8 +497,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
           <thead className="bg-gray-200">
             <tr>
+              {/* Render actions column if allowedActions is true */}
+              {visibleColumns.length>0 && (
+                <th className="px-6 border-b border-gray-300 text-left font-semibold">S.No</th>
+              )}
               {headers.map((header, index) => (
                 visibleColumns.includes(header) ? (
+                  
                   <th
                     key={index}
                     className="px-6 border-b border-gray-300 text-left font-semibold table-header"
@@ -538,10 +543,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           </thead>
           <tbody>
   {paginatedData.map((row, index) => (
+    
     <tr
       key={index}
       className={index % 2 === 0 ? "bg-gray-50" : ""}
     >
+      {/* Render actions column if allowedActions is true */}
+      {visibleColumns.length>0 && (
+                <td className="px-6 border-b border-gray-300 table-cell">{index+1}</td>
+              )}
       {headers.map((header, columnIndex) => (
         visibleColumns.includes(header) ? (
           <td
@@ -549,7 +559,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             className="px-6 border-b border-gray-300 table-cell"
           >
             {/* Check if the header is the selection column */}
-            {header === "Select" ? (
+            {header === "S.no" ? (
+          (currentPage - 1) * itemsPerPage + index + 1
+        ) :
+            header === "Select" ? (
               <Checkbox
                 onChange={() => handleRowCheckboxChange(index)}
                 checked={selectedRows.map(String).includes(String(index))}
