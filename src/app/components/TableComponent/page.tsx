@@ -46,9 +46,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
   const [isEditable, setIsEditable] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [apiState, setApiState] = useState<{ [key: number]: any }>({});
-  const [moduleState, setModuleState] = useState<{ [key: number]: any }>({});
-  const [roleState, setRoleState] = useState<{ [key: number]: any }>({});
+  const [state, setState] = useState<string>("");
+  const [rowIndex, setRowIndex] = useState<number>(0);
+  const [columnName, setColumnName] = useState<string>("");
+
 
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
@@ -277,63 +278,59 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
     }
   };
-  // const ConfirmStateChange= (rowIndex: number)=>{
-  //   setEnableModalOpen(true);
-    
-  //   setDisableModalOpen(false);
-  //   handleToggle(rowIndex)
-  // }
-  const handleToggle = (rowIndex: number) => {
-
+ 
+  const handleToggle = (rowIndex: number, col: string, apiState: boolean) => {
     const updatedData = [...rowData];
-    const apiStateUpdated = apiState[rowIndex] === true ? false : true;
-    const moduleStateUpdated = moduleState[rowIndex] === true ? false : true;
-  
-    if (updatedData[rowIndex].api_state !== undefined) {
-      updatedData[rowIndex].api_state = apiStateUpdated;
-    }
-    if (updatedData[rowIndex].apistate !== undefined) {
-      updatedData[rowIndex].apistate = apiStateUpdated;
-    }
-    if (updatedData[rowIndex].isactive !== undefined) {
-      updatedData[rowIndex].isactive = moduleStateUpdated;
-    }
-    if (
-      updatedData[rowIndex].api_state === true ||
-      updatedData[rowIndex].apistate === true ||
-      updatedData[rowIndex].isactive === true
-    ) {
-      setEnableModalOpen(false);
-      setDisableModalOpen(true);
+    const row = updatedData[rowIndex];
+    let state;
+  setRowIndex(rowIndex)
+  setColumnName(col)
+    if (apiState) {
+      if (col === "Module_state" || col === "API state") {
+        state = "Disable";
+        setDisableModalOpen(true);
+      } else {
+        state = "Inactive";
+        setDisableModalOpen(true);
+      }
     } else {
-      setEnableModalOpen(true);
-      setDisableModalOpen(false);
+      if (col === "Module_state" || col === "API state") {
+        state = "Enable";
+        setEnableModalOpen(true);
+      } else {
+        state = "Active";
+        setEnableModalOpen(true);
+      }
     }
   
-    setCurrentRowData(updatedData[rowIndex]);
-  
-    setRowData(updatedData);
-  
-    setApiState(prevState => ({
-      ...prevState,
-      [rowIndex]: apiStateUpdated,
-    }));
-  
-    setModuleState(prevState => ({
-      ...prevState,
-      [rowIndex]: moduleStateUpdated,
-    }));
-  
-    setRoleState(prevState => ({
-      ...prevState,
-      [rowIndex]: apiStateUpdated, // Assuming roleState is similar to apiState and moduleState
-    }));
-  
-   
+    // Set the state for the modal prompt
+    setState(state); // Make sure to define this state variable in your component
   };
   
 
-  const confirmSubmit = async () => {
+  const confirmSubmit = async (rowIndex: number, col: string, apiState: boolean) => {
+    const updatedData = [...rowData];
+    const row = updatedData[rowIndex];
+     console.log("row:", row)
+    if (apiState) {
+      if (col === "Module_state" || col === "API state") {
+        row.api_state = true; // Set to true for enable
+        row.isactive = true;  // Set to true for active
+      } else {
+        row.isactive = true;  // Set to true for active
+      }
+    } else {
+      if (col === "Module_state" || col === "API state") {
+        row.api_state = false; // Set to false for disable
+        row.isactive = false;  // Set to false for inactive
+      } else {
+        row.isactive = false;  // Set to false for inactive
+      }
+    }
+  
+    updatedData[rowIndex] = row;
+    setCurrentRowData(row)
+    setRowData(updatedData);
     setEnableModalOpen(false);
     setDisableModalOpen(false);
     console.log(currentRowData);
@@ -419,7 +416,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index)}
+          onClick={() => handleToggle(index,col,apiState)}
         >
           {col==="Module_state" || col === "API state"?(
             <span>Enable</span>
@@ -431,7 +428,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index)}
+          onClick={() => handleToggle(index,col,apiState)}
         >
           {col==="Module_state" || col === "API state"?(
             <span>Disable</span>
@@ -714,23 +711,23 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <p>Do you want to delete this row?</p>
       </Modal>
       <Modal
-        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Enable</span>}
-        open={EnableModalOpen}
-        onOk={confirmSubmit}
-        onCancel={() => setEnableModalOpen(false)}
-        centered
-      >
-        <p>Do you want to <strong>Disable</strong> this State?</p>
-      </Modal>
-      <Modal
-        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
-        open={DisableModalOpen}
-        onOk={confirmSubmit}
-        onCancel={() => setDisableModalOpen(false)}
-        centered
-      >
-        <p>Do you want to <strong>Enable</strong> this State?</p>
-      </Modal>
+  title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Enable</span>}
+  open={EnableModalOpen}
+  onOk={() => confirmSubmit(rowIndex, columnName, true)} // Pass true for enabling
+  onCancel={() => setEnableModalOpen(false)}
+  centered
+>
+  <p>Do you want to <strong>{state}</strong> this State?</p>
+</Modal>
+<Modal
+  title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
+  open={DisableModalOpen}
+  onOk={() => confirmSubmit(rowIndex, columnName, false)} // Pass false for disabling
+  onCancel={() => setDisableModalOpen(false)}
+  centered
+>
+  <p>Do you want to <strong>{state}</strong> this State?</p>
+</Modal>
     </div>
   );
 

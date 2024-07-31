@@ -29,7 +29,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
     const [visibleColumns2, setVisibleColumns2] = useState<string[]>([]);
     
     const headers1 = ["rolename","isactive","createdby",  "modifiedby", "modifieddate"];
-    const headers2 = ["module_name","isactive", "modifiedby", "modifieddate"];
+    const headers2 = ["module_name","is_active", "modified_by", "modified_date"];
     
     const headermap1={
         "rolename": "Role",
@@ -40,10 +40,10 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
     }
 
     const headermap2={
-       "module_name": " Module_name",
-       "isactive":"Module_state",
-       "modifiedby":"Last modified by",
-       "modifieddate":"Last modified date & time"
+       "module_name": " Module name",
+       "is_active":"Module_state",
+       "modified_by":"Last modified by",
+       "modified_date":"Last modified date & time"
     }
 
 

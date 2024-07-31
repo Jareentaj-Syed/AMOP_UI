@@ -32,35 +32,36 @@ const Page: React.FC = () => {
 },[title])
 
   useEffect(() => {
-    const fetchInitialData = async () => {
-      setLoading(true);
-      try {
-        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-        const data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/get_superadmin_info",
-          role_name: role,
-          sub_module: "Partner Modules",
-          flag: "withoutparameters"
-        };
-
-        const response = await axios.post(url, { data });
-        console.log(response.data);
-        const resp = JSON.parse(response.data.body);
-        console.log(resp);
-        console.log("Environment:", resp.data.partners_and_sub_partners);
-        setPartnersData(resp.data.partners_and_sub_partners);
-      } catch (err) {
-        console.error(err);
-        setShowUserRole(false);
-      } finally {
-        setLoading(false);
-      }
-    };
 
     fetchInitialData();
   }, []);
+  const fetchInitialData = async () => {
+    setLoading(true);
+    try {
+      const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+      const data = {
+        tenant_name: partner || "default_value",
+        username: username,
+        path: "/get_superadmin_info",
+        role_name: role,
+        sub_module: "Partner Modules",
+        flag: "withoutparameters"
+      };
+
+      const response = await axios.post(url, { data });
+      console.log(response.data);
+      const resp = JSON.parse(response.data.body);
+      console.log(resp);
+      console.log("Environment:", resp.data.partners_and_sub_partners);
+      setPartnersData(resp.data.partners_and_sub_partners);
+    } catch (err) {
+      console.error(err);
+      setShowUserRole(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   const PartnersData = partnersData || {};
   const Partneroptions = Object.keys(PartnersData).map(partner => ({ value: partner, label: partner }));
@@ -106,22 +107,16 @@ const Page: React.FC = () => {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
       setSubPartners(PartnersData[partner] || []);
-
-      // Call fetchData with the selected partner
-      fetchData(partner, selectedSubPartner);
     } else {
       setSelectedPartner('');
       setSubPartners([]);
     }
   };
-
+  
   const handleSubpartnerChange = (selectedOption: { value: string; label: string } | null) => {
     if (selectedOption) {
       const subPartner = selectedOption.value;
       setSelectedSubPartner(subPartner);
-
-      // Call fetchData with the selected sub-partner
-      fetchData(selectedPartner, subPartner);
     } else {
       setSelectedSubPartner('');
     }
@@ -137,29 +132,39 @@ const Page: React.FC = () => {
 
   return (
     <div className='bg-gray-50'>
-      <div className='p-4 pl-2 pr-2'>
+      <div className='p-3 pl-2 pr-2'>
         <h3 className="tabs-sub-headings">Partner Modules</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 pt-1">
-        <div>
-          <label className="field-label">Partner</label>
-          <Select
-            value={Partneroptions.find(option => option.value === selectedPartner) || null}
-            onChange={handlePartnerChange}
-            options={Partneroptions}
-            styles={editableDrp}
-          />
-        </div>
-        <div>
-          <label className="field-label">Sub Partner</label>
-          <Select
-            onChange={handleSubpartnerChange}
-            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-            className="mt-1"
-            styles={editableDrp}
-          />
-        </div>
-      </div>
+      <div className="gap-4 p-4 pt-1">
+  <div className="flex items-center gap-4">
+    <div className="w-[320px]">
+      <label className="field-label">Partner</label>
+      <Select
+        value={Partneroptions.find(option => option.value === selectedPartner) || null}
+        onChange={handlePartnerChange}
+        options={Partneroptions}
+        styles={editableDrp}
+      />
+    </div>
+    <div className="w-[320px]">
+      <label className="field-label">Sub Partner</label>
+      <Select
+        onChange={handleSubpartnerChange}
+        options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+        className="mt-1"
+        styles={editableDrp}
+      />
+    </div>
+    <button
+      className='save-btn mt-7'
+      type="button" // Change to "button" to prevent default form submission
+      onClick={() => fetchData(selectedPartner, selectedSubPartner)}
+    >
+      Submit
+    </button>
+  </div>
+</div>
+
       {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} />}
     </div>
   );
