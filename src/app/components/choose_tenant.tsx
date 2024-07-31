@@ -18,6 +18,7 @@ const ChooseTenant: React.FC = () => {
   const {username, tenantNames, role}=useAuth()
   const partners=tenantNames
   const handleSelectedPartner = async (partnerName: string) => {
+    setSelectedPartnerName(partnerName)
     const data = {
       path:"/get_modules",
       role_name: role,
@@ -74,7 +75,8 @@ const ChooseTenant: React.FC = () => {
             style={{
               width: '200px',
               height: '35px',
-              borderColor: '#00C1F1',
+              borderColor: selectedPartnerName === partner ? 'black' : '#00C1F1',
+              borderWidth: selectedPartnerName === partner ? '2px' : '1px',
               color: '#00C1F1',
             }}
           >
