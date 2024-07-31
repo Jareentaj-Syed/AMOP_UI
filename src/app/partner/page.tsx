@@ -88,7 +88,7 @@ const Partner: React.FC = () => {
         };
 
         fetchData();
-    }, [router, partner, username, role, setPartnerInfo, setPartnerAuthentication, setPartnerModuleAccess, setCustomerGroups, setPartnerUsers, setNotifications]);
+    }, []);
 
     const switchToCarrierInfoTab = () => {
         setActiveTab('carrierInfo');

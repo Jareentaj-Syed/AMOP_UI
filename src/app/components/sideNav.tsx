@@ -91,7 +91,7 @@ const getTitle =(title:string)=>{
                 <button
                   onClick={() => handleDropdownClick(item.label)}
                   className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
-                    isActive(item.href) || openDropdowns[item.label] ? 'nav-active-link' : ''
+                    isActive(item.href)? 'nav-active-link' : ''
                   }`}
                 >
                   {item.icon}
@@ -111,7 +111,7 @@ const getTitle =(title:string)=>{
                             <button
                               onClick={() => handleDropdownClick(subItem.label)}
                               className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
-                                isActive(subItem.href) || openDropdowns[subItem.label] ? 'nav-active-link' : ''
+                                isActive(subItem.href) ? 'nav-active-link' : ''
                               }`}
                             >
                               <span>{subItem.label}</span>
@@ -130,7 +130,7 @@ const getTitle =(title:string)=>{
                                       className={`flex items-center space-x-2 p-2 nav-link ${
                                         currentPath === subSubItem.href ? 'nav-active-link' : ''
                                       }`}
-                  onClick={() => getTitle(item.label)}
+                                      onClick={() => getTitle(item.label)}
 
                                     >
                                       <span>{subSubItem.label}</span>
