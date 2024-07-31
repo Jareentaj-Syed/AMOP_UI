@@ -26,43 +26,43 @@ const billingaccountnumber_drp = Object.values(partnerData.data["Customer groups
 // Define modal data
 export const createModalData = [
   {
-    "display_name": "name",
-    "unique_name":"",
+    "display_name": "Name",
+    "unique_name": "name",
     "type": "text",
     "default": "",
     "mandatory": "true"
   },
   {
-      "display_name":"child_account",
-      "unique_name":"",
+    "display_name": "Includes Child Account?",
+    "unique_name": "child_account",
     "type": "checkbox",
     "default": "",
     "mandatory": "false"
   },
   {
     "display_name": "Customers",
-    "unique_name":"",
+    "unique_name": "Customers",
     "type": "dropdown",
     "default": "",
     "mandatory": "true"
   },
   {
-   "display_name":"billing_account_number",
-   "unique_name":"",
+    "display_name": "BAN",
+    "unique_name": "billing_account_number",
     "type": "dropdown",
     "default": "",
     "mandatory": "false"
   },
   {
-   "display_name":"customer_rate_plan",
-   "unique_name":"",
+    "display_name": "Customer rate plan",
+    "unique_name": "customer_rate_plan",
     "type": "dropdown",
     "default": "",
     "mandatory": "false"
   },
   {
-    "display_name": "feature_codes",
-    "unique_name":"",
+    "display_name": "Feature codes",
+    "unique_name": "feature_codes",
     "type": "dropdown",
     "default": "",
     "mandatory": "false"

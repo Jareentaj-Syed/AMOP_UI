@@ -8,9 +8,10 @@ import axios from 'axios';
 import { useAuth } from './auth_context';
 
 interface Column {
-  label: string;
+  display_name: string;
+  unique_name: string;
   type: string;
-  value: any;
+  default: string;
   mandatory: string;
 }
 
@@ -19,20 +20,32 @@ interface EditModalProps {
   onClose: () => void;
   onSave: (updatedRow: any) => void;
   rowData: any;
-  infoColumns: Column[];
-  editColumns: Column[];
+  createModalData: Column[];
   isEditable: boolean;
   heading: string;
-  isTabEdit: any
+  isTabEdit: any;
+  generalFields?: Record<string, any>; // To store general fields for dropdowns
 }
 
-const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData, infoColumns = [], editColumns = [], isEditable, heading, isTabEdit }) => {
+const EditModal: React.FC<EditModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  rowData,
+  createModalData = [],
+  isEditable,
+  heading,
+  isTabEdit,
+  generalFields
+}) => {
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const editableDrp = DropdownStyles
+  const editableDrp = DropdownStyles;
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
-  const {username, tenantNames, role, partner}=useAuth()
-  
+  const { username, tenantNames, role, partner } = useAuth();
+// console.log("createModalData",createModalData)
+// console.log("formData",createModalData)
+
   useEffect(() => {
     setFormData(rowData || {});
   }, [rowData]);
@@ -49,127 +62,121 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
       [name]: value,
     }));
   };
+
   const handleSave = () => {
-    console.log("form data:",formData)
+    console.log("form data:", formData);
     onSave(formData);
-    
     onClose();
   };
-
 
   const handleCancel = () => {
     onClose();
   };
+
   const showConfirmation = () => {
     setIsConfirmationOpen(true);
   };
 
-  const handleConfirmSave = async() => {
-    if(formData){
+  const handleConfirmSave = async () => {
+    if (formData) {
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
         let data;
-        if(heading==="Customer Group"){
-          if(formData){
-            formData["modifiedby"]=username
+        if (heading === "Customer Group") {
+          if (formData) {
+            formData["modifiedby"] = username;
           }
           data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/update_partner_info",
-          role_name: role,
-          module_name: "Customer groups",
-          action:"edit",
-          updated_data:formData
-          };
-        }
-        if(heading==="Carrier"){
-          if(formData){
-            formData["lastmodifiedby"]=username
-          }
-           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path: "/update_partner_info",
             role_name: role,
-            "sub_module": "Partner API", 
+            module_name: "Customer groups",
+            action: "edit",
+            updated_data: formData
+          };
+        }
+        if (heading === "Carrier") {
+          if (formData) {
+            formData["lastmodifiedby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API",
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
-           "changed_data":formData
-          };
-        }
-        
-        if(heading==="API"){
-          if(formData){
-            formData["last_modified_by"]=username
-            
-          }
-          data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path:"/update_superadmin_data",
-            role_name: role,
-            "sub_module": "Partner API", 
-            "sub_tab": "Amop APIs",
-            "table_name": "amop_apis",
-            "changed_data":formData
+            "changed_data": formData
           };
         }
 
-        if(heading==="E911 Customer"){
-          if(formData){
-            formData["modifiedby"]=username
-            
+        if (heading === "API") {
+          if (formData) {
+            formData["last_modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_people_data",
+            path: "/update_superadmin_data",
             role_name: role,
-            "parent_module": "People", 
+            "sub_module": "Partner API",
+            "sub_tab": "Amop APIs",
+            "table_name": "amop_apis",
+            "changed_data": formData
+          };
+        }
+
+        if (heading === "E911 Customer") {
+          if (formData) {
+            formData["modifiedby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_people_data",
+            role_name: role,
+            "parent_module": "People",
             "module": "E9 Customer Customer",
             "table_name": "customers",
-            "changed_data":formData
+            "changed_data": formData
           };
         }
-        if(heading===" NetSapien Customer"){
-          if(formData){
-            formData["modifiedby"]=username
-            
+        if (heading === " NetSapien Customer") {
+          if (formData) {
+            formData["modifiedby"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_people_data",
+            path: "/update_people_data",
             role_name: role,
-            "parent_module": "People", 
+            "parent_module": "People",
             "module": " NetSapien Customer",
             "table_name": "customers",
-            "changed_data":formData
+            "changed_data": formData
           };
         }
-        if(heading==="RevIO Customer"){
-          if(formData){
-            formData["modifiedby"]=username
-            
+        if (heading === "RevIO Customer") {
+          if (formData) {
+            formData["modifiedby"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_people_data",
+            path: "/update_people_data",
             role_name: role,
-            "parent_module": "People", 
+            "parent_module": "People",
             "module": "RevIO Customer",
             "table_name": "customers",
-            "changed_data":formData
+            "changed_data": formData
           };
         }
-    
-     
+
         const response = await axios.post(url, { data });
-       
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -190,41 +197,41 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
     setIsCreateUserOpen(true);
   };
 
-  const formatColumnName = (name: string) => {
-    return name
-      .replace(/_/g, ' ')          // Replace underscores with spaces
-      .split(' ')                  // Split the string into words
-      .map(word =>                 // Capitalize each word
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      )
-      .join(' ');                  // Join the words back into a single string
-  };
-  
+  // const formatColumnName = (name: string) => {
+  //   return name
+  //     .replace(/_/g, ' ')          // Replace underscores with spaces
+  //     .split(' ')                  // Split the string into words
+  //     .map(word =>                 // Capitalize each word
+  //       word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  //     )
+  //     .join(' ');                  // Join the words back into a single string
+  // };
 
   const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
-  const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;  
+  const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
+
   return (
     <div>
-       {isTabEdit ? (
+      {isTabEdit ? (
         <>
-        <Modal
-        title={"Edit User"}
-        open={isOpen}
-        onCancel={handleCancel}
-        width={modalWidth}
-        styles={{ body: { height: modalHeight, padding: '4px' } }}
-        footer={null}
-        >
-          <div className='popup'>
-          <CreateUser 
-          isPopup={true}
-          rowData={rowData}
-          />
+          <Modal
+            title={"Edit User"}
+            open={isOpen}
+            onCancel={handleCancel}
+            width={modalWidth}
+            styles={{ body: { height: modalHeight, padding: '4px' } }}
+            footer={null}
+          >
+            <div className='popup'>
+              <CreateUser
+                isPopup={true}
+                rowData={rowData}
+              />
 
-          </div>
-        </Modal>
+            </div>
+          </Modal>
         </>
-        
+
       ) : (
         <>
           <Modal
@@ -251,84 +258,81 @@ const EditModal: React.FC<EditModalProps> = ({ isOpen, onClose, onSave, rowData,
           >
             <div className='popup'>
               <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
-                {!isEditable
-                  ? infoColumns.map((column: Column) => (
-                    <div key={column.label} className="flex flex-col mb-4">
-                      <label className="field-label">
-                        {formatColumnName(column.label)} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
-                      </label>
+                {createModalData.map((column: Column) => (
+                  <div key={column.unique_name} className="flex flex-col mb-4">
+                    <label className="field-label">
+                      {column.display_name} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
+                    </label>
+                    {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={column.label}
-                        value={formData[column.label] || ''}
-                        readOnly={!isEditable}
+                        name={column.unique_name}
+                        value={formData[column.unique_name] || ''}
+                        onChange={(e) => handleChange(column.unique_name, e.target.value)}
                         className="input"
                       />
-                    </div>
-                  ))
-                  : editColumns.map((column: Column) => (
-                    <div key={column.label} className="flex flex-col mb-4">
-                      <label className="field-label">
-                      {formatColumnName(column.label)} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
-                      </label>
-                      {column.type === 'text' && (
-                        <Input
-                          type="text"
-                          name={column.label}
-                          value={formData[column.label] || ''}
-                          onChange={(e) => handleChange(column.label, e.target.value)}
-                          className="input"
-                        />
-                      )}
-                      {column.type === 'dropdown' && (
-                        <Select
-                          name={column.label}
-                          value={{ label: formData[column.label], value: formData[column.label] }}
-                          onChange={(selectedOption: any) => handleChange(column.label, selectedOption.value)}
-                          options={column.value.map((option: string) => ({ label: option, value: option }))}
-                          styles={editableDrp}
-                        />
-                      )}
-                      {column.type === 'checkbox' && (
-                        <Checkbox
-                          checked={formData[column.label] || false}
-                          onChange={(e) => handleChange(column.label, e.target.checked)}
-                          className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        >
-                          {column.label}
-                        </Checkbox>
-                      )}
-                      {column.type === 'date' && (
-                        <Input
-                          type="date"
-                          name={column.label}
-                          value={formData[column.label] || ''}
-                          onChange={(e) => handleChange(column.label, e.target.value)}
-                          className="input"
-                        />
-                      )}
-                    </div>
-                  ))}
+                    )}
+                    {column.type === 'dropdown' && (
+                      <Select
+                        styles={editableDrp}
+                        isDisabled={!isEditable}
+                        classNamePrefix="select"
+                        placeholder="Select..."
+                        value={
+                          generalFields &&
+                          generalFields[column.unique_name] &&
+                          Array.isArray(generalFields[column.unique_name])
+                            ? generalFields[column.unique_name].find(
+                                (option: any) => option.value === formData[column.unique_name]
+                              ) || null
+                            : null
+                        }
+                        onChange={(selectedOption) => handleChange(column.unique_name, selectedOption?.value)}
+                        options={
+                          generalFields&&generalFields[column.unique_name] && Array.isArray(generalFields[column.unique_name])
+                            ? generalFields[column.unique_name].map((option: any) => ({
+                              label: option,
+                              value: option,
+                            }))
+                            : [{ label: "No options", value: "No options" }]
+                        }
+                      />
+                    )}
+                    {column.type === 'checkbox' && (
+                      <Checkbox
+                        checked={formData[column.unique_name] || false}
+                        onChange={(e) => handleChange(column.unique_name, e.target.checked)}
+                        className="mt-1"
+                      >
+                        {column.display_name}
+                      </Checkbox>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </Modal>
 
           <Modal
-            visible={isConfirmationOpen}
-            onOk={handleConfirmSave}
+            title="Confirmation"
+            open={isConfirmationOpen}
             onCancel={handleCancelConfirmation}
-            okText="Save"
-            cancelText="Cancel"
-            centered
+            footer={[
+              <button key="cancel" onClick={handleCancelConfirmation} className="cancel-btn">
+                <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
+                Cancel
+              </button>,
+              <button key="confirm" onClick={handleConfirmSave} className="save-btn">
+                <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
+                Confirm
+              </button>,
+            ]}
           >
-            <h3 className='confirm-popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
-            <p>Are you sure you want to save changes?</p>
+            <p>Are you sure you want to save the changes?</p>
           </Modal>
         </>
-      )
-      }
+      )}
     </div>
-
   );
 };
 

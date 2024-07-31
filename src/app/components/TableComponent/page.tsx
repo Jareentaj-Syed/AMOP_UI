@@ -32,13 +32,13 @@ interface TableComponentProps {
   allowedActions?: ('edit' | 'delete' | 'info' | 'Actions' | 'SingleClick' | 'tabsEdit' | 'tabsInfo')[];
   popupHeading: string;
   advancedFilters?: any
-  infoColumns?: any[]
-  editColumns?: any[]
+  createModalData?: any[]
+  generalFields?: any
   isSelectRowVisible?: boolean
   headerMap?:any
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, infoColumns, editColumns, advancedFilters, isSelectRowVisible = true ,headerMap}) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, createModalData, generalFields, advancedFilters, isSelectRowVisible = true ,headerMap}) => {
   const router = useRouter();
 
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
@@ -67,6 +67,70 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       console.error('NextRouter is not available.');
     }
   }, [router]);
+
+  useEffect( () => {
+    const lastPageWithData=5
+    const updatePaginator = async() => {
+      if(currentPage>lastPageWithData){
+        try {
+          const url =
+            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+    
+          let data={};
+          if(popupHeading==="Customer Group"){
+            data = {
+              tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Customer groups",
+            action:"delete",
+            };
+          }
+          if(popupHeading==="User"){
+            data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Partner users",
+            action:"delete",
+            };
+          }
+          
+          if(popupHeading==="E911 Customer"){
+    
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_people_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": "E911 Customer Customer",
+              "table_name": "customers",
+            };
+          }
+          if(popupHeading===" NetSapien Customer"){
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path:"/update_people_data",
+              role_name: role,
+              "parent_module": "People", 
+              "module": " NetSapien Customer",
+              "table_name": " customers",
+            };
+          }
+        const response = await axios.post(url, { data });
+         
+        } catch (err) {
+          console.error("Error fetching data:", err);
+        }
+      }
+    };
+    updatePaginator()
+  }, [currentPage]);
+  
 
   const handleActionSingleClick = () => {
     if (router) {
@@ -100,7 +164,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   useEffect(() => {
     setRowData(initialData);
-    console.log("initialdata",initialData)
+    // console.log("initialdata",initialData)
     // console.log(headers)
   }, [initialData]);
 
@@ -311,7 +375,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const confirmSubmit = async (rowIndex: number, col: string, apiState: boolean) => {
     const updatedData = [...rowData];
     const row = updatedData[rowIndex];
-     console.log("row:", row)
+    //  console.log("row:", row)
     if (apiState) {
       if (col === "Module_state" || col === "API state") {
         row.api_state = true; // Set to true for enable
@@ -333,7 +397,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setRowData(updatedData);
     setEnableModalOpen(false);
     setDisableModalOpen(false);
-    console.log(currentRowData);
+    // console.log(currentRowData);
     if(currentRowData){
       try {
         const url =
@@ -547,7 +611,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     >
       {/* Render actions column if allowedActions is true */}
       {visibleColumns.length>0 && (
-                <td className="px-6 border-b border-gray-300 table-cell">{index+1}</td>
+                <td className="px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
               )}
       {headers.map((header, columnIndex) => (
         visibleColumns.includes(header) ? (
@@ -692,8 +756,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       )}
 
       <EditModal
-        infoColumns={infoColumns || []}
-        editColumns={infoColumns || []}
+        createModalData={createModalData || []}
         isOpen={editModalOpen}
         isEditable={isEditable}
         rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
@@ -701,6 +764,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         onClose={handleCloseModal}
         heading={popupHeading}
         isTabEdit={tabsEdit}
+        generalFields={generalFields}
       />
       <Modal
         title="Confirm Deletion"

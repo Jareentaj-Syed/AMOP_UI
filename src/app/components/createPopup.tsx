@@ -1,5 +1,5 @@
-import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import React, { useState, useEffect, useRef } from 'react';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import { Checkbox, Input, Modal } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
@@ -7,261 +7,266 @@ import axios from 'axios';
 import { useAuth } from './auth_context';
 
 interface Column {
-  label: string;
+  display_name: string;
+  unique_name: string;
   type: string;
-  value: any[];
+  default: string;
   mandatory: string;
-  header?:string[]
 }
 
 interface CreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newRow: any) => void;
-  columnNames: any[];
+  onSave: (newData: any) => void;
+  columnNames: Column[];
   heading: string;
-  header?:string[]
-
+  generalFields?: Record<string, any>;
+  header:any[] // To store general fields for dropdowns
 }
 
-const CreateModal: React.FC<CreateModalProps> = ({ isOpen, onClose, onSave, columnNames, heading ,header=[]}) => {
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  const [isScrollable, setIsScrollable] = useState(false);
+const CreateModal: React.FC<CreateModalProps> = ({
+  isOpen,
+  onClose,
+  onSave,
+  columnNames = [],
+  heading,
+  generalFields,
+  header
+}) => {
+  const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
-  const modalContentRef = useRef<HTMLDivElement>(null);
-  const {username, tenantNames, role, partner}=useAuth()
-  const editableDrp=DropdownStyles
-  useEffect(() => {
-    if (modalContentRef.current) {
-      const isOverflowing = modalContentRef.current.scrollHeight > modalContentRef.current.clientHeight;
-      setIsScrollable(isOverflowing);
-    }
-  }, [columnNames, isOpen]);
-
-  useEffect(() => {
-    if (!isOpen) {
-      const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
-      setFormData(initialFormData);
-    }
-  }, [isOpen]);
-
-  if (!isOpen) return null;
-
+  const editableDrp = DropdownStyles;
+  const { username, tenantNames, role, partner } = useAuth();
+  // useEffect(() => {
+  //   if (!isOpen) {
+  //     const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
+  //     setFormData(initialFormData);
+  //   }
+  // }, [isOpen]);
   const handleChange = (name: string, value: any) => {
-    setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
+    setFormData((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
-  const handleSave= async() => {
-    // Validate mandatory fields
-    const missingFields = columnNames
-      .filter(column => column.mandatory === 'true' && !formData[column.label])
-      .map(column => column.label);
 
-      if(formData){
-        try {
-          const url =
-            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-  
-          let data;
-          if(heading==="Customer Group"){
-            if(formData){
-              formData["modifiedby"]=username
-            }
-            data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path: "/update_partner_info",
-            role_name: role,
-            module_name: "Customer groups",
-            action:"create",
-            updated_data:formData
-            };
-          }
-          if(heading==="E911 Customer"){
-            if(formData){
-              formData["modifiedby"]=username
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path:"/update_poeple_data",
-              role_name: role,
-              "parent_module": "People", 
-              "module": "E9 Customer Customer",
-              "table_name": "customers",
-              "changed_data":formData
-            };
-          }
-          if(heading===" NetSapien Customer"){
-            if(formData){
-              formData["modifiedby"]=username
-              
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path:"/update_poeple_data",
-              role_name: role,
-              "parent_module": "People", 
-              "module": " NetSapien Customer",
-              "table_name": "customers",
-              "changed_data":formData
-            };
-          }
-          if(heading==="RevIO Customer"){
-            if(formData){
-              formData["modifiedby"]=username
-              
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path:"/update_poeple_data",
-              role_name: role,
-              "parent_module": "People", 
-              "module": "RevIO Customer",
-              "table_name": "customers",
-              "changed_data":formData
-            };
-          }
-          if(heading===" Bandwidth Customer"){
-            if(formData){
-              formData["modifiedby"]=username
-              
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path:"/update_poeple_data",
-              role_name: role,
-              "parent_module": "People", 
-              "module": "Bandwidth Customer",
-              "table_name": "customers",
-              "changed_data":formData
-            };
-          }
-         
-       
-          const response = await axios.post(url, { data });
-         
-        } catch (err) {
-          console.error("Error fetching data:", err);
-        }
-      }
-
+  const handleCreate = () => {
+    const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
+    setFormData(initialFormData);
+    console.log("form data:", formData);
     onSave(formData);
     onClose();
-    console.log("formData",formData)
   };
 
-  const handleSaveClick = () => {
+  const showConfirmation = () => {
     setIsConfirmationOpen(true);
   };
 
-  const handleConfirmSave = () => {
-    handleSave();
+  const handleConfirmCreate = async () => {
+    if (formData) {
+      try {
+        const url =
+          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+
+        let data;
+        if (heading === "Customer Group") {
+          if (formData) {
+            formData["createdby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_partner_info",
+            role_name: role,
+            module_name: "Customer groups",
+            action: "create",
+            new_data: formData
+          };
+        }
+        if (heading === "Carrier") {
+          if (formData) {
+            formData["createdby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API",
+            "sub_tab": "Carrier APIs",
+            "table_name": "carrier_apis",
+            "new_data": formData
+          };
+        }
+
+        if (heading === "API") {
+          if (formData) {
+            formData["created_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API",
+            "sub_tab": "Amop APIs",
+            "table_name": "amop_apis",
+            "new_data": formData
+          };
+        }
+
+        if (heading === "E911 Customer") {
+          if (formData) {
+            formData["createdby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": "E9 Customer Customer",
+            "table_name": "customers",
+            "new_data": formData
+          };
+        }
+        if (heading === " NetSapien Customer") {
+          if (formData) {
+            formData["createdby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": " NetSapien Customer",
+            "table_name": "customers",
+            "new_data": formData
+          };
+        }
+        if (heading === "RevIO Customer") {
+          if (formData) {
+            formData["createdby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": "RevIO Customer",
+            "table_name": "customers",
+            "new_data": formData
+          };
+        }
+
+        const response = await axios.post(url, { data });
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    }
+    handleCreate();
     setIsConfirmationOpen(false);
   };
 
-  const handleCancel = () => {
+  const handleCancelConfirmation = () => {
     setIsConfirmationOpen(false);
   };
-  const formatColumnName = (name: string) => {
-    return name
-      .replace(/_/g, ' ')          // Replace underscores with spaces
-      .split(' ')                  // Split the string into words
-      .map(word =>                 // Capitalize each word
-        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-      )
-      .join(' ');                  // Join the words back into a single string
-  };
-  
-  const modalWidth = (window.innerWidth * 2.5) / 4;
-  const modalHeight = (window.innerHeight * 2.5) / 4;
+
+  const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
+  const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
 
   return (
-    <>
+    <div>
       <Modal
-        visible={isOpen}
+        open={isOpen}
         onCancel={onClose}
         title={
-          <h3 className='popup-heading'>{`Add New ${heading}`}</h3>
+          <h3 className='popup-heading'>Create {heading}</h3>
         }
-        footer={
-          <div className="flex justify-center space-x-2">
-          <button onClick={onClose} className="cancel-btn">
-            <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
-            Cancel
-          </button>
-          <button onClick={handleSaveClick} className="save-btn">
-            <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-            Save
-          </button>
-        </div>
-        }
+        footer={(
+          <div className="justify-center flex space-x-2">
+            <button onClick={onClose} className="cancel-btn">
+              <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
+              Cancel
+            </button>
+            <button onClick={showConfirmation} className="save-btn">
+              <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
+              Create
+            </button>
+          </div>
+        )}
         width={modalWidth}
         styles={{ body: { height: modalHeight, padding: '4px' } }}
       >
-        <div ref={modalContentRef} className="popup">
-          <form>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-2">
-              {columnNames.map(({ label, type, value, mandatory }) => (
-                <div key={label} className="flex flex-col mb-4">
-                  <label className="field-label">
-                  {formatColumnName(label)} {mandatory === 'true' && <span className="text-red-500">*</span>}
-                  </label>
-                  {type === 'text' && (
-                    <Input
-                      type="text"
-                      name={formatColumnName(label)}
-                      value={formData[label] || ''}
-                      onChange={(e) => handleChange(label, e.target.value)}
-                      className="input"
-                    />
-                  )}
-                  {type === 'dropdown' && (
-                      <Select
-                        value={{ label: formData[label], value: formData[label] }}
-                        onChange={(selectedOption:any) => handleChange(label, selectedOption.value)}
-                        options={value.map((option: any) => ({ label: option, value: option }))}
-                        styles={editableDrp}
-                      />
-                  )}
-                  {type === 'checkbox' && (
-                    <Checkbox
-                      checked={formData[label] || false}
-                      onChange={(e) => handleChange(label, e.target.checked)}
-                      className="mt-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    >
-                      {label}
-                    </Checkbox>
-                  )}
-                  {type === 'date' && (
-                    <Input
-                      type="date"
-                      name={label}
-                      value={formData[label] || ''}
-                      onChange={(e) => handleChange(label, e.target.value)}
-                      className="input"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          </form>
+        <div className='popup'>
+          <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
+            {columnNames.map((column: Column) => (
+              <div key={column.unique_name} className="flex flex-col mb-4">
+                <label className="field-label">
+                  {column.display_name} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
+                </label>
+                {column.type === 'text' && (
+                  <Input
+                    type="text"
+                    name={column.unique_name}
+                    value={formData[column.unique_name] || ''}
+                    onChange={(e) => handleChange(column.unique_name, e.target.value)}
+                    className="input"
+                  />
+                )}
+                {column.type === 'dropdown' && (
+                  <Select
+                    styles={editableDrp}
+                    classNamePrefix="select"
+                    placeholder="Select..."
+                    value={
+                      generalFields &&
+                      generalFields[column.unique_name] &&
+                      Array.isArray(generalFields[column.unique_name])
+                        ? generalFields[column.unique_name].find(
+                            (option: any) => option.value === formData[column.unique_name]
+                          ) || null
+                        : null
+                    }
+                    onChange={(selectedOption) => handleChange(column.unique_name, selectedOption?.value)}
+                    options={
+                      generalFields && generalFields[column.unique_name] && Array.isArray(generalFields[column.unique_name])
+                        ? generalFields[column.unique_name].map((option: any) => ({
+                          label: option,
+                          value: option,
+                        }))
+                        : [{ label: "No options", value: "No options" }]
+                    }
+                  />
+                )}
+                {column.type === 'checkbox' && (
+                  <Checkbox
+                    checked={formData[column.unique_name] || false}
+                    onChange={(e) => handleChange(column.unique_name, e.target.checked)}
+                    className="mt-1"
+                  >
+                    {column.display_name}
+                  </Checkbox>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </Modal>
 
-      <Modal
+       <Modal
         visible={isConfirmationOpen}
-        onOk={handleConfirmSave}
-        onCancel={handleCancel}
+        onOk={handleConfirmCreate}
+        onCancel={handleCancelConfirmation}
         style={{ zIndex: 10000 }}
         centered
       >
         <h3 className='confirm-popup-heading'>{`Add New ${heading}`}</h3>
         <p>Do you want to save?</p>
       </Modal>
-    </>
+    </div>
   );
 };
 

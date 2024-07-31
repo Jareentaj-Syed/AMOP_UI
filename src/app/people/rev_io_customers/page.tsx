@@ -154,8 +154,7 @@ const RevIOCustomers: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["edit", "info"]}
           popupHeading="RevIO Customer"
-          infoColumns={createColumns}
-          editColumns={createColumns}
+          createModalData={createColumns}
         />
       
       <CreateModal

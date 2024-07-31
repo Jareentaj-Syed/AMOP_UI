@@ -64,8 +64,8 @@ const Partner: React.FC = () => {
                         role_name: role,
                         modules_list: [tab.module],
                         pages: {
-                            "Customer groups": { start: 0, end: 10 },
-                            "Partner users": { start: 0, end: 10 }
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
                         }
                     };
 

@@ -83,8 +83,8 @@ const CustomerGroups: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["edit", "delete"]}
           popupHeading='Customer Group'
-          infoColumns={createColumns}
-          editColumns={createColumns}
+          createModalData={createColumns}
+          generalFields={{}}
         />
 
         <CreateModal
