@@ -43,8 +43,8 @@ const EditModal: React.FC<EditModalProps> = ({
   const editableDrp = DropdownStyles;
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
   const { username, tenantNames, role, partner } = useAuth();
-// console.log("createModalData",createModalData)
-// console.log("formData",createModalData)
+  // console.log("createModalData",createModalData)
+  // console.log("formData",createModalData)
 
   useEffect(() => {
     setFormData(rowData || {});
@@ -132,7 +132,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
         if (heading === "E911 Customer") {
           if (formData) {
-            formData["modifiedby"] = username;
+            formData["modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -140,8 +140,8 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": "E9 Customer Customer",
-            "table_name": "customers",
+            "module": "E911 Customer Customer",
+            "table_name": "weste911customer",
             "changed_data": formData
           };
         }
@@ -186,6 +186,7 @@ const EditModal: React.FC<EditModalProps> = ({
   };
 
   const handleCancelConfirmation = () => {
+    handleConfirmSave()
     setIsConfirmationOpen(false);
   };
 
@@ -280,16 +281,16 @@ const EditModal: React.FC<EditModalProps> = ({
                         placeholder="Select..."
                         value={
                           generalFields &&
-                          generalFields[column.db_column_name] &&
-                          Array.isArray(generalFields[column.db_column_name])
+                            generalFields[column.db_column_name] &&
+                            Array.isArray(generalFields[column.db_column_name])
                             ? generalFields[column.db_column_name].find(
-                                (option: any) => option.value === formData[column.db_column_name]
-                              ) || null
+                              (option: any) => option.value === formData[column.db_column_name]
+                            ) || null
                             : null
                         }
                         onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
                         options={
-                          generalFields&&generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                          generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
                             ? generalFields[column.db_column_name].map((option: any) => ({
                               label: option,
                               value: option,
@@ -312,24 +313,17 @@ const EditModal: React.FC<EditModalProps> = ({
               </div>
             </div>
           </Modal>
-
           <Modal
-            title="Confirmation"
-            open={isConfirmationOpen}
+            visible={isConfirmationOpen}
+            onOk={handleCancelConfirmation}
             onCancel={handleCancelConfirmation}
-            footer={[
-              <button key="cancel" onClick={handleCancelConfirmation} className="cancel-btn">
-                <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
-                Cancel
-              </button>,
-              <button key="confirm" onClick={handleConfirmSave} className="save-btn">
-                <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
-                Confirm
-              </button>,
-            ]}
+            style={{ zIndex: 10000 }}
+            title="Confirmation"
+            centered
           >
             <p>Are you sure you want to save the changes?</p>
           </Modal>
+
         </>
       )}
     </div>

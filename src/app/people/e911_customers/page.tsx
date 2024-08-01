@@ -180,9 +180,9 @@ useEffect(() => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={[]}
+        columnNames={createModalData}
         heading="E911 Customer"
-        header={Object.keys(tableData[0])}
+        header={tableData?Object.keys(tableData[0]):[]}
       />
     </div>
   );

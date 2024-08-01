@@ -169,9 +169,9 @@ const BandWidthCustomers: React.FC = () => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={[]}
+        columnNames={createModalData}
         heading="Bandwidth Customer"
-        header={Object.keys(tableData[0])}
+        header={tableData?Object.keys(tableData[0]):[]}
       />
     </div>
   );

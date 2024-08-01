@@ -37,12 +37,12 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
   const { username, tenantNames, role, partner } = useAuth();
-  // useEffect(() => {
-  //   if (!isOpen) {
-  //     const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
-  //     setFormData(initialFormData);
-  //   }
-  // }, [isOpen]);
+  useEffect(() => {
+    if (!isOpen) {
+      const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
+      setFormData(initialFormData);
+    }
+  }, [isOpen]);
   const handleChange = (name: string, value: any) => {
     setFormData((prevState: any) => ({
       ...prevState,
@@ -51,8 +51,6 @@ const CreateModal: React.FC<CreateModalProps> = ({
   };
 
   const handleCreate = () => {
-    const initialFormData = Object.fromEntries(header.map((h) => [h, "None"]));
-    setFormData(initialFormData);
     console.log("form data:", formData);
     onSave(formData);
     onClose();
@@ -125,8 +123,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
             path: "/create_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": "E9 Customer Customer",
-            "table_name": "customers",
+            "module": "E911 Customer Customer",
+            "table_name": "weste911customer",
             "new_data": formData
           };
         }
@@ -210,8 +208,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 {column.type === 'text' && (
                   <Input
                     type="text"
-                    name={column.db_column_name}
-                    value={formData[column.db_column_name] || ''}
+                    // name={column.db_column_name}
+                    // value={formData[column.db_column_name] || ''}
                     onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                     className="input"
                   />
