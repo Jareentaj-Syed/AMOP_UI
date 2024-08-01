@@ -101,6 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           content: response.data.message || 'Login failed. Please check your credentials and try again.',
           centered:true
         });
+        setLoading(false)
         setIsAuthenticated(false);
       }
     } catch (error) {
@@ -111,12 +112,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           content: error.message || 'An unexpected error occurred during login. Please try again.',
           centered:true
         });
+        setLoading(false)
       } else {
         Modal.error({
           title: 'Login Error',
           content: 'An unexpected error occurred during login. Please try again.',
           centered:true
         });
+        setLoading(false)
       }
 
       setIsAuthenticated(false);
