@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useRef,useState ,useEffect} from 'react';
 import { EnvelopeIcon, QuestionMarkCircleIcon, Bars3Icon, UserIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingOutlined, DownloadOutlined, DownOutlined, KeyOutlined} from '@ant-design/icons';
@@ -19,10 +19,23 @@ const Header: React.FC = () => {
   const router = useRouter();
   const [showLogout, setShowLogout] = useState(false);
   const { logout , LogoutChooseTenant} = useAuth(); 
+  const menuRef = useRef<HTMLDivElement | null>(null);
   const handleClick = () => {
     setShowLogout(!showLogout);
   };
- 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+     setShowLogout(false)
+      // Call your function here
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleLogout = () => {
     logout()
     const pathname = window.location.pathname;
@@ -71,10 +84,11 @@ const Header: React.FC = () => {
     <DownOutlined className='w-3 h-3'/>
   </div>
 </div>
-
-          
+  
           {showLogout && (
-      <div className="absolute top-full mt-2 bg-white text-red-500 rounded shadow-md whitespace-normal text-sm w-[200px] flex flex-col ">
+      <div 
+      ref={menuRef}
+      className="absolute top-full mt-2 bg-white text-red-500 rounded shadow-md whitespace-normal text-sm w-[200px] flex flex-col ">
       <button
         onClick={handleLogout}
         className="text-black rounded hover:bg-[#E5E7EB] whitespace-nowrap p-2  flex items-center "
