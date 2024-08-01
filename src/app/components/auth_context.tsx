@@ -2,6 +2,7 @@ import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 import { AUTHENTICATION_ROUTES } from '../components/routes/route_constants';
 import { Modal } from 'antd';
+import { getCurrentDateTime } from './header_constants';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -15,6 +16,8 @@ interface AuthContextType {
   username: string | null;
   setUsername: (username: string | null) => void;
   handleSelectedPartner: (partnerName: string) => void;
+  showPasswordUpdate: boolean;
+  setShowPasswordUpdate: (value: boolean) => void;
   showPassword: boolean;
   setShowPassword: (value: boolean) => void;
   tenantNames: string[];
@@ -33,10 +36,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [showPasswordUpdate, setShowPasswordUpdate] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [tenantNames, setTenantNames] = useState<string[]>([]); // Add tenantNames state
-  const [role, setRole] = useState<string | null>(null);// Add tenantNames state
-  const [modules, setModules] = useState<any[]>([]); // Initialize modules state
+  const [tenantNames, setTenantNames] = useState<string[]>([]);
+  const [role, setRole] = useState<string | null>(null);
+  const [modules, setModules] = useState<any[]>([]);
 
   const login = async (username: string, password: string) => {
     setUsername(username);
@@ -44,15 +48,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       path: "/login_using_database",
       user_name: username,
       password: password,
+      request_received_at: getCurrentDateTime()
     };
     try {
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
-        }}
-      );
-  
+        }
+      });
+
       if (response.status === 200) {
         const resp = JSON.parse(response.data.body);
         if (resp.flag === false) {
@@ -65,7 +70,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           const tenant_names = resp["tenant_names"];
           const role = resp["role"];
           setRole(role);
-          setTenantNames(tenant_names); // Set tenant names
+          setTenantNames(tenant_names);
           setIsAuthenticated(true);
         }
       } else {
@@ -89,28 +94,25 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           content: 'An unexpected error occurred during login. Please try again.',
         });
       }
-  
+
       setIsAuthenticated(false);
     }
   };
 
-  const  LogoutChooseTenant  = () => {
-    // setIsAuthenticated(false);
-    // setUsername(null);
+  const LogoutChooseTenant = () => {
     setPartner(null);
     setSelectedPartner(false);
     setShowPassword(false);
-    // setTenantNames([]); // Reset tenant names on logout
   };
 
-  const logout = () =>{
-     setIsAuthenticated(false);
-     setUsername(null);
-     setPartner(null);
-     setSelectedPartner(false);
-     setShowPassword(false);
-     setTenantNames([]);
-  }
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUsername(null);
+    setPartner(null);
+    setSelectedPartner(false);
+    setShowPassword(false);
+    setTenantNames([]);
+  };
 
   const handleSelectedPartner = async (partnerName: string) => {
     console.log('Selected Partner:', partnerName);
@@ -132,6 +134,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         username,
         setUsername,
         handleSelectedPartner,
+        showPasswordUpdate,
+        setShowPasswordUpdate,
         showPassword,
         setShowPassword,
         tenantNames,

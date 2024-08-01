@@ -1,33 +1,60 @@
-// pages/password_reset.tsx
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Input, Button } from 'antd';
+import { Input, Button, Modal } from 'antd';
 import Link from 'next/link';
 import { Footer } from './footer-nested';
 import Login from './login_page';
 import axios from 'axios';
 import { useAuth } from './auth_context';
-
+import { getCurrentDateTime } from './header_constants';
 
 const PasswordReset: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const { setShowPassword } = useAuth();
   const [email, setEmail] = useState(''); // State variable for input value
+  const { username, partner, role } = useAuth();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleBackClick = () => {
     setShowLogin(true);
   };
+
   const handleReset = async () => {
-    setShowPassword(true)
-    setShowLogin(true)
+    if (!email) {
+      setIsModalVisible(true);
+      setShowPassword(false)
+      setShowLogin(false)
+      return;
+    }
+
+    setShowPassword(true);
+    setShowLogin(true);
+
+    const data = {
+      path: "/reset_password_email",
+      username: email,
+      request_received_at: getCurrentDateTime()
+    };
+
     try {
-      const response = await axios.post('/api/password-reset', {
-        username: email // Send the email as username
-      });
+      const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
+      const response = await axios.post(url, { data: data }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }}
+      );
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -86,6 +113,17 @@ const PasswordReset: React.FC = () => {
             </div>
           </div>
           {/* <Footer /> */}
+          <Modal
+            title="Email Required"
+            visible={isModalVisible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            okText="OK"
+            centered
+            cancelButtonProps={{ style: { display: 'none' } }} // Hide cancel button
+          >
+            <p>Please enter an email address to reset your password.</p>
+          </Modal>
         </div>
       )}
     </div>

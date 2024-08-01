@@ -2,13 +2,14 @@
 import React, { useState } from 'react';
 import { EnvelopeIcon, QuestionMarkCircleIcon, Bars3Icon, UserIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
-import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingOutlined, DownloadOutlined, DownOutlined} from '@ant-design/icons';
+import { LogoutOutlined, SwitcherOutlined , UserOutlined, TeamOutlined, SettingOutlined, DownloadOutlined, DownOutlined, KeyOutlined} from '@ant-design/icons';
 import { useSidebarStore } from '../stores/navBarStore';
 import { useLogoStore } from '../stores/logoStore';
 import { useAuth } from './auth_context';
 import { usePathname, useRouter } from 'next/navigation';
+import { truncate } from 'fs';
 const Header: React.FC = () => {
-  const { username, partner } = useAuth();
+  const { username, partner,  setShowPasswordUpdate, showPasswordUpdate } = useAuth();
   const { toggleSidebar } = useSidebarStore();
   const { logoUrl } = useLogoStore();
   const title = useLogoStore((state) => state.title);
@@ -35,6 +36,11 @@ const Header: React.FC = () => {
     // const pathname = window.location.pathname;
     // const url = `/Choose_tenant`;
     // window.location.href = url;
+  }
+
+  const handlechoosePassword = () => {
+    setShowPasswordUpdate(true)
+    
   }
   return (
     <div className="p-2 flex justify-between items-left shadow-md header">
@@ -82,6 +88,13 @@ const Header: React.FC = () => {
       >
         <SettingOutlined className="mr-3" />
         Change Partner
+      </button>
+      <button
+        onClick={handlechoosePassword}
+        className="text-black rounded  hover:bg-[#E5E7EB] p-2 whitespace-nowrap flex items-center"
+      >
+        <KeyOutlined className="mr-3" />
+        Change Password
       </button>
     </div>
     

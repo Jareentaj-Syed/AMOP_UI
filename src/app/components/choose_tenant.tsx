@@ -8,6 +8,7 @@ import { BASE_URL, useAuth } from './auth_context';
 import { useRouter } from 'next/navigation';
 
 import { AUTHENTICATION_ROUTES } from './routes/route_constants';
+import { getCurrentDateTime } from './header_constants';
 
 
 const ChooseTenant: React.FC = () => {
@@ -31,7 +32,8 @@ const ChooseTenant: React.FC = () => {
       path: "/get_modules",
       role_name: role,
       username: username,
-      tenant_name: partnerName
+      tenant_name: partnerName,
+      request_received_at: getCurrentDateTime()
     };
   
     try {

@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from './auth_context';
+import axios from 'axios';
+import { useLogoStore } from '../stores/logoStore';
 
 const PasswordUpdate: React.FC = () => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [newPasswordError, setNewPasswordError] = useState('');
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const { username, partner, role,  } = useAuth();
+    const title = useLogoStore((state) => state.title);
+    const setTitle = useLogoStore((state) => state.setTitle);
 
-    const handleSave = () => {
+    useEffect(() => {
+        setTitle("Password")
+    })
+    const handleSave  = async () => {
         // Reset error messages
         setNewPasswordError('');
         setConfirmPasswordError('');
@@ -29,6 +38,24 @@ const PasswordUpdate: React.FC = () => {
         // If no errors, perform save logic
         console.log('New Password:', newPassword);
         console.log('Confirm Password:', confirmPassword);
+
+        const data = {
+            path: "/get_modules",
+            username: username,
+            new_password:newPassword,
+            msg:"new_password"
+          };
+          try {
+            const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
+            const response = await axios.post(url, { data: data }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }}
+            );
+            console.log('Response:', response.data);
+          } catch (error) {
+            console.error('Error:', error);
+          }
 
         // Clear the password fields
         setNewPassword('');
