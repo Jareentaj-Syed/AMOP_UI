@@ -12,7 +12,7 @@ import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
 import ColumnFilter from "@/app/components/columnfilter";
-import { createModalData, headerMap, headers } from "./bandwidth_customers_constants";
+// import { createModalData } from "./bandwidth_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useLogoStore } from "@/app/stores/logoStore";
@@ -26,53 +26,54 @@ const BandWidthCustomers: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true); 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
-  const createColumns = createModalData;
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  // const createColumns = createModalData;
   const { username, partner, role } = useAuth();
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
   const title = useLogoStore((state) => state.title);
   const [pagination,setpagination]=useState<any>({});
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [createModalData,setcreateModalData]=useState<any[]>([]);
+
   useEffect(() => {
     if(title!="People"){
         setLoading(true)
     }
 },[title])
 
-useEffect(() => {
-  const fetchData = async () => {
-    setLoading(true); // Set loading to true at the start
-    try {
-      const url =
-        "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-      const data = {
-        tenant_name: partner || "default_value",
-        username: username,
-        path: "/get_module_data",
-        role_name: role,
-        parent_module_name: "people", // Corrected spelling from 'poeple'
-        module_name: "Bandwidth Customers",
-        mod_pages: {
-          start: 0,
-          end: 500,
-        },
-      };
-      
-      const response = await axios.post(url, { data });
-      const parsedData = JSON.parse(response.data.body);
-
-      // Check if the flag is false in the parsed data
-      if (parsedData.flag === false) {
-        Modal.error({
-          title: 'Data Fetch Error',
-          content: parsedData.message || 'An error occurred while fetching Bandwidth Customers data. Please try again.',
-          centered: true,
-        });
-      } else {
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const url =
+          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+        const data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/get_module_data",
+          role_name: role,
+          parent_module_name: "poeple",
+          module_name: "Bandwidth Customers",
+          mod_pages: {
+            start: 0,
+            end: 500,
+          },
+        };
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
         const tableData = parsedData.data.customers;
+        const headerMap=parsedData.headers_map["Bandwidth Customers"]["header_map"]
+        const createModalData=parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+        const headers=Object.keys(headerMap)
         console.log("response.data-revio", tableData);
+        setHeaders(headers)
+        setHeaderMap(headerMap)
+        setcreateModalData(createModalData)
+        setTable(tableData);
         setTableData(tableData);
-      }
+        setLoading(false)
     } catch (error) {
       
       console.error("Error fetching data:", error);
@@ -85,9 +86,8 @@ useEffect(() => {
       setLoading(false); // Ensure loading is set to false in the finally block
     }
   };
+})
 
-  fetchData();
-}, [username, partner, role]);
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
@@ -157,7 +157,7 @@ useEffect(() => {
           itemsPerPage={10}
           allowedActions={["info"]}
           popupHeading="Bandwidth Customer"
-          createModalData={createColumns}
+          createModalData={createModalData}
           pagination={pagination}
         
         />
@@ -173,6 +173,6 @@ useEffect(() => {
       />
     </div>
   );
-};
 
+}
 export default BandWidthCustomers;
