@@ -144,6 +144,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": "E911 Customer Customer",
             "table_name": "weste911customer",
+            action: "edit",
             "changed_data": formData
           };
         }
@@ -159,6 +160,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": " NetSapien Customer",
             "table_name": "customers",
+            action: "edit",
             "changed_data": formData
           };
         }
@@ -174,6 +176,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": "RevIO Customer",
             "table_name": "customers",
+            action: "edit",
             "changed_data": formData
           };
         }

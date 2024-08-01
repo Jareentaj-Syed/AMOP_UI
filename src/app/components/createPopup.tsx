@@ -125,6 +125,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             "parent_module": "People",
             "module": "E911 Customer Customer",
             "table_name": "weste911customer",
+            action: "create",
             "new_data": formData
           };
         }
@@ -140,6 +141,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             "parent_module": "People",
             "module": " NetSapien Customer",
             "table_name": "customers",
+            action: "create",
             "new_data": formData
           };
         }
@@ -154,6 +156,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             role_name: role,
             "parent_module": "People",
             "module": "RevIO Customer",
+            action: "create",
             "table_name": "customers",
             "new_data": formData
           };

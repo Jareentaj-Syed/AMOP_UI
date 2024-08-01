@@ -278,17 +278,17 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     if (rowIndex >= 0 && rowIndex < rowData.length) {
       const updatedData:any = [...rowData];
       const row=rowData[rowIndex]
-      row["deletedby"]=username
+      row["deleted_by"]=username
       row["isdeleted"]=true
       row["isactive"]=false
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
-        let data={};
+          let data;
         if(popupHeading==="Customer Group"){
           data = {
-            tenant_name: partner || "default_value",
+          tenant_name: partner || "default_value",
           username: username,
           path: "/update_partner_info",
           role_name: role,
@@ -319,7 +319,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "parent_module": "People", 
             "module": "E911 Customer Customer",
             "table_name": "customers",
-            "changed_data":row
+            "changed_data":row,
+            action:"delete",
+
           };
         }
         if(popupHeading===" NetSapien Customer"){
@@ -331,7 +333,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "parent_module": "People", 
             "module": " NetSapien Customer",
             "table_name": " customers",
-            "changed_data":row
+            "changed_data":row,
+            action:"delete",
           };
         }
       const response = await axios.post(url, { data });
