@@ -6,7 +6,8 @@ import { DropdownStyles } from './css/dropdown';
 import CreateUser from '../partner/users/createUser/page';
 import axios from 'axios';
 import { useAuth } from './auth_context';
-
+import { DatePicker } from 'antd';
+import moment from 'moment';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -180,13 +181,13 @@ const EditModal: React.FC<EditModalProps> = ({
       } catch (err) {
         console.error("Error fetching data:", err);
       }
+      setIsConfirmationOpen(false);
     }
     handleSave();
     setIsConfirmationOpen(false);
   };
 
   const handleCancelConfirmation = () => {
-    handleConfirmSave()
     setIsConfirmationOpen(false);
   };
 
@@ -308,6 +309,18 @@ const EditModal: React.FC<EditModalProps> = ({
                         {column.display_name}
                       </Checkbox>
                     )}
+                    {column.type === 'date' && (
+              // <DatePicker
+              //   selected={formData[column.db_column_name] ? new Date(formData[column.db_column_name]) : null}
+              //   onChange={(date) => handleChange(column.db_column_name, date)}
+              //   className="input"
+              //   dateFormat="yyyy-MM-dd"
+              //   placeholderText="Select a date"
+              // />
+              <input className='input'
+              type='date'
+              />
+            )}
                   </div>
                 ))}
               </div>
@@ -315,7 +328,7 @@ const EditModal: React.FC<EditModalProps> = ({
           </Modal>
           <Modal
             visible={isConfirmationOpen}
-            onOk={handleCancelConfirmation}
+            onOk={handleConfirmSave}
             onCancel={handleCancelConfirmation}
             style={{ zIndex: 10000 }}
             title="Confirmation"
