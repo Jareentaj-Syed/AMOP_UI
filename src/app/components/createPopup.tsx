@@ -71,7 +71,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         let data;
         if (heading === "Customer Group") {
           if (formData) {
-            formData["createdby"] = username;
+            formData["created_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -85,7 +85,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
         if (heading === "Carrier") {
           if (formData) {
-            formData["createdby"] = username;
+            formData["created_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -133,7 +133,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
         if (heading === " NetSapien Customer") {
           if (formData) {
-            formData["createdby"] = username;
+            formData["created_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -149,7 +149,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
         if (heading === "RevIO Customer") {
           if (formData) {
-            formData["createdby"] = username;
+            formData["created_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -159,6 +159,21 @@ const CreateModal: React.FC<CreateModalProps> = ({
             "parent_module": "People",
             "module": "RevIO Customer",
             action: "create",
+            "table_name": "customers",
+            "new_data": formData
+          };
+        }
+        if (heading === "Bandwidth Customer") {
+          if (formData) {
+            formData["created_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/create_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": "Bandwidth Customer",
             "table_name": "customers",
             "new_data": formData
           };

@@ -37,10 +37,11 @@ const Header: React.FC = () => {
   }, []);
 
   const handleLogout = () => {
-    logout()
     const pathname = window.location.pathname;
-      const url = `/auth/logout?redirect=${pathname}&action=logout`;
-      window.location.href = url;
+    const url = `/auth/logout?redirect=${pathname}&action=logout`;
+    window.location.href = url;
+    logout()
+   
     // router.push('/components/login_page');
   };
 
@@ -53,7 +54,6 @@ const Header: React.FC = () => {
 
   const handlechoosePassword = () => {
     setShowPasswordUpdate(true)
-    
   }
   return (
     <div className="p-2 flex justify-between items-left shadow-md header">

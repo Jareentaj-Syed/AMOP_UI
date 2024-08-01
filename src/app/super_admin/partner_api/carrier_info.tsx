@@ -33,11 +33,8 @@ const CarrierInfo: React.FC = () => {
   const editableDrp = DropdownStyles;
   const [loading, setLoading] = useState(true); // State to manage loading
   const [pagination,setpagination]=useState<any>({});
-
   const module_name= "Carrier Api"
   useEffect(() => {
- 
-
     fetchData();
   }, []); // Fetch initial data once on mount
   const fetchData = async () => {
@@ -55,7 +52,7 @@ const CarrierInfo: React.FC = () => {
       
       const response = await axios.post(url, { data: data });
       const resp = JSON.parse(response.data.body);
-  
+      console.log(resp)
       // Check if the flag is false
       if (resp.flag === false) {
         Modal.error({
@@ -105,7 +102,7 @@ const CarrierInfo: React.FC = () => {
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);
-  
+          console.log(resp)
           // Check if the flag is false
           if (resp.flag === false) {
             Modal.error({

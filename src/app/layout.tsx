@@ -15,7 +15,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
-  const { isAuthenticated, showPasswordUpdate } = useAuth();
+  const { isAuthenticated, showPasswordUpdate , isReset  } = useAuth();
   const {selectedPartner}= useAuth();
   const router = useRouter();
   // console.log(selectedPartner)
@@ -31,7 +31,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
   return (
     <div className="min-h-screen grid">
-  {!selectedPartner ? (
+  {!selectedPartner && !isReset ? (
     <ChooseTenant />
   ) : (
     <>

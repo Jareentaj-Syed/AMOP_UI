@@ -6,6 +6,8 @@ import { getCurrentDateTime } from './header_constants';
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  isReset: boolean;
+
   login: (username: string, password: string) => void;
   logout: () => void;
   LogoutChooseTenant: () => void;
@@ -34,6 +36,7 @@ export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [partner, setPartner] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isReset, setReset] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
   const [showPasswordUpdate, setShowPasswordUpdate] = useState<boolean>(false);
@@ -64,20 +67,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           Modal.error({
             title: 'Login Error',
             content: resp.message || 'An error occurred during login. Please try again.',
+            centered:true
           });
           setIsAuthenticated(false);
         } else {
+          if(resp.message === "Token is Valid."){
+              setShowPasswordUpdate(true)
+              const role = resp["role"];
+              setRole(role);
+          setIsAuthenticated(true)
+          setReset(true)
+          }
+          if(resp["tenant_names"]){
           const tenant_names = resp["tenant_names"];
-          const role = resp["role"];
-          setRole(role);
           setTenantNames(tenant_names);
           setIsAuthenticated(true);
+          setReset(false)
+          const role = resp["role"];
+          setRole(role);
+          }
+           
+         
+         
         }
       } else {
         console.log('Login failed:', response.data);
         Modal.error({
           title: 'Login Error',
           content: response.data.message || 'Login failed. Please check your credentials and try again.',
+          centered:true
         });
         setIsAuthenticated(false);
       }
@@ -87,11 +105,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         Modal.error({
           title: 'Login Error',
           content: error.message || 'An unexpected error occurred during login. Please try again.',
+          centered:true
         });
       } else {
         Modal.error({
           title: 'Login Error',
           content: 'An unexpected error occurred during login. Please try again.',
+          centered:true
         });
       }
 
@@ -103,6 +123,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setPartner(null);
     setSelectedPartner(false);
     setShowPassword(false);
+    setReset(false)
   };
 
   const logout = () => {
@@ -118,12 +139,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     console.log('Selected Partner:', partnerName);
     setSelectedPartner(true);
     setPartner(partnerName);
+    
   };
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        isReset,
         login,
         logout,
         LogoutChooseTenant,

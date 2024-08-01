@@ -1,7 +1,7 @@
 // pages/choose_tenant.tsx
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Spin } from 'antd';
 import { Footer } from './footer-nested';
 import axios from 'axios';
 import { BASE_URL, useAuth } from './auth_context';
@@ -15,6 +15,8 @@ const ChooseTenant: React.FC = () => {
  
   const { setSelectedPartner, setPartner,setModules } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // State to manage loading
+
   const router = useRouter();
   const {username, tenantNames, role}=useAuth()
   const partners=tenantNames
@@ -35,7 +37,7 @@ const ChooseTenant: React.FC = () => {
       tenant_name: partnerName,
       request_received_at: getCurrentDateTime()
     };
-  
+    setLoading(false)
     try {
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
       const response = await axios.post(url, { data: data }, {
@@ -88,8 +90,17 @@ const ChooseTenant: React.FC = () => {
           content: 'An unexpected error occurred while fetching modules. Please try again.',
         });
       }
+      setLoading(false)
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">

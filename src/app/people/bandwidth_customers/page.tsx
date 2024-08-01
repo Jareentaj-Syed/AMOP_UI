@@ -63,18 +63,28 @@ const BandWidthCustomers: React.FC = () => {
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
-        const tableData = parsedData.data.customers;
-        const headerMap=parsedData.headers_map["Bandwidth Customers"]["header_map"]
-        const createModalData=parsedData.headers_map["Bandwidth Customers"]["pop_up"]
-        const headers=Object.keys(headerMap)
-        console.log("response.data-revio", tableData);
-        setHeaders(headers)
-        setHeaderMap(headerMap)
-        setcreateModalData(createModalData)
-        setTable(tableData);
-        setTableData(tableData);
-        setVisibleColumns(headers)
-        setLoading(false)
+        if (parsedData.flag === false) {
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+            centered: true,
+          });
+        }
+          else{
+            const tableData = parsedData.data.customers;
+            const headerMap=parsedData.headers_map["Bandwidth Customers"]["header_map"]
+            const createModalData=parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+            const headers=Object.keys(headerMap)
+            console.log("response.data-revio", tableData);
+            setHeaders(headers)
+            setHeaderMap(headerMap)
+            setcreateModalData(createModalData)
+            setTable(tableData);
+            setTableData(tableData);
+            setVisibleColumns(headers)
+            setLoading(false)
+          }
+  
     } catch (error) {
       
       console.error("Error fetching data:", error);
@@ -171,7 +181,7 @@ const BandWidthCustomers: React.FC = () => {
         onSave={handleCreateRow}
         columnNames={createModalData}
         heading="Bandwidth Customer"
-        header={tableData?Object.keys(tableData[0]):[]}
+        header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
       />
     </div>
   );

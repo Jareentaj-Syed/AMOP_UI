@@ -484,7 +484,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index,col,apiState)}
+          onClick={() => handleToggle(index,col,true)}
         >
           {col==="Module_state" || col === "API state"?(
             <span>Enable</span>
@@ -496,7 +496,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index,col,apiState)}
+          onClick={() => handleToggle(index,col,false)}
         >
           {col==="Module_state" || col === "API state"?(
             <span>Disable</span>

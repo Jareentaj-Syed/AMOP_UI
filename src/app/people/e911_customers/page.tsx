@@ -63,27 +63,27 @@ useEffect(() => {
 
       const response = await axios.post(url, { data });
       const parsedData = JSON.parse(response.data.body);
-      const headerMap=parsedData.headers_map["E911 Customers"]["header_map"]
-      const createModalData=parsedData.headers_map["E911 Customers"]["pop_up"]
-      const headers=Object.keys(headerMap)
-      const customertableData = parsedData.data.WestE911Customer;
-      setTableData(customertableData);
-      console.log("response.data", tableData);
-      // console.log("response.data-revio", tableData);
-      setHeaders(headers)
-      setHeaderMap(headerMap)
-      setcreateModalData(createModalData)
-      setVisibleColumns(headers)
       // Check if the flag is false in the parsed data
-      if (parsedData.flag === false) {
-        Modal.error({
-          title: 'Data Fetch Error',
-          content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
-          centered: true,
-        });
-      } else {
         
-      }
+        if (parsedData.flag === false) {
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+            centered: true,
+          });
+        } else{
+          const headerMap=parsedData.headers_map["E911 Customers"]["header_map"]
+          const createModalData=parsedData.headers_map["E911 Customers"]["pop_up"]
+          const headers=Object.keys(headerMap)
+          const customertableData = parsedData.data.WestE911Customer;
+          setTableData(customertableData);
+          console.log("response.data", tableData);
+          // console.log("response.data-revio", tableData);
+          setHeaders(headers)
+          setHeaderMap(headerMap)
+          setcreateModalData(createModalData)
+          setVisibleColumns(headers)
+        }
     } catch (error) {
       console.error("Error fetching data:", error);
       Modal.error({

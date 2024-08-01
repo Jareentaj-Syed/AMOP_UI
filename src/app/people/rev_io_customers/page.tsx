@@ -62,14 +62,14 @@ useEffect(() => {
       const parsedData = JSON.parse(response.data.body);
 
       // Check if the flag is false
-      if (parsedData.flag === false) {
-        Modal.error({
-          title: 'Data Fetch Error',
-          content: parsedData.message || 'An error occurred while fetching REV.Io Customers data. Please try again.',
-          centered: true,
-        });
-        return; // Exit early if there's an error
-      }
+      // if (parsedData.flag === false) {
+      //   Modal.error({
+      //     title: 'Data Fetch Error',
+      //     content: parsedData.message || 'An error occurred while fetching REV.Io Customers data. Please try again.',
+      //     centered: true,
+      //   });
+      //   return; // Exit early if there's an error
+      // }
 
       const tableData = parsedData.data.customers;
       const bill_profile = parsedData.data.revbillprofile;
@@ -82,11 +82,11 @@ useEffect(() => {
       setBillProfile(bill_profile_options);
     } catch (err) {
       console.error("Error fetching data:", err);
-      Modal.error({
-        title: 'Data Fetch Error',
-        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-        centered: true,
-      });
+      // Modal.error({
+      //   title: 'Data Fetch Error',
+      //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+      //   centered: true,
+      // });
     } finally {
       setLoading(false); // Set loading to false after the request is done
     }

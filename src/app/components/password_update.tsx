@@ -11,7 +11,7 @@ const PasswordUpdate: React.FC = () => {
     const { username, partner, role,  } = useAuth();
     const title = useLogoStore((state) => state.title);
     const setTitle = useLogoStore((state) => state.setTitle);
-
+    const {LogoutChooseTenant, setTenantNames} = useAuth(); 
     useEffect(() => {
         setTitle("Password")
     })
@@ -42,7 +42,7 @@ const PasswordUpdate: React.FC = () => {
         const data = {
             path: "/password_reset",
             username: username,
-            new_password:newPassword,
+            New_password:newPassword,
            
           };
           try {
@@ -53,6 +53,11 @@ const PasswordUpdate: React.FC = () => {
               }}
             );
             console.log('Response:', response.data);
+            const resp = JSON.parse(response.data.body);
+            if(resp["tenant_names"]){
+                const tenant_names = resp["tenant_names"];
+                setTenantNames(tenant_names);
+            }
           } catch (error) {
             console.error('Error:', error);
           }
@@ -60,6 +65,7 @@ const PasswordUpdate: React.FC = () => {
         // Clear the password fields
         setNewPassword('');
         setConfirmPassword('');
+        LogoutChooseTenant()
     };
 
     const handleCancel = () => {
