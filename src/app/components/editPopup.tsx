@@ -2,7 +2,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
 import { Checkbox, Input, Modal } from 'antd';
 import Select from 'react-select';
-import { DropdownStyles } from './css/dropdown';
+import { DropdownStyles, NonEditableDropdownStyles } from './css/dropdown';
 import CreateUser from '../partner/users/createUser/page';
 import axios from 'axios';
 import { useAuth } from './auth_context';
@@ -275,12 +275,13 @@ const EditModal: React.FC<EditModalProps> = ({
                         name={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
                         value={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ?formData[column.db_column_name]: ''}
                         onChange={(e) => handleChange(column.db_column_name, e.target.value)}
-                        className="input"
+                        className={isEditable ? "input" : "non-editable-input"}
+                        disabled={!isEditable}
                       />
                     )}
                     {column.type === 'dropdown' && (
                       <Select
-                        styles={editableDrp}
+                        styles={!isEditable?NonEditableDropdownStyles:editableDrp}
                         isDisabled={!isEditable}
                         classNamePrefix="select"
                         placeholder="Select..."
@@ -320,6 +321,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         className="input"
                         format="YYYY-MM-DD"
                         placeholder="Select a date"
+                        disabled={!isEditable}
                       />
                     )}
                   </div>
