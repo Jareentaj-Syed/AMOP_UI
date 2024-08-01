@@ -8,9 +8,10 @@ import SearchInput from '../../../components/Search-Input';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
-import { headerMap, users_table } from '../users_constants';
-import { headers ,pagination} from '../users_constants';
+// import { headerMap, users_table } from '../users_constants';
+// import { headers ,pagination} from '../users_constants';
 import { useUserStore } from '../createUser/createUserStore';
+// import { headers } from '../../customer_groups/customer_groups_constants';
 
 
 interface ExcelDataRow {
@@ -18,9 +19,9 @@ interface ExcelDataRow {
 }
 
 const ListView: React.FC = () => {
-  const [data, setData] = useState<ExcelDataRow[]>(users_table); // Initialize data with users_table
+  const [data, setData] = useState<ExcelDataRow[]>([]); // Initialize data with users_table
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers); // Initialize visibleColumns with headers
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]); // Initialize visibleColumns with headers
   const [showCreateUser, setShowCreateUser] = useState(false);
   const router = useRouter();
 
@@ -39,8 +40,8 @@ const ListView: React.FC = () => {
     setRoleName('')
 }, []);
   const handleExport = () => {
-    const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
-    const worksheet = XLSX.utils.aoa_to_sheet(exportData);
+    // const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
+    const worksheet = XLSX.utils.aoa_to_sheet([]);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
     XLSX.writeFile(workbook, "Users.xlsx");
@@ -59,7 +60,7 @@ const ListView: React.FC = () => {
           <div className="p-4 flex items-center justify-between mt-2 mb-2">
             <div className="flex space-x-4">
               <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-              <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={headerMap}/>
+              <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}}/>
             </div>
 
             <div className="flex space-x-4">
@@ -79,8 +80,8 @@ const ListView: React.FC = () => {
 
           <div className="">
             <TableComponent
-              headers={headers}
-              headerMap={headerMap}
+              headers={[]}
+              headerMap={{}}
               initialData={data}
               searchQuery={searchTerm}
               visibleColumns={visibleColumns}
@@ -88,7 +89,7 @@ const ListView: React.FC = () => {
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
               createModalData={[]}
-              pagination={pagination}
+              pagination={{}}
              
             />
           </div>

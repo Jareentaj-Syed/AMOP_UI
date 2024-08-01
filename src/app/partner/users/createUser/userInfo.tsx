@@ -2,22 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-import { partners ,roles_drp,subPartnersData} from '../users_constants';
+// import { partners ,roles_drp,subPartnersData} from '../users_constants';
 import { useUserStore } from './createUserStore';
+import { subPartnersData } from '@/app/constants/partnercarrier';
 type OptionType = {
   value: string;
   label: string;
 };
 
-const roles =roles_drp
-const Partneroptions = partners.map(partner => ({ value: partner, label: partner }));
+const roles:any[] = []
+const Partneroptions:any[] = []
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
-const Roleoptions = roles.map((role, index) => ({
-  value: role,
-  label: role,
-}));
-
+const Roleoptions:any[] = []
 const Notificationoptions = [
   { value: 'yes', label: 'Yes' },
   { value: 'no', label: 'No' }
@@ -51,7 +48,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   } = useUserStore();
 
   useEffect(() => {
-    console.log("partners",partners)
+    // console.log("partners",partners)
     if (rowData) {
       setUsername(rowData['username'] || '');
       setEmail(rowData['email'] || '');

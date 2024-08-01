@@ -9,7 +9,8 @@ export const getPartnerData = () => {
 
 // Usage example
 const partnerData = getPartnerData();
-export const partner_name = partnerData.data["Partner info"]["partner"];
-export const sub_partner = partnerData.data["Partner info"]["sub_partner"];
-
+// export const partner_name = partnerData.data["Partner info"]["partner"];
+// export const sub_partner = partnerData.data["Partner info"]["sub_partner"];
+export const partner_name =""
+export const sub_partner = ""
 console.log(partner_name, sub_partner);

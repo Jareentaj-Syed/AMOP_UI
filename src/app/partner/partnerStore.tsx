@@ -2,32 +2,12 @@ import create from 'zustand';
 
 type PartnerStoreType = {
   partnerData: {
-    flag: boolean;
-    data: {
       "Partner info": any;
       "Partner authentication": any;
       "Partner module access": any;
-      "pages": {
-        "Customer groups": {
-          start: number;
-          end: number;
-          total: number;
-        };
-        "Partner users": {
-          start: number;
-          end: number;
-          total: number;
-        };
-        "Notifications": {
-          start: number;
-          end: number;
-          total: number;
-        };
-      };
       "Customer groups": any;
       "Partner users": any;
       "Notifications": any;
-    };
   };
   setPartnerInfo: (data: any) => void;
   setPartnerAuthentication: (data: any) => void;
@@ -39,38 +19,18 @@ type PartnerStoreType = {
 
 export const usePartnerStore = create<PartnerStoreType>((set) => ({
   partnerData: {
-    flag: true,
-    data: {
       "Partner info": {},
       "Partner authentication": {},
       "Partner module access": {},
-      "pages": {
-        "Customer groups": {
-          start: 0,
-          end: 10,
-          total: 2
-        },
-        "Partner users": {
-          start: 0,
-          end: 10,
-          total: 4
-        },
-        "Notifications": {
-          start: 0,
-          end: 10,
-          total: 0
-        }
-      },
       "Customer groups": {},
       "Partner users": {},
       "Notifications": {}
-    }
   },
   setPartnerInfo: (data) => set((state) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Partner info": data
       }
     }
@@ -79,7 +39,7 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Partner authentication": data
       }
     }
@@ -88,7 +48,7 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Partner module access": data
       }
     }
@@ -97,7 +57,7 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Customer groups": data
       }
     }
@@ -106,7 +66,7 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Partner users": data
       }
     }
@@ -115,7 +75,7 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     partnerData: {
       ...state.partnerData,
       data: {
-        ...state.partnerData.data,
+        ...state.partnerData,
         "Notifications": data
       }
     }

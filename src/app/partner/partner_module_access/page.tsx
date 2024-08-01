@@ -192,32 +192,32 @@ const UserRole: React.FC = () => {
     
         setErrorMessages(errors);
     
-        if (errors.length === 0) {
-            // Check that role is defined before accessing its value
-            const formattedData: { [key: string]: any } = {
-                [role!.value]: {} // Use non-null assertion if you are sure it won't be null
-            };
+        // if (errors.length === 0) {
+        //     // Check that role is defined before accessing its value
+        //     const formattedData: { [key: string]: any } = {
+        //         [role!.value]: {} // Use non-null assertion if you are sure it won't be null
+        //     };
     
-            Object.keys(selectedModules).forEach(category => {
-                const selectedModulesForCategory = selectedModules[category];
-                const selectedFeaturesForCategory = selectedFeatures[category] || [];
+        //     Object.keys(selectedModules).forEach(category => {
+        //         const selectedModulesForCategory = selectedModules[category];
+        //         const selectedFeaturesForCategory = selectedFeatures[category] || [];
     
-                formattedData[role!.value][category] = {
-                    Module: selectedModulesForCategory,
-                    Feature: {}
-                };
+        //         formattedData[role!.value][category] = {
+        //             Module: selectedModulesForCategory,
+        //             Feature: {}
+        //         };
     
-                selectedModulesForCategory.forEach(module => {
-                    formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
-                        map[category]?.Feature[module]?.includes(feature)
-                    );
-                });
-            });
+        //         selectedModulesForCategory.forEach(module => {
+        //             formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
+        //                 map[category]?.Feature[module]?.includes(feature)
+        //             );
+        //         });
+        //     });
     
-            console.log("Formatted Data:", formattedData);
-        } else {
-            console.log("Errors:", errors);
-        }
+        //     console.log("Formatted Data:", formattedData);
+        // } else {
+        //     console.log("Errors:", errors);
+        // }
     };
     
 

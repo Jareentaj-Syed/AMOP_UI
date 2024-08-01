@@ -3,7 +3,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState, useEffect } from 'react';
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-import {customergroups_drp,service_provider_drp,customers_drp} from '../users_constants';
+// import {customergroups_drp,service_provider_drp,customers_drp} from '../users_constants';
 import { useUserStore } from './createUserStore';
 
 type OptionType = {
@@ -12,9 +12,9 @@ type OptionType = {
 };
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
-const CustomerGroupOptions=customergroups_drp.map(group => ({ value: group, label: group }));
-const ServiceProviderOptions = service_provider_drp.map(provider => ({ value: provider, label: provider }));
-const customerOptions=customers_drp.map(customer => ({ value: customer, label: customer }));
+const CustomerGroupOptions:any[]=[]
+const ServiceProviderOptions:any[] = []
+const customerOptions:any[]=[]
 
 interface TenantInfoProps {
     rowData?: any;

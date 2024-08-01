@@ -1,10 +1,13 @@
 import React from 'react';
 import { UserIcon, CheckCircleIcon, ReceiptPercentIcon } from '@heroicons/react/24/outline'; // Importing icons from Heroicons
-import { total_users,active_users,migrated_users } from '../users_constants';
+// import { total_users,active_users,migrated_users } from '../users_constants';
 const ChartsPage: React.FC = () => {
-  const totalUsers = total_users;
-  const activeUsers = active_users;
-  const migratedUsers = migrated_users;
+  // const totalUsers = total_users;
+  // const activeUsers = active_users;
+  // const migratedUsers = migrated_users;
+  const totalUsers = 1;
+  const activeUsers = 1;
+  const migratedUsers = 1;
 
   return (
     <div className="p-2">
