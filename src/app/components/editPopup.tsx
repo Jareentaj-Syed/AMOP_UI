@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useAuth } from './auth_context';
 import { DatePicker } from 'antd';
 import moment from 'moment';
+import dayjs from 'dayjs';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -268,7 +269,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={column.db_column_name!=="None"?column.db_column_name:""}
+                        name={column.db_column_name !== "None" ? column.db_column_name : ""}
                         value={formData[column.db_column_name] || ''}
                         onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                         className="input"
@@ -310,17 +311,14 @@ const EditModal: React.FC<EditModalProps> = ({
                       </Checkbox>
                     )}
                     {column.type === 'date' && (
-              // <DatePicker
-              //   selected={formData[column.db_column_name] ? new Date(formData[column.db_column_name]) : null}
-              //   onChange={(date) => handleChange(column.db_column_name, date)}
-              //   className="input"
-              //   dateFormat="yyyy-MM-dd"
-              //   placeholderText="Select a date"
-              // />
-              <input className='input'
-              type='date'
-              />
-            )}
+                      <DatePicker
+                        value={formData[column.db_column_name] ? dayjs(formData[column.db_column_name]) : null}
+                        onChange={(date) => handleChange(column.db_column_name, date ? date.format('YYYY-MM-DD') : null)}
+                        className="input"
+                        format="YYYY-MM-DD"
+                        placeholder="Select a date"
+                      />
+                    )}
                   </div>
                 ))}
               </div>
