@@ -12,27 +12,33 @@ const PasswordReset: React.FC = () => {
   const [showLogin, setShowLogin] = useState(false);
   const { setShowPassword } = useAuth();
   const [email, setEmail] = useState(''); // State variable for input value
-  const { username, partner, role } = useAuth();
+  const [username, setUsername] = useState(''); // State variable for username
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
 
   const handleBackClick = () => {
     setShowLogin(true);
   };
 
   const handleReset = async () => {
-    if (!email) {
+    if (!username || !email) {
+      // Set the appropriate message based on which fields are missing
+      setModalMessage(
+        !username && !email ? 'Please enter both username and email address to reset your password.' :
+        !username ? 'Please enter a username to reset your password.' :
+        'Please enter an email address to reset your password.'
+      );
       setIsModalVisible(true);
-      setShowPassword(false)
-      setShowLogin(false)
+      setShowPassword(false);
+      setShowLogin(false);
       return;
     }
 
     setShowPassword(true);
-    setShowLogin(true);
-
     const data = {
       path: "/reset_password_email",
-      username: email,
+      username: username,
+      email: email,
       request_received_at: getCurrentDateTime()
     };
 
@@ -44,6 +50,9 @@ const PasswordReset: React.FC = () => {
         }}
       );
       console.log('Response:', response.data);
+      if(response.data&&response.data.body&&response.data.body.flag){
+        setShowLogin(true);
+      }
     } catch (error) {
       console.error('Error:', error);
     }
@@ -71,10 +80,23 @@ const PasswordReset: React.FC = () => {
               height={55}
             />
           </div>
-          <div className="flex flex-col items-start w-[320px] pr-2 mb-6">
+          <div className="flex flex-col space-y-4 items-start w-[320px] pr-2 mb-6">
             <label className="text-[20px] text-left text-[#00C1F1] font-[700] mb-1">
               Reset Password
             </label>
+            <Input
+              placeholder="Username"
+              style={{
+                width: '320px',
+                height: '35px',
+                backgroundColor: '#F7F9FA',
+                padding: '6px 12px',
+                borderRadius: '1px',
+                borderColor: '#ccc',
+              }}
+              value={username} // Bind the input value
+              onChange={(e) => setUsername(e.target.value)} // Update state on change
+            />
             <Input
               placeholder="Email"
               style={{
@@ -114,7 +136,7 @@ const PasswordReset: React.FC = () => {
           </div>
           {/* <Footer /> */}
           <Modal
-            title="Email Required"
+            title="Error"
             visible={isModalVisible}
             onOk={handleOk}
             onCancel={handleCancel}
@@ -122,7 +144,7 @@ const PasswordReset: React.FC = () => {
             centered
             cancelButtonProps={{ style: { display: 'none' } }} // Hide cancel button
           >
-            <p>Please enter an email address to reset your password.</p>
+            <p>{modalMessage}</p>
           </Modal>
         </div>
       )}
