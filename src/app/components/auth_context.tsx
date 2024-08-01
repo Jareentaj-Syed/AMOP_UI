@@ -27,7 +27,9 @@ interface AuthContextType {
   role: string | null;
   setRole: (role: string | null) => void;
   modules: any[]; // Add modules to context
-  setModules: (modules: any[]) => void; // Method to set modules
+  setModules: (modules: any[]) => void; 
+  loading: boolean;
+   setLoading: (value: boolean) => void;// Method to set modules
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,6 +46,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [tenantNames, setTenantNames] = useState<string[]>([]);
   const [role, setRole] = useState<string | null>(null);
   const [modules, setModules] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false); // State to manage loading
 
   const login = async (username: string, password: string) => {
     setUsername(username);
@@ -53,6 +56,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       password: password,
       request_received_at: getCurrentDateTime()
     };
+    setLoading(true)
     try {
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
       const response = await axios.post(url, { data: data }, {
@@ -87,7 +91,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           setRole(role);
           }
            
-         
+         setLoading(false)
          
         }
       } else {
@@ -116,6 +120,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       setIsAuthenticated(false);
+      setLoading(false)
     }
   };
 
@@ -145,6 +150,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   return (
     <AuthContext.Provider
       value={{
+        loading,
+        setLoading,
         isAuthenticated,
         isReset,
         login,

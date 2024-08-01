@@ -4,43 +4,36 @@ import { useAuth } from '../components/auth_context';
 import { Footer } from './footer-nested';
 import { useRouter } from 'next/navigation';
 import PasswordReset from './password_reset';
+import { Spin } from 'antd';
 
 const Login: React.FC = () => {
   const router = useRouter();
-
-  // useEffect(() => {
-  //     router.push('/login');
-  // }, [router]);
-
-  const { login } = useAuth(); // Assuming useAuth provides a login function
+  const { login, loading } = useAuth(); // Get loading state from context
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
-  // const {isAuthenticated}=useAuth();
-  const {showPassword}=useAuth();
- const isAuthenticated=true
-
- 
+  const [showPasswordReset, setShowPasswordReset] = useState(false);
+  const isAuthenticated = true; // You may want to adjust this
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     login(username, password);
   };
 
-  const [showPasswordReset, setShowPasswordReset] = useState(false);
-
   const handleForgotPasswordClick = () => {
     setShowPasswordReset(true);
   };
-  // const currentUrl = window.location.href;
-  // console.log("currentUrl",currentUrl)
-  // console.log("password:", showPassword)
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
+      {loading && (
+        <div className="absolute inset-0 flex justify-center items-center bg-white z-10">
+          <Spin size="large" />
+        </div>
+      )}
       {showPasswordReset ? (
         <PasswordReset />
       ) : (
-        <div className="w-80 text-left">
+        <div className={`w-80 text-left relative z-20 ${loading?'blur-sm':''}`}>
           <div className="w-[300px] h-[55px] mb-4">
             <Image
               src="/amop_logo_header.png"
@@ -49,14 +42,6 @@ const Login: React.FC = () => {
               height={55}
             />
           </div>
-          {showPassword && (
-            <div className='bg-[#DFF0D8] p-4 mb-2 border border-green-600 rounded text-center'>
-              <h3 className='text-[#3C763D] font-[13px]'>Password Reset. Please Check your email.</h3>
-            </div>)}
-          {!isAuthenticated && (
-            <div className='bg-[#F2DEDE] p-4 mb-2 border border-red-600 rounded text-center'>
-              <h3 className='text-[#A94442] font-[13px]'>Invalid Login</h3>
-            </div>)}
           <h1 className="text-2xl font-bold mb-4" style={{ color: '#00C1F1' }}>
             Login
           </h1>
@@ -99,9 +84,6 @@ const Login: React.FC = () => {
               </a>
             </div>
           </form>
-          {/* <div className="mx-auto">
-            <Footer />
-          </div> */}
         </div>
       )}
     </div>
