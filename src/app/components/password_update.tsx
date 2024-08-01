@@ -40,10 +40,10 @@ const PasswordUpdate: React.FC = () => {
         console.log('Confirm Password:', confirmPassword);
 
         const data = {
-            path: "/get_modules",
+            path: "/password_reset",
             username: username,
             new_password:newPassword,
-            msg:"new_password"
+           
           };
           try {
             const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";

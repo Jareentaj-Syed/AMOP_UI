@@ -575,7 +575,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                     onClick={() => handleSort(header)}
                     style={{ cursor: 'pointer' }}
                   >
-                    {headerMap && headerMap[header] ? headerMap[header] : formatColumnName(header)}
+                    {headerMap && headerMap[header] ? headerMap[header][0] : formatColumnName(header)}
                     {sortConfig && sortConfig.key === header ? (
                       sortConfig.direction === 'ascending' ? (
                         <ArrowUpOutlined style={{ marginLeft: 8 }} />
@@ -633,9 +633,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 checked={selectedRows.map(String).includes(String(index))}
                 style={{ fontSize: '2rem' }}
               />
-            ) : (headerMap && headerMap[header]  === "Module_state") ||(headerMap && headerMap[header]  ==="Role_status") || (headerMap && headerMap[header]  ==="API state") ? (
-              renderApiState(row[header], index,headerMap[header])
-            ) : (headerMap && headerMap[header] === "User status") || header === "User status" ? (
+            ) : (headerMap && headerMap[header][0]  === "Module_state") ||(headerMap && headerMap[header][0]  ==="Role_status") || (headerMap && headerMap[header][0]  ==="API state") ? (
+              renderApiState(row[header], index,headerMap[header][0])
+            ) : (headerMap && headerMap[header][0] === "User status") || header === "User status" ? (
               renderUserStatus(row[header])
             ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
               <DateTimeCellRenderer value={row[header]} />

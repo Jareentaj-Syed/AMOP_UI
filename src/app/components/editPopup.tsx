@@ -96,7 +96,7 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_partner_info",
             role_name: role,
             module_name: "Customer groups",
-            action: "edit",
+            action: "update",
             updated_data: formData
           };
         }
@@ -144,7 +144,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": "E911 Customer Customer",
             "table_name": "weste911customer",
-            action: "edit",
+            action: "update",
             "changed_data": formData
           };
         }
@@ -160,7 +160,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": " NetSapien Customer",
             "table_name": "customers",
-            action: "edit",
+            action: "update",
             "changed_data": formData
           };
         }
@@ -176,7 +176,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "parent_module": "People",
             "module": "RevIO Customer",
             "table_name": "customers",
-            action: "edit",
+            action: "update",
             "changed_data": formData
           };
         }
@@ -201,6 +201,14 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleTabEditOpen = () => {
     setIsCreateUserOpen(true);
+  };
+  const getKey = (obj:any) => {
+    if(obj){
+      const list=Object.values(obj)
+      console.log("list[0]",list[0])
+      return list[0]
+    }
+    
   };
 
   // const formatColumnName = (name: string) => {
@@ -272,8 +280,8 @@ const EditModal: React.FC<EditModalProps> = ({
                     {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
-                        value={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ?formData[column.db_column_name]: ''}
+                        name={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
+                        value={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? formData[column.db_column_name] : ''}
                         onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                         className={isEditable ? "input" : "non-editable-input"}
                         disabled={!isEditable}
@@ -281,7 +289,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     )}
                     {column.type === 'dropdown' && (
                       <Select
-                        styles={!isEditable?NonEditableDropdownStyles:editableDrp}
+                        styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
                         isDisabled={!isEditable}
                         classNamePrefix="select"
                         placeholder="Select..."
@@ -289,25 +297,26 @@ const EditModal: React.FC<EditModalProps> = ({
                           generalFields &&
                             generalFields[column.db_column_name] &&
                             Array.isArray(generalFields[column.db_column_name])
-                            ? generalFields[column.db_column_name].find(
-                              (option: any) => option.value === formData[column.db_column_name]
-                            ) || null
+                            ? generalFields[column.db_column_name].find((option: any) => option.tenant_name === formData[column.db_column_name])
+                              ? { label: formData[column.db_column_name], value: formData[column.db_column_name] }
+                              : null
                             : null
                         }
                         onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
                         options={
                           generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
                             ? generalFields[column.db_column_name].map((option: any) => ({
-                              label: option,
-                              value: option,
+                              label:getKey(option),
+                              value:getKey(option)
                             }))
                             : [{ label: "No options", value: "No options" }]
                         }
                       />
                     )}
+
                     {column.type === 'checkbox' && (
                       <Checkbox
-                        checked={formData[column.db_column_name]&&column.db_column_name !== "None"?formData[column.db_column_name] : false}
+                        checked={formData[column.db_column_name] && column.db_column_name !== "None" ? formData[column.db_column_name] : false}
                         onChange={(e) => handleChange(column.db_column_name, e.target.checked)}
                         className="mt-1"
                       >

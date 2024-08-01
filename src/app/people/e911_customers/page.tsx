@@ -182,7 +182,7 @@ useEffect(() => {
         onSave={handleCreateRow}
         columnNames={createModalData}
         heading="E911 Customer"
-        header={tableData?Object.keys(tableData[0]):[]}
+        header={Array.isArray(tableData) && tableData.length > 0 ? Object.keys(tableData[0]) : []}
       />
     </div>
   );
