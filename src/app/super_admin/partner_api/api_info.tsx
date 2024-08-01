@@ -5,7 +5,7 @@ import SearchInput from '../../components/Search-Input';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { DropdownStyles } from '@/app/components/css/dropdown';
-import { Spin } from 'antd'; // Import Ant Design Spin component
+import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { createModalData } from './api_constants';
 
 interface ExcelData {
@@ -32,40 +32,51 @@ const CarrierInfo: React.FC = () => {
   }, [username, partner, role]); // Add dependencies if necessary
 
   const fetchData = async () => {
+    setLoading(true); // Set loading to true before the request
     try {
-      setLoading(true); // Set loading to true before the request
       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
       const data = {
         tenant_name: partner || "default_value",
         username: username,
         path: "/get_superadmin_info",
         role_name: role,
-        "sub_module": "Partner API",
-        "sub_tab": "Amop APIs"
+        sub_module: "Partner API",
+        sub_tab: "Amop APIs",
       };
-      const response = await axios.post(url, { data: data });
-      // console.log(response.data);
-      const resp = JSON.parse(response.data.body);
-      // console.log(resp);
-      // console.log("Environment:", resp.data.Environment);
-      // console.log("Partner:", resp.data.Partner);
-      // console.log("amop_apis_data:", resp.data.amop_apis_data.amop_apis);
-     
-      const carrierApis = resp.data.amop_apis_data.amop_apis;
       
+      const response = await axios.post(url, { data: data });
+      const resp = JSON.parse(response.data.body);
+  
+      // Check if the flag is false
+      if (resp.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: resp.message || 'An error occurred while fetching Super Admin info. Please try again.',
+          centered: true,
+        });
+        return; // Exit early if there's an error
+      }
+  
+      const carrierApis = resp.data.amop_apis_data.amop_apis;
       setTableData(carrierApis);
+  
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
-      
+  
       const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
       setPartnerOptions(partners);
-      setLoading(false);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching data:", err);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+        centered: true,
+      });
     } finally {
       setLoading(false); // Set loading to false after the request is done
     }
   };
+  
   useEffect(() => {
     const fetchData = async () => {
       if (environment && selectedPartner) {

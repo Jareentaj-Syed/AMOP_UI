@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { partnerCarrierData } from '@/app/constants/partnercarrier';
 import { createModalData } from './carrier_constant';
 import { useAuth } from '@/app/components/auth_context';
-import { Spin } from 'antd'; // Import Ant Design Spin component
+import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import axios from 'axios';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 
@@ -41,79 +41,106 @@ const CarrierInfo: React.FC = () => {
     fetchData();
   }, []); // Fetch initial data once on mount
   const fetchData = async () => {
+    setLoading(true); // Set loading to true before the request
     try {
-      setLoading(true);
       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
       const data = {
         tenant_name: partner || "default_value",
         username: username,
         path: "/get_superadmin_info",
         role_name: role,
-        "sub_module": "Partner API", 
-        "sub_tab": "Carrier APIs",
+        sub_module: "Partner API", 
+        sub_tab: "Carrier APIs",
       };
+      
       const response = await axios.post(url, { data: data });
       const resp = JSON.parse(response.data.body);
-
-      const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-      console.log(carrierApis)
-      setTableData(carrierApis);
   
+      // Check if the flag is false
+      if (resp.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: resp.message || 'An error occurred while fetching Carrier APIs. Please try again.',
+          centered: true,
+        });
+        return; // Exit early if there's an error
+      }
+  
+      const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+      console.log(carrierApis);
+      setTableData(carrierApis);
+    
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
-
+  
       const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
       setPartnerOptions(partners);
-      setLoading(false);
     } catch (err) {
-
-      console.error(err);
-    }finally {
-      setLoading(false); 
+      console.error("Error fetching data:", err);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+        centered: true,
+      });
+    } finally {
+      setLoading(false); // Set loading to false after the request is done
     }
-  
   };
+  
   useEffect(() => {
     if (environment && selectedPartner) {
       const fetchData = async () => {
         try {
-          setLoading(true)
+          setLoading(true);
           const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
           const data = {
             tenant_name: partner || "default_value",
             username: username,
             path: "/get_superadmin_info",
             role_name: role,
-            "sub_module": "Partner API", 
-            "sub_tab": "Carrier APIs",
-            "Environment": environment.value,
-            "Partner": selectedPartner.value
+            sub_module: "Partner API", 
+            sub_tab: "Carrier APIs",
+            Environment: environment.value,
+            Partner: selectedPartner.value,
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);
-          // console.log(resp)
-          // console.log("Environment:", resp.data.partners_and_subpartners);
-          // console.log("Partner:", resp.data.role_module_data);
-          // console.log("amop_apis_data:", resp.data.Carrier_apis_data);
-          
-        const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-
-        setTableData(carrierApis);
-    
-        const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
-        setEnvironmentOptions(environments);
-
-        const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
-        setPartnerOptions(partners);
-        setLoading(false)
+  
+          // Check if the flag is false
+          if (resp.flag === false) {
+            Modal.error({
+              title: 'Data Fetch Error',
+              content: resp.message || 'An error occurred while fetching data. Please try again.',
+              centered: true,
+            });
+            return; // Exit early if there's an error
+          }
+  
+          const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+  
+          setTableData(carrierApis);
+  
+          const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
+          setEnvironmentOptions(environments);
+  
+          const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
+          setPartnerOptions(partners);
         } catch (err) {
-          console.error(err);
+          console.error("Error fetching data:", err);
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+            centered: true,
+          });
+        } finally {
+          setLoading(false); // Ensure loading is set to false after the request
         }
       };
-
+  
       fetchData();
     }
-  }, [environment, selectedPartner]); // Call fetchData when environment or selectedPartner changes
+  }, [environment, selectedPartner]);
+  // Call fetchData when environment or selectedPartner changes
 
   if (loading) {
     return (

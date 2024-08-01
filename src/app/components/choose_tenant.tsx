@@ -1,7 +1,7 @@
 // pages/choose_tenant.tsx
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import { Footer } from './footer-nested';
 import axios from 'axios';
 import { BASE_URL, useAuth } from './auth_context';
@@ -26,42 +26,81 @@ const ChooseTenant: React.FC = () => {
    
   // }, []);
   const handleSelectedPartner = async (partnerName: string) => {
-    setSelectedPartnerName(partnerName)
+    setSelectedPartnerName(partnerName);
     const data = {
-      path:"/get_modules",
+      path: "/get_modules",
       role_name: role,
       username: username,
       tenant_name: partnerName
     };
-   
+  
     try {
-   
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-     
-   
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
         }}
       );
+  
       if (response.status === 200) {
-      
-        setSelectedPartner(true)
         const parsedData = JSON.parse(response.data.body); // Parse the response body
-        setModules(parsedData.Modules); // Set the modules state
-        setPartner(partnerName);
-        
+  
+        if (parsedData.error) {
+          // Show error popup if there's an error in the response
+          Modal.error({
+            title: 'Module Fetch Error',
+            content: parsedData.error || 'An error occurred while fetching modules. Please try again.',
+          // Custom styles for the modal content
+            centered: true // Center the modal horizontally
+          });
+        } else if (parsedData.flag === false) {
+          // Show error popup if the flag is false
+          Modal.error({
+            title: 'Module Fetch Error',
+            content: parsedData.message || 'An error occurred while fetching modules. Please try again.',
+           // Center the modal vertically
+            bodyStyle: {  textAlign: 'center' }, // Custom styles for the modal content
+            centered: true // Center the modal horizontally
+          });
+        } else {
+          setSelectedPartner(true);
+          setModules(parsedData.Modules); // Set the modules state
+          setPartner(partnerName);
+          router.push('/partner');
+        }
       } else {
-        console.log('Login failed:', response.data);
+        console.log('Fetching modules failed:', response.data);
+        Modal.error({
+          title: 'Module Fetch Error',
+          content: response.data.message || 'Fetching modules failed. Please try again.',
+        // Center the modal vertically
+          bodyStyle: {  textAlign: 'center' }, // Custom styles for the modal content
+          centered: true // Center the modal horizontally
+        });
       }
     } catch (error) {
-      console.error('Error during login:', error);
-    }
-    router.push('/partner');
-    
-    
-  };
+      console.error('Error during module fetch:', error);
   
+      // Type guard to check if error is an instance of Error
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'Module Fetch Error',
+          content: error.message || 'An unexpected error occurred while fetching modules. Please try again.',
+          style: { top: '20vh' }, // Center the modal vertically
+          bodyStyle: { padding: '20px', textAlign: 'center' }, // Custom styles for the modal content
+          centered: true // Center the modal horizontally
+        });
+      } else {
+        Modal.error({
+          title: 'Module Fetch Error',
+          content: 'An unexpected error occurred while fetching modules. Please try again.',
+          style: { top: '20vh' }, // Center the modal vertically
+          bodyStyle: { padding: '20px', textAlign: 'center' }, // Custom styles for the modal content
+          centered: true // Center the modal horizontally
+        });
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">

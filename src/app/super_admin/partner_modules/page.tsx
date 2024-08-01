@@ -7,7 +7,7 @@ import Select, { SingleValue } from 'react-select';
 import UserRole from './user_role/page';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
-import { Spin } from 'antd';
+import { Modal, Spin } from 'antd';
 import { useLogoStore } from "@/app/stores/logoStore";
 
 const editableDrp = DropdownStyles;
@@ -45,22 +45,36 @@ const Page: React.FC = () => {
         path: "/get_superadmin_info",
         role_name: role,
         sub_module: "Partner Modules",
-        flag: "withoutparameters"
+        flag: "withoutparameters",
       };
-
+  
       const response = await axios.post(url, { data });
-      console.log(response.data);
       const resp = JSON.parse(response.data.body);
-      console.log(resp);
+  
+      // Check if the flag is false
+      if (resp.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: resp.message || 'An error occurred while fetching initial data. Please try again.',
+          centered: true,
+        });
+        return; // Exit early if there's an error
+      }
+  
       console.log("Environment:", resp.data.partners_and_sub_partners);
       setPartnersData(resp.data.partners_and_sub_partners);
     } catch (err) {
-      console.error(err);
-      setShowUserRole(false);
+      console.error("Error fetching initial data:", err);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching initial data. Please try again.',
+        centered: true,
+      });
     } finally {
       setLoading(false);
     }
   };
+  
 
 
   const PartnersData = partnersData || {};
@@ -80,14 +94,23 @@ const Page: React.FC = () => {
         sub_module: "Partner Modules",
         flag: "withparameters",
         Partner: selectedPartner,
-        sub_partner: selectedSubPartner // Send selected sub-partner
+        sub_partner: selectedSubPartner, // Send selected sub-partner
       };
-
+  
       const response = await axios.post(url, { data });
-      console.log(response.data);
       const resp = JSON.parse(response.data.body);
-      console.log(resp);
-
+  
+      // Check if the flag is false
+      if (resp.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: resp.message || 'An error occurred while fetching partner modules. Please try again.',
+          centered: true,
+        });
+        setShowUserRole(false);
+        return; // Exit early if there's an error
+      }
+  
       console.log("Environment:", resp.data.partners_and_sub_partners);
       console.log("role data:", resp.data.roles_data);
       console.log("module data:", resp.data.role_module_data);
@@ -95,12 +118,18 @@ const Page: React.FC = () => {
       setModuleData(resp.data.role_module_data);
       setShowUserRole(true);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching data:", err);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+        centered: true,
+      });
       setShowUserRole(false);
     } finally {
       setLoading(false);
     }
   };
+  
 
   const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
     if (selectedOption) {

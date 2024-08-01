@@ -1,6 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import axios from 'axios';
 import { AUTHENTICATION_ROUTES } from '../components/routes/route_constants';
+import { Modal } from 'antd';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -45,28 +46,50 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       password: password,
     };
     try {
-      // console.log('Logging in with:', username, password);
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
-      // console.log("url", url);
       const response = await axios.post(url, { data: data }, {
         headers: {
           'Content-Type': 'application/json'
         }}
       );
+  
       if (response.status === 200) {
         const resp = JSON.parse(response.data.body);
-        // console.log('Login successful:', resp["tenant_names"]);
-        const tenant_names = resp["tenant_names"];
-        const role=resp["role"]
-        setRole(role)
-        setTenantNames(tenant_names); // Set tenant names
-        setIsAuthenticated(true);
+        if (resp.flag === false) {
+          Modal.error({
+            title: 'Login Error',
+            content: resp.message || 'An error occurred during login. Please try again.',
+          });
+          setIsAuthenticated(false);
+        } else {
+          const tenant_names = resp["tenant_names"];
+          const role = resp["role"];
+          setRole(role);
+          setTenantNames(tenant_names); // Set tenant names
+          setIsAuthenticated(true);
+        }
       } else {
         console.log('Login failed:', response.data);
+        Modal.error({
+          title: 'Login Error',
+          content: response.data.message || 'Login failed. Please check your credentials and try again.',
+        });
         setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Error during login:', error);
+      if (error instanceof Error) {
+        Modal.error({
+          title: 'Login Error',
+          content: error.message || 'An unexpected error occurred during login. Please try again.',
+        });
+      } else {
+        Modal.error({
+          title: 'Login Error',
+          content: 'An unexpected error occurred during login. Please try again.',
+        });
+      }
+  
       setIsAuthenticated(false);
     }
   };

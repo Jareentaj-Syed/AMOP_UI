@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import { PlusIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
-import { Button } from "antd";
+import { Button, Modal } from "antd";
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -35,40 +35,53 @@ const NetSapiensCustomers: React.FC = () => {
         setLoading(true)
     }
 },[title])
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-        const data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/get_module_data",
-          role_name: role,
-          parent_module_name: "poeple",
-          module_name: "NetSapiens Customers",
-          mod_pages: {
-            start: 0,
-            end: 500,
-          },
-        };
-        const response = await axios.post(url, { data });
-        const parsedData = JSON.parse(response.data.body);
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true); // Set loading to true at the start
+    try {
+      const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+      const data = {
+        tenant_name: partner || "default_value",
+        username: username,
+        path: "/get_module_data",
+        role_name: role,
+        parent_module_name: "people", // Corrected spelling from 'poeple'
+        module_name: "NetSapiens Customers",
+        mod_pages: {
+          start: 0,
+          end: 500,
+        },
+      };
+      
+      const response = await axios.post(url, { data });
+      const parsedData = JSON.parse(response.data.body);
+
+      // Check if the flag is false in the parsed data
+      if (parsedData.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: parsedData.message || 'An error occurred while fetching NetSapiens Customers data. Please try again.',
+          centered: true,
+        });
+      } else {
         const tableData = parsedData.data.customers;
         console.log("response.data-revio", tableData);
-        setTable(tableData);
         setTableData(tableData);
-        setLoading(false)
-      } catch (err) {
-        console.error("Error fetching data:", err);
       }
-      finally {
-        setLoading(false); // Set loading to false after the request is done
-      }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: error instanceof Error ? error.message : 'An unexpected error occurred while fetching data. Please try again.',
+        centered: true,
+      });
+    } finally {
+      setLoading(false); // Ensure loading is set to false in the finally block
+    }
+  };
 
-    fetchData();
-  }, [username, partner, role, setTable]);
+  fetchData();
+}, [username, partner, role, setTable]);
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);

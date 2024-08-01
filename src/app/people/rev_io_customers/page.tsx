@@ -7,7 +7,7 @@ import {
   AdjustmentsHorizontalIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button, Popover } from "antd";
+import { Button, Modal, Popover } from "antd";
 import { Spin } from 'antd';
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
@@ -41,47 +41,60 @@ const RevIOCustomers: React.FC = () => {
         setLoading(true)
     }
 },[title])
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true)
-      try {
-        const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-        const data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/get_module_data",
-          role_name: role,
-          parent_module_name: "poeple",
-          module_name: "REV.Io Customers",
-          mod_pages: {
-            start: 0,
-            end: 500,
-          },
-        };
-        const response = await axios.post(url, {
-          data,
-        });
-        const parsedData = JSON.parse(response.data.body);
-        const tableData = parsedData.data.customers;
-        const bill_profile=parsedData.data.revbillprofile
-        const bill_profile_options=bill_profile.map((bill:any) => bill.description)
-        const createColumns = createModalData(bill_profile_options)
-        setcreateColumns(createColumns)
-        // console.log("response.data-revio", tableData);
-        setTable(tableData);
-        setTableData(tableData);
-        setBillProfile(bill_profile_options)
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setLoading(false);
-      }
-      finally {
-        setLoading(false); // Set loading to false after the request is done
-      }
-    };
+useEffect(() => {
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+      const data = {
+        tenant_name: partner || "default_value",
+        username: username,
+        path: "/get_module_data",
+        role_name: role,
+        parent_module_name: "people", // Corrected spelling from 'poeple'
+        module_name: "REV.Io Customers",
+        mod_pages: {
+          start: 0,
+          end: 500,
+        },
+      };
+      const response = await axios.post(url, { data });
+      const parsedData = JSON.parse(response.data.body);
 
-    fetchData();
-  }, []);
+      // Check if the flag is false
+      if (parsedData.flag === false) {
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: parsedData.message || 'An error occurred while fetching REV.Io Customers data. Please try again.',
+          centered: true,
+        });
+        return; // Exit early if there's an error
+      }
+
+      const tableData = parsedData.data.customers;
+      const bill_profile = parsedData.data.revbillprofile;
+      const bill_profile_options = bill_profile.map((bill: any) => bill.description);
+      const createColumns = createModalData(bill_profile_options);
+      
+      setcreateColumns(createColumns);
+      setTable(tableData);
+      setTableData(tableData);
+      setBillProfile(bill_profile_options);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+      Modal.error({
+        title: 'Data Fetch Error',
+        content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+        centered: true,
+      });
+    } finally {
+      setLoading(false); // Set loading to false after the request is done
+    }
+  };
+
+  fetchData();
+}, [username, partner, role, setTable]);
+
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
