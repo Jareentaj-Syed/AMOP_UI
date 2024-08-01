@@ -12,7 +12,7 @@ import { useLogoStore } from '../stores/logoStore';
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
 const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
 const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'));
-const CustomerGroups = dynamic(() => import('./customer_groups/page'));
+// const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));
 
