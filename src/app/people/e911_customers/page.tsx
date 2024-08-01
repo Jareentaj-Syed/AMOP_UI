@@ -97,7 +97,7 @@ useEffect(() => {
   };
 
   fetchData();
-}, [username, partner, role, setTable]);
+}, []);
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);

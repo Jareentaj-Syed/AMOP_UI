@@ -50,17 +50,12 @@ const ChooseTenant: React.FC = () => {
           Modal.error({
             title: 'Module Fetch Error',
             content: parsedData.error || 'An error occurred while fetching modules. Please try again.',
-          // Custom styles for the modal content
-            centered: true // Center the modal horizontally
           });
         } else if (parsedData.flag === false) {
           // Show error popup if the flag is false
           Modal.error({
             title: 'Module Fetch Error',
             content: parsedData.message || 'An error occurred while fetching modules. Please try again.',
-           // Center the modal vertically
-            bodyStyle: {  textAlign: 'center' }, // Custom styles for the modal content
-            centered: true // Center the modal horizontally
           });
         } else {
           setSelectedPartner(true);
@@ -73,9 +68,6 @@ const ChooseTenant: React.FC = () => {
         Modal.error({
           title: 'Module Fetch Error',
           content: response.data.message || 'Fetching modules failed. Please try again.',
-        // Center the modal vertically
-          bodyStyle: {  textAlign: 'center' }, // Custom styles for the modal content
-          centered: true // Center the modal horizontally
         });
       }
     } catch (error) {
@@ -86,17 +78,12 @@ const ChooseTenant: React.FC = () => {
         Modal.error({
           title: 'Module Fetch Error',
           content: error.message || 'An unexpected error occurred while fetching modules. Please try again.',
-          style: { top: '20vh' }, // Center the modal vertically
-          bodyStyle: { padding: '20px', textAlign: 'center' }, // Custom styles for the modal content
-          centered: true // Center the modal horizontally
+         
         });
       } else {
         Modal.error({
           title: 'Module Fetch Error',
           content: 'An unexpected error occurred while fetching modules. Please try again.',
-          style: { top: '20vh' }, // Center the modal vertically
-          bodyStyle: { padding: '20px', textAlign: 'center' }, // Custom styles for the modal content
-          centered: true // Center the modal horizontally
         });
       }
     }

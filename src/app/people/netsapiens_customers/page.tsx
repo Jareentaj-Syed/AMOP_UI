@@ -15,20 +15,23 @@ import { useNetSapiensStore } from "./netsapiens_customers_constants";
 import { useLogoStore } from "@/app/stores/logoStore";
 
 
+
 const NetSapiensCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true); // State to manage loading
 
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
-  const createColumns = createModalData;
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  // const createColumns = createModalData;
   const { username, partner, role } = useAuth();
   const { customers_table, setTable } = useNetSapiensStore();
   const [tableData, setTableData] = useState<any[]>([]);
   const title = useLogoStore((state) => state.title);
   const [pagination,setpagination]=useState<any>({});
-  
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [createModalData,setcreateModalData]=useState<any[]>([]);
 
   useEffect(() => {
     if(title!="People"){
@@ -55,8 +58,20 @@ useEffect(() => {
       
       const response = await axios.post(url, { data });
       const parsedData = JSON.parse(response.data.body);
-
+      console.log(parsedData)
       // Check if the flag is false in the parsed data
+      const tableData = parsedData.data.customers;
+      console.log("response.data-revio", tableData);
+      const headerMap=parsedData.headers_map["NetSapiens Customers"]["header_map"]
+      const createModalData=parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+      const headers=Object.keys(headerMap)
+      setHeaders(headers)
+      setHeaderMap(headerMap)
+      setcreateModalData(createModalData)
+      // setTable(tableData);
+      setVisibleColumns(headers)
+      setTableData(tableData);
+      setLoading(false)
       if (parsedData.flag === false) {
         Modal.error({
           title: 'Data Fetch Error',
@@ -64,10 +79,9 @@ useEffect(() => {
           centered: true,
         });
       } else {
-        const tableData = parsedData.data.customers;
-        console.log("response.data-revio", tableData);
-        setTableData(tableData);
+       
       }
+      
     } catch (error) {
       console.error("Error fetching data:", error);
       Modal.error({
@@ -81,7 +95,7 @@ useEffect(() => {
   };
 
   fetchData();
-}, [username, partner, role, setTable]);
+}, []);
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -151,7 +165,7 @@ useEffect(() => {
           itemsPerPage={10}
           allowedActions={["info", "edit"]}
           popupHeading="NetSapien Customer"
-          createModalData={createColumns}
+          createModalData={createModalData}
           pagination={pagination}
         />
      
@@ -160,8 +174,10 @@ useEffect(() => {
         isOpen={isCreateModalOpen}
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
-        columnNames={[]}
-        heading="NetSapien Customer" header={[]}      />
+        columnNames={createModalData}
+        heading="NetSapien Customer" 
+        header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+  />
     </div>
   );
 };
