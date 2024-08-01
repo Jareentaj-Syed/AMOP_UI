@@ -74,6 +74,7 @@ useEffect(() => {
         setTableData(tableData);
       }
     } catch (error) {
+      
       console.error("Error fetching data:", error);
       Modal.error({
         title: 'Data Fetch Error',
