@@ -5,7 +5,9 @@ import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
 import axios from 'axios';
 import { useAuth } from './auth_context';
-
+import { DatePicker } from 'antd';
+import moment from 'moment';
+import dayjs from 'dayjs';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -251,6 +253,15 @@ const CreateModal: React.FC<CreateModalProps> = ({
                     {column.display_name}
                   </Checkbox>
                 )}
+                {column.type === 'date' && (
+                      <DatePicker
+                        value={formData[column.db_column_name] ? dayjs(formData[column.db_column_name]) : null}
+                        onChange={(date) => handleChange(column.db_column_name, date ? date.format('DD-MM-YYYY') : null)}
+                        className="input"
+                        format="DD-MM-YYYY"
+                        placeholder="Select a date"
+                      />
+                    )}
               </div>
             ))}
           </div>

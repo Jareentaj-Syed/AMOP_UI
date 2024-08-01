@@ -88,7 +88,7 @@ const BandWidthCustomers: React.FC = () => {
     }
   };
   fetchData()
-})
+},[])
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);

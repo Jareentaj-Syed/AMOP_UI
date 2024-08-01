@@ -272,8 +272,8 @@ const EditModal: React.FC<EditModalProps> = ({
                     {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={column.db_column_name !== "None" ? column.db_column_name : ""}
-                        value={formData[column.db_column_name] || ''}
+                        name={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
+                        value={formData[column.db_column_name]&&formData[column.db_column_name] !== "None" ?formData[column.db_column_name]: ''}
                         onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                         className="input"
                       />
@@ -306,7 +306,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     )}
                     {column.type === 'checkbox' && (
                       <Checkbox
-                        checked={formData[column.db_column_name] || false}
+                        checked={formData[column.db_column_name]&&column.db_column_name !== "None"?formData[column.db_column_name] : false}
                         onChange={(e) => handleChange(column.db_column_name, e.target.checked)}
                         className="mt-1"
                       >
