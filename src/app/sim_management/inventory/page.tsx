@@ -127,7 +127,7 @@ const sim_management: React.FC = () => {
       </div>
       <TableComponent
         createModalData={[]}
-     
+
         isSelectRowVisible={false}
         headers={headers}
         initialData={data}
@@ -136,8 +136,9 @@ const sim_management: React.FC = () => {
         itemsPerPage={10}
         advancedFilters={filteredData}
 
-        allowedActions={["Actions"]} 
-        popupHeading={''} />
+        allowedActions={["Actions"]}
+        popupHeading={''} 
+        pagination={{}} />
     </div>
   );
 };

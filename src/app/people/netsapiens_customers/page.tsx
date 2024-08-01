@@ -182,7 +182,7 @@ useEffect(() => {
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}
           itemsPerPage={10}
-          allowedActions={["info", "edit"]}
+          allowedActions={["info","edit"]}
           popupHeading="NetSapien Customer"
           createModalData={createModalData}
           pagination={pagination}
@@ -197,6 +197,7 @@ useEffect(() => {
         columnNames={createModalData}
         heading="NetSapien Customer" 
         header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+        generalFields={generalFields}
   />
     </div>
   );

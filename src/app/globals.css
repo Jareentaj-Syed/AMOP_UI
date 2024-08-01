@@ -151,6 +151,7 @@
   border-radius: 4px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   text-align: left;
+  max-height: 40px;
 }
 
 .input:hover {

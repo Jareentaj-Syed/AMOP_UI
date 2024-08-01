@@ -9,6 +9,7 @@ import { useAuth } from './auth_context';
 import { DatePicker } from 'antd';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import InfoPopup from '../people/info_popup';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -45,17 +46,15 @@ const EditModal: React.FC<EditModalProps> = ({
   const editableDrp = DropdownStyles;
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
   const { username, tenantNames, role, partner } = useAuth();
+  const rate_plan_name_drp=generalFields&&generalFields.rate_plan_name&&Array.isArray(generalFields.rate_plan_name)?generalFields.rate_plan_name:[]
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
 
   useEffect(() => {
-    setFormData(rowData || {});
-  }, [rowData]);
-
-  useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
       setFormData(rowData || {});
     }
+
   }, [isOpen, rowData]);
 
   const handleChange = (name: string, value: any) => {
@@ -65,7 +64,6 @@ const EditModal: React.FC<EditModalProps> = ({
     }));
   };
   const getOptions = (column:any) => {
-    console.log("column",column)
     console.log("generalFields",generalFields)
 
     if(column&&generalFields&&generalFields[column]){
@@ -74,7 +72,6 @@ const EditModal: React.FC<EditModalProps> = ({
         value:getKey(option)
 
     }))
-    console.log("optionList",optionList)
 
     return optionList
   }
@@ -166,9 +163,9 @@ const EditModal: React.FC<EditModalProps> = ({
             "changed_data": formData
           };
         }
-        if (heading === " NetSapien Customer") {
+        if (heading === "NetSapien Customer") {
           if (formData) {
-            formData["modifiedby"] = username;
+            formData["modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -177,6 +174,22 @@ const EditModal: React.FC<EditModalProps> = ({
             role_name: role,
             "parent_module": "People",
             "module": " NetSapien Customer",
+            "table_name": "customers",
+            action: "update",
+            "changed_data": formData
+          };
+        }
+        if (heading === "Bandwidth Customer") {
+          if (formData) {
+            formData["modifie_dby"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": " Bandwidth Customer",
             "table_name": "customers",
             action: "update",
             "changed_data": formData
@@ -223,7 +236,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const getKey = (obj:any) => {
     if(obj){
       const list=Object.values(obj)
-      console.log("list[0]",list[0])
+      // console.log("list[0]",list[0])
       return list[0]
     }
     
@@ -241,6 +254,8 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
+  const infoModalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2) / 4 : 0;
+  
 
   return (
     <div>
@@ -266,96 +281,106 @@ const EditModal: React.FC<EditModalProps> = ({
 
       ) : (
         <>
+         {!isEditable && (heading === "NetSapien Customer" || heading === "Bandwidth Customer") ?(
           <Modal
-            open={isOpen}
-            onCancel={handleCancel}
-            title={
-              <h3 className='popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
-            }
-            footer={isEditable ? (
-              <div className="justify-center flex space-x-2">
-                <button onClick={handleCancel} className="cancel-btn">
-                  <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
-                  Cancel
-                </button>
-                <button onClick={showConfirmation} className="save-btn">
-                  <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
-                  Save
-                </button>
-              </div>
-            ) : null
-            }
-            width={modalWidth}
-            styles={{ body: { height: modalHeight, padding: '4px' } }}
-          >
-            <div className='popup'>
-              <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
-                {createModalData.map((column: Column) => (
-                  <div key={column.db_column_name} className="flex flex-col mb-4">
-                    <label className="field-label">
-                      {column.display_name} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
-                    </label>
-                    {column.type === 'text' && (
-                      <Input
-                        type="text"
-                        name={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
-                        value={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? formData[column.db_column_name] : ''}
-                        onChange={(e) => handleChange(column.db_column_name, e.target.value)}
-                        className={isEditable ? "input" : "non-editable-input"}
-                        disabled={!isEditable}
-                      />
-                    )}
-                    {column.type === 'dropdown' && (
-                      <Select
-                        styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
-                        isDisabled={!isEditable}
-                        classNamePrefix="select"
-                        placeholder="Select..."
-                        value={
-                          generalFields &&
-                            generalFields[column.db_column_name] &&
-                            Array.isArray(generalFields[column.db_column_name])
-                            ? generalFields[column.db_column_name].find((option: any) => option.tenant_name === formData[column.db_column_name])
-                              ? { label: formData[column.db_column_name], value: formData[column.db_column_name] }
-                              : null
-                            : null
-                        }
-                        onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
-                        options={
-                          generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
-                            ? generalFields[column.db_column_name].map((option: any) => ({
-                              label:getKey(option),
-                              value:getKey(option)
-                            }))
-                            : [{ label: "No options", value: "No options" }]
-                        }
-                      />
-                    )}
+          open={isOpen}
+          onCancel={handleCancel}
+          title={
+            <h3 className='popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
+          }
+          width={modalWidth}
+          styles={{ body: { height: infoModalHeight, padding: '4px' } }}
+        >
+          <div className='popup'>
+          <InfoPopup rate_plan={rate_plan_name_drp}/>
 
-                    {column.type === 'checkbox' && (
-                      <Checkbox
-                        checked={formData[column.db_column_name] && column.db_column_name !== "None" ? formData[column.db_column_name] : false}
-                        onChange={(e) => handleChange(column.db_column_name, e.target.checked)}
-                        className="mt-1"
-                      >
-                        {column.display_name}
-                      </Checkbox>
-                    )}
-                    {column.type === 'date' && (
-                      <DatePicker
-                        value={formData[column.db_column_name] ? dayjs(formData[column.db_column_name]) : null}
-                        onChange={(date) => handleChange(column.db_column_name, date ? date.format('YYYY-MM-DD') : null)}
-                        className="input"
-                        format="YYYY-MM-DD"
-                        placeholder="Select a date"
-                        disabled={!isEditable}
-                      />
-                    )}
-                  </div>
-                ))}
+          </div>
+
+        </Modal>
+        ):
+        <Modal
+        open={isOpen}
+        onCancel={handleCancel}
+        title={
+          <h3 className='popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
+        }
+        footer={isEditable ? (
+          <div className="justify-center flex space-x-2">
+            <button onClick={handleCancel} className="cancel-btn">
+              <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
+              Cancel
+            </button>
+            <button onClick={showConfirmation} className="save-btn">
+              <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
+              Save
+            </button>
+          </div>
+        ) : null
+        }
+        width={modalWidth}
+        styles={{ body: { height: modalHeight, padding: '4px' } }}
+      >
+        <div className='popup'>
+          <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
+            {createModalData.map((column: Column) => (
+              <div key={column.db_column_name} className="flex flex-col mb-4">
+                <label className="field-label">
+                  {column.display_name} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
+                </label>
+                {column.type === 'text' && (
+                  <Input
+                    type="text"
+                    name={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? column.db_column_name : ""}
+                    value={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? formData[column.db_column_name] : ''}
+                    onChange={(e) => handleChange(column.db_column_name, e.target.value)}
+                    className={isEditable ? "input" : "non-editable-input"}
+                    disabled={!isEditable}
+                  />
+                )}
+                {column.type === 'dropdown' && (
+                  <Select
+                    styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
+                    isDisabled={!isEditable}
+                    classNamePrefix="select"
+                    placeholder="Select..."
+                    value={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ?{label:formData[column.db_column_name],value:formData[column.db_column_name]}:{label:'',value:''}}
+                    onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
+                    options={
+                      generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                        ? generalFields[column.db_column_name].map((option: any) => ({
+                          label:option,
+                          value:option
+                        }))
+                        : [{ label: "No options", value: "No options" }]
+                    }
+                  />
+                )}
+
+                {column.type === 'checkbox' && (
+                  <Checkbox
+                    checked={formData[column.db_column_name] && column.db_column_name !== "None" ? formData[column.db_column_name] : false}
+                    onChange={(e) => handleChange(column.db_column_name, e.target.checked)}
+                    className="mt-1"
+                  >
+                    {column.display_name}
+                  </Checkbox>
+                )}
+                {column.type === 'date' && (
+                  <DatePicker
+                    value={formData[column.db_column_name] ? dayjs(formData[column.db_column_name]) : null}
+                    onChange={(date) => handleChange(column.db_column_name, date ? date.format('YYYY-MM-DD') : null)}
+                    className="input"
+                    format="YYYY-MM-DD"
+                    placeholder="Select a date"
+                    disabled={!isEditable}
+                  />
+                )}
               </div>
-            </div>
-          </Modal>
+            ))}
+          </div>
+        </div>
+      </Modal>}
+          
           <Modal
             visible={isConfirmationOpen}
             onOk={handleConfirmSave}
@@ -366,7 +391,6 @@ const EditModal: React.FC<EditModalProps> = ({
           >
             <p>Are you sure you want to save the changes?</p>
           </Modal>
-
         </>
       )}
     </div>

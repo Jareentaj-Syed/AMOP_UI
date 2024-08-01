@@ -69,7 +69,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           username: username,
           path: "/get_module_data",
           role_name: role,
-          parent_module_name: "poeple",
+          parent_module_name: "people",
           module_name: "Bandwidth Customers",
           mod_pages: {
             start: 0,
@@ -185,7 +185,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}
           itemsPerPage={10}
-          allowedActions={["info"]}
+          allowedActions={["info","edit"]}
           popupHeading="Bandwidth Customer"
           createModalData={createModalData}
           pagination={pagination}
@@ -200,6 +200,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
         columnNames={createModalData}
         heading="Bandwidth Customer"
         header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+        generalFields={generalFields}
       />
     </div>
   );
