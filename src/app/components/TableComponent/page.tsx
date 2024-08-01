@@ -660,7 +660,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             ) : header === "Change Details" ? (
               changeDetailCellRenderer()
             ) : (
-              row[header]
+              row[header]!="None"?row[header]:""
             )}
           </td>
         ) : null // Ensure non-visible columns return null

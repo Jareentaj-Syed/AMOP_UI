@@ -73,6 +73,7 @@ const BandWidthCustomers: React.FC = () => {
         setcreateModalData(createModalData)
         setTable(tableData);
         setTableData(tableData);
+        setVisibleColumns(headers)
         setLoading(false)
     } catch (error) {
       
@@ -86,6 +87,7 @@ const BandWidthCustomers: React.FC = () => {
       setLoading(false); // Ensure loading is set to false in the finally block
     }
   };
+  fetchData()
 })
 
   const handleCreateModalOpen = () => {

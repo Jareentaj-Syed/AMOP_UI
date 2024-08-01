@@ -26,15 +26,17 @@ const E911Customers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
-  const createColumns = createModalData;
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const createColumns = [];
   const { username, partner, role } = useAuth();
   const [loading, setLoading] = useState(true); // State to manage loading
   const title = useLogoStore((state) => state.title);
   const [tableData, setTableData] = useState<any>([]);
   const { customers_table, setTable } = useE911CustomersStore();
   const [pagination,setpagination]=useState<any>({});
-
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [createModalData,setcreateModalData]=useState<any[]>([]);
   useEffect(() => {
     if(title!="People"){
         setLoading(true)
@@ -61,7 +63,17 @@ useEffect(() => {
 
       const response = await axios.post(url, { data });
       const parsedData = JSON.parse(response.data.body);
-
+      const headerMap=parsedData.headers_map["E911 Customers"]["header_map"]
+      const createModalData=parsedData.headers_map["E911 Customers"]["pop_up"]
+      const headers=Object.keys(headerMap)
+      const customertableData = parsedData.data.WestE911Customer;
+      setTableData(customertableData);
+      console.log("response.data", tableData);
+      // console.log("response.data-revio", tableData);
+      setHeaders(headers)
+      setHeaderMap(headerMap)
+      setcreateModalData(createModalData)
+      setVisibleColumns(headers)
       // Check if the flag is false in the parsed data
       if (parsedData.flag === false) {
         Modal.error({
@@ -70,9 +82,7 @@ useEffect(() => {
           centered: true,
         });
       } else {
-        const tableData = parsedData.data.WestE911Customer;
-        console.log("response.data-revio", tableData);
-        setTableData(tableData);
+        
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -159,8 +169,8 @@ useEffect(() => {
           visibleColumns={visibleColumns}
           itemsPerPage={10}
           allowedActions={["edit", "delete"]}
-          popupHeading="E9 Customer"
-          createModalData={createColumns}
+          popupHeading="E911 Customer"
+          createModalData={createModalData}
           pagination={pagination}
         
         />
