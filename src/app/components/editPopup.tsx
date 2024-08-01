@@ -64,6 +64,24 @@ const EditModal: React.FC<EditModalProps> = ({
       [name]: value,
     }));
   };
+  const getOptions = (column:any) => {
+    console.log("column",column)
+    console.log("generalFields",generalFields)
+
+    if(column&&generalFields&&generalFields[column]){
+      const optionList=generalFields[column].map((option: any) => ({
+        label:getKey(option),
+        value:getKey(option)
+
+    }))
+    console.log("optionList",optionList)
+
+    return optionList
+  }
+  else{
+    return []
+  }
+}
 
   const handleSave = () => {
     console.log("form data:", formData);

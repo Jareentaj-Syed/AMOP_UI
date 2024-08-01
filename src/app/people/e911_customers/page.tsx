@@ -37,12 +37,27 @@ const E911Customers: React.FC = () => {
   const [headers,setHeaders]=useState<any[]>([]);
   const [headerMap,setHeaderMap]=useState<any>({});
   const [createModalData,setcreateModalData]=useState<any[]>([]);
+  const [generalFields,setgeneralFields]=useState<any[]>([])
+
   useEffect(() => {
     if(title!="People"){
         setLoading(true)
     }
 },[title])
 
+
+type HeaderMap = Record<string, [string, number]>;
+
+const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+  // Convert the object to an array of [key, value] pairs
+  const entries = Object.entries(headerMap) as [string, [string, number]][];
+
+  // Sort the array based on the second item of each value
+  entries.sort((a, b) => a[1][1] - b[1][1]);
+
+  // Convert the sorted array back to an object
+  return Object.fromEntries(entries) as HeaderMap;
+}
 useEffect(() => {
   const fetchData = async () => {
     setLoading(true); // Set loading to true at the start
@@ -63,6 +78,7 @@ useEffect(() => {
 
       const response = await axios.post(url, { data });
       const parsedData = JSON.parse(response.data.body);
+      
       // Check if the flag is false in the parsed data
         
         if (parsedData.flag === false) {
@@ -74,11 +90,12 @@ useEffect(() => {
         } else{
           const headerMap=parsedData.headers_map["E911 Customers"]["header_map"]
           const createModalData=parsedData.headers_map["E911 Customers"]["pop_up"]
-          const headers=Object.keys(headerMap)
           const customertableData = parsedData.data.WestE911Customer;
           setTableData(customertableData);
-          console.log("response.data", tableData);
-          // console.log("response.data-revio", tableData);
+          const sortedheaderMap=sortHeaderMap(headerMap)
+          const headers=Object.keys(sortedheaderMap)
+          const generalFields=parsedData.data
+          setgeneralFields(generalFields)
           setHeaders(headers)
           setHeaderMap(headerMap)
           setcreateModalData(createModalData)
