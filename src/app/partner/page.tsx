@@ -72,7 +72,8 @@ const Partner: React.FC = () => {
                     try {
                         const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
                         const parseddata=JSON.parse(response.data.body).data
-                        tab.setter(parseddata[tab.module]);
+                        tab.setter(parseddata);
+                        console.log("parseddata[tab.module]",parseddata)
                         tab.setLoaded(true); // Set the loaded flag to true
                     } catch (error) {
                         console.error('Error fetching', tab.module, ':', error);

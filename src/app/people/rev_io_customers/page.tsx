@@ -18,7 +18,7 @@ import axios from "axios";
 import { useAuth } from "@/app/components/auth_context";
 import { useRevIOStore } from "./rev_io_customers_constants";
 import { useLogoStore } from "@/app/stores/logoStore";
-
+const [pagination,setpagination]=useState<any>({});
 
 interface ExcelData {
   [key: string]: any;
@@ -155,6 +155,7 @@ const RevIOCustomers: React.FC = () => {
           allowedActions={["edit", "info"]}
           popupHeading="RevIO Customer"
           createModalData={createColumns}
+          pagination={pagination}
         />
       
       <CreateModal

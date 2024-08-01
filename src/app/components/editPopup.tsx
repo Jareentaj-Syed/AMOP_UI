@@ -9,7 +9,7 @@ import { useAuth } from './auth_context';
 
 interface Column {
   display_name: string;
-  unique_name: string;
+  db_column_name: string;
   type: string;
   default: string;
   mandatory: string;
@@ -259,16 +259,16 @@ const EditModal: React.FC<EditModalProps> = ({
             <div className='popup'>
               <div className='grid grid-cols-2 gap-4 md:grid-cols-2'>
                 {createModalData.map((column: Column) => (
-                  <div key={column.unique_name} className="flex flex-col mb-4">
+                  <div key={column.db_column_name} className="flex flex-col mb-4">
                     <label className="field-label">
                       {column.display_name} {column.mandatory === 'true' && <span className="text-red-500">*</span>}
                     </label>
                     {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={column.unique_name}
-                        value={formData[column.unique_name] || ''}
-                        onChange={(e) => handleChange(column.unique_name, e.target.value)}
+                        name={column.db_column_name}
+                        value={formData[column.db_column_name] || ''}
+                        onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                         className="input"
                       />
                     )}
@@ -280,17 +280,17 @@ const EditModal: React.FC<EditModalProps> = ({
                         placeholder="Select..."
                         value={
                           generalFields &&
-                          generalFields[column.unique_name] &&
-                          Array.isArray(generalFields[column.unique_name])
-                            ? generalFields[column.unique_name].find(
-                                (option: any) => option.value === formData[column.unique_name]
+                          generalFields[column.db_column_name] &&
+                          Array.isArray(generalFields[column.db_column_name])
+                            ? generalFields[column.db_column_name].find(
+                                (option: any) => option.value === formData[column.db_column_name]
                               ) || null
                             : null
                         }
-                        onChange={(selectedOption) => handleChange(column.unique_name, selectedOption?.value)}
+                        onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
                         options={
-                          generalFields&&generalFields[column.unique_name] && Array.isArray(generalFields[column.unique_name])
-                            ? generalFields[column.unique_name].map((option: any) => ({
+                          generalFields&&generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                            ? generalFields[column.db_column_name].map((option: any) => ({
                               label: option,
                               value: option,
                             }))
@@ -300,8 +300,8 @@ const EditModal: React.FC<EditModalProps> = ({
                     )}
                     {column.type === 'checkbox' && (
                       <Checkbox
-                        checked={formData[column.unique_name] || false}
-                        onChange={(e) => handleChange(column.unique_name, e.target.checked)}
+                        checked={formData[column.db_column_name] || false}
+                        onChange={(e) => handleChange(column.db_column_name, e.target.checked)}
                         className="mt-1"
                       >
                         {column.display_name}

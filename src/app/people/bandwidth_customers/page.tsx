@@ -32,6 +32,7 @@ const BandWidthCustomers: React.FC = () => {
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
   const title = useLogoStore((state) => state.title);
+  const [pagination,setpagination]=useState<any>({});
   useEffect(() => {
     if(title!="People"){
         setLoading(true)
@@ -143,6 +144,7 @@ const BandWidthCustomers: React.FC = () => {
           allowedActions={["info"]}
           popupHeading="Bandwidth Customer"
           createModalData={createColumns}
+          pagination={pagination}
         
         />
     

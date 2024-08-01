@@ -36,9 +36,10 @@ interface TableComponentProps {
   generalFields?: any
   isSelectRowVisible?: boolean
   headerMap?:any
+  pagination:any
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, createModalData, generalFields, advancedFilters, isSelectRowVisible = true ,headerMap}) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, createModalData, generalFields, advancedFilters, isSelectRowVisible = true ,headerMap,pagination}) => {
   const router = useRouter();
 
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);

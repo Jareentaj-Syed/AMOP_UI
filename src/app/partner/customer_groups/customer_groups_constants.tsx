@@ -24,57 +24,12 @@ const billingaccountnumber_drp = Object.values(partnerData.data["Customer groups
 );
 
 // Define modal data
-export const createModalData = [
-  {
-    "display_name": "Name",
-    "unique_name": "name",
-    "type": "text",
-    "default": "",
-    "mandatory": "true"
-  },
-  {
-    "display_name": "Includes Child Account?",
-    "unique_name": "child_account",
-    "type": "checkbox",
-    "default": "",
-    "mandatory": "false"
-  },
-  {
-    "display_name": "Customers",
-    "unique_name": "Customers",
-    "type": "dropdown",
-    "default": "",
-    "mandatory": "true"
-  },
-  {
-    "display_name": "BAN",
-    "unique_name": "billing_account_number",
-    "type": "dropdown",
-    "default": "",
-    "mandatory": "false"
-  },
-  {
-    "display_name": "Customer rate plan",
-    "unique_name": "customer_rate_plan",
-    "type": "dropdown",
-    "default": "",
-    "mandatory": "false"
-  },
-  {
-    "display_name": "Feature codes",
-    "unique_name": "feature_codes",
-    "type": "dropdown",
-    "default": "",
-    "mandatory": "false"
-  }
-];
-
+export const createModalData = partnerData.data["Customer groups"]["headers_map"]["Customer groups"]["pop_up"]
+export const generalFields=partnerData.data["Customer groups"]["Customer groups"]
 // Extract customer table data and headers
-export const customer_table: any[] = partnerData.data["Customer groups"]["customergroups"];
-export const headers = ["name", "tenant_name", "modified_by", "modified_date"];
-export const headerMap={
-  "name":"Name",
-  "tenant_name":"Partner",
-  "modified_by":"Last Modified By",
-  "modified_date":"Last Modified Date & Time"
-}
+export const customer_table: any[] = partnerData.data["Customer groups"]["Customer groups"]["customergroups"];
+
+const headerMapping=partnerData.data["Customer groups"]["headers_map"]["Customer groups"]["header_map"]
+export const headers = Object.keys(headerMapping)
+export const headerMap=partnerData.data["Customer groups"]["headers_map"]["Customer groups"]["header_map"]
+export const pagination=partnerData.data["Customer groups"]["pages"]

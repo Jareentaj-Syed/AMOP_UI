@@ -55,4 +55,5 @@ export const subPartnersData: any =partnerData.data["Partner users"]["tenant"];
 export const total_users:any=partnerData.data["Partner users"]["total_count"]
 export const active_users:any=partnerData.data["Partner users"]["active_user_count"]
 export const migrated_users:any=partnerData.data["Partner users"]["migrated_count"]
+export const pagination=partnerData.data["Partner users"]["pages"]
 

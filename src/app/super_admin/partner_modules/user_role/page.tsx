@@ -27,6 +27,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
     const [visibleColumns2, setVisibleColumns2] = useState<string[]>([]);
+    const [pagination1,setpagination1]=useState<any>({});
+    const [pagination2,setpagination2]=useState<any>({});
     
     const headers1 = ["rolename","isactive","createdby",  "modifiedby", "modifieddate"];
     const headers2 = ["module_name","is_active", "modified_by", "modified_date"];
@@ -69,6 +71,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
                         itemsPerPage={10}
                         popupHeading='User'
                         createModalData={[]}
+                        pagination={pagination1}
                        
                         headerMap={headermap1}
                     />
@@ -86,7 +89,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
                         itemsPerPage={10}
                         popupHeading='UserModule'
                         createModalData={[]}
-                     
+                        pagination={pagination2}
                         headerMap={headermap2}
                     />
                 </div>

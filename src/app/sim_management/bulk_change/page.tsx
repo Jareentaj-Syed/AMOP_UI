@@ -25,6 +25,8 @@ const BulkChange: React.FC = () => {
     const { setVisible: setBulkChangeModalVisible } = useBulkChangeModalStore();
     const [loading, setLoading] = useState(false); // State to manage loading
     const title = useLogoStore((state) => state.title);
+    const [pagination,setpagination]=useState<any>({});
+
 
     useEffect(() => {
       if(title!="Sim Management"){
@@ -128,7 +130,7 @@ const BulkChange: React.FC = () => {
           visibleColumns={visibleColumns}
           itemsPerPage={10}
           advancedFilters={filteredData}
-
+          pagination={pagination}
           popupHeading={''} 
         />
        </div>

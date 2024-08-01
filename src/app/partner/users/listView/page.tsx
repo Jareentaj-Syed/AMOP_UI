@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
 import { headerMap, users_table } from '../users_constants';
-import { headers } from '../users_constants';
+import { headers ,pagination} from '../users_constants';
 import { useUserStore } from '../createUser/createUserStore';
 
 
@@ -88,6 +88,7 @@ const ListView: React.FC = () => {
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
               createModalData={[]}
+              pagination={pagination}
              
             />
           </div>

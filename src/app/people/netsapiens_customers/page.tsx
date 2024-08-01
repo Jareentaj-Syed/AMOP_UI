@@ -27,6 +27,8 @@ const NetSapiensCustomers: React.FC = () => {
   const { customers_table, setTable } = useNetSapiensStore();
   const [tableData, setTableData] = useState<any[]>([]);
   const title = useLogoStore((state) => state.title);
+  const [pagination,setpagination]=useState<any>({});
+  
 
   useEffect(() => {
     if(title!="People"){
@@ -137,7 +139,7 @@ const NetSapiensCustomers: React.FC = () => {
           allowedActions={["info", "edit"]}
           popupHeading="NetSapien Customer"
           createModalData={createColumns}
-         
+          pagination={pagination}
         />
      
 

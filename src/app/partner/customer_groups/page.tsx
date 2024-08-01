@@ -8,7 +8,7 @@ import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import { createModalData, headerMap } from './customer_groups_constants';
 import { customer_table } from './customer_groups_constants';
-import { headers } from './customer_groups_constants';
+import { headers,pagination,generalFields } from './customer_groups_constants';
 
 interface ExcelData {
   [key: string]: any;
@@ -84,7 +84,8 @@ const CustomerGroups: React.FC = () => {
           allowedActions={["edit", "delete"]}
           popupHeading='Customer Group'
           createModalData={createColumns}
-          generalFields={{}}
+          generalFields={generalFields}
+          pagination={pagination}
         />
 
         <CreateModal

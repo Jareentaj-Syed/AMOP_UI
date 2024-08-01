@@ -33,6 +33,7 @@ const E911Customers: React.FC = () => {
   const title = useLogoStore((state) => state.title);
   const [tableData, setTableData] = useState<any>([]);
   const { customers_table, setTable } = useE911CustomersStore();
+  const [pagination,setpagination]=useState<any>({});
 
   useEffect(() => {
     if(title!="People"){
@@ -149,6 +150,7 @@ const E911Customers: React.FC = () => {
           allowedActions={["edit", "delete"]}
           popupHeading="E9 Customer"
           createModalData={createColumns}
+          pagination={pagination}
         
         />
      
