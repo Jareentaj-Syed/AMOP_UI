@@ -16,6 +16,8 @@ const ListView: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   const router = useRouter();
+  const [pagination,setpagination]=useState<any>({});
+
   const handleCreateClick = () => {
     router.push('users/createUser');
   };
@@ -103,7 +105,7 @@ const ListView: React.FC = () => {
           allowedActions={["SingleClick"]}
           popupHeading='User'    
           createModalData={[]}  
-        
+          pagination={pagination}
         />
       </div>
     </div>

@@ -32,6 +32,8 @@ const CarrierInfo: React.FC = () => {
   const [tableData, setTableData] = useState<any>([]);
   const editableDrp = DropdownStyles;
   const [loading, setLoading] = useState(true); // State to manage loading
+  const [pagination,setpagination]=useState<any>({});
+
   const module_name= "Carrier Api"
   useEffect(() => {
  
@@ -204,7 +206,8 @@ const CarrierInfo: React.FC = () => {
               allowedActions={["edit"]}
               popupHeading='Carrier'
               createModalData={editColumns}
-              advancedFilters={[]}        
+              advancedFilters={[]}     
+              pagination={pagination}   
             />
           )}
         </div>

@@ -23,6 +23,7 @@ const CarrierInfo: React.FC = () => {
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<{ value: string; label: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [pagination,setpagination]=useState<any>({});
 
   useEffect(() => {
    
@@ -185,7 +186,7 @@ const CarrierInfo: React.FC = () => {
               allowedActions={["edit"]}
               popupHeading='API'
               createModalData={editColumns}
-             
+              pagination={pagination}
               advancedFilters={[]}
             />
           )}
