@@ -268,7 +268,7 @@ const EditModal: React.FC<EditModalProps> = ({
                     {column.type === 'text' && (
                       <Input
                         type="text"
-                        name={column.db_column_name}
+                        name={column.db_column_name!=="None"?column.db_column_name:""}
                         value={formData[column.db_column_name] || ''}
                         onChange={(e) => handleChange(column.db_column_name, e.target.value)}
                         className="input"
