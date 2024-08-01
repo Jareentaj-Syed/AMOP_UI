@@ -47,85 +47,79 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [role, setRole] = useState<string | null>(null);
   const [modules, setModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(false); // State to manage loading
-
   const login = async (username: string, password: string) => {
     setUsername(username);
     const data = {
-      path: "/login_using_database",
-      user_name: username,
-      password: password,
-      request_received_at: getCurrentDateTime()
+        path: "/login_using_database",
+        user_name: username,
+        password: password,
+        request_received_at: getCurrentDateTime(),
     };
-    setLoading(true)
+    setLoading(true);
+    
     try {
-      const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
-      const response = await axios.post(url, { data: data }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+        const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";
+        const response = await axios.post(url, { data: data }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
 
-      if (response.status === 200) {
-        const resp = JSON.parse(response.data.body);
-        if (resp.flag === false) {
-          Modal.error({
-            title: 'Login Error',
-            content: resp.message || 'An error occurred during login. Please try again.',
-            centered:true
-          });
-          setIsAuthenticated(false);
+        if (response.status === 200) {
+            const resp = JSON.parse(response.data.body);
+            if (resp.flag === false) {
+                Modal.error({
+                    title: 'Login Error',
+                    content: resp.message || 'An error occurred during login. Please try again.',
+                    centered: true,
+                });
+                setIsAuthenticated(false);
+            } else {
+                if (resp.message === "Token is Valid.") {
+                    setShowPasswordUpdate(true);
+                    const role = resp["role"];
+                    setRole(role);
+                    setIsAuthenticated(true);
+                    setReset(true);
+                }
+                if (resp["tenant_names"]) {
+                    const tenant_names = resp["tenant_names"];
+                    setTenantNames(tenant_names);
+                    setIsAuthenticated(true);
+                    setReset(false);
+                    const role = resp["role"];
+                    setRole(role);
+                }
+            }
         } else {
-          if(resp.message === "Token is Valid."){
-              setShowPasswordUpdate(true)
-              const role = resp["role"];
-              setRole(role);
-          setIsAuthenticated(true)
-          setReset(true)
-          }
-          if(resp["tenant_names"]){
-          const tenant_names = resp["tenant_names"];
-          setTenantNames(tenant_names);
-          setIsAuthenticated(true);
-          setReset(false)
-          const role = resp["role"];
-          setRole(role);
-          }
-           
-         setLoading(false)
-         
+            console.log('Login failed:', response.data);
+            Modal.error({
+                title: 'Login Error',
+                content: response.data.message || 'Login failed. Please check your credentials and try again.',
+                centered: true,
+            });
+            setIsAuthenticated(false);
         }
-      } else {
-        console.log('Login failed:', response.data);
-        Modal.error({
-          title: 'Login Error',
-          content: response.data.message || 'Login failed. Please check your credentials and try again.',
-          centered:true
-        });
-        setLoading(false)
-        setIsAuthenticated(false);
-      }
     } catch (error) {
-      console.error('Error during login:', error);
-      if (error instanceof Error) {
-        Modal.error({
-          title: 'Login Error',
-          content: error.message || 'An unexpected error occurred during login. Please try again.',
-          centered:true
-        });
-        setLoading(false)
-      } else {
-        Modal.error({
-          title: 'Login Error',
-          content: 'An unexpected error occurred during login. Please try again.',
-          centered:true
-        });
-        setLoading(false)
-      }
-
-      setIsAuthenticated(false);
-      setLoading(false)
+        console.error('Error during login:', error);
+        if (error instanceof Error) {
+            Modal.error({
+                title: 'Login Error',
+                content: error.message || 'An unexpected error occurred during login. Please try again.',
+                centered: true,
+            });
+        } else {
+            Modal.error({
+                title: 'Login Error',
+                content: 'An unexpected error occurred during login. Please try again.',
+                centered: true,
+            });
+        }
+        setIsAuthenticated(false);
+    } finally {
+        setLoading(false); // Always stop the loader in the finally block
     }
-  };
+};
 
   const LogoutChooseTenant = () => {
     setPartner(null);
