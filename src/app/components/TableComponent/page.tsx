@@ -583,9 +583,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   return (
     <div className="relative">
-      <div className="overflow-auto">
+      <div className="overflow-auto max-h-[527px]">
         <table className="min-w-full bg-white border border-gray-200 rounded-lg">
-          <thead className="bg-gray-200">
+          <thead className="bg-gray-200  sticky top-0 z-10">
             <tr>
               {/* Render actions column if allowedActions is true */}
               {visibleColumns.length > 0 && (
