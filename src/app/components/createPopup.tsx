@@ -103,7 +103,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             role_name: role,
             module_name: 'Customer groups',
             action: 'create',
-            new_data: formData,
+            changed_data: formData,
           };
         }
         if (heading === 'Carrier') {
@@ -118,7 +118,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_module: 'Partner API',
             sub_tab: 'Carrier APIs',
             table_name: 'carrier_apis',
-            new_data: formData,
+            changed_data: formData,
           };
         }
 
@@ -134,7 +134,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_module: 'Partner API',
             sub_tab: 'Amop APIs',
             table_name: 'amop_apis',
-            new_data: formData,
+            changed_data: formData,
           };
         }
 
@@ -151,7 +151,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module: 'E911 Customers',
             table_name: 'weste911customer',
             action: 'create',
-            new_data: formData,
+            changed_data: formData,
           };
         }
         if (heading === 'NetSapien Customer') {
@@ -167,7 +167,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module: ' NetSapiens Customers',
             table_name: 'customers',
             action: 'create',
-            new_data: formData,
+            changed_data: formData,
           };
         }
         if (heading === 'Bandwidth Customer') {
@@ -182,7 +182,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             parent_module: 'People',
             module: 'Bandwidth Customers',
             table_name: 'customers',
-            new_data: formData,
+            changed_data: formData,
           };
         }
         if (heading === 'RevIO Customer') {
@@ -198,7 +198,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module: 'RevIO Customer',
             action: 'create',
             table_name: 'customers',
-            new_data: formData,
+            changed_data: formData,
           };
         }
 
