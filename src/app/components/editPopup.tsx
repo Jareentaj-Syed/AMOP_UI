@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Input, Modal } from 'antd';
+import { Checkbox, Input, Modal, notification } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles, NonEditableDropdownStyles } from './css/dropdown';
 import CreateUser from '../partner/users/createUser/page';
@@ -96,6 +96,15 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const showConfirmation = () => {
     setIsConfirmationOpen(true);
+  };
+
+
+  
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px', 
+       // Add padding
   };
 
   const handleConfirmSave = async () => {
@@ -281,6 +290,15 @@ const EditModal: React.FC<EditModalProps> = ({
         };
 
         const response = await axios.post(url, { data });
+        if (response && response.status === 200) {
+          // Show success message
+          notification.success({
+            message: 'Success',
+            description: 'Successfully created the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });
+        }
         const parsedData = JSON.parse(response.data.body);
         if (parsedData.flag === false) {
           Modal.error({
@@ -368,14 +386,30 @@ const EditModal: React.FC<EditModalProps> = ({
           };
         }
         const recall = await axios.post(url, { data });
+        if (response && response.status === 200) {
+          // Show success message
+          notification.success({
+            message: 'Success',
+            description: 'Successfully edited the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });
+        }
+
         }
         else{
           const errorMsg=JSON.parse(response.data.body).message
-          Modal.error({
-            title: 'Data Fetch Error',
-            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
-            centered: true,
+          notification.error({
+            message: 'Error',
+            description: 'Failed to edit the record. Please try again.',
+            style: messageStyle, 
+            placement: 'top',// Apply custom styles here
           });
+          // Modal.error({
+          //   title: 'Data Fetch Error',
+          //   content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
+          //   centered: true,
+          // });
         }
 
       } catch (error) {

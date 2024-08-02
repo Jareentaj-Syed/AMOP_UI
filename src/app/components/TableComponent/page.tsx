@@ -10,7 +10,7 @@ import EditUsernameCellRenderer from './data-grid-cell-renderers/edit-username-c
 import { StatusCellRenderer } from './data-grid-cell-renderers/status-cell-renderer';
 import { StatusHistoryCellRenderer } from './data-grid-cell-renderers/status-history-cell-renderer';
 import ServiceProviderCellRenderer from './data-grid-cell-renderers/service-provider-cell-renderer';
-import { Modal, Checkbox } from 'antd';
+import { Modal, Checkbox, notification } from 'antd';
 
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
@@ -148,6 +148,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     } else {
       setSelectedRows([]);
     }
+  };
+
+    
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px', 
+       // Add padding
   };
 
   const handleRowCheckboxChange = (index: number) => {
@@ -340,9 +348,24 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           };
         }
         const response = await axios.post(url, { data });
+        if (response && response.status === 200) {
+          // Show success message
+          // notification.success({
+          //   message: 'Success',
+          //   description: 'Successfully Deleted the record!',
+          //   style: messageStyle,
+          //   placement: 'top', // Apply custom styles here
+          // });  //// place it after you make the call to load the table data
+        }
 
       } catch (err) {
         console.error("Error fetching data:", err);
+        // notification.error({
+        //   message: 'Error',
+        //   description: 'Failed to Deleted the record. Please try again.',
+        //   style: messageStyle, 
+        //   placement: 'top',// Apply custom styles here
+        // });  //// place it after you make the call to load the table data
       }
       setRowData(updatedData);
 
@@ -778,6 +801,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         open={deleteModalOpen}
         onOk={confirmDelete}
         onCancel={() => setDeleteModalOpen(false)}
+        centered
       >
         <p>Do you want to delete this row?</p>
       </Modal>
