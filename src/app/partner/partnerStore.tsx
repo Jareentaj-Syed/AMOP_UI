@@ -81,5 +81,9 @@ export const usePartnerStore = create<PartnerStoreType>((set) => ({
     }
   }))
 }));
+export const getPartnerData = () => {
+  const { partnerData } = usePartnerStore.getState();
+  return partnerData;
+};
 
 export const PartnerData = (state: PartnerStoreType) => state.partnerData;

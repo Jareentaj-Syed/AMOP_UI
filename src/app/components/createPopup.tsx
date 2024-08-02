@@ -25,6 +25,7 @@ interface CreateModalProps {
   heading: string;
   generalFields?: Record<string, any>;
   header: any[];
+  tableData?: any
 }
 
 const CreateModal: React.FC<CreateModalProps> = ({
@@ -35,20 +36,22 @@ const CreateModal: React.FC<CreateModalProps> = ({
   heading,
   generalFields,
   header,
+  tableData = []
+
 }) => {
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
   const { username, tenantNames, role, partner } = useAuth();
+  const [initialData, setTableData] = useState<any>(tableData)
   useEffect(() => {
-    console.log("generalFields",generalFields)
     const initialFormData = header.reduce((acc, column) => {
       acc[column] = ''; // Initialize each header item as an empty string
       return acc;
     }, {} as Record<string, any>);
 
     setFormData(initialFormData);
-  }, [columnNames, isOpen]); 
+  }, [columnNames, isOpen]);
 
   const handleChange = (name: string, value: any) => {
     setFormData((prevState: any) => ({
@@ -70,19 +73,19 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const messageStyle = {
     fontSize: '14px',  // Adjust font size
     fontWeight: 'bold', // Make the text bold
-    padding: '16px', 
-       // Add padding
+    padding: '16px',
+    // Add padding
   };
-  
+
 
   const handleConfirmCreate = async () => {
     const initialFormData = header.reduce((acc, column) => {
       acc[column] = formData[column] ? formData[column] : 'None';
       return acc;
-    }, {} as Record<string, any>);      
+    }, {} as Record<string, any>);
 
     setFormData(initialFormData);
-    console.log("formData",formData)
+    console.log("formData", formData)
     if (formData) {
       try {
         const url =
@@ -145,7 +148,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
-            module: 'E911 Customer Customer',
+            module: 'E911 Customers',
             table_name: 'weste911customer',
             action: 'create',
             new_data: formData,
@@ -161,9 +164,24 @@ const CreateModal: React.FC<CreateModalProps> = ({
             path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
-            module: ' NetSapiens Customer',
+            module: ' NetSapiens Customers',
             table_name: 'customers',
             action: 'create',
+            new_data: formData,
+          };
+        }
+        if (heading === 'Bandwidth Customer') {
+          if (formData) {
+            formData['created_by'] = username;
+          }
+          data = {
+            tenant_name: partner || 'default_value',
+            username: username,
+            path: '/update_people_data',
+            role_name: role,
+            parent_module: 'People',
+            module: 'Bandwidth Customers',
+            table_name: 'customers',
             new_data: formData,
           };
         }
@@ -183,24 +201,167 @@ const CreateModal: React.FC<CreateModalProps> = ({
             new_data: formData,
           };
         }
-        if (heading === 'Bandwidth Customer') {
-          if (formData) {
-            formData['created_by'] = username;
-          }
-          data = {
-            tenant_name: partner || 'default_value',
-            username: username,
-            path: '/update_people_data',
-            role_name: role,
-            parent_module: 'People',
-            module: 'Bandwidth Customers',
-            table_name: 'customers',
-            new_data: formData,
-          };
-        }
 
         const response = await axios.post(url, { data });
-        if (response && response.status === 200) {
+        if (response.data.statusCode === 200) {
+          if (heading === "Customer Group") {
+            if (formData) {
+              formData["modified_by"] = username;
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_partner_info",
+              role_name: role,
+              module_name: "Customer groups",
+              action: "update",
+              updated_data: formData
+            };
+          }
+          if (heading === "Carrier") {
+            if (formData) {
+              formData["last_modified_by"] = username;
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_superadmin_data",
+              role_name: role,
+              "sub_module": "Partner API",
+              "sub_tab": "Carrier APIs",
+              "table_name": "carrier_apis",
+              "changed_data": formData
+            };
+          }
+
+          if (heading === "API") {
+            if (formData) {
+              formData["last_modified_by"] = username;
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_superadmin_data",
+              role_name: role,
+              "sub_module": "Partner API",
+              "sub_tab": "Amop APIs",
+              "table_name": "amop_apis",
+              "changed_data": formData
+            };
+          }
+
+          if (heading === "E911 Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "E911 Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+              const customertableData = parsedData.data.WestE911Customer;
+              setTableData(customertableData);
+            }
+          }
+          if (heading === "NetSapien Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people", // Corrected spelling from 'poeple'
+              module_name: "NetSapiens Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            console.log(parsedData)
+            // Check if the flag is false in the parsed data
+            const tableData = parsedData.data.customers;
+            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+            const generalFields = parsedData.data
+            setTableData(tableData);
+          }
+          if (heading === "Bandwidth Customer") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "Bandwidth Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              setTableData(tableData);
+            }
+          }
+          if (heading === "RevIO Customer") {
+            if (formData) {
+              formData["modified_by"] = username;
+            }
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_people_data",
+              role_name: role,
+              "parent_module": "People",
+              "module": "RevIO Customer",
+              "table_name": "customers",
+              action: "update",
+              "changed_data": formData
+            };
+          }
+        }
+        else {
+          const errorMsg = JSON.parse(response.data.body).message
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
+            centered: true,
+          });
+        }
+        if (response && response.data.statusCode) {
           // Show success message
           notification.success({
             message: 'Success',
@@ -215,7 +376,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         notification.error({
           message: 'Error',
           description: 'Failed to create the record. Please try again.',
-          style: messageStyle, 
+          style: messageStyle,
           placement: 'top',// Apply custom styles here
         });
       }

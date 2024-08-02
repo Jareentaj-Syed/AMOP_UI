@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../components/auth_context';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
-import { usePartnerStore, PartnerData } from './partnerStore';
+import { usePartnerStore,getPartnerData } from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
@@ -38,6 +38,7 @@ const Partner: React.FC = () => {
     const setCustomerGroups = usePartnerStore((state) => state.setCustomerGroups);
     const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
     const setNotifications = usePartnerStore((state) => state.setNotifications);
+    
     useEffect(() => {
         if (title != "Partner") {
             setLoading(true)
@@ -72,14 +73,12 @@ const Partner: React.FC = () => {
                     try {
                         const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
                         if (response &&response.status&&response.status===200) {
-                            console.log(response.status)
                             const parseddata = JSON.parse(response.data.body)
                             if(parseddata.flag){
                                 tab.setter(parseddata);
                                 tab.setLoaded(true);
                             }
                             else{
-                                console.log("false")
                             // Modal.error({
                             //     title: 'Login Error',
                             //     content: 'An error occurred during fetching data.',
@@ -90,7 +89,6 @@ const Partner: React.FC = () => {
                            
                         }
                         else {
-                            console.log("false")
                             Modal.error({
                                 title: 'Login Error',
                                 content: 'An error occurred during fetching data.',
@@ -109,6 +107,7 @@ const Partner: React.FC = () => {
             } finally {
                 setLoading(false);
             }
+            console.log("totalData",getPartnerData)
         };
 
         fetchData();
