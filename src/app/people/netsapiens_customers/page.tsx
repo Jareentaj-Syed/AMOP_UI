@@ -85,7 +85,6 @@ useEffect(() => {
       console.log(parsedData)
       // Check if the flag is false in the parsed data
       const tableData = parsedData.data.customers;
-      console.log("response.data-revio", tableData);
       const headerMap=parsedData.headers_map["NetSapiens Customers"]["header_map"]
       const createModalData=parsedData.headers_map["NetSapiens Customers"]["pop_up"]
       const sortedheaderMap=sortHeaderMap(headerMap)

@@ -252,9 +252,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const handleSaveModal = (updatedRow: { [key: string]: any },tableData:any) => {
     if (editRowIndex !== null) {
       console.log("updated",tableData)
-      const updatedData = [...rowData];
-      updatedData[editRowIndex] = updatedRow;
-      setRowData(updatedData);
+      // const updatedData = [...rowData];
+      // updatedData[editRowIndex] = updatedRow;
+      // setRowData(updatedData);
       handleCloseModal();
       setRowData(tableData)
     }
