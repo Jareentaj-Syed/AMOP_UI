@@ -19,7 +19,6 @@ const Partneroptions = Object.keys(partnerCarrierData).map(partner => ({ value: 
 
 const CarrierInfo: React.FC = () => {
   const { username, partner, role } = useAuth();
-  const editColumns = createModalData;
   const [carrierData, setCarrierData] = useState<ExcelData[]>([]);
   const [apiState, setApiState] = useState<{ [key: number]: string }>({});
   const [originalCarrierData, setOriginalCarrierData] = useState<ExcelData[]>([]);
@@ -34,11 +33,18 @@ const CarrierInfo: React.FC = () => {
   const [loading, setLoading] = useState(true); // State to manage loading
   const [pagination,setpagination]=useState<any>({});
   const module_name= "Carrier Api"
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [createModalData,setcreateModalData]=useState<any[]>([]);
+  const [generalFields,setgeneralFields]=useState<any[]>([])
   useEffect(() => {
     fetchData();
   }, []); // Fetch initial data once on mount
   const fetchData = async () => {
-    setLoading(true); // Set loading to true before the request
+    setEnvironment(null)
+    setSelectedPartner(null)
+    setLoading(true); 
+    // Set loading to true before the request
     try {
       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
       const data = {
@@ -66,6 +72,11 @@ const CarrierInfo: React.FC = () => {
       const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
       console.log(carrierApis);
       setTableData(carrierApis);
+          const headersMap=resp.headers_map["carrier apis"].header_map
+          const sortedheaderMap=sortHeaderMap(headersMap)
+          setHeaderMap(sortedheaderMap)
+          const headers=Object.keys(sortedheaderMap)
+          setHeaders(headers)
     
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
@@ -83,6 +94,19 @@ const CarrierInfo: React.FC = () => {
       setLoading(false); // Set loading to false after the request is done
     }
   };
+
+  type HeaderMap = Record<string, [string, number]>;
+
+const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+  // Convert the object to an array of [key, value] pairs
+  const entries = Object.entries(headerMap) as [string, [string, number]][];
+
+  // Sort the array based on the second item of each value
+  entries.sort((a, b) => a[1][1] - b[1][1]);
+
+  // Convert the sorted array back to an object
+  return Object.fromEntries(entries) as HeaderMap;
+}
   
   useEffect(() => {
     if (environment && selectedPartner) {
@@ -116,7 +140,13 @@ const CarrierInfo: React.FC = () => {
           const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
   
           setTableData(carrierApis);
-  
+          console.log("response",resp)
+          const headersMap=resp.headers_map["carrier apis"].header_map
+          const sortedheaderMap=sortHeaderMap(headersMap)
+          setHeaderMap(sortedheaderMap)
+          const headers=Object.keys(sortedheaderMap)
+          setHeaders(headers)
+          console.log("headersMap",sortedheaderMap,headers)
           const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
           setEnvironmentOptions(environments);
   
@@ -147,19 +177,19 @@ const CarrierInfo: React.FC = () => {
     );
   }
 
-  const headers = ["service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
-  const headersmap = {
+//   const headers = ["service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
+//   const headersmap = {
   
-    "service_provider_name":"Service provider name",
-   "api_name":"API name",
-  "api_url": "API url",
-   "api_params":"API params",
-   "api_state": "API state", 
-   "env": "Environment",
-   "partner":"Partner",
-   "last_modified_by":"Last modified by", 
-   "last_modified_datetime":"Last modified date & time"
-}
+//     "service_provider_name":"Service provider name",
+//    "api_name":"API name",
+//   "api_url": "API url",
+//    "api_params":"API params",
+//    "api_state": "API state", 
+//    "env": "Environment",
+//    "partner":"Partner",
+//    "last_modified_by":"Last modified by", 
+//    "last_modified_datetime":"Last modified date & time"
+// }
 
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
@@ -219,17 +249,17 @@ const CarrierInfo: React.FC = () => {
         </div>
 
         <div className="container mx-auto">
-          {tableData.length > 0 && (
+          {(
             <TableComponent
               headers={headers}
-              headerMap={headersmap}
+              headerMap={headerMap}
               initialData={tableData}
               searchQuery={searchTerm}
               visibleColumns={headers}
               itemsPerPage={10}
               allowedActions={["edit"]}
               popupHeading='Carrier'
-              createModalData={editColumns}
+              createModalData={createModalData}
               advancedFilters={[]}     
               pagination={pagination}   
             />
