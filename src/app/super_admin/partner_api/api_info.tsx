@@ -225,7 +225,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
               initialData={tableData}
               searchQuery={searchTerm}
               visibleColumns={headers}
-              itemsPerPage={10}
+              itemsPerPage={100}
               allowedActions={["edit"]}
               popupHeading='API'
               createModalData={createModalData}

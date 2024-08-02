@@ -114,10 +114,11 @@ const RatePlanType: React.FC = () => {
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
-        itemsPerPage={10}
+        itemsPerPage={100}
         allowedActions={["edit","delete"]}
         popupHeading='Rate Plan Type'  
         createModalData={createColumns}  
+        pagination={{}}
                 
       />
 

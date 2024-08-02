@@ -21,13 +21,14 @@ interface Column {
 interface EditModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (updatedRow: any) => void;
+  onSave: (updatedRow: any,tableData:any) => void;
   rowData: any;
   createModalData: Column[];
   isEditable: boolean;
   heading: string;
   isTabEdit: any;
   generalFields?: Record<string, any>; // To store general fields for dropdowns
+  tableData?:any
 }
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -39,7 +40,8 @@ const EditModal: React.FC<EditModalProps> = ({
   isEditable,
   heading,
   isTabEdit,
-  generalFields
+  generalFields,
+  tableData
 }) => {
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
@@ -49,6 +51,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const rate_plan_name_drp=generalFields&&generalFields.rate_plan_name&&Array.isArray(generalFields.rate_plan_name)?generalFields.rate_plan_name:[]
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
+  const [initialData,setTableData]=useState<any>(tableData)
 
   useEffect(() => {
     if (isOpen) {
@@ -82,7 +85,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleSave = () => {
     console.log("form data:", formData);
-    onSave(formData);
+    onSave(formData,initialData);
     onClose();
   };
 
@@ -103,7 +106,7 @@ const EditModal: React.FC<EditModalProps> = ({
         let data;
         if (heading === "Customer Group") {
           if (formData) {
-            formData["modifiedby"] = username;
+            formData["modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -117,7 +120,7 @@ const EditModal: React.FC<EditModalProps> = ({
         }
         if (heading === "Carrier") {
           if (formData) {
-            formData["lastmodifiedby"] = username;
+            formData["last_modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -181,7 +184,7 @@ const EditModal: React.FC<EditModalProps> = ({
         }
         if (heading === "Bandwidth Customer") {
           if (formData) {
-            formData["modifie_dby"] = username;
+            formData["modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -189,7 +192,7 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": " Bandwidth Customer",
+            "module": "Bandwidth Customers",
             "table_name": "customers",
             action: "update",
             "changed_data": formData
@@ -197,7 +200,7 @@ const EditModal: React.FC<EditModalProps> = ({
         }
         if (heading === "RevIO Customer") {
           if (formData) {
-            formData["modifiedby"] = username;
+            formData["modified_by"] = username;
           }
           data = {
             tenant_name: partner || "default_value",
@@ -213,6 +216,122 @@ const EditModal: React.FC<EditModalProps> = ({
         }
 
         const response = await axios.post(url, { data });
+        if(response){
+          let data;
+          const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+         
+        if (heading === "Customer Group") {
+          if (formData) {
+            formData["modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Customer groups",
+            action: "update",
+            updated_data: formData
+          };
+        }
+        if (heading === "Carrier") {
+          if (formData) {
+            formData["last_modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API",
+            "sub_tab": "Carrier APIs",
+            "table_name": "carrier_apis",
+            "changed_data": formData
+          };
+        }
+
+        if (heading === "API") {
+          if (formData) {
+            formData["last_modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_superadmin_data",
+            role_name: role,
+            "sub_module": "Partner API",
+            "sub_tab": "Amop APIs",
+            "table_name": "amop_apis",
+            "changed_data": formData
+          };
+        }
+
+        if (heading === "E911 Customer") {
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/get_module_data",
+            role_name: role,
+            parent_module_name: "people",
+            module_name: "E911 Customers",
+            mod_pages: {
+              start: 0,
+              end: 500,
+            },
+          };
+        }
+        if (heading === "NetSapien Customer") {
+          if (formData) {
+            formData["modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": " NetSapien Customer",
+            "table_name": "customers",
+            action: "update",
+            "changed_data": formData
+          };
+        }
+        if (heading === "Bandwidth Customer") {
+          if (formData) {
+            formData["modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": "Bandwidth Customers",
+            "table_name": "customers",
+            action: "update",
+            "changed_data": formData
+          };
+        }
+        if (heading === "RevIO Customer") {
+          if (formData) {
+            formData["modified_by"] = username;
+          }
+          data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_people_data",
+            role_name: role,
+            "parent_module": "People",
+            "module": "RevIO Customer",
+            "table_name": "customers",
+            action: "update",
+            "changed_data": formData
+          };
+        }
+        const recall = await axios.post(url, { data });
+console.log("recall",recall)
+        }
+
       } catch (err) {
         console.error("Error fetching data:", err);
       }

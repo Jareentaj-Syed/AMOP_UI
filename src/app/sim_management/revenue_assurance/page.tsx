@@ -226,9 +226,10 @@ const RevenueAssurance: React.FC = () => {
                   initialData={data}
                   searchQuery={''}
                   visibleColumns={visibleColumns}
-                  itemsPerPage={10}
+                  itemsPerPage={100}
                   popupHeading="Customer"
                   createModalData={[]}
+                  pagination={{}}
                   
                 />
               </div>

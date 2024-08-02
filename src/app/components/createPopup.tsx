@@ -133,7 +133,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
           data = {
             tenant_name: partner || 'default_value',
             username: username,
-            path: '/create_people_data',
+            path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
             module: 'E911 Customer Customer',
@@ -149,7 +149,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
           data = {
             tenant_name: partner || 'default_value',
             username: username,
-            path: '/create_people_data',
+            path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
             module: ' NetSapien Customer',
@@ -165,7 +165,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
           data = {
             tenant_name: partner || 'default_value',
             username: username,
-            path: '/create_people_data',
+            path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
             module: 'RevIO Customer',
@@ -181,16 +181,20 @@ const CreateModal: React.FC<CreateModalProps> = ({
           data = {
             tenant_name: partner || 'default_value',
             username: username,
-            path: '/create_people_data',
+            path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
-            module: 'Bandwidth Customer',
+            module: 'Bandwidth Customers',
             table_name: 'customers',
             new_data: formData,
           };
         }
 
         const response = await axios.post(url, { data });
+if(response){
+  
+}
+
       } catch (err) {
         console.error('Error fetching data:', err);
       }

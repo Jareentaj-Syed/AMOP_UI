@@ -85,7 +85,7 @@ const ListView: React.FC = () => {
               initialData={data}
               searchQuery={searchTerm}
               visibleColumns={visibleColumns}
-              itemsPerPage={10}
+              itemsPerPage={100}
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
               createModalData={[]}
