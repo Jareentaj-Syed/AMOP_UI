@@ -132,10 +132,10 @@ useEffect(() => {
     setNewRowData({});
   };
 
-  const handleCreateRow = (newRow: any) => {
+  const handleCreateRow = (newRow: any,tableData:any) => {
     const updatedData = [...tableData, newRow];
-    setTable(updatedData);
-    setTableData(updatedData);
+    setTable(tableData);
+    setTableData(tableData);
     handleCreateModalClose();
   };
 
@@ -261,6 +261,7 @@ useEffect(() => {
         heading="NetSapien Customer" 
         header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
         generalFields={generalFields}
+        tableData={tableData}
   />
     <Modal
         title="Export Output"

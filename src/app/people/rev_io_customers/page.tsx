@@ -180,6 +180,7 @@ useEffect(() => {
         columnNames={createColumns}
         heading="RevIO Customer"
         header={Object.keys(tableData[0])}
+        tableData={tableData}
       />
     </div>
   );
