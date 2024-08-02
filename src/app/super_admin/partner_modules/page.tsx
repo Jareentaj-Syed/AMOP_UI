@@ -22,6 +22,8 @@ const Page: React.FC = () => {
   const [rolesData, setRolesData] = useState(null);
   const [moduleData, setModuleData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [rolesDataHeaders, setRolesDataHeaders] = useState(null);
+  const [moduleDataHeaders, setModuleDataHeaders] = useState(null);
   const { username, partner, role } = useAuth();
   
   const title = useLogoStore((state) => state.title);
@@ -50,7 +52,7 @@ const Page: React.FC = () => {
   
       const response = await axios.post(url, { data });
       const resp = JSON.parse(response.data.body);
-  
+      console.log(resp)
       // Check if the flag is false
       if (resp.flag === false) {
         Modal.error({
@@ -63,6 +65,10 @@ const Page: React.FC = () => {
   
       console.log("Environment:", resp.data.partners_and_sub_partners);
       setPartnersData(resp.data.partners_and_sub_partners);
+      console.log("Roles:", resp.headers_map.Roles);
+      console.log("Modules:", resp.headers_map.Modules);
+      setRolesDataHeaders(resp.headers_map.Roles)
+      setModuleDataHeaders(resp.headers_map.Modules)
     } catch (err) {
       console.error("Error fetching initial data:", err);
       Modal.error({
@@ -75,7 +81,18 @@ const Page: React.FC = () => {
     }
   };
   
+  type HeaderMap = Record<string, [string, number]>;
 
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    // Convert the object to an array of [key, value] pairs
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
+
+    // Sort the array based on the second item of each value
+    entries.sort((a, b) => a[1][1] - b[1][1]);
+
+    // Convert the sorted array back to an object
+    return Object.fromEntries(entries) as HeaderMap;
+  }// Add dependencies if necessary
 
   const PartnersData = partnersData || {};
   const Partneroptions = Object.keys(PartnersData).map(partner => ({ value: partner, label: partner }));
@@ -94,12 +111,13 @@ const Page: React.FC = () => {
         sub_module: "Partner Modules",
         flag: "withparameters",
         Partner: selectedPartner,
-        sub_partner: selectedSubPartner, // Send selected sub-partner
-      };
+        sub_partner: selectedSubPartner,
+        module_name: ["role partner module","partner module"]}
   
       const response = await axios.post(url, { data });
       const resp = JSON.parse(response.data.body);
-  
+      console.log(resp)
+    
       // Check if the flag is false
       if (resp.flag === false) {
         Modal.error({
@@ -114,6 +132,7 @@ const Page: React.FC = () => {
       console.log("Environment:", resp.data.partners_and_sub_partners);
       console.log("role data:", resp.data.roles_data);
       console.log("module data:", resp.data.role_module_data);
+      
       setRolesData(resp.data.roles_data);
       setModuleData(resp.data.role_module_data);
       setShowUserRole(true);
@@ -194,7 +213,7 @@ const Page: React.FC = () => {
   </div>
 </div>
 
-      {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} />}
+      {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} rolesHeaders={rolesDataHeaders} moduleHeaders={moduleDataHeaders}/>}
     </div>
   );
 };

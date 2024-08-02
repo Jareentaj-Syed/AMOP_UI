@@ -14,10 +14,12 @@ interface ExcelDataRow {
 
 interface UserRoleProps {
     rolesData: any; // Replace `any` with the actual type if known
-    moduleData: any; // Replace `any` with the actual type if known
+    moduleData: any;
+    rolesHeaders:any;
+    moduleHeaders:any // Replace `any` with the actual type if known
 }
 
-const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData }) => {
+const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders, moduleHeaders }) => {
 
     console.log("rolesData", rolesData)
     console.log("modulesData", moduleData)
