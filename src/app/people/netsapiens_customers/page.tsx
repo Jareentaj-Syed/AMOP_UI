@@ -194,7 +194,7 @@ useEffect(() => {
     const blobObject = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blobObject);
-    link.download = 'E911 Customers.xlsx'; // Set the file name to .xlsx
+    link.download = 'NetSapiens Customers.xlsx'; // Set the file name to .xlsx
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
