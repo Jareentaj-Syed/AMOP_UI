@@ -118,7 +118,7 @@ const E911Customers: React.FC = () => {
 
   const handleExportModalClose = () => {
     setExportModalOpen(false);
-    setDateRange([null, null]); // Reset date range
+    console.log("Modal closed, resetting date range."); // Debug log
   };
 
   const handleExport = async () => {
@@ -185,6 +185,12 @@ const E911Customers: React.FC = () => {
     );
   }
 
+  const disableFutureDates = (current:any) => {
+    console.log("future dates:",current && current > dayjs().endOf('day'));
+    return current && current > dayjs().endOf('day'); // Disable future dates
+  };
+  
+
   return (
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
@@ -234,22 +240,29 @@ const E911Customers: React.FC = () => {
       <Modal
         title="Export Output"
         visible={isExportModalOpen}
-        onCancel={handleExportModalClose}
+        onCancel={() => {
+          handleExportModalClose();
+          setDateRange([null, null]); // Reset date range here for good measure
+        }}
         footer={null}
         centered
+        afterClose={() => setDateRange([null, null])}
       >
         <div className="flex flex-col space-y-4">
           <span>Select Date Range:</span>
           <RangePicker 
-  onChange={(dates) => {
-    if (dates && dates.length === 2) {
-      setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]); // Cast to the expected type
-    } else {
-      setDateRange([null, null]); // Reset to null if dates are not both available
-    }
-  }} 
-  format="YYYY-MM-DD"
-/>
+         value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+            onChange={(dates) => {
+              console.log("Selected dates:", dates); // Debug log
+              if (dates && dates.length === 2) {
+                setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
+              } else {
+                setDateRange([null, null]); // Reset to null if dates are not both available
+              }
+            }} 
+            format="YYYY-MM-DD"
+            disabledDate={disableFutureDates}
+          />
           <div className="flex justify-end space-x-2">
             <Button onClick={handleExportModalClose}>Cancel</Button>
             <Button type="primary" onClick={handleExport}>Export</Button>

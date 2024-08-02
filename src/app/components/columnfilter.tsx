@@ -72,7 +72,7 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({
           }
           style={{ marginBottom: "4px", whiteSpace: "nowrap" }}
         >
-          {headerMap && headerMap[column] ? headerMap[column] : formatColumnName(column)}
+          {headerMap && headerMap[column] ? headerMap[column][0] : formatColumnName(column)}
         </Checkbox>
       ))}
     </div>
