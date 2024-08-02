@@ -383,16 +383,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     if (apiState) {
       if (col === "Module_state" || col === "API state") {
         row.api_state = true; // Set to true for enable
-        row.isactive = true;  // Set to true for active
+        row.is_active = true;  // Set to true for active
       } else {
-        row.isactive = true;  // Set to true for active
+        row.is_active = true;  // Set to true for active
       }
     } else {
       if (col === "Module_state" || col === "API state") {
         row.api_state = false; // Set to false for disable
-        row.isactive = false;  // Set to false for inactive
+        row.is_active = false;  // Set to false for inactive
       } else {
-        row.isactive = false;  // Set to false for inactive
+        row.is_active = false;  // Set to false for inactive
       }
     }
   
