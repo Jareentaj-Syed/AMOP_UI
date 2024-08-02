@@ -10,6 +10,7 @@ import { DatePicker } from 'antd';
 import moment from 'moment';
 import dayjs from 'dayjs';
 import InfoPopup from '../people/info_popup';
+import error from 'next/error';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -160,7 +161,7 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": "E911 Customer Customer",
+            "module": "E911 Customers",
             "table_name": "weste911customer",
             action: "update",
             "changed_data": formData
@@ -176,7 +177,7 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": " NetSapien Customer",
+            "module": "NetSapiens Customers",
             "table_name": "customers",
             action: "update",
             "changed_data": formData
@@ -216,10 +217,8 @@ const EditModal: React.FC<EditModalProps> = ({
         }
 
         const response = await axios.post(url, { data });
-        if(response){
-          let data;
-          const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-         
+        console.log("response",response,response.data)
+        if(response.data.statusCode===200){         
         if (heading === "Customer Group") {
           if (formData) {
             formData["modified_by"] = username;
@@ -267,51 +266,91 @@ const EditModal: React.FC<EditModalProps> = ({
         }
 
         if (heading === "E911 Customer") {
-          data = {
+          const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+        const data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/get_module_data",
+          role_name: role,
+          parent_module_name: "people",
+          module_name: "E911 Customers",
+          mod_pages: {
+            start: 0,
+            end: 500,
+          },
+        };
+
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+        if (parsedData.flag === false) {
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+            centered: true,
+          });
+        } else {
+          const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+          const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+          const customertableData = parsedData.data.WestE911Customer;
+          setTableData(customertableData);
+        }
+      }
+        if (heading === "NetSapien Customer") {
+          const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+          const data = {
             tenant_name: partner || "default_value",
             username: username,
             path: "/get_module_data",
             role_name: role,
-            parent_module_name: "people",
-            module_name: "E911 Customers",
+            parent_module_name: "people", // Corrected spelling from 'poeple'
+            module_name: "NetSapiens Customers",
             mod_pages: {
               start: 0,
               end: 500,
             },
           };
-        }
-        if (heading === "NetSapien Customer") {
-          if (formData) {
-            formData["modified_by"] = username;
-          }
-          data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path: "/update_people_data",
-            role_name: role,
-            "parent_module": "People",
-            "module": " NetSapien Customer",
-            "table_name": "customers",
-            action: "update",
-            "changed_data": formData
-          };
+          
+          const response = await axios.post(url, { data });
+          const parsedData = JSON.parse(response.data.body);
+          console.log(parsedData)
+          // Check if the flag is false in the parsed data
+          const tableData = parsedData.data.customers;
+          const headerMap=parsedData.headers_map["NetSapiens Customers"]["header_map"]
+          const createModalData=parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+          const generalFields=parsedData.data
+          setTableData(tableData);
         }
         if (heading === "Bandwidth Customer") {
-          if (formData) {
-            formData["modified_by"] = username;
-          }
-          data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path: "/update_people_data",
-            role_name: role,
-            "parent_module": "People",
-            "module": "Bandwidth Customers",
-            "table_name": "customers",
-            action: "update",
-            "changed_data": formData
-          };
+          const url =
+          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+        const data = {
+          tenant_name: partner || "default_value",
+          username: username,
+          path: "/get_module_data",
+          role_name: role,
+          parent_module_name: "people",
+          module_name: "Bandwidth Customers",
+          mod_pages: {
+            start: 0,
+            end: 500,
+          },
+        };
+        const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+        if (parsedData.flag === false) {
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+            centered: true,
+          });
+        }else{
+          const tableData = parsedData.data.customers;
+          const headerMap=parsedData.headers_map["Bandwidth Customers"]["header_map"]
+          const createModalData=parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+          const generalFields=parsedData.data
+          setTableData(tableData);
         }
+      }
         if (heading === "RevIO Customer") {
           if (formData) {
             formData["modified_by"] = username;
@@ -329,11 +368,30 @@ const EditModal: React.FC<EditModalProps> = ({
           };
         }
         const recall = await axios.post(url, { data });
-console.log("recall",recall)
+        }
+        else{
+          const errorMsg=JSON.parse(response.data.body).message
+          Modal.error({
+            title: 'Data Fetch Error',
+            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
+            centered: true,
+          });
         }
 
-      } catch (err) {
-        console.error("Error fetching data:", err);
+      } catch (error) {
+        if (error instanceof Error) {
+          Modal.error({
+              title: 'Saving Error',
+              content: error.message || 'An unexpected error occurred during login. Please try again.',
+              centered: true,
+          });
+      } else {
+          Modal.error({
+              title: 'Saving Error',
+              content: 'An unexpected error occurred during login. Please try again.',
+              centered: true,
+          });
+      }
       }
       setIsConfirmationOpen(false);
     }
