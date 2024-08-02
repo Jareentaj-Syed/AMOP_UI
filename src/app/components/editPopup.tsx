@@ -84,7 +84,7 @@ const EditModal: React.FC<EditModalProps> = ({
   }
 
   const handleSave = () => {
-    console.log("editedData",initialData)
+    // console.log("editedData", initialData)
     onSave(formData, initialData);
     onClose();
   };
@@ -225,152 +225,60 @@ const EditModal: React.FC<EditModalProps> = ({
         }
 
         const response = await axios.post(url, { data });
+        
         if (response.data.statusCode === 200) {
-          if (heading === "E911 Customer") {
-            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-            const data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/get_module_data",
-              role_name: role,
-              parent_module_name: "people",
-              module_name: "E911 Customers",
-              mod_pages: {
-                start: 0,
-                end: 500,
-              },
-            };
+          try{
+            let tebleParams;
+            const tableUrl = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            if (heading === "E911 Customer") {
+              tebleParams = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_module_data",
+                role_name: role,
+                parent_module_name: "people",
+                module_name: "E911 Customers",
+                mod_pages: {
+                  start: 0,
+                  end: 500,
+                },
+              };
+  
+            }
+            if (heading === "NetSapien Customer") {
+              tebleParams = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_module_data",
+                role_name: role,
+                parent_module_name: "people", // Corrected spelling from 'poeple'
+                module_name: "NetSapiens Customers",
+                mod_pages: {
+                  start: 0,
+                  end: 500,
+                },
+              };
+            }
+            if (heading === "Bandwidth Customer") {
+              tebleParams = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_module_data",
+                role_name: role,
+                parent_module_name: "people",
+                module_name: "Bandwidth Customers",
+                mod_pages: {
+                  start: 0,
+                  end: 500,
+                },
+              };
+            }
+            const tableResponse = await axios.post(tableUrl, { tebleParams });
+            console.log("tableResponse",tableResponse)
 
-            const response = await axios.post(url, { data });
-            const parsedData = JSON.parse(response.data.body);
-            if (response && response.data.statusCode===200) {
-              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
-              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.WestE911Customer;
-              setTableData(customertableData);
-
-              // Show success message
-              notification.success({
-                message: 'Success',
-                description: 'Successfully edited the record!',
-                style: messageStyle,
-                placement: 'top', // Apply custom styles here
-              });
-            }
-            if (parsedData.flag === false) {
-              Modal.error({
-                title: 'Data Fetch Error',
-                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
-                centered: true,
-              });
-            } else {
-              
-            }
-          }
-          if (heading === "NetSapien Customer") {
-            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-            const data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/get_module_data",
-              role_name: role,
-              parent_module_name: "people", // Corrected spelling from 'poeple'
-              module_name: "NetSapiens Customers",
-              mod_pages: {
-                start: 0,
-                end: 500,
-              },
-            };
-
-            const response = await axios.post(url, { data });
-            const parsedData= JSON.parse(response.data.body);
-            if (response && response.data.statusCode===200) {
-              const tableData = parsedData.data.customers;
-            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
-            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
-            const generalFields = parsedData.data
-            setTableData(tableData);
-            console.log("editedData",parsedData.data)
-              // Show success message
-              notification.success({
-                message: 'Success',
-                description: 'Successfully edited the record!',
-                style: messageStyle,
-                placement: 'top', // Apply custom styles here
-              });
-            }
-
-            console.log(parsedData)
-            // Check if the flag is false in the parsed data
-            
-          }
-          if (heading === "Bandwidth Customer") {
-            const url =
-              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-            const data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/get_module_data",
-              role_name: role,
-              parent_module_name: "people",
-              module_name: "Bandwidth Customers",
-              mod_pages: {
-                start: 0,
-                end: 500,
-              },
-            };
-            const response = await axios.post(url, { data });
-            const parsedData = JSON.parse(response.data.body);
-            if (response && response.data.statusCode) {
-              const tableData = parsedData.data.customers;
-              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
-              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
-              const generalFields = parsedData.data
-              setTableData(tableData);
-              // Show success message
-              notification.success({
-                message: 'Success',
-                description: 'Successfully edited the record!',
-                style: messageStyle,
-                placement: 'top', // Apply custom styles here
-              });
-            }
-            if (parsedData.flag === false) {
-              Modal.error({
-                title: 'Data Fetch Error',
-                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
-                centered: true,
-              });
-            } else {
-              
-            }
-          }
-          if (heading === "RevIO Customer") {
-            if (formData) {
-              formData["modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_people_data",
-              role_name: role,
-              "parent_module": "People",
-              "module": "RevIO Customer",
-              "table_name": "customers",
-              action: "update",
-              "changed_data": formData
-            };
-          }
+          }catch(err){}
+          
         }
-        else {
-          const errorMsg = JSON.parse(response.data.body).message
-          Modal.error({
-            title: 'Data Fetch Error',
-            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
-            centered: true,
-          });
-        }
-
       } catch (error) {
         if (error instanceof Error) {
           Modal.error({
