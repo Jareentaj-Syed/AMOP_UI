@@ -20,7 +20,7 @@ interface Column {
 interface CreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newData: any) => void;
+  onSave: (newData: any,tableData:any) => void;
   columnNames: Column[];
   heading: string;
   generalFields?: Record<string, any>;
@@ -62,7 +62,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
 
   const handleCreate = () => {
     console.log('form data:', formData);
-    onSave(formData);
+    onSave(formData,tableData);
     onClose();
   };
 

@@ -128,7 +128,9 @@ const CustomerFeatureCodes: React.FC = () => {
         onClose={handleCreateModalClose}
         onSave={handleCreateRow}
         columnNames={[]}
-        heading='Customer Feature Codes' header={[]}      />
+        heading='Customer Feature Codes' header={[]}    
+        tableData={data}
+          />
     </div>
   );
 };

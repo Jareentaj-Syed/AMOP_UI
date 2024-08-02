@@ -139,10 +139,10 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     );
   }
 
-  const handleCreateRow = (newRow: any) => {
-    const updatedData = [...tableData, newRow];
-    setTable(updatedData);
-    setTableData(updatedData);
+  const handleCreateRow = (newRow: any,tableData:any) => {
+    // const updatedData = [...tableData, newRow];
+    setTable(tableData);
+    setTableData(tableData);
     handleCreateModalClose();
   };
 
@@ -265,6 +265,7 @@ const disableFutureDates = (current:any) => {
         heading="Bandwidth Customer"
         header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
         generalFields={generalFields}
+        tableData={tableData}
       />
       <Modal
         title="Export Output"

@@ -105,10 +105,10 @@ const E911Customers: React.FC = () => {
     setNewRowData({});
   };
 
-  const handleCreateRow = (newRow: any) => {
+  const handleCreateRow = (newRow: any,tableData:any) => {
     const updatedData = [...tableData, newRow];
-    setTable(updatedData);
-    setTableData(updatedData);
+    setTable(tableData);
+    setTableData(tableData);
     handleCreateModalClose();
   };
 
@@ -234,6 +234,7 @@ const E911Customers: React.FC = () => {
         columnNames={createModalData}
         heading="E911 Customer"
         header={Array.isArray(tableData) && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+        tableData={tableData}
       />
 
       {/* Export Modal */}
