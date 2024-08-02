@@ -1,6 +1,6 @@
 // info_popup.tsx
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Select, Typography, Space } from 'antd';
 import { useRouter } from 'next/navigation';
 import { useLogoStore } from '../stores/logoStore';
@@ -14,10 +14,18 @@ interface InfoModalProps {
 const InfoPopup: React.FC <InfoModalProps>= ({rate_plan=[]}) => {
   const router = useRouter();
   const setTitle = useLogoStore((state) => state.setTitle);
+  const[selectedOption,setSelectedOption]=useState("")
+  useEffect(() => {
+    setSelectedOption("")
+
+},[])
 
   const navigateToSimManagement = () => {
     setTitle("Sim Management");
     router.push('/sim_management/inventory');
+  };
+  const onSelection = (option:string) => {
+    setSelectedOption(option)
   };
 
   const navigateToUsers = () => {
@@ -42,7 +50,8 @@ const InfoPopup: React.FC <InfoModalProps>= ({rate_plan=[]}) => {
             <Select
               style={{ width: '100%' }}
               dropdownStyle={buttonStyle.dropdown}
-              onChange={(value) => console.log(value)}
+              onChange={(value) => onSelection(value)}
+              value={selectedOption}
             >
               {rate_plan.map((option) => (
                 <Option key={option} value={option}>

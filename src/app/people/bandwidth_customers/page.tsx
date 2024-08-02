@@ -7,7 +7,7 @@ import {
   AdjustmentsHorizontalIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button, Modal, Popover, Spin } from "antd";
+import { Button, Modal, Popover, Spin,DatePicker } from "antd";
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -16,10 +16,14 @@ import ColumnFilter from "@/app/components/columnfilter";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useLogoStore } from "@/app/stores/logoStore";
+import dayjs, { Dayjs } from "dayjs";
 
 // State to manage loading
 
 import { useBandWidthStore } from "./bandwidth_customers_constants";
+import { getCurrentDateTime } from "@/app/components/header_constants";
+const { RangePicker } = DatePicker;
+
 
 const BandWidthCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -37,7 +41,8 @@ const BandWidthCustomers: React.FC = () => {
   const [headerMap,setHeaderMap]=useState<any>({});
   const [createModalData,setcreateModalData]=useState<any[]>([]);
   const [generalFields,setgeneralFields]=useState<any[]>([])
-
+  const [isExportModalOpen, setExportModalOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
 
   useEffect(() => {
     if(title!="People"){
@@ -92,7 +97,6 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           const headers=Object.keys(sortedheaderMap)
           const generalFields=parsedData.data
           setgeneralFields(generalFields) 
-  
           setHeaders(headers)
           setHeaderMap(headerMap)
           setcreateModalData(createModalData)
@@ -142,17 +146,71 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     handleCreateModalClose();
   };
 
-  const handleExport = () => {
-    const exportData = [
-      headers,
-      ...tableData.map((row) => headers.map((header) => row[header])),
-    ];
-    const worksheet = XLSX.utils.aoa_to_sheet(exportData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "BandWidthCustomers");
-    XLSX.writeFile(workbook, "BandWidthCustomers.xlsx");
+  const handleExportModalOpen = () => {
+    setExportModalOpen(true);
   };
 
+  const handleExportModalClose = () => {
+    setExportModalOpen(false);
+    setDateRange([null, null]); // Reset date range
+  };
+
+  const handleExport = async () => {
+    if (!dateRange || dateRange[0] === null || dateRange[1] === null) {
+      Modal.error({ title: 'Error', content: 'Please select a date range.' });
+      return;
+    }
+
+    const [startDate, endDate] = dateRange;
+
+    const data = {
+      path: "/export",
+      username: username,
+      table: "customers",
+      module_name:"Bandwidth Customers",
+      request_received_at: getCurrentDateTime(),
+      start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
+        end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
+    };
+
+    try {
+      const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+      const response = await axios.post(url, { data: data }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const resp = JSON.parse(response.data.body);
+      const blob = resp.blob;
+
+      downloadBlob(blob)
+      
+      // Close the modal after exporting
+      handleExportModalClose();
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+      Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
+    }
+  };
+ 
+  const downloadBlob = (base64Blob: string) => {
+    // Decode the Base64 string
+    const byteCharacters = atob(base64Blob);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+
+    const blobObject = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blobObject);
+    link.download = 'E911 Customers.xlsx'; // Set the file name to .xlsx
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+};
   return (
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
@@ -170,7 +228,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
           </button>
-          <button className="save-btn" onClick={handleExport}>
+          <button className="save-btn" onClick={handleExportModalOpen}>
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
@@ -189,7 +247,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           popupHeading="Bandwidth Customer"
           createModalData={createModalData}
           pagination={pagination}
-        
+          generalFields={generalFields}
         />
     
 
@@ -202,6 +260,31 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
         header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
         generalFields={generalFields}
       />
+      <Modal
+        title="Export Output"
+        visible={isExportModalOpen}
+        onCancel={handleExportModalClose}
+        footer={null}
+        centered
+      >
+        <div className="flex flex-col space-y-4">
+          <span>Select Date Range:</span>
+          <RangePicker 
+  onChange={(dates) => {
+    if (dates && dates.length === 2) {
+      setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]); // Cast to the expected type
+    } else {
+      setDateRange([null, null]); // Reset to null if dates are not both available
+    }
+  }} 
+  format="YYYY-MM-DD"
+/>
+          <div className="flex justify-end space-x-2">
+            <Button onClick={handleExportModalClose}>Cancel</Button>
+            <Button type="primary" onClick={handleExport}>Export</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 

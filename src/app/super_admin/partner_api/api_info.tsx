@@ -19,11 +19,16 @@ const CarrierInfo: React.FC = () => {
   const [loading, setLoading] = useState(true); // State to manage loading
   const [Partneroptions, setPartnerOptions] = useState<{ value: string; label: string }[]>([]);
   const [tableData, setTableData] = useState<any>([]);
-  const editColumns = createModalData; // Initialize as empty array or with appropriate columns if needed
+  // const editColumns = createModalData; // Initialize as empty array or with appropriate columns if needed
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<{ value: string; label: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [pagination,setpagination]=useState<any>({});
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [createModalData,setcreateModalData]=useState<any[]>([]);
+  const [generalFields,setgeneralFields]=useState<any[]>([])
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
   useEffect(() => {
    
@@ -46,7 +51,7 @@ const CarrierInfo: React.FC = () => {
       
       const response = await axios.post(url, { data: data });
       const resp = JSON.parse(response.data.body);
-  
+      console.log(resp)
       // Check if the flag is false
       if (resp.flag === false) {
         Modal.error({
@@ -58,13 +63,28 @@ const CarrierInfo: React.FC = () => {
       }
   
       const carrierApis = resp.data.amop_apis_data.amop_apis;
+      console.log(carrierApis)
       setTableData(carrierApis);
+
   
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
   
       const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
       setPartnerOptions(partners);
+
+      const headerMap=resp.headers_map["amop apis"]["header_map"]
+      const createModalData=resp.headers_map["amop apis"]["pop_up"]
+      const sortedheaderMap=sortHeaderMap(headerMap)
+      const headers=Object.keys(sortedheaderMap)
+      // const generalFields=parsedData.data
+      // setgeneralFields(generalFields)
+      setHeaders(headers)
+      setHeaderMap(sortedheaderMap)
+      setcreateModalData(createModalData)
+      // setTable(tableData);
+      setVisibleColumns(headers)
+
     } catch (err) {
       console.error("Error fetching data:", err);
       Modal.error({
@@ -76,6 +96,19 @@ const CarrierInfo: React.FC = () => {
       setLoading(false); // Set loading to false after the request is done
     }
   };
+
+  type HeaderMap = Record<string, [string, number]>;
+
+const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+  // Convert the object to an array of [key, value] pairs
+  const entries = Object.entries(headerMap) as [string, [string, number]][];
+
+  // Sort the array based on the second item of each value
+  entries.sort((a, b) => a[1][1] - b[1][1]);
+
+  // Convert the sorted array back to an object
+  return Object.fromEntries(entries) as HeaderMap;
+}
   
   useEffect(() => {
     const fetchData = async () => {
@@ -109,6 +142,17 @@ const CarrierInfo: React.FC = () => {
           
           const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
           setPartnerOptions(partners);
+          const headerMap=resp.headers_map["amop api"]["header_map"]
+      const createModalData=resp.headers_map["amop api"]["pop_up"]
+      const sortedheaderMap=sortHeaderMap(headerMap)
+      const headers=Object.keys(sortedheaderMap)
+      // const generalFields=parsedData.data
+      // setgeneralFields(generalFields)
+      setHeaders(headers)
+      setHeaderMap(sortedheaderMap)
+      setcreateModalData(createModalData)
+      // setTable(tableData);
+      setVisibleColumns(headers)
         } catch (err) {
           console.error(err);
         } finally {
@@ -120,19 +164,7 @@ const CarrierInfo: React.FC = () => {
     fetchData();
   }, [environment, selectedPartner]); // Add dependencies if necessary
 
-  const headers = ["module_name", "api_name", "api_url", "api_params", "api_state", "env", "partner", "last_modified_by", "last_modified_date_time"];
-  const headersmap = {
-  
-      "module_name":"Module name",
-     "api_name":"API name",
-    "api_url": "API url",
-     "api_params":"API params",
-     "api_state": "API state", 
-     "env": "Environment",
-     "partner":"Partner",
-     "last_modified_by":"Last modified by", 
-     "last_modified_date_time":"Last modified date & time"
-  }
+
   
 
   // Show loader until data is fully loaded
@@ -186,21 +218,21 @@ const CarrierInfo: React.FC = () => {
         </div>
 
         <div className="container mx-auto">
-          {tableData.length > 0 && (
+       
             <TableComponent
               headers={headers}
-              headerMap={headersmap}
+              headerMap={headerMap}
               initialData={tableData}
               searchQuery={searchTerm}
               visibleColumns={headers}
               itemsPerPage={10}
               allowedActions={["edit"]}
               popupHeading='API'
-              createModalData={editColumns}
+              createModalData={createModalData}
               pagination={pagination}
               advancedFilters={[]}
             />
-          )}
+          
         </div>
       </div>
     </div>

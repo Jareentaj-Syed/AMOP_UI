@@ -16,13 +16,17 @@ interface UserRoleProps {
     rolesData: any; // Replace `any` with the actual type if known
     moduleData: any;
     rolesHeaders:any;
-    moduleHeaders:any // Replace `any` with the actual type if known
+    moduleHeaders:any
+    rolesHeadersMap:any;
+    moduleHeadersMap:any // Replace `any` with the actual type if known
 }
 
-const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders, moduleHeaders }) => {
+const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders, moduleHeaders,rolesHeadersMap, moduleHeadersMap }) => {
 
     console.log("rolesData", rolesData)
     console.log("modulesData", moduleData)
+    console.log(rolesHeaders)
+    console.log(moduleHeaders)
 
     const [data, setData] = useState<ExcelDataRow[]>([]);
     const [data2, setData2] = useState<ExcelDataRow[]>([]);
@@ -32,23 +36,23 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders
     const [pagination1,setpagination1]=useState<any>({});
     const [pagination2,setpagination2]=useState<any>({});
     
-    const headers1 = ["rolename","isactive","createdby",  "modifiedby", "modifieddate"];
-    const headers2 = ["module_name","is_active", "modified_by", "modified_date"];
+    const headers1 = rolesHeaders
+    const headers2 = moduleHeaders
     
-    const headermap1={
-        "rolename": "Role",
-        "isactive":"Role_status",
-        "createdby":"Assigned by" ,
-        "modifiedby":"Last modified by",
-         "modifieddate":"Last modified date & time"
-    }
+    // const headermap1={
+    //     "rolename": "Role",
+    //     "isactive":"Role_status",
+    //     "createdby":"Assigned by" ,
+    //     "modifiedby":"Last modified by",
+    //      "modifieddate":"Last modified date & time"
+    // }
 
-    const headermap2={
-       "module_name": " Module name",
-       "is_active":"Module_state",
-       "modified_by":"Last modified by",
-       "modified_date":"Last modified date & time"
-    }
+    // const headermap2={
+    //    "module_name": " Module name",
+    //    "is_active":"Module_state",
+    //    "modified_by":"Last modified by",
+    //    "modified_date":"Last modified date & time"
+    // }
 
 
 
@@ -75,7 +79,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders
                         createModalData={[]}
                         pagination={pagination1}
                        
-                        headerMap={headermap1}
+                        headerMap={rolesHeadersMap}
                     />
                 </div>
                 <div>
@@ -92,7 +96,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rolesData, moduleData, rolesHeaders
                         popupHeading='UserModule'
                         createModalData={[]}
                         pagination={pagination2}
-                        headerMap={headermap2}
+                        headerMap={moduleHeadersMap}
                     />
                 </div>
             </div>

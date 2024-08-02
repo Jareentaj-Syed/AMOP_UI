@@ -22,10 +22,13 @@ const Page: React.FC = () => {
   const [rolesData, setRolesData] = useState(null);
   const [moduleData, setModuleData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [rolesDataHeaders, setRolesDataHeaders] = useState(null);
-  const [moduleDataHeaders, setModuleDataHeaders] = useState(null);
+  const [headers,setHeaders]=useState<any[]>([]);
+  const [headerMap,setHeaderMap]=useState<any>({});
+  const [rolesDataHeaders, setRolesDataHeaders] =useState<any[]>([]);
+  const [moduleDataHeaders, setModuleDataHeaders] = useState<any[]>([]);
   const { username, partner, role } = useAuth();
-  
+  const [rolesDataHeadersMap, setRolesDataHeadersMap] =useState<any>({});
+  const [moduleDataHeadersMap, setModuleDataHeadersMap] = useState<any>({});
   const title = useLogoStore((state) => state.title);
   useEffect(() => {
     if(title!="Super Admin"){
@@ -67,8 +70,8 @@ const Page: React.FC = () => {
       setPartnersData(resp.data.partners_and_sub_partners);
       console.log("Roles:", resp.headers_map.Roles);
       console.log("Modules:", resp.headers_map.Modules);
-      setRolesDataHeaders(resp.headers_map.Roles)
-      setModuleDataHeaders(resp.headers_map.Modules)
+      // setRolesDataHeaders(resp.headers_map.Roles)
+      // setModuleDataHeaders(resp.headers_map.Modules)
     } catch (err) {
       console.error("Error fetching initial data:", err);
       Modal.error({
@@ -112,7 +115,9 @@ const Page: React.FC = () => {
         flag: "withparameters",
         Partner: selectedPartner,
         sub_partner: selectedSubPartner,
-        module_name: ["role partner module","partner module"]}
+        modules:["role partner module","partner module"]
+         // Send selected sub-partner
+      };
   
       const response = await axios.post(url, { data });
       const resp = JSON.parse(response.data.body);
@@ -135,6 +140,25 @@ const Page: React.FC = () => {
       
       setRolesData(resp.data.roles_data);
       setModuleData(resp.data.role_module_data);
+      console.log(resp.headers_map["partner module"]["header_map"])
+      console.log(resp.headers_map["role partner module"]["header_map"])
+      const headerMap1=resp.headers_map["role partner module"]["header_map"]
+      const headerMap2=resp.headers_map["partner module"]["header_map"]
+      const sortedheaderMap1=sortHeaderMap(headerMap1)
+      const sortedheaderMap2=sortHeaderMap(headerMap2)
+      setRolesDataHeadersMap(sortedheaderMap1)
+      setModuleDataHeadersMap(sortedheaderMap2)
+      const headers1=Object.keys(sortedheaderMap1)
+      const headers2=Object.keys(sortedheaderMap2)
+  
+      // setHeaders(headers)
+      // setHeaderMap(headerMap)
+   
+    
+      setLoading(false)
+      setModuleDataHeaders(headers2)
+
+      setRolesDataHeaders(headers1)
       setShowUserRole(true);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -148,6 +172,8 @@ const Page: React.FC = () => {
       setLoading(false);
     }
   };
+  
+
   
 
   const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
@@ -213,7 +239,7 @@ const Page: React.FC = () => {
   </div>
 </div>
 
-      {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} rolesHeaders={rolesDataHeaders} moduleHeaders={moduleDataHeaders}/>}
+      {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} rolesHeaders={rolesDataHeaders} moduleHeaders={moduleDataHeaders} rolesHeadersMap={rolesDataHeadersMap} moduleHeadersMap={moduleDataHeadersMap}/>}
     </div>
   );
 };
