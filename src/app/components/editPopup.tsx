@@ -97,12 +97,12 @@ const EditModal: React.FC<EditModalProps> = ({
   };
 
 
-  
+
   const messageStyle = {
     fontSize: '14px',  // Adjust font size
     fontWeight: 'bold', // Make the text bold
-    padding: '16px', 
-       // Add padding
+    padding: '16px',
+    // Add padding
   };
 
   const handleConfirmSave = async () => {
@@ -288,6 +288,15 @@ const EditModal: React.FC<EditModalProps> = ({
             };
 
             const response = await axios.post(url, { data });
+            if (response && response.data.statusCode) {
+              // Show success message
+              notification.success({
+                message: 'Success',
+                description: 'Successfully edited the record!',
+                style: messageStyle,
+                placement: 'top', // Apply custom styles here
+              });
+            }
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
               Modal.error({
@@ -318,6 +327,16 @@ const EditModal: React.FC<EditModalProps> = ({
             };
 
             const response = await axios.post(url, { data });
+            if (response && response.data.statusCode) {
+              // Show success message
+              notification.success({
+                message: 'Success',
+                description: 'Successfully edited the record!',
+                style: messageStyle,
+                placement: 'top', // Apply custom styles here
+              });
+            }
+
             const parsedData = JSON.parse(response.data.body);
             console.log(parsedData)
             // Check if the flag is false in the parsed data
@@ -343,6 +362,15 @@ const EditModal: React.FC<EditModalProps> = ({
               },
             };
             const response = await axios.post(url, { data });
+            if (response && response.data.statusCode) {
+              // Show success message
+              notification.success({
+                message: 'Success',
+                description: 'Successfully edited the record!',
+                style: messageStyle,
+                placement: 'top', // Apply custom styles here
+              });
+            }
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
               Modal.error({
@@ -549,8 +577,9 @@ const EditModal: React.FC<EditModalProps> = ({
                         </Checkbox>
                       )}
                       {column.type === 'date' && (
+
                         <DatePicker
-                          value={formData[column.db_column_name] ? dayjs(formData[column.db_column_name]) : null}
+                          value={formData[column.db_column_name] && dayjs(formData[column.db_column_name]).isValid() ? dayjs(formData[column.db_column_name]) : null}
                           onChange={(date) => handleChange(column.db_column_name, date ? date.format('YYYY-MM-DD') : null)}
                           className="input"
                           format="YYYY-MM-DD"
