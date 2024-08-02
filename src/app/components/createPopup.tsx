@@ -1,12 +1,13 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { Checkbox, Input, Modal } from 'antd';
+import { Checkbox, Input, Modal, notification } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
 import axios from 'axios';
 import { useAuth } from './auth_context';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
+import { message } from 'antd';
 
 interface Column {
   display_name: string;
@@ -65,6 +66,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const showConfirmation = () => {
     setIsConfirmationOpen(true);
   };
+
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px', 
+       // Add padding
+  };
+  
 
   const handleConfirmCreate = async () => {
     const initialFormData = header.reduce((acc, column) => {
@@ -191,12 +200,24 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
 
         const response = await axios.post(url, { data });
-if(response){
-  
-}
+        if (response && response.status === 200) {
+          // Show success message
+          notification.success({
+            message: 'Success',
+            description: 'Successfully created the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });
+        }
 
       } catch (err) {
         console.error('Error fetching data:', err);
+        notification.error({
+          message: 'Error',
+          description: 'Failed to create the record. Please try again.',
+          style: messageStyle, 
+          placement: 'top',// Apply custom styles here
+        });
       }
     }
     handleCreate();
@@ -316,6 +337,7 @@ if(response){
         open={isConfirmationOpen}
         onOk={handleConfirmCreate}
         onCancel={handleCancelConfirmation}
+        centered
       >
         <p>Are you sure you want to create this {heading}?</p>
       </Modal>
