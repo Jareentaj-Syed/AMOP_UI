@@ -128,7 +128,7 @@ const BulkChange: React.FC = () => {
           initialData={data}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}
-          itemsPerPage={10}
+          itemsPerPage={100}
           advancedFilters={filteredData}
           pagination={pagination}
           popupHeading={''} 

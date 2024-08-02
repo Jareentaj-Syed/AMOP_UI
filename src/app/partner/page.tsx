@@ -5,14 +5,14 @@ import { useSidebarStore } from '../stores/navBarStore';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../components/auth_context';
-import { Spin } from 'antd'; // Import Ant Design Spin component
-import { usePartnerStore } from './partnerStore';
+import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
+import { usePartnerStore, PartnerData } from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
 const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
 const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'));
-// const CustomerGroups = dynamic(() => import('./customer_groups/page'));
+const CustomerGroups = dynamic(() => import('./customer_groups/page'));
 const PartnerUsers = dynamic(() => import('./users/page'));
 const Notification = dynamic(() => import('./notification/page'));
 
@@ -39,53 +39,76 @@ const Partner: React.FC = () => {
     const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
     const setNotifications = usePartnerStore((state) => state.setNotifications);
     useEffect(() => {
-        if(title!="Partner"){
+        if (title != "Partner") {
             setLoading(true)
         }
-    },[title])
+    }, [title])
 
     useEffect(() => {
         const fetchData = async () => {
-            // try {
-            //     const tabs = [
-            //         { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
-            //         { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
-            //         { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
-            //         { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
-            //         { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
-            //         { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
-            //     ];
+            try {
+                const tabs = [
+                    { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
+                    { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
+                    { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
+                    { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
+                    { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
+                    { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
+                ];
 
-            //     const promises = tabs.map(async (tab) => {
-            //         const data = {
-            //             tenant_name: partner || "default_value",
-            //             username: username,
-            //             path: "/get_partner_info",
-            //             role_name: role,
-            //             modules_list: [tab.module],
-            //             pages: {
-            //                 "Customer groups": { start: 0, end: 500 },
-            //                 "Partner users": { start: 0, end: 500 }
-            //             }
-            //         };
+                const promises = tabs.map(async (tab) => {
+                    const data = {
+                        tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: [tab.module],
+                        pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                        }
+                    };
 
-            //         try {
-            //             const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-            //             const parseddata=JSON.parse(response.data.body)
-            //             tab.setter(parseddata);
-            //             console.log("parseddata",tab.module,parseddata)
-            //             tab.setLoaded(true); // Set the loaded flag to true
-            //         } catch (error) {
-            //             console.error('Error fetching', tab.module, ':', error);
-            //         }
-            //     });
+                    try {
+                        const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+                        if (response &&response.status&&response.status===200) {
+                            console.log(response.status)
+                            const parseddata = JSON.parse(response.data.body)
+                            if(parseddata.flag){
+                                tab.setter(parseddata);
+                                tab.setLoaded(true);
+                            }
+                            else{
+                                console.log("false")
+                            // Modal.error({
+                            //     title: 'Login Error',
+                            //     content: 'An error occurred during fetching data.',
+                            //     centered: true,
+                            // });
+                            }
+                            console.log("tab.module",parseddata)
+                           
+                        }
+                        else {
+                            console.log("false")
+                            Modal.error({
+                                title: 'Login Error',
+                                content: 'An error occurred during fetching data.',
+                                centered: true,
+                            });
+                        }
 
-            //     await Promise.all(promises); // Wait until all requests are complete
-            // } catch (error) {
-            //     console.error('Error:', error);
-            // } finally {
-            //     setLoading(false);
-            // }
+                    } catch (error) {
+                        console.error('Error fetching', tab.module, ':', error);
+                    }
+                });
+
+                await Promise.all(promises); // Wait until all requests are complete
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchData();
@@ -144,12 +167,12 @@ const Partner: React.FC = () => {
                 </button>
             </div>
             <div className="container pt-[70px]">
-                {/* {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
+                {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
                 {activeTab === 'partnerRegistration' && <PartnerAuthentication onSubmit={switchToCarrierInfoTab} />}
                 {activeTab === 'partnermoduleaccess' && <PartnerModuleAccess />}
                 {activeTab === 'customergroups' && <CustomerGroups />}
                 {activeTab === 'partnerusers' && <PartnerUsers />}
-                {activeTab === 'notification' && <Notification />} */}
+                {activeTab === 'notification' && <Notification />}
             </div>
         </div>
     );

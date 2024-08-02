@@ -242,7 +242,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           initialData={tableData}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}
-          itemsPerPage={10}
+          itemsPerPage={100}
           allowedActions={["info","edit"]}
           popupHeading="Bandwidth Customer"
           createModalData={createModalData}

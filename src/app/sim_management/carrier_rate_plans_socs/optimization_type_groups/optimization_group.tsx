@@ -114,10 +114,11 @@ const OptimizationGroup: React.FC = () => {
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
-        itemsPerPage={10}
+        itemsPerPage={100}
         allowedActions={["edit","delete"]}
         popupHeading='Optimization Group'  
         createModalData={createColumns}  
+        pagination={{}}
                
       />
 

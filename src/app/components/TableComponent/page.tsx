@@ -35,11 +35,11 @@ interface TableComponentProps {
   createModalData?: any[]
   generalFields?: any
   isSelectRowVisible?: boolean
-  headerMap?:any
-  pagination:any
+  headerMap?: any
+  pagination: any
 }
 
-const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, createModalData, generalFields, advancedFilters, isSelectRowVisible = true ,headerMap,pagination}) => {
+const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, searchQuery, visibleColumns, itemsPerPage, allowedActions, popupHeading, createModalData, generalFields, advancedFilters, isSelectRowVisible = true, headerMap, pagination }) => {
   const router = useRouter();
 
   const [rowData, setRowData] = useState<{ [key: string]: any }[]>(initialData);
@@ -61,7 +61,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const {username, tenantNames, role, partner}=useAuth()
+  const { username, tenantNames, role, partner } = useAuth()
 
   useEffect(() => {
     if (!router) {
@@ -69,61 +69,61 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   }, [router]);
 
-  useEffect( () => {
-    const lastPageWithData=5
-    const updatePaginator = async() => {
-      if(currentPage>lastPageWithData){
+  useEffect(() => {
+    const lastPageWithData = 5
+    const updatePaginator = async () => {
+      if (currentPage > lastPageWithData) {
         try {
           const url =
             "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-    
-          let data={};
-          if(popupHeading==="Customer Group"){
-            data = {
-              tenant_name: partner || "default_value",
-            username: username,
-            path: "/update_partner_info",
-            role_name: role,
-            module_name: "Customer groups",
-            action:"delete",
-            };
-          }
-          if(popupHeading==="User"){
-            data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path: "/update_partner_info",
-            role_name: role,
-            module_name: "Partner users",
-            action:"delete",
-            };
-          }
-          
-          if(popupHeading==="E911 Customer"){
-    
+
+          let data = {};
+          if (popupHeading === "Customer Group") {
             data = {
               tenant_name: partner || "default_value",
               username: username,
-              path:"/update_people_data",
+              path: "/update_partner_info",
               role_name: role,
-              "parent_module": "People", 
+              module_name: "Customer groups",
+              action: "delete",
+            };
+          }
+          if (popupHeading === "User") {
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_partner_info",
+              role_name: role,
+              module_name: "Partner users",
+              action: "delete",
+            };
+          }
+
+          if (popupHeading === "E911 Customer") {
+
+            data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/update_people_data",
+              role_name: role,
+              "parent_module": "People",
               "module": "E911 Customer Customer",
               "table_name": "customers",
             };
           }
-          if(popupHeading===" NetSapien Customer"){
+          if (popupHeading === " NetSapien Customer") {
             data = {
               tenant_name: partner || "default_value",
               username: username,
-              path:"/update_people_data",
+              path: "/update_people_data",
               role_name: role,
-              "parent_module": "People", 
+              "parent_module": "People",
               "module": " NetSapien Customer",
               "table_name": " customers",
             };
           }
-        const response = await axios.post(url, { data });
-         
+          const response = await axios.post(url, { data });
+
         } catch (err) {
           console.error("Error fetching data:", err);
         }
@@ -131,7 +131,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     };
     updatePaginator()
   }, [currentPage]);
-  
+
 
   const handleActionSingleClick = () => {
     if (router) {
@@ -249,12 +249,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   };
 
-  const handleSaveModal = (updatedRow: { [key: string]: any }) => {
+  const handleSaveModal = (updatedRow: { [key: string]: any },tableData:any) => {
     if (editRowIndex !== null) {
+      console.log("updated",tableData)
       const updatedData = [...rowData];
       updatedData[editRowIndex] = updatedRow;
       setRowData(updatedData);
       handleCloseModal();
+      setRowData(tableData)
     }
   };
 
@@ -266,7 +268,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
 
   const confirmDelete = () => {
-    
+
     if (deleteRowIndex !== null) {
       handleDelete(deleteRowIndex);
     }
@@ -274,71 +276,71 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setDeleteRowIndex(null);
   };
 
-  const handleDelete = async(rowIndex: number) => {
+  const handleDelete = async (rowIndex: number) => {
     if (rowIndex >= 0 && rowIndex < rowData.length) {
-      const updatedData:any = [...rowData];
-      const row=rowData[rowIndex]
-      row["deleted_by"]=username
-      row["isdeleted"]=true
-      row["isactive"]=false
+      const updatedData: any = [...rowData];
+      const row = rowData[rowIndex]
+      row["deleted_by"] = username
+      row["isdeleted"] = true
+      row["isactive"] = false
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
-          let data;
-        if(popupHeading==="Customer Group"){
+        let data;
+        if (popupHeading === "Customer Group") {
           data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/update_partner_info",
-          role_name: role,
-          module_name: "Customer groups",
-          action:"delete",
-          updated_data:row
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Customer groups",
+            action: "delete",
+            updated_data: row
           };
         }
-        if(popupHeading==="User"){
+        if (popupHeading === "User") {
           data = {
-          tenant_name: partner || "default_value",
-          username: username,
-          path: "/update_partner_info",
-          role_name: role,
-          module_name: "Partner users",
-          action:"delete",
-          updated_data:row
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Partner users",
+            action: "delete",
+            updated_data: row
           };
         }
-        
-        if(popupHeading==="E911 Customer"){
+
+        if (popupHeading === "E911 Customer") {
 
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_people_data",
+            path: "/update_people_data",
             role_name: role,
-            "parent_module": "People", 
+            "parent_module": "People",
             "module": "E911 Customer Customer",
             "table_name": "customers",
-            "changed_data":row,
-            action:"delete",
+            "changed_data": row,
+            action: "delete",
 
           };
         }
-        if(popupHeading===" NetSapien Customer"){
+        if (popupHeading === " NetSapien Customer") {
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_people_data",
+            path: "/update_people_data",
             role_name: role,
-            "parent_module": "People", 
+            "parent_module": "People",
             "module": " NetSapien Customer",
             "table_name": " customers",
-            "changed_data":row,
-            action:"delete",
+            "changed_data": row,
+            action: "delete",
           };
         }
-      const response = await axios.post(url, { data });
-       
+        const response = await axios.post(url, { data });
+
       } catch (err) {
         console.error("Error fetching data:", err);
       }
@@ -346,13 +348,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
     }
   };
- 
+
   const handleToggle = (rowIndex: number, col: string, apiState: boolean) => {
     const updatedData = [...rowData];
     const row = updatedData[rowIndex];
     let state;
-  setRowIndex(rowIndex)
-  setColumnName(col)
+    setRowIndex(rowIndex)
+    setColumnName(col)
     if (apiState) {
       if (col === "Module_state" || col === "API state") {
         state = "Disable";
@@ -370,11 +372,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setEnableModalOpen(true);
       }
     }
-  
+
     // Set the state for the modal prompt
     setState(state); // Make sure to define this state variable in your component
   };
-  
+
 
   const confirmSubmit = async (rowIndex: number, col: string, apiState: boolean) => {
     const updatedData = [...rowData];
@@ -395,113 +397,113 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         row.is_active = false;  // Set to false for inactive
       }
     }
-  
+
     updatedData[rowIndex] = row;
     setCurrentRowData(row)
     setRowData(updatedData);
     setEnableModalOpen(false);
     setDisableModalOpen(false);
     // console.log(currentRowData);
-    if(currentRowData){
+    if (currentRowData) {
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
         let data;
-        if(popupHeading==="Carrier"){
-          if(currentRowData){
-            currentRowData["lastmodifiedby"]=username
+        if (popupHeading === "Carrier") {
+          if (currentRowData) {
+            currentRowData["lastmodifiedby"] = username
           }
-           data = {
+          data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path: "/update_superadmin_data",
             role_name: role,
-            "sub_module": "Partner API", 
+            "sub_module": "Partner API",
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
-           "changed_data":currentRowData
+            "changed_data": currentRowData
           };
         }
-        
-        if(popupHeading==="API"){
-          if(currentRowData){
-            currentRowData["last_modified_by"]=username
-            
+
+        if (popupHeading === "API") {
+          if (currentRowData) {
+            currentRowData["last_modified_by"] = username
+
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path: "/update_superadmin_data",
             role_name: role,
-            "sub_module": "Partner API", 
+            "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
-            "changed_data":currentRowData
+            "changed_data": currentRowData
           };
         }
-        if(popupHeading==="User"){
-          if(currentRowData){
-            currentRowData["modifiedby"]=username
-            
+        if (popupHeading === "User") {
+          if (currentRowData) {
+            currentRowData["modifiedby"] = username
+
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path: "/update_superadmin_data",
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "roles",
-            "changed_data":currentRowData
+            "changed_data": currentRowData
           };
         }
-        if(popupHeading==="UserModule"){
-          if(currentRowData){
-            currentRowData["modifiedby"]=username
+        if (popupHeading === "UserModule") {
+          if (currentRowData) {
+            currentRowData["modifiedby"] = username
           }
           data = {
             tenant_name: partner || "default_value",
             username: username,
-            path:"/update_superadmin_data",
+            path: "/update_superadmin_data",
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "tenant_module",
-            "changed_data":currentRowData
+            "changed_data": currentRowData
           };
         }
         const response = await axios.post(url, { data });
-       
+
       } catch (err) {
         console.error("Error fetching data:", err);
       }
     }
-   
+
   };
-  const renderApiState = (apiState: any, index: number,col:any) => {
+  const renderApiState = (apiState: any, index: number, col: any) => {
     return (
       <div className="flex items-center space-x-2">
         <button
           className={`${apiState === true ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index,col,false)}
+          onClick={() => handleToggle(index, col, false)}
         >
-          {col==="Module_state" || col === "API state"?(
+          {col === "Module_state" || col === "API state" ? (
             <span>Enable</span>
-          ):
-          <span>Active</span>}
+          ) :
+            <span>Active</span>}
 
         </button>
         <button
           className={`${apiState === false ? 'active-btn' : 'inactive-btn'
             }`}
           style={{ width: '100%' }}
-          onClick={() => handleToggle(index,col,true)}
+          onClick={() => handleToggle(index, col, true)}
         >
-          {col==="Module_state" || col === "API state"?(
+          {col === "Module_state" || col === "API state" ? (
             <span>Disable</span>
-          ):
-          <span>Inactive</span>}
+          ) :
+            <span>Inactive</span>}
 
         </button>
       </div>
@@ -515,14 +517,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     } else if (status === 'Inactive' || status === 'ERROR') {
       textColorClass = 'text-red-500';
     }
-    if(status === 'True'){
+    if (status === 'True') {
       return <span className={`${textColorClass}`}>Active</span>;
     }
-    else if(status === 'False'){
+    else if (status === 'False') {
       return <span className={`${textColorClass}`}>Inactive</span>;
     }
-    else{
-    return <span className={`${textColorClass}`}>{status}</span>;
+    else {
+      return <span className={`${textColorClass}`}>{status}</span>;
     }
   };
 
@@ -563,12 +565,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           <thead className="bg-gray-200">
             <tr>
               {/* Render actions column if allowedActions is true */}
-              {visibleColumns.length>0 && (
+              {visibleColumns.length > 0 && (
                 <th className="px-6 border-b border-gray-300 text-left font-semibold">S.No</th>
               )}
               {headers.map((header, index) => (
                 visibleColumns.includes(header) ? (
-                  
+
                   <th
                     key={index}
                     className="px-6 border-b border-gray-300 text-left font-semibold table-header"
@@ -600,163 +602,163 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               ))}
 
               {/* Render actions column if allowedActions is true */}
-              {allowedActions&&visibleColumns.length>0 && (
+              {allowedActions && visibleColumns.length > 0 && (
                 <th className="px-6 border-b border-gray-300 text-left font-semibold">Actions</th>
               )}
             </tr>
 
           </thead>
           <tbody>
-  {paginatedData.map((row, index) => (
-    
-    <tr
-      key={index}
-      className={index % 2 === 0 ? "bg-gray-50" : ""}
-    >
-      {/* Render actions column if allowedActions is true */}
-      {visibleColumns.length>0 && (
-                <td className="px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
-              )}
-      {headers.map((header, columnIndex) => (
-        visibleColumns.includes(header) ? (
-          <td
-            key={columnIndex}
-            className="px-6 border-b border-gray-300 table-cell"
-          >
-            {/* Check if the header is the selection column */}
-            {header === "S.no" ? (
-          (currentPage - 1) * itemsPerPage + index + 1
-        ) :
-            header === "Select" ? (
-              <Checkbox
-                onChange={() => handleRowCheckboxChange(index)}
-                checked={selectedRows.map(String).includes(String(index))}
-                style={{ fontSize: '2rem' }}
-              />
-            ) : (headerMap && headerMap[header][0]  === "Module_state") ||(headerMap && headerMap[header][0]  ==="Role_status") || (headerMap && headerMap[header][0]  ==="API state") ? (
-              renderApiState(row[header], index,headerMap[header][0])
-            ) : (headerMap && headerMap[header][0] === "User status") || header === "User status" ? (
-              renderUserStatus(row[header])
-            ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
-              <DateTimeCellRenderer value={row[header]} />
-            ) : header === "Username" ? (
-              <EditUsernameCellRenderer value={row[header]} />
-            ) : header === "SimStatus" ? (
-              <StatusCellRenderer
-                record={row}
-                value={row[header]}
-                index={index}
-                colorMap={colorMap}
-              />
-            ) : header === "ActionHistory" ? (
-              <StatusHistoryCellRenderer value={row[header]} />
-            ) : ["Provider", "Service Provider"].includes(header) ? (
-              <ServiceProviderCellRenderer value={row[header]} />
-            ) : header === "Status" ? (
-              <StatusIndicator status={row[header]} />
-            ) : header === "Uploaded" ? (
-              <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
-            ) : header === "Successful" ? (
-              <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
-            ) : header === "Errors" ? (
-              <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
-            ) : header === "Change Details" ? (
-              changeDetailCellRenderer()
-            ) : (
-              row[header]!="None"?row[header]:""
-            )}
-          </td>
-        ) : null // Ensure non-visible columns return null
-      ))}
-      
-      {allowedActions&&visibleColumns.length>0 && (
-        <td className="px-6 border-b border-gray-300 table-cell">
-          <div className="flex items-center space-x-2">
-            {allowedActions.includes("edit") && (
-              <PencilIcon
-                className="h-5 w-5 text-blue-500 cursor-pointer"
-                onClick={() =>
-                  handleActionClick(
-                    "edit",
-                    (currentPage - 1) * itemsPerPage + index
-                  )
-                }
-              />
-            )}
-            {allowedActions.includes("delete") && (
-              <TrashIcon
-                className="h-5 w-5 text-red-500 cursor-pointer"
-                onClick={() =>
-                  handleActionClick(
-                    "delete",
-                    (currentPage - 1) * itemsPerPage + index
-                  )
-                }
-              />
-            )}
-            {allowedActions.includes("info") && (
-              <InformationCircleIcon
-                className="h-5 w-5 text-green-500 cursor-pointer"
-                onClick={() =>
-                  handleActionClick(
-                    "info",
-                    (currentPage - 1) * itemsPerPage + index
-                  )
-                }
-              />
-            )}
-            {allowedActions.includes("Actions") && (
-              <ActionItems
-                initialData={initialData}
-                currentPage={currentPage}
-                itemsPerPage={itemsPerPage}
-                index={index}
-                handleActionClick={handleActionClick}
-              />
-            )}
-            {allowedActions.includes("SingleClick") && (
-              <PencilIcon
-                className="h-5 w-5 text-blue-500 cursor-pointer"
-                onClick={() =>
-                  handleActionSingleClick()
-                }
-              />
-            )}
-            {allowedActions.includes("tabsEdit") && (
-              <PencilIcon
-                className="h-5 w-5 text-blue-500 cursor-pointer"
-                onClick={() =>
-                  handleActionClick(
-                    "tabsEdit",
-                    (currentPage - 1) * itemsPerPage + index
-                  )
-                }
-              />
-            )}
-            {allowedActions.includes("tabsInfo") && (
-              <InformationCircleIcon
-                className="h-5 w-5 text-green-500 cursor-pointer"
-                onClick={() =>
-                  handleActionClick(
-                    "tabsInfo",
-                    (currentPage - 1) * itemsPerPage + index
-                  )
-                }
-              />
-            )}
-          </div>
-        </td>
-      )}
-    </tr>
-  ))}
-</tbody>
+            {paginatedData.map((row, index) => (
+
+              <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-gray-50" : ""}
+              >
+                {/* Render actions column if allowedActions is true */}
+                {visibleColumns.length > 0 && (
+                  <td className="px-6 border-b border-gray-300 table-cell">{(currentPage - 1) * itemsPerPage + index + 1}</td>
+                )}
+                {headers.map((header, columnIndex) => (
+                  visibleColumns.includes(header) ? (
+                    <td
+                      key={columnIndex}
+                      className="px-6 border-b border-gray-300 table-cell"
+                    >
+                      {/* Check if the header is the selection column */}
+                      {header === "S.no" ? (
+                        (currentPage - 1) * itemsPerPage + index + 1
+                      ) :
+                        header === "Select" ? (
+                          <Checkbox
+                            onChange={() => handleRowCheckboxChange(index)}
+                            checked={selectedRows.map(String).includes(String(index))}
+                            style={{ fontSize: '2rem' }}
+                          />
+                        ) : (headerMap && headerMap[header][0] === "Module_state") || (headerMap && headerMap[header][0] === "Role_status") || (headerMap && headerMap[header][0] === "API state") ? (
+                          renderApiState(row[header], index, headerMap[header][0])
+                        ) : (headerMap && headerMap[header][0] === "User status") || header === "User status" ? (
+                          renderUserStatus(row[header])
+                        ) : header === "DateAdded" || header === "DateActivated" || header === "Processed_Date" ? (
+                          <DateTimeCellRenderer value={row[header]} />
+                        ) : header === "Username" ? (
+                          <EditUsernameCellRenderer value={row[header]} />
+                        ) : header === "SimStatus" ? (
+                          <StatusCellRenderer
+                            record={row}
+                            value={row[header]}
+                            index={index}
+                            colorMap={colorMap}
+                          />
+                        ) : header === "ActionHistory" ? (
+                          <StatusHistoryCellRenderer value={row[header]} />
+                        ) : ["Provider", "Service Provider"].includes(header) ? (
+                          <ServiceProviderCellRenderer value={row[header]} />
+                        ) : header === "Status" ? (
+                          <StatusIndicator status={row[header]} />
+                        ) : header === "Uploaded" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.UPLOAD} />
+                        ) : header === "Successful" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.SUCCESSFUL} />
+                        ) : header === "Errors" ? (
+                          <QuantityCell value={row[header]} type={STATUS_TYPE.ERRORS} />
+                        ) : header === "Change Details" ? (
+                          changeDetailCellRenderer()
+                        ) : (
+                          row[header] != "None" ? row[header] : ""
+                        )}
+                    </td>
+                  ) : null // Ensure non-visible columns return null
+                ))}
+
+                {allowedActions && visibleColumns.length > 0 && (
+                  <td className="px-6 border-b border-gray-300 table-cell">
+                    <div className="flex items-center space-x-2">
+                      {allowedActions.includes("edit") && (
+                        <PencilIcon
+                          className="h-5 w-5 text-blue-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionClick(
+                              "edit",
+                              (currentPage - 1) * itemsPerPage + index
+                            )
+                          }
+                        />
+                      )}
+                      {allowedActions.includes("delete") && (
+                        <TrashIcon
+                          className="h-5 w-5 text-red-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionClick(
+                              "delete",
+                              (currentPage - 1) * itemsPerPage + index
+                            )
+                          }
+                        />
+                      )}
+                      {allowedActions.includes("info") && (
+                        <InformationCircleIcon
+                          className="h-5 w-5 text-green-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionClick(
+                              "info",
+                              (currentPage - 1) * itemsPerPage + index
+                            )
+                          }
+                        />
+                      )}
+                      {allowedActions.includes("Actions") && (
+                        <ActionItems
+                          initialData={initialData}
+                          currentPage={currentPage}
+                          itemsPerPage={itemsPerPage}
+                          index={index}
+                          handleActionClick={handleActionClick}
+                        />
+                      )}
+                      {allowedActions.includes("SingleClick") && (
+                        <PencilIcon
+                          className="h-5 w-5 text-blue-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionSingleClick()
+                          }
+                        />
+                      )}
+                      {allowedActions.includes("tabsEdit") && (
+                        <PencilIcon
+                          className="h-5 w-5 text-blue-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionClick(
+                              "tabsEdit",
+                              (currentPage - 1) * itemsPerPage + index
+                            )
+                          }
+                        />
+                      )}
+                      {allowedActions.includes("tabsInfo") && (
+                        <InformationCircleIcon
+                          className="h-5 w-5 text-green-500 cursor-pointer"
+                          onClick={() =>
+                            handleActionClick(
+                              "tabsInfo",
+                              (currentPage - 1) * itemsPerPage + index
+                            )
+                          }
+                        />
+                      )}
+                    </div>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
 
         </table>
       </div>
-      {visibleColumns.length>0 &&(
-         <div className="flex justify-center mt-5">
-         <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-       </div>
+      {visibleColumns.length > 0 && (
+        <div className="flex justify-center mt-5">
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        </div>
       )}
 
       <EditModal
@@ -769,6 +771,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         heading={popupHeading}
         isTabEdit={tabsEdit}
         generalFields={generalFields}
+        tableData={rowData}
       />
       <Modal
         title="Confirm Deletion"
@@ -779,23 +782,23 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         <p>Do you want to delete this row?</p>
       </Modal>
       <Modal
-  title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Enable</span>}
-  open={EnableModalOpen}
-  onOk={() => confirmSubmit(rowIndex, columnName, true)} // Pass true for enabling
-  onCancel={() => setEnableModalOpen(false)}
-  centered
->
-  <p>Do you want to <strong>{state}</strong> this State?</p>
-</Modal>
-<Modal
-  title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
-  open={DisableModalOpen}
-  onOk={() => confirmSubmit(rowIndex, columnName, false)} // Pass false for disabling
-  onCancel={() => setDisableModalOpen(false)}
-  centered
->
-  <p>Do you want to <strong>{state}</strong> this State?</p>
-</Modal>
+        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Enable</span>}
+        open={EnableModalOpen}
+        onOk={() => confirmSubmit(rowIndex, columnName, true)} // Pass true for enabling
+        onCancel={() => setEnableModalOpen(false)}
+        centered
+      >
+        <p>Do you want to <strong>{state}</strong> this State?</p>
+      </Modal>
+      <Modal
+        title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Disable</span>}
+        open={DisableModalOpen}
+        onOk={() => confirmSubmit(rowIndex, columnName, false)} // Pass false for disabling
+        onCancel={() => setDisableModalOpen(false)}
+        centered
+      >
+        <p>Do you want to <strong>{state}</strong> this State?</p>
+      </Modal>
     </div>
   );
 

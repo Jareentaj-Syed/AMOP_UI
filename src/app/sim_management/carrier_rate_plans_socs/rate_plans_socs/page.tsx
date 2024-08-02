@@ -152,10 +152,11 @@ const RatePlans_SOCs: React.FC = () => {
         initialData={data}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
-        itemsPerPage={10}
+        itemsPerPage={100}
         allowedActions={["edit"]}
         popupHeading='Carrier Rate Plan'
         createModalData={createColumns}
+        pagination={{}}
        
       />
 

@@ -216,7 +216,7 @@ const E911Customers: React.FC = () => {
         initialData={tableData}
         searchQuery={searchTerm}
         visibleColumns={visibleColumns}
-        itemsPerPage={10}
+        itemsPerPage={100}
         allowedActions={["edit", "delete"]}
         popupHeading="E911 Customer"
         createModalData={createModalData} pagination={undefined}      />
