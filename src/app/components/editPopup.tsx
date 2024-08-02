@@ -177,7 +177,7 @@ const EditModal: React.FC<EditModalProps> = ({
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": "NetSapien Customers",
+            "module": "NetSapiens Customers",
             "table_name": "customers",
             action: "update",
             "changed_data": formData
@@ -368,18 +368,30 @@ const EditModal: React.FC<EditModalProps> = ({
           };
         }
         const recall = await axios.post(url, { data });
-console.log("recall",recall)
         }
         else{
+          const errorMsg=JSON.parse(response.data.body).message
           Modal.error({
             title: 'Data Fetch Error',
-            content: error instanceof Error ? error.message : 'An unexpected error occurred while fetching data. Please try again.',
+            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
             centered: true,
           });
         }
 
-      } catch (err) {
-        console.error("Error fetching data:", err);
+      } catch (error) {
+        if (error instanceof Error) {
+          Modal.error({
+              title: 'Saving Error',
+              content: error.message || 'An unexpected error occurred during login. Please try again.',
+              centered: true,
+          });
+      } else {
+          Modal.error({
+              title: 'Saving Error',
+              content: 'An unexpected error occurred during login. Please try again.',
+              centered: true,
+          });
+      }
       }
       setIsConfirmationOpen(false);
     }
