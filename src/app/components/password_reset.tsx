@@ -50,11 +50,32 @@ const PasswordReset: React.FC = () => {
         }}
       );
       console.log('Response:', response.data);
-      if(response.data&&response.data.body&&response.data.body.flag){
+      if(response.data&&response.data&&response.data.statusCode===200){
         setShowLogin(true);
+      }
+      else{
+        const parsedData=JSON.parse(response.data.body)
+        Modal.error({
+          title: 'Reset Password Error',
+          content:parsedData?parsedData.message:'An unexpected error occurred during resetting password. Please try again.',
+          centered: true,
+      });
       }
     } catch (error) {
       console.error('Error:', error);
+      if (error instanceof Error) {
+        Modal.error({
+            title: 'Reset Password Error',
+            content: error.message || 'An unexpected error occurred during login. Please try again.',
+            centered: true,
+        });
+    } else {
+        Modal.error({
+            title: 'Reset Password Error',
+            content: 'An unexpected error occurred during login. Please try again.',
+            centered: true,
+        });
+    }
     }
   };
 

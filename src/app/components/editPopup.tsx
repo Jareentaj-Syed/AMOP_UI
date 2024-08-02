@@ -84,6 +84,7 @@ const EditModal: React.FC<EditModalProps> = ({
   }
 
   const handleSave = () => {
+    console.log("editedData",initialData)
     onSave(formData, initialData);
     onClose();
   };
@@ -224,54 +225,7 @@ const EditModal: React.FC<EditModalProps> = ({
         }
 
         const response = await axios.post(url, { data });
-        console.log("response", response, response.data)
         if (response.data.statusCode === 200) {
-          if (heading === "Customer Group") {
-            if (formData) {
-              formData["modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_partner_info",
-              role_name: role,
-              module_name: "Customer groups",
-              action: "update",
-              updated_data: formData
-            };
-          }
-          if (heading === "Carrier") {
-            if (formData) {
-              formData["last_modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_superadmin_data",
-              role_name: role,
-              "sub_module": "Partner API",
-              "sub_tab": "Carrier APIs",
-              "table_name": "carrier_apis",
-              "changed_data": formData
-            };
-          }
-
-          if (heading === "API") {
-            if (formData) {
-              formData["last_modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_superadmin_data",
-              role_name: role,
-              "sub_module": "Partner API",
-              "sub_tab": "Amop APIs",
-              "table_name": "amop_apis",
-              "changed_data": formData
-            };
-          }
-
           if (heading === "E911 Customer") {
             const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
             const data = {
@@ -288,7 +242,13 @@ const EditModal: React.FC<EditModalProps> = ({
             };
 
             const response = await axios.post(url, { data });
-            if (response && response.data.statusCode) {
+            const parsedData = JSON.parse(response.data.body);
+            if (response && response.data.statusCode===200) {
+              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+              const customertableData = parsedData.data.WestE911Customer;
+              setTableData(customertableData);
+
               // Show success message
               notification.success({
                 message: 'Success',
@@ -297,7 +257,6 @@ const EditModal: React.FC<EditModalProps> = ({
                 placement: 'top', // Apply custom styles here
               });
             }
-            const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
               Modal.error({
                 title: 'Data Fetch Error',
@@ -305,10 +264,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 centered: true,
               });
             } else {
-              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
-              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.WestE911Customer;
-              setTableData(customertableData);
+              
             }
           }
           if (heading === "NetSapien Customer") {
@@ -327,7 +283,14 @@ const EditModal: React.FC<EditModalProps> = ({
             };
 
             const response = await axios.post(url, { data });
-            if (response && response.data.statusCode) {
+            const parsedData= JSON.parse(response.data.body);
+            if (response && response.data.statusCode===200) {
+              const tableData = parsedData.data.customers;
+            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+            const generalFields = parsedData.data
+            setTableData(tableData);
+            console.log("editedData",parsedData.data)
               // Show success message
               notification.success({
                 message: 'Success',
@@ -337,14 +300,9 @@ const EditModal: React.FC<EditModalProps> = ({
               });
             }
 
-            const parsedData = JSON.parse(response.data.body);
             console.log(parsedData)
             // Check if the flag is false in the parsed data
-            const tableData = parsedData.data.customers;
-            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
-            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
-            const generalFields = parsedData.data
-            setTableData(tableData);
+            
           }
           if (heading === "Bandwidth Customer") {
             const url =
@@ -362,7 +320,13 @@ const EditModal: React.FC<EditModalProps> = ({
               },
             };
             const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
             if (response && response.data.statusCode) {
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              setTableData(tableData);
               // Show success message
               notification.success({
                 message: 'Success',
@@ -371,7 +335,6 @@ const EditModal: React.FC<EditModalProps> = ({
                 placement: 'top', // Apply custom styles here
               });
             }
-            const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
               Modal.error({
                 title: 'Data Fetch Error',
@@ -379,11 +342,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 centered: true,
               });
             } else {
-              const tableData = parsedData.data.customers;
-              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
-              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
-              const generalFields = parsedData.data
-              setTableData(tableData);
+              
             }
           }
           if (heading === "RevIO Customer") {
@@ -427,7 +386,6 @@ const EditModal: React.FC<EditModalProps> = ({
           });
         }
       }
-      setIsConfirmationOpen(false);
     }
     handleSave();
     setIsConfirmationOpen(false);

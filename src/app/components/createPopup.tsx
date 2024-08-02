@@ -361,7 +361,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             centered: true,
           });
         }
-        if (response && response.data.statusCode) {
+        if (response && response.data.statusCode===200) {
           // Show success message
           notification.success({
             message: 'Success',
