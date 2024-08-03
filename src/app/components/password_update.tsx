@@ -12,7 +12,7 @@ const PasswordUpdate: React.FC = () => {
     const { username, partner, role,  } = useAuth();
     const title = useLogoStore((state) => state.title);
     const setTitle = useLogoStore((state) => state.setTitle);
-    const {LogoutChooseTenant, setTenantNames} = useAuth(); 
+    const {LogoutChooseTenant, setTenantNames, setRole} = useAuth(); 
     useEffect(() => {
         setTitle("Password")
     })
@@ -58,7 +58,10 @@ const PasswordUpdate: React.FC = () => {
             if(resp["tenant_names"]){
                 const tenant_names = resp["tenant_names"];
                 setTenantNames(tenant_names);
+                const role = resp["role"];
+                setRole(role);
             }
+
           } catch (error) {
             console.error('Error:', error);
           }

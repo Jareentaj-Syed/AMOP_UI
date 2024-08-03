@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 
 import { AUTHENTICATION_ROUTES } from './routes/route_constants';
 import { getCurrentDateTime } from './header_constants';
+import { useLogoStore } from '../stores/logoStore';
 
 
 const ChooseTenant: React.FC = () => {
@@ -18,8 +19,9 @@ const ChooseTenant: React.FC = () => {
   const [loading, setLoading] = useState(false); // State to manage loading
 
   const router = useRouter();
-  const {username, tenantNames, role}=useAuth()
+  const {username, tenantNames, role, setShowPassword, setShowPasswordUpdate, showPasswordUpdate}=useAuth()
   const partners=tenantNames
+  const setTitle = useLogoStore((state) => state.setTitle);
 
   // useEffect(() => {
 
@@ -47,6 +49,10 @@ const ChooseTenant: React.FC = () => {
       );
   
       if (response.status === 200) {
+        setShowPasswordUpdate(false)
+        if (!showPasswordUpdate){
+           setTitle("Partner")
+        }
         const parsedData = JSON.parse(response.data.body); // Parse the response body
   
         if (parsedData.error) {
@@ -65,6 +71,7 @@ const ChooseTenant: React.FC = () => {
           setSelectedPartner(true);
           setModules(parsedData.Modules); // Set the modules state
           setPartner(partnerName);
+          
           router.push('/partner');
         }
       } else {
