@@ -8,6 +8,7 @@ import { useAuth } from './auth_context';
 import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { message } from 'antd';
+import { getCurrentDateTime } from './header_constants';
 
 interface Column {
   display_name: string;
@@ -42,8 +43,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
-  const { username, tenantNames, role, partner } = useAuth();
-  const [initialData, setTableData] = useState<any>(tableData)
+  const { username, tenantNames, role, partner, settabledata } = useAuth();
+
   useEffect(() => {
     const initialFormData = header.reduce((acc, column) => {
       acc[column] = ''; // Initialize each header item as an empty string
@@ -95,6 +96,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'Customer Group') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -109,6 +111,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'Carrier') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -125,6 +128,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'API') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -141,6 +145,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'E911 Customer') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -157,6 +162,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'NetSapien Customer') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -173,6 +179,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'Bandwidth Customer') {
           if (formData) {
             formData['created_by'] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -185,22 +192,22 @@ const CreateModal: React.FC<CreateModalProps> = ({
             changed_data: formData,
           };
         }
-        if (heading === 'RevIO Customer') {
-          if (formData) {
-            formData['created_by'] = username;
-          }
-          data = {
-            tenant_name: partner || 'default_value',
-            username: username,
-            path: '/update_people_data',
-            role_name: role,
-            parent_module: 'People',
-            module: 'RevIO Customer',
-            action: 'create',
-            table_name: 'customers',
-            changed_data: formData,
-          };
-        }
+        // if (heading === 'RevIO Customer') {
+        //   if (formData) {
+        //     formData['created_by'] = username;
+        //   }
+        //   data = {
+        //     tenant_name: partner || 'default_value',
+        //     username: username,
+        //     path: '/update_people_data',
+        //     role_name: role,
+        //     parent_module: 'People',
+        //     module: 'RevIO Customer',
+        //     action: 'create',
+        //     table_name: 'customers',
+        //     changed_data: formData,
+        //   };
+        // }
 
         const response = await axios.post(url, { data });
         if (response.data.statusCode === 200) {
@@ -277,7 +284,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
               const customertableData = parsedData.data.WestE911Customer;
-              setTableData(customertableData);
+              settabledata(customertableData);
             }
           }
           if (heading === "NetSapien Customer") {
@@ -303,7 +310,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
             const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
             const generalFields = parsedData.data
-            setTableData(tableData);
+            settabledata(tableData);
           }
           if (heading === "Bandwidth Customer") {
             const url =
@@ -333,25 +340,25 @@ const CreateModal: React.FC<CreateModalProps> = ({
               const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
               const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
               const generalFields = parsedData.data
-              setTableData(tableData);
+              settabledata(tableData);
             }
           }
-          if (heading === "RevIO Customer") {
-            if (formData) {
-              formData["modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_people_data",
-              role_name: role,
-              "parent_module": "People",
-              "module": "RevIO Customer",
-              "table_name": "customers",
-              action: "update",
-              "changed_data": formData
-            };
-          }
+          // if (heading === "RevIO Customer") {
+          //   if (formData) {
+          //     formData["modified_by"] = username;
+          //   }
+          //   data = {
+          //     tenant_name: partner || "default_value",
+          //     username: username,
+          //     path: "/update_people_data",
+          //     role_name: role,
+          //     "parent_module": "People",
+          //     "module": "RevIO Customer",
+          //     "table_name": "customers",
+          //     action: "update",
+          //     "changed_data": formData
+          //   };
+          // }
         }
         else {
           const errorMsg = JSON.parse(response.data.body).message

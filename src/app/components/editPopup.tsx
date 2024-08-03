@@ -11,6 +11,8 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import InfoPopup from '../people/info_popup';
 import error from 'next/error';
+
+import { getCurrentDateTime } from './header_constants';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -48,7 +50,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
-  const { username, tenantNames, role, partner } = useAuth();
+  const { username, tenantNames, role, partner, settabledata} = useAuth();
   const rate_plan_name_drp = generalFields && generalFields.rate_plan_name && Array.isArray(generalFields.rate_plan_name) ? generalFields.rate_plan_name : []
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
@@ -124,12 +126,14 @@ const EditModal: React.FC<EditModalProps> = ({
             role_name: role,
             module_name: "Customer groups",
             action: "update",
-            updated_data: formData
+            updated_data: formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "Carrier") {
           if (formData) {
             formData["last_modified_by"] = username;
+            formData["last_modified_date_time"]=getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -139,13 +143,15 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_module": "Partner API",
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
 
         if (heading === "API") {
           if (formData) {
             formData["last_modified_by"] = username;
+            formData["last_modified_date_time"]=getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -155,13 +161,15 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
 
         if (heading === "E911 Customer") {
           if (formData) {
             formData["modified_by"] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -172,12 +180,14 @@ const EditModal: React.FC<EditModalProps> = ({
             "module": "E911 Customers",
             "table_name": "weste911customer",
             action: "update",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "NetSapien Customer") {
           if (formData) {
             formData["modified_by"] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -188,12 +198,14 @@ const EditModal: React.FC<EditModalProps> = ({
             "module": "NetSapiens Customers",
             "table_name": "customers",
             action: "update",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "Bandwidth Customer") {
           if (formData) {
             formData["modified_by"] = username;
+            formData["modified_date"]= getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -204,7 +216,8 @@ const EditModal: React.FC<EditModalProps> = ({
             "module": "Bandwidth Customers",
             "table_name": "customers",
             action: "update",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "RevIO Customer") {
@@ -220,65 +233,232 @@ const EditModal: React.FC<EditModalProps> = ({
             "module": "RevIO Customer",
             "table_name": "customers",
             action: "update",
-            "changed_data": formData
+            "changed_data": formData,
+            request_received_at: getCurrentDateTime(),
           };
         }
 
         const response = await axios.post(url, { data });
-        
-        if (response.data.statusCode === 200) {
-          try{
-            let tebleParams;
-            const tableUrl = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-            if (heading === "E911 Customer") {
-              tebleParams = {
-                tenant_name: partner || "default_value",
-                username: username,
-                path: "/get_module_data",
-                role_name: role,
-                parent_module_name: "people",
-                module_name: "E911 Customers",
-                mod_pages: {
-                  start: 0,
-                  end: 500,
-                },
-              };
+        const resp = JSON.parse(response.data.body);
+        console.log(resp)
+        // if (response.data.statusCode === 200) {
+        //   try{
+        //     let tebleParams;
+        //     const tableUrl = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+        //     if (heading === "E911 Customer") {
+        //       tebleParams = {
+        //         tenant_name: partner || "default_value",
+        //         username: username,
+        //         path: "/get_module_data",
+        //         role_name: role,
+        //         parent_module_name: "people",
+        //         module_name: "E911 Customers",
+        //         mod_pages: {
+        //           start: 0,
+        //           end: 500,
+        //         },
+        //       };
   
-            }
-            if (heading === "NetSapien Customer") {
-              tebleParams = {
-                tenant_name: partner || "default_value",
-                username: username,
-                path: "/get_module_data",
-                role_name: role,
-                parent_module_name: "people", // Corrected spelling from 'poeple'
-                module_name: "NetSapiens Customers",
-                mod_pages: {
-                  start: 0,
-                  end: 500,
-                },
-              };
-            }
-            if (heading === "Bandwidth Customer") {
-              tebleParams = {
-                tenant_name: partner || "default_value",
-                username: username,
-                path: "/get_module_data",
-                role_name: role,
-                parent_module_name: "people",
-                module_name: "Bandwidth Customers",
-                mod_pages: {
-                  start: 0,
-                  end: 500,
-                },
-              };
-            }
-            const tableResponse = await axios.post(tableUrl, { tebleParams });
-            console.log("tableResponse",tableResponse)
+        //     }
+        //     if (heading === "NetSapien Customer") {
+        //       tebleParams = {
+        //         tenant_name: partner || "default_value",
+        //         username: username,
+        //         path: "/get_module_data",
+        //         role_name: role,
+        //         parent_module_name: "people", // Corrected spelling from 'poeple'
+        //         module_name: "NetSapiens Customers",
+        //         mod_pages: {
+        //           start: 0,
+        //           end: 500,
+        //         },
+        //       };
+        //     }
+        //     if (heading === "Bandwidth Customer") {
+        //       tebleParams = {
+        //         tenant_name: partner || "default_value",
+        //         username: username,
+        //         path: "/get_module_data",
+        //         role_name: role,
+        //         parent_module_name: "people",
+        //         module_name: "Bandwidth Customers",
+        //         mod_pages: {
+        //           start: 0,
+        //           end: 500,
+        //         },
+        //       };
+        //     }
 
-          }catch(err){}
+        //     const tableResponse = await axios.post(tableUrl, { tebleParams });
+        //     console.log("tableResponse",tableResponse)
+
+
+        //   }catch(err){}
           
+        // }
+        if (response.data.statusCode === 200 && resp.flag === true) {
+
+          notification.success({
+            message: 'Success',
+            description: 'Successfully Edit the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });
+          if (heading === "Carrier") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API", 
+                sub_tab: "Carrier APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+              console.log(carrierApis);
+              settabledata(carrierApis)
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                // Modal.error({
+                //   title: 'Data Fetch Error',
+                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                //   centered: true,
+                // });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+          if (heading === "API") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API",
+                sub_tab: "Amop APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+              
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              const carrierApis = resp.data.amop_apis_data.amop_apis;
+              console.log(carrierApis);
+              settabledata(carrierApis)
+           
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                // Modal.error({
+                //   title: 'Data Fetch Error',
+                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                //   centered: true,
+                // });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+          if (heading === "E911 Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "E911 Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+              request_received_at: getCurrentDateTime(),
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+              const customertableData = parsedData.data.WestE911Customer;
+              settabledata(customertableData);
+            }
+          }
+          if (heading === "NetSapien Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people", // Corrected spelling from 'poeple'
+              module_name: "NetSapiens Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            console.log(parsedData)
+            // Check if the flag is false in the parsed data
+            const tableData = parsedData.data.customers;
+            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+            const generalFields = parsedData.data
+            settabledata(tableData);
+          }
+          if (heading === "Bandwidth Customer") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "Bandwidth Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              settabledata(tableData);
+            }
+          }
+
         }
+          
       } catch (error) {
         if (error instanceof Error) {
           Modal.error({
