@@ -158,6 +158,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     setDateRange([null, null]); // Reset date range
   };
 
+
   const handleExport = async () => {
     if (!dateRange || dateRange[0] === null || dateRange[1] === null) {
       Modal.error({ title: 'Error', content: 'Please select a date range.' });
@@ -185,9 +186,10 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
       });
 
       const resp = JSON.parse(response.data.body);
-      console.log(resp)
       const blob = resp.blob;
-
+      console.log(resp)
+        // Close the modal after exporting
+      
       if (resp.flag === false) {
         console.log(resp.message)
         Modal.error({
@@ -196,28 +198,13 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           centered: true,
         });
       }
-
-      downloadBlob(blob)
-
-
-      
-      // Close the modal after exporting
+ 
       handleExportModalClose();
-
-      // if () {
-        // Show success message
-        // notification.success({
-        //   message: 'Success',
-        //   description: 'More than 500 records!',
-        //   style: messageStyle,
-        //   placement: 'top', // Apply custom styles here
-        // });
-      //   Modal.error({ title: 'Export Error', content: 'More than 500 records!' });
-
-      // }
+      downloadBlob(blob)
+    
     } catch (error) {
-      console.error("Error downloading the file:", error);
-      Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
+      // console.error("Error downloading the file:", error);
+      // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
  

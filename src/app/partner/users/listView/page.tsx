@@ -10,6 +10,12 @@ import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
 import { usePartnerStore } from '../../partnerStore';
 import { useUserStore } from '../createUser/createUserStore';
+import dayjs, { Dayjs } from "dayjs";
+import { getCurrentDateTime } from '@/app/components/header_constants';
+import { useAuth } from '@/app/components/auth_context';
+import axios from 'axios';
+import { Button, DatePicker, Modal } from 'antd';
+const { RangePicker } = DatePicker;
 
 
 interface ExcelDataRow {
@@ -28,6 +34,10 @@ const ListView: React.FC = () => {
   const [generalFields, setGeneralFields] = useState<any>({});
   const { partnerData } = usePartnerStore.getState();
   const usersData = partnerData["Partner users"] || {};
+  const [isExportModalOpen, setExportModalOpen] = useState(false);
+
+  const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const { username, partner, role } = useAuth();
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
@@ -64,14 +74,87 @@ const ListView: React.FC = () => {
     setSubTenant([])
     setRoleName('')
 }, []);
-  const handleExport = () => {
-    // const exportData = [headers, ...data.map(row => headers.map(header => row[header]))];
-    const worksheet = XLSX.utils.aoa_to_sheet([]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Users");
-    XLSX.writeFile(workbook, "Users.xlsx");
+const handleExportModalOpen = () => {
+  setExportModalOpen(true);
+};
+
+const handleExportModalClose = () => {
+  setExportModalOpen(false);
+  setDateRange([null, null]); // Reset date range
+};
+
+const handleExport = async () => {
+  if (!dateRange || dateRange[0] === null || dateRange[1] === null) {
+    Modal.error({ title: 'Error', content: 'Please select a date range.' });
+    return;
+  }
+
+  const [startDate, endDate] = dateRange;
+
+  const data = {
+    path: "/export",
+    username: username,
+    table: "customers",
+    module_name:"Customer Groups",
+    request_received_at: getCurrentDateTime(),
+    start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
+      end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
   };
 
+  try {
+    const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+    const response = await axios.post(url, { data: data }, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const resp = JSON.parse(response.data.body);
+    const blob = resp.blob;
+    console.log(resp)
+      // Close the modal after exporting
+    
+    if (resp.flag === false) {
+      console.log(resp.message)
+      Modal.error({
+        title: 'Export Error',
+        content: resp.message ,
+        centered: true,
+      });
+    }
+
+    handleExportModalClose();
+    downloadBlob(blob)
+  
+  } catch (error) {
+    // console.error("Error downloading the file:", error);
+    // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
+  }
+};
+
+const downloadBlob = (base64Blob: string) => {
+  // Decode the Base64 string
+  const byteCharacters = atob(base64Blob);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+
+  const blobObject = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blobObject);
+  link.download = 'Customer Groups.xlsx'; // Set the file name to .xlsx
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+
+const disableFutureDates = (current:any) => {
+console.log("future dates:",current && current > dayjs().endOf('day'));
+return current && current > dayjs().endOf('day'); // Disable future dates
+};
   return (
     <div className="container mx-auto">
       {showCreateUser ? (
@@ -96,7 +179,7 @@ const ListView: React.FC = () => {
                 <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
                 Create New User
               </button>
-              <button className="save-btn" onClick={handleExport}>
+              <button className="save-btn" onClick={handleExportModalOpen}>
                 <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
                 <span>Export</span>
               </button>
@@ -117,7 +200,40 @@ const ListView: React.FC = () => {
               pagination={{}}
              generalFields={generalFields}
             />
+
           </div>
+          <Modal
+        title="Export Output"
+        visible={isExportModalOpen}
+        onCancel={() => {
+          handleExportModalClose();
+          setDateRange([null, null]); // Reset date range here for good measure
+        }}
+        footer={null}
+        centered
+        afterClose={() => setDateRange([null, null])}
+      >
+        <div className="flex flex-col space-y-4">
+          <span>Select Date Range:</span>
+          <RangePicker 
+         value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+            onChange={(dates) => {
+              console.log("Selected dates:", dates); // Debug log
+              if (dates && dates.length === 2) {
+                setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
+              } else {
+                setDateRange([null, null]); // Reset to null if dates are not both available
+              }
+            }} 
+            format="YYYY-MM-DD"
+            disabledDate={disableFutureDates}
+          />
+          <div className="flex justify-end space-x-2">
+            <Button onClick={handleExportModalClose}>Cancel</Button>
+            <Button type="primary" onClick={handleExport}>Export</Button>
+          </div>
+        </div>
+      </Modal>
         </>
       )}
     </div>

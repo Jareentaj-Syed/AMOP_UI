@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '../stores/navBarStore';
 import { useRouter } from 'next/navigation';
@@ -46,8 +46,12 @@ const Partner: React.FC = () => {
         }
     }, [title])
 
+
+    const hasFetchedData = useRef(false); // Ref to track if data has been fetched
+
     useEffect(() => {
         const fetchData = async () => {
+            console.log('Fetching data...'); // Debug: Log when fetching starts
             try {
                 const tabs = [
                     { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
@@ -73,30 +77,27 @@ const Partner: React.FC = () => {
 
                     try {
                         const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-                        if (response &&response.status&&response.status===200) {
-                            const parseddata = JSON.parse(response.data.body)
-                            if(parseddata.flag){
+                        console.log(`Response for ${tab.module}:`, response); // Debug: Log the response
+                        if (response && response.status === 200) {
+                            const parseddata = JSON.parse(response.data.body);
+                            if (parseddata.flag) {
                                 tab.setter(parseddata);
                                 tab.setLoaded(true);
-                            }
-                            else{
+                            } else {
                                 tab.setter(parseddata.message);
-                            // Modal.error({
-                            //     title: 'Login Error',
-                            //     content: 'An error occurred during fetching data.',
-                            //     centered: true,
-                            // });
+                                Modal.error({
+                                    title: 'Error',
+                                    content: parseddata.message,
+                                    centered: true,
+                                });
                             }
-                           
-                        }
-                        else {
+                        } else {
                             Modal.error({
-                                title: 'Login Error',
+                                title: 'Error',
                                 content: 'An error occurred during fetching data.',
                                 centered: true,
                             });
                         }
-
                     } catch (error) {
                         console.error('Error fetching', tab.module, ':', error);
                     }
@@ -110,9 +111,77 @@ const Partner: React.FC = () => {
             }
         };
 
-        fetchData();
-    }, []);
+        if (!hasFetchedData.current) { // Check if data has already been fetched
+            fetchData();
+            hasFetchedData.current = true; // Set to true after fetching
+        }
+    }, [partner, username, role]);
 
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         console.log('Fetching data...'); // Debug: Log when fetching starts
+    //         try {
+    //             const tabs = [
+    //                 { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
+    //                 { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
+    //                 { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
+    //                 { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
+    //                 { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
+    //                 { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
+    //             ];
+    
+    //             const promises = tabs.map(async (tab) => {
+    //                 const data = {
+    //                     tenant_name: partner || "default_value",
+    //                     username: username,
+    //                     path: "/get_partner_info",
+    //                     role_name: role,
+    //                     modules_list: [tab.module],
+    //                     pages: {
+    //                         "Customer groups": { start: 0, end: 500 },
+    //                         "Partner users": { start: 0, end: 500 }
+    //                     }
+    //                 };
+    
+    //                 try {
+    //                     const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+    //                     console.log(`Response for ${tab.module}:`, response); // Debug: Log the response
+    //                     if (response && response.status === 200) {
+    //                         const parseddata = JSON.parse(response.data.body);
+    //                         if (parseddata.flag) {
+    //                             tab.setter(parseddata);
+    //                             tab.setLoaded(true);
+    //                         } else {
+    //                             tab.setter(parseddata.message);
+    //                             Modal.error({
+    //                                 title: 'Error',
+    //                                 content: parseddata.message,
+    //                                 centered: true,
+    //                             });
+    //                         }
+    //                     } else {
+    //                         Modal.error({
+    //                             title: 'Error',
+    //                             content: 'An error occurred during fetching data.',
+    //                             centered: true,
+    //                         });
+    //                     }
+    //                 } catch (error) {
+    //                     console.error('Error fetching', tab.module, ':', error);
+    //                 }
+    //             });
+    
+    //             await Promise.all(promises); // Wait until all requests are complete
+    //         } catch (error) {
+    //             console.error('Error:', error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+    
+    //     fetchData();
+    // }, [partner, username, role]); // Ensure dependencies are set correctly
+    
     const switchToCarrierInfoTab = () => {
         setActiveTab('carrierInfo');
     };
