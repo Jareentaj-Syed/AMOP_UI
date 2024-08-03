@@ -169,6 +169,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Email id is required.'));
     }
   };
+  const handleChange = () => {
+    console.log("changed")
+  };
   const getFieldValue = (label: any) => {
     if(rowData){
       console.log("label",label)
@@ -209,11 +212,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         </div>
         <div>
           <label className="field-label">First Name</label>
-          <input type="text" className="input" value={getFieldValue('First Name')} />
+          <input type="text" className="input" value={getFieldValue('First Name')} onChange={handleChange}/>
         </div>
         <div>
           <label className="field-label">Last Name</label>
-          <input type="text" className="input" value={getFieldValue('Last Name')} />
+          <input type="text" className="input" value={getFieldValue('Last Name')} onChange={handleChange} />
         </div>
         <div>
           <label className="field-label">Username<span className="text-red-500">*</span></label>
@@ -245,6 +248,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <input type="text"
             className="input" 
             value={getFieldValue('Mobile No')}
+            onChange={handleChange}
             />
         </div>
         <div>
@@ -279,6 +283,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <input type="text"
             className="input" 
             value={getFieldValue('Phone')}
+            onChange={handleChange}
             />
         </div>
       </div>
@@ -303,6 +308,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Business Name')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -310,6 +316,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Locale')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -317,6 +324,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Apt/Suite')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -324,6 +332,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Address Line-1')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -331,6 +340,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Address Line-2')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -338,6 +348,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Country')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -345,6 +356,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input" 
             value={getFieldValue('State')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -352,6 +364,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('City')}
+            onChange={handleChange}
             />
           </div>
           <div>
@@ -359,6 +372,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input" 
             value={getFieldValue('Time Zone')}
+            onChange={handleChange}
             />
           </div>
 
@@ -367,6 +381,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Zip')}
+            onChange={handleChange}
             />
           </div>
         </div>
