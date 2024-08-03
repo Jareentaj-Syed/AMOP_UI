@@ -21,15 +21,13 @@ const ListView: React.FC = () => {
   const [data, setData] = useState<ExcelDataRow[]>([]); // Initialize data with users_table
   const [searchTerm, setSearchTerm] = useState('');
   const [showCreateUser, setShowCreateUser] = useState(false);
-  const router = useRouter();
-  const createUser = dynamic(() => import('../createUser/page'))
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   const [headers, setHeaders] = useState<string[]>([]);
   const [headerMap, setHeadersMap] = useState<HeaderMap>({});
   const [createModalData, setCreateModalData] = useState<any[]>([]);
   const [generalFields, setGeneralFields] = useState<any>({});
   const { partnerData } = usePartnerStore.getState();
-  const customerGroupsData = partnerData["Customer groups"] || {};;
+  const usersData = partnerData["Partner users"] || {};
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
@@ -38,13 +36,12 @@ const ListView: React.FC = () => {
   };
   useEffect(() => {
     const initializeData = () => {
-      const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
+      const data = usersData?.data?.["Partner users"]?.users || [];
       setData(data);
-
-      const header_Map = sortHeaderMap(customerGroupsData?.headers_map?.["Customer groups"]?.header_map || {});
+      const header_Map = sortHeaderMap(usersData?.headers_map?.["Partner users"]?.header_map || {});
       const headers_ = Object.keys(header_Map);
-      const createModalData_=customerGroupsData?.headers_map?.["Customer groups"]?.pop_up|| [];
-      const generalFields_=customerGroupsData?.data?.["Customer groups"] || {}
+      const createModalData_=usersData?.headers_map?.["Partner users"]?.pop_up|| [];
+      const generalFields_=usersData?.data?.["Partner users"] || {}
       setHeaders(headers_);
       setHeadersMap(header_Map);
       setVisibleColumns(headers_);
@@ -53,7 +50,7 @@ const ListView: React.FC = () => {
     };
 
     initializeData();
-  }, [customerGroupsData]);
+  }, [usersData]);
   const handleCreateClick = () => {
     setShowCreateUser(true);
   };

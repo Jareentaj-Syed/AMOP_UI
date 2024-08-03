@@ -244,6 +244,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setIsEditable(true);
         setEditModalOpen(true);
         break;
+      case 'tabsInfo':
+        setTabsEdit(true)
+        setEditRowIndex(rowIndex);
+        setIsEditable(true);
+        setEditModalOpen(true);
+        break;
       case 'delete':
         setDeleteRowIndex(rowIndex);
         setDeleteModalOpen(true);
@@ -708,7 +714,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     let textColorClass = '';
     if (status === 'True' || status === 'PROCESSED') {
       textColorClass = 'text-blue-500';
-    } else if (status === 'Inactive' || status === 'ERROR') {
+    } else if (status === 'False' || status === 'ERROR') {
       textColorClass = 'text-red-500';
     }
     if (status === 'True') {

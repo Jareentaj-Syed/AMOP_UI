@@ -3,8 +3,8 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useState, useEffect } from 'react';
 import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
-// import {customergroups_drp,service_provider_drp,customers_drp} from '../users_constants';
 import { useUserStore } from './createUserStore';
+import { usePartnerStore } from '../../partnerStore';
 
 type OptionType = {
     value: string;
@@ -26,6 +26,8 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
     const [ServiceProvider, setServiceProvider] = useState<MultiValue<OptionType>>([]);
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
+    const { partnerData } = usePartnerStore.getState();
+    const usersData = partnerData["Partner users"] || {};
     const {
         tenant,
         role_name,

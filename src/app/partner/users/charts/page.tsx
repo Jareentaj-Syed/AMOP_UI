@@ -1,13 +1,13 @@
 import React from 'react';
-import { UserIcon, CheckCircleIcon, ReceiptPercentIcon } from '@heroicons/react/24/outline'; // Importing icons from Heroicons
-// import { total_users,active_users,migrated_users } from '../users_constants';
+import { UserIcon, CheckCircleIcon, ReceiptPercentIcon } from '@heroicons/react/24/outline';
+import { usePartnerStore } from '../../partnerStore';
 const ChartsPage: React.FC = () => {
-  // const totalUsers = total_users;
-  // const activeUsers = active_users;
-  // const migratedUsers = migrated_users;
-  const totalUsers = 1;
-  const activeUsers = 1;
-  const migratedUsers = 1;
+  const { partnerData } = usePartnerStore.getState();
+  const usersData = partnerData["Partner users"] || {};
+
+  const totalUsers = usersData?.data?.["Partner users"]?.total_count || 0;
+  const activeUsers = usersData?.data?.["Partner users"]?.active_user_count ||0;
+  const migratedUsers =usersData?.data?.["Partner users"]?.migrated_count ||0;
 
   return (
     <div className="p-2">
