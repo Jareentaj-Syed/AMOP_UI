@@ -53,13 +53,10 @@ const BandWidthCustomers: React.FC = () => {
 type HeaderMap = Record<string, [string, number]>;
 
 const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
-  // Convert the object to an array of [key, value] pairs
   const entries = Object.entries(headerMap) as [string, [string, number]][];
 
-  // Sort the array based on the second item of each value
   entries.sort((a, b) => a[1][1] - b[1][1]);
 
-  // Convert the sorted array back to an object
   return Object.fromEntries(entries) as HeaderMap;
 }
 

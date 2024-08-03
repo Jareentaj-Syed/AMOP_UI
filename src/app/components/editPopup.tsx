@@ -416,21 +416,34 @@ const EditModal: React.FC<EditModalProps> = ({
                       )}
                       {column.type === 'dropdown' && (
                         <Select
-                          styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
-                          isDisabled={!isEditable}
-                          classNamePrefix="select"
-                          placeholder="Select..."
-                          value={formData[column.db_column_name] && formData[column.db_column_name] !== "None" ? { label: formData[column.db_column_name], value: formData[column.db_column_name] } : { label: '', value: '' }}
-                          onChange={(selectedOption) => handleChange(column.db_column_name, selectedOption?.value)}
-                          options={
-                            generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
-                              ? generalFields[column.db_column_name].map((option: any) => ({
+                        isMulti={column.db_column_name === "Customer_names"}
+                        styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
+                        isDisabled={!isEditable}
+                        classNamePrefix="select"
+                        placeholder="Select..."
+                        value={
+                          formData[column.db_column_name] && formData[column.db_column_name] !== "None"
+                            ? Array.isArray(formData[column.db_column_name])
+                              ? formData[column.db_column_name].map((item: string) => ({ label: item, value: item }))
+                              : { label: formData[column.db_column_name], value: formData[column.db_column_name] }
+                            : null
+                        }
+                        onChange={(selectedOption) => {
+                          const value = Array.isArray(selectedOption)
+                            ? selectedOption.map(option => option.value)
+                            : selectedOption?.value;
+                          handleChange(column.db_column_name, value);
+                        }}
+                        options={
+                          generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                            ? generalFields[column.db_column_name].map((option: any) => ({
                                 label: option,
                                 value: option
                               }))
-                              : [{ label: "No options", value: "No options" }]
-                          }
-                        />
+                            : [{ label: "No options", value: "No options" }]
+                        }
+                      />
+                      
                       )}
 
                       {column.type === 'checkbox' && (

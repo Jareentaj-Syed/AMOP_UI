@@ -15,16 +15,45 @@ import { useUserStore } from '../createUser/createUserStore';
 interface ExcelDataRow {
   [key: string]: any;
 }
+type HeaderMap = Record<string, [string, number]>;
 
 const ListView: React.FC = () => {
   const [data, setData] = useState<ExcelDataRow[]>([]); // Initialize data with users_table
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>([]); // Initialize visibleColumns with headers
   const [showCreateUser, setShowCreateUser] = useState(false);
   const router = useRouter();
+  const createUser = dynamic(() => import('../createUser/page'))
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [headers, setHeaders] = useState<string[]>([]);
+  const [headerMap, setHeadersMap] = useState<HeaderMap>({});
+  const [createModalData, setCreateModalData] = useState<any[]>([]);
+  const [generalFields, setGeneralFields] = useState<any>({});
   const { partnerData } = usePartnerStore.getState();
-  const partnerInfo=partnerData["Partner info"]
-  const createUser = dynamic(() => import('../createUser/page'));
+  const customerGroupsData = partnerData["Customer groups"] || {};;
+
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
+    entries.sort((a, b) => a[1][1] - b[1][1]);
+    return Object.fromEntries(entries) as HeaderMap;
+  };
+  useEffect(() => {
+    const initializeData = () => {
+      const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
+      setData(data);
+
+      const header_Map = sortHeaderMap(customerGroupsData?.headers_map?.["Customer groups"]?.header_map || {});
+      const headers_ = Object.keys(header_Map);
+      const createModalData_=customerGroupsData?.headers_map?.["Customer groups"]?.pop_up|| [];
+      const generalFields_=customerGroupsData?.data?.["Customer groups"] || {}
+      setHeaders(headers_);
+      setHeadersMap(header_Map);
+      setVisibleColumns(headers_);
+      setGeneralFields(generalFields_);
+      setCreateModalData(createModalData_ )
+    };
+
+    initializeData();
+  }, [customerGroupsData]);
   const handleCreateClick = () => {
     setShowCreateUser(true);
   };
@@ -79,17 +108,17 @@ const ListView: React.FC = () => {
 
           <div className="">
             <TableComponent
-              headers={[]}
-              headerMap={{}}
+              headers={headers}
+              headerMap={headerMap}
               initialData={data}
               searchQuery={searchTerm}
               visibleColumns={visibleColumns}
               itemsPerPage={100}
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
-              createModalData={[]}
+              createModalData={createModalData}
               pagination={{}}
-             
+             generalFields={generalFields}
             />
           </div>
         </>

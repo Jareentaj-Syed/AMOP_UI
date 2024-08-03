@@ -17,11 +17,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [emailList, setEmailList] = useState<string[]>([]);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const { username, partner, role } = useAuth();
-  const[logo,setLogo]=useState<string | null>(null);
   const { partnerData } = usePartnerStore.getState();
-  console.log("partnerData",partnerData)
   const partnerInfo = partnerData?.["Partner info"]?.data?.["Partner info"] || {};
-  console.log("partnerInfo",partnerData["Partner info"],partnerInfo)
 useEffect(()=>{
   setEmailList(partnerInfo.email_id||[])
 },[])

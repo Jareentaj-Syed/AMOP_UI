@@ -11,7 +11,6 @@ interface PartnerAuthentication {
 const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
   const { partnerData } = usePartnerStore.getState();
   const partnerAuthentication=partnerData["Partner authentication"]?.data?.["Partner authentication"]||{}
-  console.log("partnerData",partnerAuthentication)
   return (
     <div className='p-2'>
       <form>

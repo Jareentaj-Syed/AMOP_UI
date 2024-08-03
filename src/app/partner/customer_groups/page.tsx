@@ -1,29 +1,57 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import { PlusIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
 import TableComponent from '@/app/components/TableComponent/page';
 import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
-import { createModalData, headerMap } from './customer_groups_constants';
-import { customer_table } from './customer_groups_constants';
-import { headers,pagination,generalFields } from './customer_groups_constants';
 import { usePartnerStore } from '../partnerStore';
 
 interface ExcelData {
   [key: string]: any;
 }
 
+type HeaderMap = Record<string, [string, number]>;
+
 const CustomerGroups: React.FC = () => {
-  const [data, setData] = useState<ExcelData[]>(customer_table);
+  const [data, setData] = useState<ExcelData[]>([]);
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
-  const createColumns = createModalData;
+  const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [headers, setHeaders] = useState<string[]>([]);
+  const [headerMap, setHeadersMap] = useState<HeaderMap>({});
+  const [createModalData, setCreateModalData] = useState<any[]>([]);
+  const [generalFields, setGeneralFields] = useState<any>({});
   const { partnerData } = usePartnerStore.getState();
-  const customerGroupsData=partnerData["Customer groups"]?.data?.["Customer groups"]||{}
+  const customerGroupsData = partnerData["Customer groups"] || {};
+
+
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
+    entries.sort((a, b) => a[1][1] - b[1][1]);
+    return Object.fromEntries(entries) as HeaderMap;
+  };
+
+  useEffect(() => {
+    const initializeData = () => {
+      const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
+      setData(data);
+
+      const header_Map = sortHeaderMap(customerGroupsData?.headers_map?.["Customer groups"]?.header_map || {});
+      const headers_ = Object.keys(header_Map);
+      const createModalData_=customerGroupsData?.headers_map?.["Customer groups"]?.pop_up|| [];
+      const generalFields_=customerGroupsData?.data?.["Customer groups"] || {}
+      setHeaders(headers_);
+      setHeadersMap(header_Map);
+      setVisibleColumns(headers_);
+      setGeneralFields(generalFields_);
+      setCreateModalData(createModalData_ )
+    };
+
+    initializeData();
+  }, [customerGroupsData]);
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -86,18 +114,19 @@ const CustomerGroups: React.FC = () => {
           itemsPerPage={10}
           allowedActions={["edit", "delete"]}
           popupHeading='Customer Group'
-          createModalData={createColumns}
+          createModalData={createModalData}
           generalFields={generalFields}
-          pagination={pagination}
+          pagination={{}}
         />
 
         <CreateModal
           isOpen={isCreateModalOpen}
           onClose={handleCreateModalClose}
           onSave={handleCreateRow}
-          columnNames={createColumns}
+          columnNames={createModalData}
           heading='Customer Group'
-          header={Object.keys(data[0])}
+          header={data.length>0?Object.keys(data[0]):[]}
+          generalFields={generalFields}
         />
       </div>
     </div>
