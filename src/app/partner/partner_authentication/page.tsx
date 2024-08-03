@@ -24,7 +24,7 @@ const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
             <input
               type="text"
               className="non-editable-input "
-              value={partnerAuthentication.client_id?.partnerAuthentication.client_id||"NA"}
+              value={partnerAuthentication.client_id||"NA"}
               readOnly
             />
           </div>
@@ -35,7 +35,7 @@ const PartnerAuthentication: React.FC<PartnerAuthentication> = () => {
             <input
               type="text"
               className="non-editable-input "
-              value={partnerAuthentication.client_secret?.partnerAuthentication.client_secret||"NA"}
+              value={partnerAuthentication.client_secret||"NA"}
               readOnly
             />
           </div>

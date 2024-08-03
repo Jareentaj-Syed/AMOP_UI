@@ -62,12 +62,12 @@ const roleData = {
                 name: "Optimization",
                 emailAlerts: ["Performance milestone reached"]
             },
-       
+
             {
                 name: "Automation",
                 emailAlerts: ["Performance milestone reached"]
             },
-       
+
         ]
     },
     "Notification Only User": {
@@ -84,7 +84,7 @@ const roleData = {
                 name: "Customer Charges",
                 emailAlerts: ["User registration", "System outage"]
             },
-         
+
             {
                 name: "LNP",
                 emailAlerts: ["Performance milestone reached"]
@@ -93,8 +93,8 @@ const roleData = {
                 name: "Automation",
                 emailAlerts: ["System outage", "Performance milestone reached"]
             },
-           
-           
+
+
         ]
     },
     "Partner Admin": {
@@ -103,12 +103,12 @@ const roleData = {
                 name: "Sim Management",
                 emailAlerts: ["User registration", "Content update", "System outage", "Monthly sales summary"]
             },
-            
+
             {
                 name: "Customer Charges",
                 emailAlerts: ["User registration", "Content update", "System outage"]
             },
-          
+
         ]
     },
     "Super Admin": {
@@ -125,7 +125,7 @@ const roleData = {
                 name: "Automation",
                 emailAlerts: ["Content update", "System outage", "Performance milestone reached"]
             },
-         
+
             {
                 name: "Settings",
                 emailAlerts: ["Monthly sales summary"]
@@ -138,12 +138,12 @@ const roleData = {
                 name: "Sim Management",
                 emailAlerts: ["User registration", "Content update", "Monthly sales summary", "Performance milestone reached"]
             },
-           
+
             {
                 name: "Customer Charges",
                 emailAlerts: ["User registration", "Content update", "System outage"]
             },
-          
+
         ]
     }
 };
@@ -151,7 +151,7 @@ const roleData = {
 
 const Notification = () => {
     const { partnerData } = usePartnerStore.getState();
-const partnerInfo=partnerData["Customer groups"]
+    const partnerNotifications=partnerData["Notifications"]?.data?.["Notifications"]||{}
     const [role, setRole] = useState<OptionType | null>(null);
 
     const handleSetRole = (selectedOption: OptionType | null) => {

@@ -19,8 +19,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const { username, partner, role } = useAuth();
   const[logo,setLogo]=useState<string | null>(null);
   const { partnerData } = usePartnerStore.getState();
-  const partnerInfo=partnerData["Partner info"]?.data?.["Partner info"]||{}
-
+  console.log("partnerData",partnerData)
+  const partnerInfo = partnerData?.["Partner info"]?.data?.["Partner info"] || {};
+  console.log("partnerInfo",partnerData["Partner info"],partnerInfo)
+useEffect(()=>{
+  setEmailList(partnerInfo.email_id||[])
+},[])
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
 
@@ -109,7 +113,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={partnerInfo.partner?.partnerInfo.partner || "NA"}
+                value={partnerInfo.partner|| "NA"}
                 readOnly
               />
               {/* value={partnerName} */}
@@ -121,7 +125,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={partnerInfo.sub_partner?.partnerInfo.sub_partner || "NA"}
+                value={partnerInfo.sub_partner || "NA"}
                 readOnly
               />
               {/* value={subPartnerName} */}

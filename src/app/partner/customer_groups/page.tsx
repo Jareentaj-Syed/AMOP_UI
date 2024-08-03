@@ -23,7 +23,8 @@ const CustomerGroups: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(headers);
   const createColumns = createModalData;
   const { partnerData } = usePartnerStore.getState();
-  const partnerInfo=partnerData["Customer groups"]
+  const customerGroupsData=partnerData["Customer groups"]?.data?.["Customer groups"]||{}
+
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
