@@ -43,8 +43,8 @@ interface ExcelData {
 
 const UserRole: React.FC = () => {
     const { partnerData } = usePartnerStore.getState();
-  const partnermoduleaccess=partnerData["Partner module access"]
-  console.log("Partner module access",partnermoduleaccess)
+    const partnermoduleaccess=partnerData["Partner module access"]
+    console.log("Partner module access",partnermoduleaccess)
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
@@ -52,6 +52,8 @@ const UserRole: React.FC = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [map, setMap] = useState<ExcelData>({});
     console.log("partner module data:", partnerModuleData)
+    console.log("partner data:", partnerModuleData.data["Partner module access"])
+    console.log("roledata",partnerModuleData.data["Partner module access"]["role_module"])
     const editableDrp = DropdownStyles;
     const colorPalette = [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
@@ -130,7 +132,8 @@ const UserRole: React.FC = () => {
     });
     
     
-    const rawData = partnerModuleData.role_module;
+    const rawData = partnerModuleData.data["Partner module access"]["role_module"];
+
 
     const transformData = (data: typeof rawData): Data => {
         const transformedData: Data = {};
@@ -180,12 +183,14 @@ const UserRole: React.FC = () => {
         }
     };
 
+  console.log(partnerModuleData.data["Partner module access"]["role_name"])
 
-
-    const Roleoptions = partnerModuleData.Roles.map((role: Role) => ({
-        value: role.rolename,
-        label: role.rolename,
+    const Roleoptions =  partnerModuleData.data["Partner module access"]["role_name"].map((role: any) => ({
+        value: role,
+        label: role,
     }));
+
+    console.log(Roleoptions)
 
     const handleSubmit = () => {
         const errors: string[] = [];
