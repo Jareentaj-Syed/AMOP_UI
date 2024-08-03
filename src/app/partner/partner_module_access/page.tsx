@@ -43,7 +43,8 @@ interface ExcelData {
 
 const UserRole: React.FC = () => {
     const { partnerData } = usePartnerStore.getState();
-  const partnerInfo=partnerData["Partner info"]
+  const partnermoduleaccess=partnerData["Partner module access"]
+  console.log("Partner module access",partnermoduleaccess)
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});

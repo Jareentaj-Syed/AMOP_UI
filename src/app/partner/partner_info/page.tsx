@@ -46,14 +46,12 @@ useEffect(()=>{
         const data = {
           tenant_name: partner || "default_value",
           username: username,
-          path: "/update_partner_info",
+          path: "/update_partner_data",
           role_name: role,
-          module_name: "Partner info",
-          pages: {
-            "Customer groups": { start: 0, end: 10 },
-            "Partner users": { start: 0, end: 10 }
-          },
-          updated_data:{
+          "parent_module": "Partner",
+          "module_name": ["Partner info"],
+          action: "update",
+          changed_data:{
             email_ids: emailList,
             logo:"Logo-design-illustration-on-transparent-background-PNG"
 

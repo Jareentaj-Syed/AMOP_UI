@@ -250,7 +250,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
           <Select
-            value={{ value: role_name, label: role_name }}
+            value={rowData?{value:getFieldValue('Role'),label:getFieldValue('Role')}:{ value: role_name, label: role_name }}
             onChange={handlesetRole}
             options={Roleoptions.map((option: string) => ({
               label: option,

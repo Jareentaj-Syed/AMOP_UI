@@ -7,6 +7,7 @@ import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import { usePartnerStore } from '../partnerStore';
+import { Modal } from 'antd';
 
 interface ExcelData {
   [key: string]: any;
@@ -75,7 +76,14 @@ const CustomerGroups: React.FC = () => {
     XLSX.utils.book_append_sheet(workbook, worksheet, "E911Customers");
     XLSX.writeFile(workbook, "CustomerGroups.xlsx");
   };
-
+if(headers.length<1){
+  console.log(customerGroupsData)
+  Modal.error({
+    title: 'Error',
+    content:customerGroupsData||'Unable to fetch table.',
+    centered: true,
+});
+}
   return (
     <div className="container">
       <div className='p-4'>

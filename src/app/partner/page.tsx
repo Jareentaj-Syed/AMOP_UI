@@ -80,6 +80,7 @@ const Partner: React.FC = () => {
                                 tab.setLoaded(true);
                             }
                             else{
+                                tab.setter(parseddata.message);
                             // Modal.error({
                             //     title: 'Login Error',
                             //     content: 'An error occurred during fetching data.',
