@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
+import { usePartnerStore } from '../partnerStore';
 
 type OptionType = {
     value: string;
@@ -41,6 +42,8 @@ interface ExcelData {
 }
 
 const UserRole: React.FC = () => {
+    const { partnerData } = usePartnerStore.getState();
+  const partnerInfo=partnerData["Partner info"]
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});

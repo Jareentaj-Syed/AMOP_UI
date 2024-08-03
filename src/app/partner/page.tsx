@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../components/auth_context';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
-import { usePartnerStore,getPartnerData } from './partnerStore';
+import { usePartnerStore} from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
 const PartnerInfo = dynamic(() => import('./partner_info/page'));
@@ -29,6 +29,7 @@ const Partner: React.FC = () => {
     const [partnerUsersLoaded, setPartnerUsersLoaded] = useState(false);
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const title = useLogoStore((state) => state.title);
+
 
 
     const isExpanded = useSidebarStore((state: any) => state.isExpanded);
@@ -85,7 +86,6 @@ const Partner: React.FC = () => {
                             //     centered: true,
                             // });
                             }
-                            console.log("tab.module",parseddata)
                            
                         }
                         else {
@@ -107,7 +107,6 @@ const Partner: React.FC = () => {
             } finally {
                 setLoading(false);
             }
-            console.log("totalData",getPartnerData)
         };
 
         fetchData();

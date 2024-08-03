@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '../EmailModal';
 import { Modal } from 'antd';
-import { partner_name, sub_partner } from './partner_info_constants';
 import axios from 'axios';
 import { useAuth } from "@/app/components/auth_context";
+import { usePartnerStore } from '../partnerStore';
 
 
 interface PartnerInfo {
@@ -18,6 +18,8 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const { username, partner, role } = useAuth();
   const[logo,setLogo]=useState<string | null>(null);
+  const { partnerData } = usePartnerStore.getState();
+  const partnerInfo=partnerData["Partner info"]?.data?.["Partner info"]||{}
 
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
@@ -107,7 +109,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={partner_name}
+                value={partnerInfo.partner?.partnerInfo.partner || "NA"}
                 readOnly
               />
               {/* value={partnerName} */}
@@ -119,7 +121,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
               <input
                 type="text"
                 className="non-editable-input"
-                value={sub_partner || "NA"}
+                value={partnerInfo.sub_partner?.partnerInfo.sub_partner || "NA"}
                 readOnly
               />
               {/* value={subPartnerName} */}

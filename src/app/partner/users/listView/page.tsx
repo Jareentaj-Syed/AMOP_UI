@@ -8,10 +8,8 @@ import SearchInput from '../../../components/Search-Input';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import CreateUser from '../createUser/page';
-// import { headerMap, users_table } from '../users_constants';
-// import { headers ,pagination} from '../users_constants';
+import { usePartnerStore } from '../../partnerStore';
 import { useUserStore } from '../createUser/createUserStore';
-// import { headers } from '../../customer_groups/customer_groups_constants';
 
 
 interface ExcelDataRow {
@@ -24,7 +22,8 @@ const ListView: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]); // Initialize visibleColumns with headers
   const [showCreateUser, setShowCreateUser] = useState(false);
   const router = useRouter();
-
+  const { partnerData } = usePartnerStore.getState();
+  const partnerInfo=partnerData["Partner info"]
   const createUser = dynamic(() => import('../createUser/page'));
   const handleCreateClick = () => {
     setShowCreateUser(true);

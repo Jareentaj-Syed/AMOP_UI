@@ -1,6 +1,7 @@
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import React, { useState } from 'react';
 import Select from 'react-select';
+import { usePartnerStore } from '../partnerStore';
 
 // Define the type for options
 type OptionType = { value: string; label: string };
@@ -149,6 +150,8 @@ const roleData = {
 
 
 const Notification = () => {
+    const { partnerData } = usePartnerStore.getState();
+const partnerInfo=partnerData["Customer groups"]
     const [role, setRole] = useState<OptionType | null>(null);
 
     const handleSetRole = (selectedOption: OptionType | null) => {
