@@ -422,6 +422,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
 
     updatedData[rowIndex] = row;
+    console.log(row)
     setCurrentRowData(row)
     setRowData(updatedData);
     setEnableModalOpen(false);
@@ -435,7 +436,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         let data;
         if (popupHeading === "Carrier") {
           if (currentRowData) {
-            currentRowData["lastmodifiedby"] = username
+            currentRowData["last_modified_by"] = username
           }
           data = {
             tenant_name: partner || "default_value",
@@ -467,7 +468,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         }
         if (popupHeading === "User") {
           if (currentRowData) {
-            currentRowData["modifiedby"] = username
+            currentRowData["modified_by"] = username
 
           }
           data = {
@@ -482,7 +483,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         }
         if (popupHeading === "UserModule") {
           if (currentRowData) {
-            currentRowData["modifiedby"] = username
+            currentRowData["modified_by"] = username
           }
           data = {
             tenant_name: partner || "default_value",
@@ -495,6 +496,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           };
         }
         const response = await axios.post(url, { data });
+        const resp = JSON.parse(response.data.body);
+        console.log(resp)
+          
 
       } catch (err) {
         console.error("Error fetching data:", err);

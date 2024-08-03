@@ -178,6 +178,15 @@ useEffect(() => {
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
 
+      if (resp.flag === false) {
+        console.log(resp.message)
+        Modal.error({
+          title: 'Export Error',
+          content: resp.message ,
+          centered: true,
+        });
+      }
+
       downloadBlob(blob)
       
       // Close the modal after exporting

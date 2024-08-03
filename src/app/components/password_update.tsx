@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from './auth_context';
 import axios from 'axios';
 import { useLogoStore } from '../stores/logoStore';
+import { getCurrentDateTime } from './header_constants';
 
 const PasswordUpdate: React.FC = () => {
     const [newPassword, setNewPassword] = useState('');
@@ -43,7 +44,7 @@ const PasswordUpdate: React.FC = () => {
             path: "/password_reset",
             username: username,
             New_password:newPassword,
-           
+            request_received_at: getCurrentDateTime()
           };
           try {
             const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/user_auth";

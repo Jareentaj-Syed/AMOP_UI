@@ -149,14 +149,24 @@ const E911Customers: React.FC = () => {
 
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
-
-      downloadBlob(blob)
+      console.log(resp)
+        // Close the modal after exporting
       
-      // Close the modal after exporting
+      if (resp.flag === false) {
+        console.log(resp.message)
+        Modal.error({
+          title: 'Export Error',
+          content: resp.message ,
+          centered: true,
+        });
+      }
+ 
       handleExportModalClose();
+      downloadBlob(blob)
+    
     } catch (error) {
-      console.error("Error downloading the file:", error);
-      Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
+      // console.error("Error downloading the file:", error);
+      // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
  

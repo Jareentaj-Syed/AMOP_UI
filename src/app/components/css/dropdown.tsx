@@ -44,24 +44,26 @@ export const DropdownStyles = {
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
         textAlign: 'left',
         padding: '2px',
+        zIndex: 2,
         '&:hover': {
-        borderColor: '#3B82F6'
+            borderColor: '#3B82F6'
         }
     }),
     singleValue: (provided: any) => ({
         ...provided,
         color: 'black',
     }),
-    // menu: (provided: any) => ({
-    //     ...provided,
-    //     backgroundColor: '#F9FAFB',
-    // }),
+    menu: (provided: any) => ({
+        ...provided,
+        backgroundColor: '#F9FAFB',
+        zIndex: 9999
+    }),
     option: (provided: any, state: any) => ({
         ...provided,
         backgroundColor: state.isSelected ? '#BFDBFE' : '',
         color: 'black',
         ':hover': {
-        backgroundColor: '#BFDBFE',
-    },
+            backgroundColor: '#BFDBFE',
+        },
     }),
 };

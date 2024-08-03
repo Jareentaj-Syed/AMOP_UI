@@ -7,7 +7,7 @@ import {
   AdjustmentsHorizontalIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button, Modal, Popover, Spin,DatePicker } from "antd";
+import { Button, Modal, Popover, Spin,DatePicker, notification } from "antd";
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -139,6 +139,12 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     );
   }
 
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
+  };
   const handleCreateRow = (newRow: any,tableData:any) => {
     // const updatedData = [...tableData, newRow];
     setTable(tableData);
@@ -182,12 +188,36 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
       });
 
       const resp = JSON.parse(response.data.body);
+      console.log(resp)
       const blob = resp.blob;
 
+      if (resp.flag === false) {
+        console.log(resp.message)
+        Modal.error({
+          title: 'Export Error',
+          content: resp.message ,
+          centered: true,
+        });
+      }
+
       downloadBlob(blob)
+
+
       
       // Close the modal after exporting
       handleExportModalClose();
+
+      // if () {
+        // Show success message
+        // notification.success({
+        //   message: 'Success',
+        //   description: 'More than 500 records!',
+        //   style: messageStyle,
+        //   placement: 'top', // Apply custom styles here
+        // });
+      //   Modal.error({ title: 'Export Error', content: 'More than 500 records!' });
+
+      // }
     } catch (error) {
       console.error("Error downloading the file:", error);
       Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });

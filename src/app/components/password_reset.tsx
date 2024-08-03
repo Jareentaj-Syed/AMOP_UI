@@ -38,7 +38,7 @@ const PasswordReset: React.FC = () => {
     const data = {
       path: "/reset_password_email",
       username: username,
-      email: email,
+      // email: email,
       request_received_at: getCurrentDateTime()
     };
 
@@ -118,19 +118,7 @@ const PasswordReset: React.FC = () => {
               value={username} // Bind the input value
               onChange={(e) => setUsername(e.target.value)} // Update state on change
             />
-            <Input
-              placeholder="Email"
-              style={{
-                width: '320px',
-                height: '35px',
-                backgroundColor: '#F7F9FA',
-                padding: '6px 12px',
-                borderRadius: '1px',
-                borderColor: '#ccc',
-              }}
-              value={email} // Bind the input value
-              onChange={(e) => setEmail(e.target.value)} // Update state on change
-            />
+
             <div className="flex justify-end w-full mt-4">
               <Button
                 type="primary"
@@ -174,3 +162,19 @@ const PasswordReset: React.FC = () => {
 };
 
 export default PasswordReset;
+
+
+
+{/* <Input
+placeholder="Email"
+style={{
+  width: '320px',
+  height: '35px',
+  backgroundColor: '#F7F9FA',
+  padding: '6px 12px',
+  borderRadius: '1px',
+  borderColor: '#ccc',
+}} */}
+// value={email} // Bind the input value
+// onChange={(e) => setEmail(e.target.value)} // Update state on change
+// />

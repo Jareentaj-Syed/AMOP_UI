@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { Modal, Spin } from 'antd';
 import { useLogoStore } from "@/app/stores/logoStore";
+import { getCurrentDateTime } from '@/app/components/header_constants';
 
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
@@ -29,6 +30,8 @@ const Page: React.FC = () => {
   const { username, partner, role } = useAuth();
   const [rolesDataHeadersMap, setRolesDataHeadersMap] =useState<any>({});
   const [moduleDataHeadersMap, setModuleDataHeadersMap] = useState<any>({});
+  const [partnerMenuIsOpen, setPartnerMenuIsOpen] = useState(false);
+  const [subPartnerMenuIsOpen, setSubPartnerMenuIsOpen] = useState(false);
   const title = useLogoStore((state) => state.title);
   useEffect(() => {
     if(title!="Super Admin"){
@@ -115,7 +118,8 @@ const Page: React.FC = () => {
         flag: "withparameters",
         Partner: selectedPartner,
         sub_partner: selectedSubPartner,
-        modules:["role partner module","partner module"]
+        modules:["role partner module","partner module"],
+        request_received_at: getCurrentDateTime()
          // Send selected sub-partner
       };
   
@@ -172,7 +176,19 @@ const Page: React.FC = () => {
       setLoading(false);
     }
   };
-  
+  useEffect(() => {
+    const handleScroll = () => {
+     setPartnerMenuIsOpen(false)
+     setSubPartnerMenuIsOpen(false)
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   
 
@@ -180,6 +196,7 @@ const Page: React.FC = () => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
+      setPartnerMenuIsOpen(false)
       setSubPartners(PartnersData[partner] || []);
     } else {
       setSelectedPartner('');
@@ -191,6 +208,7 @@ const Page: React.FC = () => {
     if (selectedOption) {
       const subPartner = selectedOption.value;
       setSelectedSubPartner(subPartner);
+      setSubPartnerMenuIsOpen(false)
     } else {
       setSelectedSubPartner('');
     }
@@ -204,6 +222,22 @@ const Page: React.FC = () => {
     );
   }
 
+
+  const handlePartnerBlur = () => {
+    setPartnerMenuIsOpen(false);
+  };
+
+  const handlePartnerFocus = () => {
+    setPartnerMenuIsOpen(true);
+  };
+
+  const handleSubPartnerBlur = () => {
+    setSubPartnerMenuIsOpen(false);
+  };
+
+  const handleSubPartnerFocus = () => {
+    setSubPartnerMenuIsOpen(true);
+  };
   return (
     <div className='bg-gray-50'>
       <div className='p-3 pl-2 pr-2'>
@@ -214,20 +248,29 @@ const Page: React.FC = () => {
     <div className="w-[320px]">
       <label className="field-label">Partner</label>
       <Select
-        value={Partneroptions.find(option => option.value === selectedPartner) || null}
-        onChange={handlePartnerChange}
-        options={Partneroptions}
-        styles={editableDrp}
-      />
+            value={Partneroptions.find(option => option.value === selectedPartner) || null}
+            onChange={handlePartnerChange}
+            options={Partneroptions}
+            menuIsOpen={partnerMenuIsOpen}
+            onFocus={handlePartnerFocus}
+            onBlur={handlePartnerBlur}
+            blurInputOnSelect
+            styles={editableDrp}
+          />
     </div>
     <div className="w-[320px]">
       <label className="field-label">Sub Partner</label>
       <Select
-        onChange={handleSubpartnerChange}
-        options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-        className="mt-1"
-        styles={editableDrp}
-      />
+            value={subPartnersoptions.find(option => option.value === selectedSubPartner) || null}
+            onChange={handleSubpartnerChange}
+            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+            menuIsOpen={subPartnerMenuIsOpen}
+            onFocus={handleSubPartnerFocus}
+            onBlur={handleSubPartnerBlur}
+            blurInputOnSelect
+            className="mt-1"
+            styles={editableDrp}
+          />
     </div>
     <button
       className='save-btn mt-7'
