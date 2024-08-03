@@ -33,7 +33,9 @@ interface AuthContextType {
   modules: any[]; // Add modules to context
   setModules: (modules: any[]) => void; 
   loading: boolean;
-   setLoading: (value: boolean) => void;// Method to set modules
+   setLoading: (value: boolean) => void;
+   tabledata: any[];
+   settabledata: (data: any[]) => void;// Method to set modules
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -47,7 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [username, setUsername] = useState<string | null>(null);
   const [selectedPartnerModule, setSelectedPartnerModule] = useState<string | null>(null);
   const [Environment, setSelectedEnvironment] = useState<string | null>(null);
-
+  const [tabledata, settabledata] = useState<any[]>([]);
   const [showPasswordUpdate, setShowPasswordUpdate] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [tenantNames, setTenantNames] = useState<string[]>([]);
@@ -156,6 +158,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         loading,
         setLoading,
+        tabledata,settabledata,
         selectedPartnerModule,
         setSelectedPartnerModule,
         Environment,

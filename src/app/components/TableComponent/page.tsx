@@ -21,6 +21,7 @@ import { changeDetailCellRenderer } from './data-grid-cell-renderers/change-deta
 import { useAuth } from '../auth_context';
 import axios from 'axios';
 import { getCurrentDateTime } from '../header_constants';
+import { table } from 'console';
 
 
 
@@ -51,8 +52,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [state, setState] = useState<string>("");
   const [rowIndex, setRowIndex] = useState<number>(0);
   const [columnName, setColumnName] = useState<string>("");
-
-
   const [selectAll, setSelectAll] = useState(false);
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [EnableModalOpen, setEnableModalOpen] = useState(false); // State for Enable Modal
@@ -62,7 +61,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const { username, tenantNames, role, partner, selectedPartnerModule, Environment } = useAuth()
+  const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata } = useAuth()
 
   useEffect(() => {
     if (!router) {
@@ -171,12 +170,19 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
     setSelectedRows(newSelectedRows);
   };
-
+  
+  
   useEffect(() => {
-    setRowData(initialData);
-    // console.log("initialdata",initialData)
-    // console.log(headers)
-  }, [initialData]);
+   
+    if (tabledata) {
+      console.log("table data", tabledata);
+      setRowData(tabledata);
+      console.log("rowdata", rowData)
+      // window.location.reload(); // Refresh the page if there is tabledata
+    } else {
+      setRowData(initialData);
+    }
+  }, [tabledata, initialData]);
 
   // useEffect(() => {
   //   // Filter row data based on search query
@@ -311,7 +317,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             module_name: "Customer groups",
             action: "delete",
-            updated_data: row
+            updated_data: row,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (popupHeading === "User") {
@@ -322,12 +329,17 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             module_name: "Partner users",
             action: "delete",
-            updated_data: row
+            updated_data: row,
+            request_received_at: getCurrentDateTime(),
           };
         }
 
         if (popupHeading === "E911 Customer") {
 
+          if (row) {
+            row["modified_by"] = username;
+            row["modified_date"]= getCurrentDateTime()
+          }
           data = {
             tenant_name: partner || "default_value",
             username: username,
@@ -338,10 +350,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": "customers",
             "changed_data": row,
             action: "delete",
+            request_received_at: getCurrentDateTime(),
 
           };
         }
         if (popupHeading === " NetSapien Customer") {
+          if (row) {
+            row["modified_by"] = username;
+            row["modified_date"]= getCurrentDateTime()
+          }
           data = {
             tenant_name: partner || "default_value",
             username: username,
@@ -352,29 +369,89 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": " customers",
             "changed_data": row,
             action: "delete",
+            request_received_at: getCurrentDateTime(),
           };
+          
         }
         const response = await axios.post(url, { data });
         if (response && response.status === 200) {
           // Show success message
-          // notification.success({
-          //   message: 'Success',
-          //   description: 'Successfully Deleted the record!',
-          //   style: messageStyle,
-          //   placement: 'top', // Apply custom styles here
-          // });  //// place it after you make the call to load the table data
+          notification.success({
+            message: 'Success',
+            description: 'Successfully Deleted the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });  
+          
+          if (popupHeading === "E911 Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "E911 Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+              request_received_at: getCurrentDateTime(),
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+              const customertableData = parsedData.data.WestE911Customer;
+              setRowData(customertableData);
+            }
+          }
+          if (popupHeading === "NetSapien Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people", // Corrected spelling from 'poeple'
+              module_name: "NetSapiens Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+              request_received_at: getCurrentDateTime(),
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            console.log(parsedData)
+            // Check if the flag is false in the parsed data
+            const tableData = parsedData.data.customers;
+            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+            const generalFields = parsedData.data
+            setRowData(tableData);
+          }
         }
 
       } catch (err) {
-        console.error("Error fetching data:", err);
-        // notification.error({
-        //   message: 'Error',
-        //   description: 'Failed to Deleted the record. Please try again.',
-        //   style: messageStyle, 
-        //   placement: 'top',// Apply custom styles here
-        // });  //// place it after you make the call to load the table data
+        // console.error("Error fetching data:", err);
+        notification.error({
+          message: 'Error',
+          description: 'Failed to Deleted the record. Please try again.',
+          style: messageStyle, 
+          placement: 'top',// Apply custom styles here
+        });  //// place it after you make the call to load the table data
       }
-      setRowData(updatedData);
+      // setRowData(updatedData);
 
     }
   };
