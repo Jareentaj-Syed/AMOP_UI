@@ -7,6 +7,7 @@ import { useAuth } from '@/app/components/auth_context';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { createModalData } from './api_constants';
+import TableSearch from '@/app/components/entire_table_search';
 
 interface ExcelData {
   [key: string]: any;
@@ -23,16 +24,16 @@ const CarrierInfo: React.FC = () => {
   const [environment, setEnvironment] = useState<{ value: string; label: string } | null>(null);
   const [selectedPartner, setSelectedPartner] = useState<{ value: string; label: string } | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [pagination,setpagination]=useState<any>({});
-  const [headers,setHeaders]=useState<any[]>([]);
-  const [headerMap,setHeaderMap]=useState<any>({});
-  const [createModalData,setcreateModalData]=useState<any[]>([]);
-  const [generalFields,setgeneralFields]=useState<any[]>([])
+  const [pagination, setpagination] = useState<any>({});
+  const [headers, setHeaders] = useState<any[]>([]);
+  const [headerMap, setHeaderMap] = useState<any>({});
+  const [createModalData, setcreateModalData] = useState<any[]>([]);
+  const [generalFields, setgeneralFields] = useState<any[]>([])
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
 
   useEffect(() => {
-   
-  
+
+
     fetchData();
   }, [username, partner, role]); // Add dependencies if necessary
 
@@ -48,7 +49,7 @@ const CarrierInfo: React.FC = () => {
         sub_module: "Partner API",
         sub_tab: "Amop APIs",
       };
-      
+
       const response = await axios.post(url, { data: data });
       const resp = JSON.parse(response.data.body);
       console.log(resp)
@@ -61,22 +62,22 @@ const CarrierInfo: React.FC = () => {
         });
         return; // Exit early if there's an error
       }
-  
+
       const carrierApis = resp.data.amop_apis_data.amop_apis;
       console.log(carrierApis)
       setTableData(carrierApis);
 
-  
+
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
-  
+
       const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
       setPartnerOptions(partners);
 
-      const headerMap=resp.headers_map["amop apis"]["header_map"]
-      const createModalData=resp.headers_map["amop apis"]["pop_up"]
-      const sortedheaderMap=sortHeaderMap(headerMap)
-      const headers=Object.keys(sortedheaderMap)
+      const headerMap = resp.headers_map["amop apis"]["header_map"]
+      const createModalData = resp.headers_map["amop apis"]["pop_up"]
+      const sortedheaderMap = sortHeaderMap(headerMap)
+      const headers = Object.keys(sortedheaderMap)
       // const generalFields=parsedData.data
       // setgeneralFields(generalFields)
       setHeaders(headers)
@@ -99,17 +100,17 @@ const CarrierInfo: React.FC = () => {
 
   type HeaderMap = Record<string, [string, number]>;
 
-const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
-  // Convert the object to an array of [key, value] pairs
-  const entries = Object.entries(headerMap) as [string, [string, number]][];
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    // Convert the object to an array of [key, value] pairs
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
 
-  // Sort the array based on the second item of each value
-  entries.sort((a, b) => a[1][1] - b[1][1]);
+    // Sort the array based on the second item of each value
+    entries.sort((a, b) => a[1][1] - b[1][1]);
 
-  // Convert the sorted array back to an object
-  return Object.fromEntries(entries) as HeaderMap;
-}
-  
+    // Convert the sorted array back to an object
+    return Object.fromEntries(entries) as HeaderMap;
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       if (environment && selectedPartner) {
@@ -123,7 +124,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             role_name: role,
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
-      
+
             "Environment": environment.value,
             "Partner": selectedPartner.value
           };
@@ -134,25 +135,25 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           // console.log("Partner:", resp.data.role_module_data);
           // console.log("amop_apis_data:", resp.data.amop_apis_data);
           const carrierApis = resp.data.amop_apis_data.amop_apis;
-        
+
           setTableData(carrierApis);
           setLoading(false);
           const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
           setEnvironmentOptions(environments);
-          
+
           const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
           setPartnerOptions(partners);
-          const headerMap=resp.headers_map["amop api"]["header_map"]
-      const createModalData=resp.headers_map["amop api"]["pop_up"]
-      const sortedheaderMap=sortHeaderMap(headerMap)
-      const headers=Object.keys(sortedheaderMap)
-      // const generalFields=parsedData.data
-      // setgeneralFields(generalFields)
-      setHeaders(headers)
-      setHeaderMap(sortedheaderMap)
-      setcreateModalData(createModalData)
-      // setTable(tableData);
-      setVisibleColumns(headers)
+          const headerMap = resp.headers_map["amop api"]["header_map"]
+          const createModalData = resp.headers_map["amop api"]["pop_up"]
+          const sortedheaderMap = sortHeaderMap(headerMap)
+          const headers = Object.keys(sortedheaderMap)
+          // const generalFields=parsedData.data
+          // setgeneralFields(generalFields)
+          setHeaders(headers)
+          setHeaderMap(sortedheaderMap)
+          setcreateModalData(createModalData)
+          // setTable(tableData);
+          setVisibleColumns(headers)
         } catch (err) {
           console.error(err);
         } finally {
@@ -165,7 +166,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
   }, [environment, selectedPartner]); // Add dependencies if necessary
 
 
-  
+
 
   // Show loader until data is fully loaded
   if (loading) {
@@ -192,6 +193,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
                 styles={editableDrp}
               />
             </div>
+            
             <div className='w-[250px] '>
               <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
               <Select
@@ -201,38 +203,44 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
                 styles={editableDrp}
               />
             </div>
-           
+            <div className=''>
+              <TableSearch
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                tableName={"amop_apis"}
+                headerMap={headerMap} />
+            </div>
           </div>
           <div className='mt-5 ml-3'>
-          <button
+            <button
               className='save-btn'
               type="submit"
               onClick={() => fetchData()}
             >
               Clear
             </button>
-            </div>
+          </div>
           <div className="ml-auto mt-4">
             <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
         </div>
 
         <div className="container mx-auto">
-       
-            <TableComponent
-              headers={headers}
-              headerMap={headerMap}
-              initialData={tableData}
-              searchQuery={searchTerm}
-              visibleColumns={headers}
-              itemsPerPage={100}
-              allowedActions={["edit"]}
-              popupHeading='API'
-              createModalData={createModalData}
-              pagination={pagination}
-              advancedFilters={[]}
-            />
-          
+
+          <TableComponent
+            headers={headers}
+            headerMap={headerMap}
+            initialData={tableData}
+            searchQuery={searchTerm}
+            visibleColumns={headers}
+            itemsPerPage={100}
+            allowedActions={["edit"]}
+            popupHeading='API'
+            createModalData={createModalData}
+            pagination={pagination}
+            advancedFilters={[]}
+          />
+
         </div>
       </div>
     </div>

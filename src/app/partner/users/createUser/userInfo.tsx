@@ -295,7 +295,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <label className="field-label">Notification Enable<span className="text-red-500">*</span></label>
             <Select
               styles={editableDrp}
-              value={getFieldValue('Notification Enable')}
+              value={rowData?{value:getFieldValue('Notification Enable'),label:getFieldValue('Notification Enable')}:{value:'',label:''}}
               options={Notificationoptions}
               onChange={handleNotification}
             />

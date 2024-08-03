@@ -7,7 +7,7 @@ import {
   AdjustmentsHorizontalIcon,
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button, Modal, Popover, Spin,DatePicker, notification } from "antd";
+import { Button, Modal, Popover, Spin, DatePicker, notification } from "antd";
 import TableComponent from "@/app/components/TableComponent/page";
 import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -17,6 +17,7 @@ import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useLogoStore } from "@/app/stores/logoStore";
 import dayjs, { Dayjs } from "dayjs";
+import TableSearch from "@/app/components/entire_table_search";
 
 // State to manage loading
 
@@ -29,36 +30,36 @@ const BandWidthCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   // const createColumns = createModalData;
   const { username, partner, role } = useAuth();
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
   const title = useLogoStore((state) => state.title);
-  const [pagination,setpagination]=useState<any>({});
-  const [headers,setHeaders]=useState<any[]>([]);
-  const [headerMap,setHeaderMap]=useState<any>({});
-  const [createModalData,setcreateModalData]=useState<any[]>([]);
-  const [generalFields,setgeneralFields]=useState<any[]>([])
+  const [pagination, setpagination] = useState<any>({});
+  const [headers, setHeaders] = useState<any[]>([]);
+  const [headerMap, setHeaderMap] = useState<any>({});
+  const [createModalData, setcreateModalData] = useState<any[]>([]);
+  const [generalFields, setgeneralFields] = useState<any[]>([])
   const [isExportModalOpen, setExportModalOpen] = useState(false);
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
 
   useEffect(() => {
-    if(title!="People"){
-        setLoading(true)
+    if (title != "People") {
+      setLoading(true)
     }
-},[title])
+  }, [title])
 
-type HeaderMap = Record<string, [string, number]>;
+  type HeaderMap = Record<string, [string, number]>;
 
-const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
-  const entries = Object.entries(headerMap) as [string, [string, number]][];
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
 
-  entries.sort((a, b) => a[1][1] - b[1][1]);
+    entries.sort((a, b) => a[1][1] - b[1][1]);
 
-  return Object.fromEntries(entries) as HeaderMap;
-}
+    return Object.fromEntries(entries) as HeaderMap;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,14 +87,14 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
             centered: true,
           });
-        }else{
+        } else {
           const tableData = parsedData.data.customers;
-          const headerMap=parsedData.headers_map["Bandwidth Customers"]["header_map"]
-          const createModalData=parsedData.headers_map["Bandwidth Customers"]["pop_up"]
-          const sortedheaderMap=sortHeaderMap(headerMap)
-          const headers=Object.keys(sortedheaderMap)
-          const generalFields=parsedData.data
-          setgeneralFields(generalFields) 
+          const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+          const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+          const sortedheaderMap = sortHeaderMap(headerMap)
+          const headers = Object.keys(sortedheaderMap)
+          const generalFields = parsedData.data
+          setgeneralFields(generalFields)
           setHeaders(headers)
           setHeaderMap(headerMap)
           setcreateModalData(createModalData)
@@ -103,21 +104,21 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           setLoading(false)
 
         }
-       
-    } catch (error) {
-      
-      console.error("Error fetching data:", error);
-      Modal.error({
-        title: 'Data Fetch Error',
-        content: error instanceof Error ? error.message : 'An unexpected error occurred while fetching data. Please try again.',
-        centered: true,
-      });
-    } finally {
-      setLoading(false); // Ensure loading is set to false in the finally block
-    }
-  };
-  fetchData()
-},[])
+
+      } catch (error) {
+
+        console.error("Error fetching data:", error);
+        Modal.error({
+          title: 'Data Fetch Error',
+          content: error instanceof Error ? error.message : 'An unexpected error occurred while fetching data. Please try again.',
+          centered: true,
+        });
+      } finally {
+        setLoading(false); // Ensure loading is set to false in the finally block
+      }
+    };
+    fetchData()
+  }, [])
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -142,7 +143,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     padding: '16px',
     // Add padding
   };
-  const handleCreateRow = (newRow: any,tableData:any) => {
+  const handleCreateRow = (newRow: any, tableData: any) => {
     // const updatedData = [...tableData, newRow];
     setTable(tableData);
     setTableData(tableData);
@@ -171,10 +172,10 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
       path: "/export",
       username: username,
       table: "customers",
-      module_name:"Bandwidth Customers",
+      module_name: "Bandwidth Customers",
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
-        end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
+      end_date: endDate.format("YYYY-MM-DD 23:59:59"),
     };
 
     try {
@@ -194,26 +195,41 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
         console.log(resp.message)
         Modal.error({
           title: 'Export Error',
-          content: resp.message ,
+          content: resp.message,
           centered: true,
         });
       }
- 
-      handleExportModalClose();
+
       downloadBlob(blob)
-    
+
+
+
+      // Close the modal after exporting
+      handleExportModalClose();
+
+      // if () {
+      // Show success message
+      // notification.success({
+      //   message: 'Success',
+      //   description: 'More than 500 records!',
+      //   style: messageStyle,
+      //   placement: 'top', // Apply custom styles here
+      // });
+      //   Modal.error({ title: 'Export Error', content: 'More than 500 records!' });
+
+      // }
     } catch (error) {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
- 
+
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
 
@@ -224,12 +240,12 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-};
+  };
 
-const disableFutureDates = (current:any) => {
-  console.log("future dates:",current && current > dayjs().endOf('day'));
-  return current && current > dayjs().endOf('day'); // Disable future dates
-};
+  const disableFutureDates = (current: any) => {
+    console.log("future dates:", current && current > dayjs().endOf('day'));
+    return current && current > dayjs().endOf('day'); // Disable future dates
+  };
 
   return (
     <div className="container mx-auto">
@@ -254,22 +270,29 @@ const disableFutureDates = (current:any) => {
           </button>
         </div>
       </div>
+      <div className="mb-4">
+      <TableSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            tableName={"Bandwidth Customers"}
+            headerMap={headerMap} />
+      </div>
+      
 
-   
-        <TableComponent
-          headers={headers}
-          headerMap={headerMap}
-          initialData={tableData}
-          searchQuery={searchTerm}
-          visibleColumns={visibleColumns}
-          itemsPerPage={100}
-          allowedActions={["info","edit"]}
-          popupHeading="Bandwidth Customer"
-          createModalData={createModalData}
-          pagination={pagination}
-          generalFields={generalFields}
-        />
-    
+      <TableComponent
+        headers={headers}
+        headerMap={headerMap}
+        initialData={tableData}
+        searchQuery={searchTerm}
+        visibleColumns={visibleColumns}
+        itemsPerPage={100}
+        allowedActions={["info", "edit"]}
+        popupHeading="Bandwidth Customer"
+        createModalData={createModalData}
+        pagination={pagination}
+        generalFields={generalFields}
+      />
+
 
       <CreateModal
         isOpen={isCreateModalOpen}
@@ -294,8 +317,8 @@ const disableFutureDates = (current:any) => {
       >
         <div className="flex flex-col space-y-4">
           <span>Select Date Range:</span>
-          <RangePicker 
-         value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+          <RangePicker
+            value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
             onChange={(dates) => {
               console.log("Selected dates:", dates); // Debug log
               if (dates && dates.length === 2) {
@@ -303,7 +326,7 @@ const disableFutureDates = (current:any) => {
               } else {
                 setDateRange([null, null]); // Reset to null if dates are not both available
               }
-            }} 
+            }}
             format="YYYY-MM-DD"
             disabledDate={disableFutureDates}
           />

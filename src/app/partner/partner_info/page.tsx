@@ -46,7 +46,7 @@ useEffect(()=>{
         const data = {
           tenant_name: partner || "default_value",
           username: username,
-          path: "/update_partner_data",
+          path: "/update_partner_info",
           role_name: role,
           "parent_module": "Partner",
           "module_name": ["Partner info"],
