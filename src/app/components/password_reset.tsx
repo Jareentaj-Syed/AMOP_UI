@@ -21,12 +21,12 @@ const PasswordReset: React.FC = () => {
   };
 
   const handleReset = async () => {
-    if (!username || !email) {
+    if (!username) {
       // Set the appropriate message based on which fields are missing
       setModalMessage(
-        !username && !email ? 'Please enter both username and email address to reset your password.' :
+        // !username && !email ? 'Please enter both username and email address to reset your password.' :
         !username ? 'Please enter a username to reset your password.' :
-        'Please enter an email address to reset your password.'
+        ''
       );
       setIsModalVisible(true);
       setShowPassword(false);
@@ -52,6 +52,7 @@ const PasswordReset: React.FC = () => {
       console.log('Response:', response.data);
       if(response.data&&response.data&&response.data.statusCode===200){
         setShowLogin(true);
+      
       }
       else{
         const parsedData=JSON.parse(response.data.body)

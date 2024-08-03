@@ -14,12 +14,13 @@ import { Modal, Checkbox, notification } from 'antd';
 
 import ActionItems from '@/app/sim_management/inventory/Table-feautures/action-items';
 import AdvancedFilter from '@/app/sim_management/inventory/Table-feautures/advanced-filter';
-import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import { ArrowUpOutlined, ArrowDownOutlined, EnvironmentFilled } from '@ant-design/icons';
 import StatusIndicator from './data-grid-cell-renderers/status-indicator';
 import QuantityCell, { STATUS_TYPE } from './data-grid-cell-renderers/quantity-cell-renderer';
 import { changeDetailCellRenderer } from './data-grid-cell-renderers/change-details-cell';
 import { useAuth } from '../auth_context';
 import axios from 'axios';
+import { getCurrentDateTime } from '../header_constants';
 
 
 
@@ -61,7 +62,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const { username, tenantNames, role, partner } = useAuth()
+  const { username, tenantNames, role, partner, selectedPartnerModule, Environment } = useAuth()
 
   useEffect(() => {
     if (!router) {
@@ -264,7 +265,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       // updatedData[editRowIndex] = updatedRow;
       // setRowData(updatedData);
       handleCloseModal();
-      setRowData(tableData)
+      // setRowData(tableData)
     }
   };
 
@@ -379,7 +380,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setRowIndex(rowIndex)
     setColumnName(col)
     if (apiState) {
-      if (col === "Module_state" || col === "API state") {
+      if (col === "Module State" || col === "API state") {
         state = "Disable";
         setDisableModalOpen(true);
       } else {
@@ -387,7 +388,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setDisableModalOpen(true);
       }
     } else {
-      if (col === "Module_state" || col === "API state") {
+      if (col === "Module State" || col === "API state") {
         state = "Enable";
         setEnableModalOpen(true);
       } else {
@@ -406,37 +407,39 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     const row = updatedData[rowIndex];
     //  console.log("row:", row)
     if (apiState) {
-      if (col === "Module_state" || col === "API state") {
-        row.api_state = true; // Set to true for enable
+      if (col === "Module State" || col === "Role Status") {
+       // Set to true for enable
         row.is_active = true;  // Set to true for active
       } else {
-        row.is_active = true;  // Set to true for active
+        row.api_state = true; // Set to true for active
       }
     } else {
-      if (col === "Module_state" || col === "API state") {
-        row.api_state = false; // Set to false for disable
+      if (col === "Module State" || col === "Role Status") {
+       // Set to false for disable
         row.is_active = false;  // Set to false for inactive
       } else {
-        row.is_active = false;  // Set to false for inactive
+        row.api_state = false;   // Set to false for inactive
       }
     }
 
     updatedData[rowIndex] = row;
     console.log(row)
-    setCurrentRowData(row)
-    setRowData(updatedData);
+    // setCurrentRowData(row)
+    // setRowData(updatedData);
     setEnableModalOpen(false);
     setDisableModalOpen(false);
-    // console.log(currentRowData);
-    if (currentRowData) {
+  
+    if (row) {
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
         let data;
         if (popupHeading === "Carrier") {
-          if (currentRowData) {
-            currentRowData["last_modified_by"] = username
+          if (row) {
+            row["last_modified_by"] = username
+            row["last_modified_date_time"]=getCurrentDateTime()
+            
           }
           data = {
             tenant_name: partner || "default_value",
@@ -446,14 +449,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_module": "Partner API",
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
-            "changed_data": currentRowData
+            "changed_data": row,
+            request_received_at: getCurrentDateTime(),
           };
         }
 
         if (popupHeading === "API") {
-          if (currentRowData) {
-            currentRowData["last_modified_by"] = username
-
+          if (row) {
+            row["last_modified_by"] = username
+            row["last_modified_date_time"]=getCurrentDateTime()
+            console.log(row)
           }
           data = {
             tenant_name: partner || "default_value",
@@ -463,12 +468,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
-            "changed_data": currentRowData
+            "changed_data": row,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (popupHeading === "User") {
-          if (currentRowData) {
-            currentRowData["modified_by"] = username
+          if (row) {
+            row["modified_by"] = username
+            row["modified_date"]=getCurrentDateTime()
 
           }
           data = {
@@ -478,12 +485,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "roles",
-            "changed_data": currentRowData
+            "changed_data": row,
+            request_received_at: getCurrentDateTime(),
           };
         }
         if (popupHeading === "UserModule") {
-          if (currentRowData) {
-            currentRowData["modified_by"] = username
+          if (row) {
+            row["modified_by"] = username
+            row["modified_date"]=getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -492,12 +501,170 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "tenant_module",
-            "changed_data": currentRowData
+            "changed_data": row,
+            request_received_at: getCurrentDateTime(),
           };
         }
         const response = await axios.post(url, { data });
         const resp = JSON.parse(response.data.body);
         console.log(resp)
+        if (response.data.statusCode === 200 && resp.flag === true) {
+
+          notification.success({
+            message: 'Success',
+            description: 'Successfully Edit the record!',
+            style: messageStyle,
+            placement: 'top', // Apply custom styles here
+          });
+          if (popupHeading === "Carrier") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API", 
+                sub_tab: "Carrier APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+              console.log(carrierApis);
+              setRowData(carrierApis)
+              console.log("rowdata:", rowData)
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                // Modal.error({
+                //   title: 'Data Fetch Error',
+                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                //   centered: true,
+                // });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+          if (popupHeading === "API") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API",
+                sub_tab: "Amop APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+              
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              const carrierApis = resp.data.amop_apis_data.amop_apis;
+              // console.log(carrierApis);
+              setRowData(carrierApis)
+              console.log("rowdata:", rowData)
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                // Modal.error({
+                //   title: 'Data Fetch Error',
+                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                //   centered: true,
+                // });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+          if (popupHeading === "UserModule") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner Modules",
+                flag: "withparameters",
+                Partner: selectedPartnerModule,
+                sub_partner:Environment,
+                modules:["role partner module","partner module"],
+                request_received_at: getCurrentDateTime()
+                 // Send selected sub-partner
+              };
+              
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              console.log("role data:", resp.data.roles_data);
+              console.log("module data:", resp.data.role_module_data);
+              // setRowData(resp.data.roles_data)
+              // console.log(rowData)
+              setRowData(resp.data.role_module_data)
+              console.log(rowData)
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                Modal.error({
+                  title: 'Data Fetch Error',
+                  content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                  centered: true,
+                });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+          if (popupHeading === "User") {
+          
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner Modules",
+                flag: "withparameters",
+                Partner: selectedPartnerModule,
+                sub_partner:Environment,
+                modules:["role partner module","partner module"],
+                request_received_at: getCurrentDateTime()
+                
+                 // Send selected sub-partner
+              };
+              
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              console.log(resp)
+              console.log("role data:", resp.data.roles_data);
+              console.log("module data:", resp.data.role_module_data);
+              setRowData(resp.data.roles_data)
+              console.log(rowData)
+              // setRowData(resp.data.role_module_data)
+              // console.log(rowData)
+            }
+              catch (err) {
+                console.error("Error fetching data:", err);
+                // Modal.error({
+                //   title: 'Data Fetch Error',
+                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                //   centered: true,
+                // });
+              } finally {
+                // setLoading(false); // Set loading to false after the request is done
+              }
+          }
+        
+          
+          
+ 
+        }
           
 
       } catch (err) {
@@ -515,7 +682,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ width: '100%' }}
           onClick={() => handleToggle(index, col, false)}
         >
-          {col === "Module_state" || col === "API state" ? (
+          {col === "Module State" || col === "API state" ? (
             <span>Enable</span>
           ) :
             <span>Active</span>}
@@ -527,7 +694,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           style={{ width: '100%' }}
           onClick={() => handleToggle(index, col, true)}
         >
-          {col === "Module_state" || col === "API state" ? (
+          {col === "Module State" || col === "API state" ? (
             <span>Disable</span>
           ) :
             <span>Inactive</span>}
@@ -662,7 +829,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                             checked={selectedRows.map(String).includes(String(index))}
                             style={{ fontSize: '2rem' }}
                           />
-                        ) : (headerMap && headerMap[header][0] === "Module_state") || (headerMap && headerMap[header][0] === "Role_status") || (headerMap && headerMap[header][0] === "API state") ? (
+                        ) : (headerMap && headerMap[header][0] === "Module State") || (headerMap && headerMap[header][0] === "Role Status") || (headerMap && headerMap[header][0] === "API state") ? (
                           renderApiState(row[header], index, headerMap[header][0])
                         ) : (headerMap && headerMap[header][0] === "User status") || header === "User status" ? (
                           renderUserStatus(row[header])

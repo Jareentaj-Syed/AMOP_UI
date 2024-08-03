@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const [headerMap,setHeaderMap]=useState<any>({});
   const [rolesDataHeaders, setRolesDataHeaders] =useState<any[]>([]);
   const [moduleDataHeaders, setModuleDataHeaders] = useState<any[]>([]);
-  const { username, partner, role } = useAuth();
+  const { username, partner, role, setSelectedPartnerModule, setSelectedEnvironment } = useAuth();
   const [rolesDataHeadersMap, setRolesDataHeadersMap] =useState<any>({});
   const [moduleDataHeadersMap, setModuleDataHeadersMap] = useState<any>({});
   const [partnerMenuIsOpen, setPartnerMenuIsOpen] = useState(false);
@@ -196,6 +196,7 @@ const Page: React.FC = () => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setSelectedPartner(partner);
+      setSelectedPartnerModule(partner)
       setPartnerMenuIsOpen(false)
       setSubPartners(PartnersData[partner] || []);
     } else {
@@ -208,6 +209,7 @@ const Page: React.FC = () => {
     if (selectedOption) {
       const subPartner = selectedOption.value;
       setSelectedSubPartner(subPartner);
+      setSelectedEnvironment(subPartner)
       setSubPartnerMenuIsOpen(false)
     } else {
       setSelectedSubPartner('');

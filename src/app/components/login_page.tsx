@@ -11,8 +11,10 @@ const Login: React.FC = () => {
   const { login, loading } = useAuth(); // Get loading state from context
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+    const {isAuthenticated, showPassword}=useAuth();
+  
   const [showPasswordReset, setShowPasswordReset] = useState(false);
-  const isAuthenticated = true; // You may want to adjust this
+ // You may want to adjust this
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,6 +44,14 @@ const Login: React.FC = () => {
               height={55}
             />
           </div>
+          {showPassword && (
+            <div className='bg-[#DFF0D8] p-4 mb-2 border border-green-600 rounded text-center'>
+              <h3 className='text-[#3C763D] font-[13px]'>Password Reset. Please Check your email.</h3>
+            </div>)}
+          {/* {!isAuthenticated && (
+            <div className='bg-[#F2DEDE] p-4 mb-2 border border-red-600 rounded text-center'>
+              <h3 className='text-[#A94442] font-[13px]'>Invalid Login</h3>
+            </div>)} */}
           <h1 className="text-2xl font-bold mb-4" style={{ color: '#00C1F1' }}>
             Login
           </h1>

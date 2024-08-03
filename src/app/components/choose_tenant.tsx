@@ -122,7 +122,7 @@ const ChooseTenant: React.FC = () => {
             style={{
               width: '200px',
               height: '35px',
-              borderColor: selectedPartnerName === partner ? 'black' : '#00C1F1',
+              borderColor: selectedPartnerName === partner ? '#00C1F1' : '#00C1F1',
               borderWidth: selectedPartnerName === partner ? '3px' : '1px',
               color: '#00C1F1',
             }}

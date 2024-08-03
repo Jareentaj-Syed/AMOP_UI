@@ -17,6 +17,10 @@ interface AuthContextType {
   setSelectedPartner: (value: boolean) => void;
   username: string | null;
   setUsername: (username: string | null) => void;
+  selectedPartnerModule: string | null;
+  setSelectedPartnerModule: (partner: string | null) => void;
+  Environment: string | null;
+  setSelectedEnvironment: (Environment: string | null) => void;
   handleSelectedPartner: (partnerName: string) => void;
   showPasswordUpdate: boolean;
   setShowPasswordUpdate: (value: boolean) => void;
@@ -41,6 +45,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isReset, setReset] = useState(false);
   const [selectedPartner, setSelectedPartner] = useState<boolean>(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [selectedPartnerModule, setSelectedPartnerModule] = useState<string | null>(null);
+  const [Environment, setSelectedEnvironment] = useState<string | null>(null);
+
   const [showPasswordUpdate, setShowPasswordUpdate] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [tenantNames, setTenantNames] = useState<string[]>([]);
@@ -149,6 +156,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       value={{
         loading,
         setLoading,
+        selectedPartnerModule,
+        setSelectedPartnerModule,
+        Environment,
+        setSelectedEnvironment,
         isAuthenticated,
         isReset,
         login,
