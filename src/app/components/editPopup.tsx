@@ -241,61 +241,6 @@ const EditModal: React.FC<EditModalProps> = ({
         const response = await axios.post(url, { data });
         const resp = JSON.parse(response.data.body);
         console.log(resp)
-        // if (response.data.statusCode === 200) {
-        //   try{
-        //     let tebleParams;
-        //     const tableUrl = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-        //     if (heading === "E911 Customer") {
-        //       tebleParams = {
-        //         tenant_name: partner || "default_value",
-        //         username: username,
-        //         path: "/get_module_data",
-        //         role_name: role,
-        //         parent_module_name: "people",
-        //         module_name: "E911 Customers",
-        //         mod_pages: {
-        //           start: 0,
-        //           end: 500,
-        //         },
-        //       };
-  
-        //     }
-        //     if (heading === "NetSapien Customer") {
-        //       tebleParams = {
-        //         tenant_name: partner || "default_value",
-        //         username: username,
-        //         path: "/get_module_data",
-        //         role_name: role,
-        //         parent_module_name: "people", // Corrected spelling from 'poeple'
-        //         module_name: "NetSapiens Customers",
-        //         mod_pages: {
-        //           start: 0,
-        //           end: 500,
-        //         },
-        //       };
-        //     }
-        //     if (heading === "Bandwidth Customer") {
-        //       tebleParams = {
-        //         tenant_name: partner || "default_value",
-        //         username: username,
-        //         path: "/get_module_data",
-        //         role_name: role,
-        //         parent_module_name: "people",
-        //         module_name: "Bandwidth Customers",
-        //         mod_pages: {
-        //           start: 0,
-        //           end: 500,
-        //         },
-        //       };
-        //     }
-
-        //     const tableResponse = await axios.post(tableUrl, { tebleParams });
-        //     console.log("tableResponse",tableResponse)
-
-
-        //   }catch(err){}
-          
-        // }
         if (response.data.statusCode === 200 && resp.flag === true) {
 
           notification.success({
@@ -453,6 +398,35 @@ const EditModal: React.FC<EditModalProps> = ({
               const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
               const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
               const generalFields = parsedData.data
+              settabledata(tableData);
+            }
+          }
+          if (heading === "Customer Group") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: ["Customer groups"],
+                        pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                        },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
+              console.log("tableData",tableData)
               settabledata(tableData);
             }
           }

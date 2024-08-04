@@ -178,8 +178,14 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Email id is required.'));
     }
   };
-  const handleChange = () => {
-    console.log("changed")
+  const handleSelectChange = (selectedOption: any, fieldName: any) => {
+    if(rowData){
+      // rowData=[
+      //   ...rowData,
+      //   [getFieldValue(fieldName)]:selectedOption
+      // ]
+      rowData[getFieldValue(fieldName)]=selectedOption
+    }
   };
   const getFieldValue = (label: any) => {
     if(rowData){
@@ -221,11 +227,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         </div>
         <div>
           <label className="field-label">First Name</label>
-          <input type="text" className="input" value={getFieldValue('First Name')} onChange={handleChange}/>
+          <input type="text" className="input" value={getFieldValue('First Name')}  onChange={(option) => handleSelectChange(option, 'partner')}/>
         </div>
         <div>
           <label className="field-label">Last Name</label>
-          <input type="text" className="input" value={getFieldValue('Last Name')} onChange={handleChange} />
+          <input type="text" className="input" value={getFieldValue('Last Name')}  onChange={(option) => handleSelectChange(option, 'partner')} />
         </div>
         <div>
           <label className="field-label">Username<span className="text-red-500">*</span></label>
@@ -257,7 +263,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <input type="text"
             className="input" 
             value={getFieldValue('Mobile No')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'Mobile No')}
             />
         </div>
         <div>
@@ -292,7 +298,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <input type="text"
             className="input" 
             value={getFieldValue('Phone')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
         </div>
       </div>
@@ -317,7 +323,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Business Name')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -325,7 +331,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Locale')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -333,7 +339,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Apt/Suite')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -341,7 +347,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Address Line-1')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -349,7 +355,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Address Line-2')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -357,7 +363,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Country')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -365,7 +371,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input" 
             value={getFieldValue('State')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -373,7 +379,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('City')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
           <div>
@@ -381,7 +387,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input" 
             value={getFieldValue('Time Zone')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
 
@@ -390,7 +396,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <input type="text"
               className="input"
             value={getFieldValue('Zip')}
-            onChange={handleChange}
+            onChange={(option) => handleSelectChange(option, 'partner')}
             />
           </div>
         </div>

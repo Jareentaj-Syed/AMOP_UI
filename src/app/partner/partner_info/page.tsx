@@ -18,10 +18,18 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const { username, partner, role } = useAuth();
   const { partnerData } = usePartnerStore.getState();
+  const [emails, setEmails] = useState<string | null>("");
   const partnerInfo = partnerData?.["Partner info"]?.data?.["Partner info"] || {};
 useEffect(()=>{
-  setEmailList(partnerInfo.email_id||[])
-},[])
+  let email_list:any
+  if(partnerInfo?.email_id){
+    email_list=JSON.parse(partnerInfo.email_id)
+  }
+  if(Array.isArray(email_list)){
+    setEmailList(partnerInfo.email_list||[])
+  }
+  console.log("email_list",email_list)
+},[partnerInfo])
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
 

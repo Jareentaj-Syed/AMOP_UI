@@ -21,13 +21,16 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
     const [ServiceProvider, setServiceProvider] = useState<MultiValue<OptionType>>([]);
+    const [customerGroup, setCustomerGroup] = useState<SingleValue<OptionType>>(null);
+    const [customer, setCustomer] = useState<MultiValue<OptionType>>([]);
+
     const [CustomerGroupOptions, setCustomerGroupOptions] = useState<any[]>([])
     const [ServiceProviderOptions, setServiceProviderOptions] = useState<any[]>([])
     const [customerOptions, setcustomerOptions] = useState<any[]>([])
+    const [generalFields, setGeneralFields] = useState<any[]>([]);
 
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
     const { partnerData } = usePartnerStore.getState();
-
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
 
     const {
@@ -52,6 +55,8 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             setcustomerOptions(customerOptions_)
             setCustomerGroupOptions(CustomerGroupOptions_)
             setServiceProviderOptions(ServiceProviderOptions_)
+            setGeneralFields(general_fields)
+
 
         };
 
@@ -89,11 +94,29 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
         }
     };
-    const serviceProviderCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+    const serviceProviderChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
 
         setServiceProvider(newValue);
         if (newValue.length > 0) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
+        }
+    };
+    const customerGroupChange = (selectedOption: SingleValue<OptionType>) => {
+        if (selectedOption) {
+            setCustomerGroup(selectedOption);
+        }
+    }
+    const customerChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
+        setCustomer(newValue);
+    };
+    const getFieldValue = (label: any) => {
+        if (rowData) {
+            console.log("label", label)
+            const field = generalFields ? generalFields.find((f: any) => f.display_name === label) : null;
+            return field ? rowData[field.db_column_name] || '' : '';
+        }
+        else {
+            return ""
         }
     };
     return (
@@ -139,8 +162,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                             isMulti
                             options={ServiceProviderOptions}
                             styles={editableDrp}
-                            value={ServiceProvider}
-                            onChange={serviceProviderCarrier}
+                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Service Provider'))
+                            ? { value: getFieldValue('Service Provider'), label: getFieldValue('Service Provider') }
+                            : ServiceProvider
+                        }
+                            onChange={serviceProviderChange}
 
                         />
                         {errorMessages.includes('Service Provider is required.') && (
@@ -150,9 +176,13 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                     <div>
                         <label className="field-label">Customer Group</label>
                         <Select
-
+                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Customer Group'))
+                                ? { value: getFieldValue('Customer Group'), label: getFieldValue('Customer Group') }
+                                : customerGroup
+                            }
                             styles={editableDrp}
                             options={CustomerGroupOptions}
+                            onChange={customerGroupChange}
                         />
                     </div>
                     <div>
@@ -161,6 +191,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                             isMulti
                             options={customerOptions}
                             styles={editableDrp}
+                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Customers'))
+                                ? { value: getFieldValue('Customers'), label: getFieldValue('Customers') }
+                                : customer
+                            }
+                            onChange={customerChange}
                         />
                     </div>
                 </div>

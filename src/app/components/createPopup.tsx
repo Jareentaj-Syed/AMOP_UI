@@ -190,6 +190,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module: 'Bandwidth Customers',
             table_name: 'customers',
             changed_data: formData,
+            action: 'create'
+
           };
         }
         // if (heading === 'RevIO Customer') {
@@ -211,20 +213,6 @@ const CreateModal: React.FC<CreateModalProps> = ({
 
         const response = await axios.post(url, { data });
         if (response.data.statusCode === 200) {
-          if (heading === "Customer Group") {
-            if (formData) {
-              formData["modified_by"] = username;
-            }
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_partner_info",
-              role_name: role,
-              module_name: "Customer groups",
-              action: "update",
-              updated_data: formData
-            };
-          }
           if (heading === "Carrier") {
             if (formData) {
               formData["last_modified_by"] = username;
@@ -340,6 +328,35 @@ const CreateModal: React.FC<CreateModalProps> = ({
               const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
               const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
               const generalFields = parsedData.data
+              settabledata(tableData);
+            }
+          }
+          if (heading === "Customer Group") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: ["Customer groups"],
+                        pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                        },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
+              console.log("tableData",tableData)
               settabledata(tableData);
             }
           }
