@@ -77,12 +77,12 @@ const UserRole: React.FC = () => {
     // console.log("parent modules",partnerModuleData.data["Partner module access"]["tenant_module"])
     const editableDrp = DropdownStyles;
     const colorPalette = [
-        '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
-        '#3366E6', '#999966', '#99FF99', '#B34D4D', '#FF4D4D', '#C2C2F0',
-        '#FFCC99', '#C2F0C2', '#FF99E6', '#FFB3E6', '#80BFFF', '#FFCC00',
-        '#FF6666', '#C2C2F0', '#6699FF'
+        '#FF6F61', '#D7B2A1', '#D45D79', '#E6E1A1', '#4CA1B5', '#E3B33A',
+        '#3B5998', '#B3B3B3', '#B8EBAF', '#C34A4A', '#FF5C5C', '#A3A9E3',
+        '#FFCC99', '#A7E7A5', '#FF85B5', '#FFB3C1', '#A8D5FF', '#FFC300',
+        '#FF8C8C', '#B3B3E3', '#6699CC'
     ];
-
+    
     const getColor = (index: number) => colorPalette[index % colorPalette.length];
 
     const handleModuleChange = (category: string, modules: any) => {
