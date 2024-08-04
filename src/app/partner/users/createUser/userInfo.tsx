@@ -99,10 +99,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     const initializeData = () => {
       if (rowData) {
         setPartner(getFieldValue('Partner'));
+        setTenant(getFieldValue('Partner'))
         setFirstName(getFieldValue('First Name'));
         setLastName(getFieldValue('Last Name'));
         setUsername(getFieldValue('Username'));
-        setUser_Name(username)
+        setUser_Name(getFieldValue('Username'))
         setEmailId(getFieldValue('Email Id'));
         setMobileNo(getFieldValue('Mobile No'));
         setRole(getFieldValue('Role'));

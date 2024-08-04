@@ -8,7 +8,7 @@ interface UserState {
     setTenant: (partner: string) => void;
     setRoleName: (role: string) => void;
     setSubTenant: (subPartners: string[]) => void;
-    setUser_Name:(partner: string) => void;
+    setUser_Name:(user_name: string) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
@@ -19,5 +19,5 @@ export const useUserStore = create<UserState>((set) => ({
     setTenant: (tenant) => set({ tenant }),
     setRoleName: (role_name) => set({ role_name }),
     setSubTenant: (sub_tenant) => set({ sub_tenant }),
-    setUser_Name: (tenant) => set({ tenant }),
+    setUser_Name: (user_name) => set({ user_name }),
 }));
