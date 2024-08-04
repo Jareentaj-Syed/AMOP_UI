@@ -5,6 +5,8 @@ import Select, { SingleValue, StylesConfig } from 'react-select';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
 import { usePartnerStore } from '../partnerStore';
+import axios from 'axios';
+import { useAuth } from '@/app/components/auth_context';
 
 
 interface FormattedData {
@@ -54,6 +56,7 @@ interface ExcelData {
 
 const UserRole: React.FC = () => {
     const { partnerData } = usePartnerStore.getState();
+    const { username, partner } = useAuth();
     const partnermoduleaccess=partnerData["Partner module access"]
     // console.log("Partner module access",partnermoduleaccess)
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
@@ -68,7 +71,7 @@ const UserRole: React.FC = () => {
     // console.log("modules",partnerModuleData.data["Partner module access"]["module"])
     const subModules = partnerModuleData.data["Partner module access"]["module"];
     const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
-  
+ 
     const module_features=partnerModuleData.data["Partner module access"]["module_features"]
 
     // console.log("parent modules",partnerModuleData.data["Partner module access"]["tenant_module"])
@@ -258,10 +261,9 @@ const UserRole: React.FC = () => {
     }));
 
     // console.log(Roleoptions)
-    const handleSubmit = () => {
-        console.log("entered");
+
+    const handleSubmit =async ()=> {
         const errors: string[] = [];
-    
         // Check if role is null and push an error if it is
         if (!role) {
             errors.push('Role is required.');
@@ -270,32 +272,46 @@ const UserRole: React.FC = () => {
         setErrorMessages(errors);
     
         if (errors.length === 0) {
-            // Prepare the formatted data
-            const formattedData: FormattedData = {
-                role: role!.value, // Use non-null assertion if you are sure it won't be null
-                module: parentModules, // Assuming parentModules contains the selected module
-                sub_module: partnerModuleData.data["Partner module access"]["module"], // Use your desired sub-module data
-                module_features: []
+            // Check that role is defined before accessing its value
+            const formattedData: { [key: string]: any } = {
+                [role!.value]: {} // Use non-null assertion if you are sure it won't be null
             };
     
-            // Iterate through selected modules
-            Object.keys(selectedModules).forEach((category) => {
+            Object.keys(selectedModules).forEach(category => {
                 const selectedModulesForCategory = selectedModules[category];
                 const selectedFeaturesForCategory = selectedFeatures[category] || [];
     
-                selectedModulesForCategory.forEach((selectedModule) => {
-                    const features = selectedFeaturesForCategory.filter((feature) =>
-                        map[category]?.Feature[selectedModule]?.includes(feature)
-                    );
+                formattedData[role!.value][category] = {
+                    Module: selectedModulesForCategory,
+                    Feature: {}
+                };
     
-                    formattedData.module_features.push({
-                        module: selectedModule,
-                        features: features
-                    });
+                selectedModulesForCategory.forEach(module => {
+                    formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
+                        map[category]?.Feature[module]?.includes(feature)
+                    );
                 });
             });
     
             console.log("Formatted Data:", formattedData);
+            try {
+                const url =
+                  "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+                const data = {
+                  tenant_name: partner || "default_value",
+                  username: username,
+                  path: "/update_partner_info",
+                  "parent_module": "Partner",
+                  "module_name": ["Partner Module Access"],
+                  action: "update",
+                  changed_data:{formattedData}
+                };
+                const response = await axios.post(url, { data });
+            
+                console.log(response);
+              } catch (err) {
+                console.error("Error fetching data:", err);
+              }
         } else {
             console.log("Errors:", errors);
         }
