@@ -10,6 +10,7 @@ import { useAuth } from '@/app/components/auth_context';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import axios from 'axios';
 import { DropdownStyles } from '@/app/components/css/dropdown';
+import TableSearch from '@/app/components/entire_table_search';
 
 interface ExcelData {
   [key: string]: any;
@@ -244,7 +245,13 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             </button>
             </div>
           <div className="ml-auto mt-4">
-            <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+            <TableSearch
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              tableName={"carrier_apis "}
+              headerMap={headerMap}
+            />
           </div>
         </div>
 

@@ -203,13 +203,7 @@ const CarrierInfo: React.FC = () => {
                 styles={editableDrp}
               />
             </div>
-            <div className=''>
-              <TableSearch
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                tableName={"amop_apis"}
-                headerMap={headerMap} />
-            </div>
+
           </div>
           <div className='mt-5 ml-3'>
             <button
@@ -221,7 +215,13 @@ const CarrierInfo: React.FC = () => {
             </button>
           </div>
           <div className="ml-auto mt-4">
-            <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+            <TableSearch
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              tableName={"amop_apis "}
+              headerMap={headerMap}
+            />
           </div>
         </div>
 

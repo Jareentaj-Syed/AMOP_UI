@@ -14,6 +14,7 @@ import { getCurrentDateTime } from '@/app/components/header_constants';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
 import TableSearch from '@/app/components/entire_table_search';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 const { RangePicker } = DatePicker;
 
 interface ExcelData {
@@ -183,7 +184,13 @@ const CustomerGroups: React.FC = () => {
         <div className="p-4 flex items-center justify-between mb-4">
           <div className="flex space-x-2">
             {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-           
+            <TableSearch
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              tableName={"customer_groups"}
+              headerMap={headerMap}
+            />
+
           </div>
 
           <div className="flex space-x-2">
@@ -206,13 +213,9 @@ const CustomerGroups: React.FC = () => {
             />
           </div>
         </div>
-        <div className='mb-4 ml-2'>
-        <TableSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          tableName={"customer_groups"}
-          headerMap={headerMap}
-        />
+        <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+
         </div>
         <TableComponent
           headers={headers}

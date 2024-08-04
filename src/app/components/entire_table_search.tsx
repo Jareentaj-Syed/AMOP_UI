@@ -83,7 +83,7 @@ const TableSearch: React.FC<SearchInputProps> = ({
         className="ml-2 h-8 border-none outline-none w-full"
       />
     </div>
-      <Button type="primary" onClick={handleButtonClick}>
+      <Button onClick={handleButtonClick} className=' h-8 save-btn'>
         Search
       </Button>
     </div>

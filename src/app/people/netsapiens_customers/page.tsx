@@ -228,12 +228,13 @@ useEffect(() => {
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
           {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-          <ColumnFilter
-            headers={headers}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
-            headerMap={headerMap}
-          />
+          <TableSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          tableName={"netsapiens_customers"}
+          headerMap={headerMap}
+        />
+          
         </div>
 
         <div className="flex space-x-2">
@@ -245,15 +246,16 @@ useEffect(() => {
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
           </button>
+          <ColumnFilter
+            headers={headers}
+            visibleColumns={visibleColumns}
+            setVisibleColumns={setVisibleColumns}
+            headerMap={headerMap}
+          />
         </div>
       </div>
       <div className='mb-4 ml-4'>
-        <TableSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          tableName={"netsapiens_customers"}
-          headerMap={headerMap}
-        />
+        
         </div>
 
         <TableComponent
