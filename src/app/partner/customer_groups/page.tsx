@@ -160,14 +160,14 @@ const disableFutureDates = (current:any) => {
   console.log("future dates:",current && current > dayjs().endOf('day'));
   return current && current > dayjs().endOf('day'); // Disable future dates
 };
-if(headers.length<1){
-  console.log(customerGroupsData)
-  Modal.error({
-    title: 'Error',
-    content:customerGroupsData||'Unable to fetch table.',
-    centered: true,
-});
-}
+// if(headers.length<1){
+//   console.log(customerGroupsData)
+//   Modal.error({
+//     title: 'Error',
+//     content:JSON.stringify(customerGroupsData)||'Unable to fetch table.',
+//     centered: true,
+// });
+// }
   return (
     <div className="container">
       <div className='p-4'>

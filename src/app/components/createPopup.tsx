@@ -472,14 +472,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
                     )
                   }
                   options={
-                    generalFields &&
+                    column.db_column_name!==null?(generalFields &&
                     generalFields[column.db_column_name] &&
                     Array.isArray(generalFields[column.db_column_name])
                       ? generalFields[column.db_column_name].map((option: string) => ({
                           label: option,
                           value: option,
                         }))
-                      : [{ label: 'No options', value: '' }]
+                      : [{ label: 'No options', value: '' }]):[{ label: 'No options', value: '' }]
                   }
                 />
                 

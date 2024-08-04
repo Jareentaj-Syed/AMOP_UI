@@ -3,7 +3,6 @@ import { XMarkIcon, CheckIcon } from '@heroicons/react/24/outline';
 import Select, { MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { useUserStore } from './createUserStore';
-import { subPartnersData } from '@/app/constants/partnercarrier';
 import { usePartnerStore } from '../../partnerStore';
 
 type OptionType = {
@@ -37,8 +36,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   const [Partneroptions, setPartneroptions] = useState<string[]>([]);
   const [Roleoptions, setRoleoptions] = useState<string[]>([]);
   const [generalFields, setGeneralFields] = useState<any[]>([]);
+  const [subPartnersData, setsubPartnersData] = useState<any>({});
+  const [subPartnersoptions,setsubPartnersoptions]=useState<any[]>([]);
 
-  const subPartnersoptions = subPartners.map(subPartner => ({ value: subPartner, label: subPartner }));
+
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
 
@@ -49,10 +50,18 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     const initializeData = () => {
       const general_fields = partnerData["Partner users"]?.headers_map?.["Partner users"]?.general_fields || {}
       const partneroptions: any[] = usersData?.tenant ? Object.keys(usersData.tenant) : []
+      const subPartnersData=usersData?.tenant || {}
+      const subPartners=subPartnersData[tenant] || []
       const roleoptions: any[] = usersData?.role_name || []
+      const subPartnersoptions = subPartners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
+      setsubPartnersData(subPartnersData)
+      setsubPartnersoptions(subPartnersoptions)
       setRoleoptions(roleoptions)
       setPartneroptions(partneroptions)
       setGeneralFields(general_fields)
+      setSubPartners(subPartners);
+      setSubPartners(subPartnersData[tenant] || []);
+
       console.log("general_fields", general_fields)
 
 
@@ -189,7 +198,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Partner</label>
           <Select
-            value={{ value: tenant, label: tenant }}
+            value={rowData?{value:getFieldValue('Partner'),label:getFieldValue('Partner')}:{ value: tenant, label: tenant }}
             onChange={handlePartnerChange}
             options={Partneroptions.map((option: string) => ({
               label: option,
@@ -203,7 +212,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <label className="field-label">Sub Partner</label>
           <Select
             isMulti
-            value={subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
+            value={rowData?{value:getFieldValue('Sub Partner'),label:getFieldValue('Sub Partner')}:subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
             onChange={handleSetSubPartner}
             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
             styles={editableDrp}

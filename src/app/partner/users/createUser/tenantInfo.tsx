@@ -12,10 +12,6 @@ type OptionType = {
 };
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
-const CustomerGroupOptions:any[]=[]
-const ServiceProviderOptions:any[] = []
-const customerOptions:any[]=[]
-
 interface TenantInfoProps {
     rowData?: any;
 }
@@ -25,9 +21,15 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
     const [ServiceProvider, setServiceProvider] = useState<MultiValue<OptionType>>([]);
+    const [CustomerGroupOptions, setCustomerGroupOptions] = useState<any[]>([])
+    const [ServiceProviderOptions, setServiceProviderOptions] = useState<any[]>([])
+    const [customerOptions, setcustomerOptions] = useState<any[]>([])
+
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
     const { partnerData } = usePartnerStore.getState();
-    const usersData = partnerData["Partner users"] || {};
+
+    const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
+
     const {
         tenant,
         role_name,
@@ -35,14 +37,32 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         setTenant,
         setRoleName,
         setSubTenant
-      } = useUserStore();
+    } = useUserStore();
 
     useEffect(() => {
-        if (rowData) {
-            setTenant(rowData['tenant_name'] || '');
-            setSubTenant(rowData['subtenant_name'] || '');
-        }
-    }, [rowData]);
+        const initializeData = () => {
+            const general_fields = partnerData["Partner users"]?.headers_map?.["Partner users"]?.general_fields || {}
+            const CustomerGroupOptions: any[] = usersData?.name || []
+            const CustomerGroupOptions_ = CustomerGroupOptions.map((group: any) => ({ value: group, label: group }))
+            const ServiceProviderOptions: any[] = usersData?.rate_plan_name || []
+            const ServiceProviderOptions_ = ServiceProviderOptions.map((service: any) => ({ value: service, label: service }))
+            const customerOptions: any[] = usersData?.customer_name || []
+            const customerOptions_ = customerOptions.map((customer: any) => ({ value: customer, label: customer }))
+            console.log("general_fields", general_fields)
+            setcustomerOptions(customerOptions_)
+            setCustomerGroupOptions(CustomerGroupOptions_)
+            setServiceProviderOptions(ServiceProviderOptions_)
+
+        };
+
+        initializeData();
+    }, [usersData]);
+    // useEffect(() => {
+    //     if (rowData) {
+    //         setTenant(rowData['tenant_name'] || '');
+    //         setSubTenant(rowData['subtenant_name'] || '');
+    //     }
+    // }, [rowData]);
     const handleSubmit = () => {
         const errors: string[] = [];
         if (CarrierNotification.length === 0) errors.push('Carrier is required.');
@@ -84,19 +104,19 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                     <div>
                         <label className="field-label">Partner</label>
                         <input
-                        type="text"
-                        value={tenant}
-                        className="non-editable-input"
-                    />
+                            type="text"
+                            value={tenant}
+                            className="non-editable-input"
+                        />
                     </div>
 
                     <div>
                         <label className="field-label">Sub Partner</label>
                         <input
-                        type="text"
-                        value={sub_tenant}
-                        className="non-editable-input"
-                    />
+                            type="text"
+                            value={sub_tenant}
+                            className="non-editable-input"
+                        />
                     </div>
                     <div>
                         <label className="field-label">Carrier <span className="text-red-500">*</span></label>

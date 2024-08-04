@@ -615,12 +615,12 @@ const EditModal: React.FC<EditModalProps> = ({
                           handleChange(column.db_column_name, value);
                         }}
                         options={
-                          generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                          column.db_column_name!==null?(generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
                             ? generalFields[column.db_column_name].map((option: any) => ({
                                 label: option,
                                 value: option
                               }))
-                            : [{ label: "No options", value: "No options" }]
+                            : [{ label: "No options", value: "No options" }]):[[{ label: "No options", value: "No options" }]]
                         }
                       />
                       
