@@ -82,7 +82,7 @@ const ColumnFilter: React.FC<ColumnFilterProps> = ({
     <Popover content={columnContent} trigger="click" placement="bottom">
       <button className="flex items-center p-2 save-btn">
         <AdjustmentsHorizontalIcon className="h-5 w-5 text-black-500 mr-2" />
-        Filter
+        Columns
       </button>
     </Popover>
   );

@@ -95,10 +95,10 @@ const handleExport = async () => {
     path: "/export",
     username: username,
     table: "customers",
-    module_name:"Customer Groups",
+    module_name:"Partner Users",
     request_received_at: getCurrentDateTime(),
     start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
-      end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
+    end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
   };
 
   try {

@@ -249,34 +249,38 @@ const BandWidthCustomers: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="p-4 flex items-center justify-between mt-1 mb-4">
-        <div className="flex space-x-2">
-          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <ColumnFilter
-            headers={headers}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
-            headerMap={headerMap}
-          />
-        </div>
-        <div className="flex space-x-2">
-          <button className="save-btn" onClick={handleCreateModalOpen}>
-            <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-            Add Customer
-          </button>
-          <button className="save-btn" onClick={handleExportModalOpen}>
-            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
-            <span>Export</span>
-          </button>
-        </div>
-      </div>
+    <div className="p-4 flex items-center justify-end mt-1 mb-4">
+  <div className="flex space-x-2">
+    <button className="save-btn" onClick={handleCreateModalOpen}>
+      <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+      Add Customer
+    </button>
+    <button className="save-btn" onClick={handleExportModalOpen}>
+      <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+      <span>Export</span>
+    </button>
+  </div>
+</div>
+
       <div className="mb-4">
-      <TableSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            tableName={"Bandwidth Customers"}
-            headerMap={headerMap} />
-      </div>
+  <div className="flex justify-between">
+    <TableSearch
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      tableName={"Bandwidth Customers"}
+      headerMap={headerMap}
+    />
+    <div className="flex space-x-2 mr-2">
+      <ColumnFilter
+        headers={headers}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        headerMap={headerMap}
+      />
+    </div>
+  </div>
+</div>
+
       
 
       <TableComponent
@@ -341,3 +345,6 @@ const BandWidthCustomers: React.FC = () => {
 
 }
 export default BandWidthCustomers;
+
+
+     {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}

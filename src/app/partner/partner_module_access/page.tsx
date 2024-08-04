@@ -304,7 +304,7 @@ const UserRole: React.FC = () => {
                   "parent_module": "Partner",
                   "module_name": ["Partner Module Access"],
                   action: "update",
-                  changed_data:{formattedData}
+                  changed_data:formattedData
                 };
                 const response = await axios.post(url, { data });
             
@@ -315,6 +315,8 @@ const UserRole: React.FC = () => {
         } else {
             console.log("Errors:", errors);
         }
+        // setSelectedModules({});
+        // setSelectedFeatures({});
     };
     
 
