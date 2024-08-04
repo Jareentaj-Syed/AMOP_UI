@@ -169,7 +169,12 @@ return current && current > dayjs().endOf('day'); // Disable future dates
           <div className="p-4 flex items-center justify-between mt-2 mb-2">
             <div className="flex space-x-4">
               {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-              <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}}/>
+              <TableSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          tableName={"partner_users"}
+          headerMap={headerMap}
+        />
             </div>
 
             <div className="flex space-x-4">
@@ -184,15 +189,11 @@ return current && current > dayjs().endOf('day'); // Disable future dates
                 <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
                 <span>Export</span>
               </button>
+              <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}}/>
             </div>
           </div>
           <div className='mb-4 ml-2'>
-        <TableSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          tableName={"partner_users"}
-          headerMap={headerMap}
-        />
+        
         </div>
 
           <div className="">
