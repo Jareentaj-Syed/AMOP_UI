@@ -6,6 +6,17 @@ import { DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
 import { usePartnerStore } from '../partnerStore';
 
+
+interface FormattedData {
+    role: string;
+    module: string;
+    sub_module: string;
+    module_features: Array<{
+        module: string;
+        features: string[];
+    }>;
+}
+
 type OptionType = {
     value: string;
     label: string;
@@ -44,16 +55,23 @@ interface ExcelData {
 const UserRole: React.FC = () => {
     const { partnerData } = usePartnerStore.getState();
     const partnermoduleaccess=partnerData["Partner module access"]
-    console.log("Partner module access",partnermoduleaccess)
+    // console.log("Partner module access",partnermoduleaccess)
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [map, setMap] = useState<ExcelData>({});
-    console.log("partner module data:", partnerModuleData)
-    console.log("partner data:", partnerModuleData.data["Partner module access"])
-    console.log("roledata",partnerModuleData.data["Partner module access"]["role_module"])
+    // console.log("partner module data:", partnerModuleData)
+    // console.log("partner data:", partnerModuleData.data["Partner module access"])
+    // console.log("roledata",partnerModuleData.data["Partner module access"]["role_module"])
+    // console.log("modules",partnerModuleData.data["Partner module access"]["module"])
+    const subModules = partnerModuleData.data["Partner module access"]["module"];
+    const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
+  
+    const module_features=partnerModuleData.data["Partner module access"]["module_features"]
+
+    // console.log("parent modules",partnerModuleData.data["Partner module access"]["tenant_module"])
     const editableDrp = DropdownStyles;
     const colorPalette = [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
@@ -69,22 +87,28 @@ const UserRole: React.FC = () => {
         const newColors = { ...moduleColors };
     
         moduleValues.forEach((module: string | number, index: number) => {
+            // Assign a color to the module if it doesn't have one
             if (!newColors[module]) {
                 newColors[module] = getColor(index);
             }
     
-            // Assign the same color to the features of the module
+            // Get features associated with the module
             const features = map[category]?.Feature[module] || [];
+            
+            // Assign the module's color to features only if they have not been assigned a color yet
             features.forEach((feature: string) => {
-                newColors[feature] = newColors[module]; // Assign module color to features
+                if (!newColors[feature]) {
+                    newColors[feature] = newColors[module]; // Use the module's color for its features
+                }
             });
         });
     
+        // Create a list of features with their colors
         const defaultFeatures = moduleValues.flatMap((module: any) => {
             const features = map[category]?.Feature[module] || [];
             return features.map((feature: string) => ({
                 feature,
-                color: newColors[module], // Keep the same color for features
+                color: newColors[feature], // Use the feature's color
             }));
         });
     
@@ -102,6 +126,9 @@ const UserRole: React.FC = () => {
             return updatedFeatures;
         });
     };
+    
+    
+    
     
     const customStyles = (category: string): StylesConfig<OptionType, true> => ({
         option: (provided, { data }) => ({
@@ -171,29 +198,70 @@ const UserRole: React.FC = () => {
         }));
     };
 
-    const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
+    const handleSetRole = (selectedOption: SingleValue<OptionType>) => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
-            const selectedRoleData = mockRoleData[role] || {};
+    
+            let selectedRoleData = mockRoleData[role];
+            if (!selectedRoleData) {
+                selectedRoleData = generateDefaultRoleData();
+                mockRoleData[role] = selectedRoleData; // Save the generated default data
+            }
+    
+            console.log(selectedRoleData);
             setMap(selectedRoleData);
             setSelectedModules({});
             setSelectedFeatures({});
             setModuleColors({}); // Reset colors when role changes
         }
     };
+    
 
-  console.log(partnerModuleData.data["Partner module access"]["role_name"])
+    const generateDefaultRoleData = (): CategoryData => {
+        const subModules = partnerModuleData.data["Partner module access"]["module"];
+        const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
+        const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
+        
+        const defaultRoleData: CategoryData = {};
+    
+        // Iterate through each parent module
+        parentModules.forEach((parentModule: string) => {
+            defaultRoleData[parentModule] = {
+                Module: [], // Initialize Module as an empty array
+                Feature: {}
+            };
+    
+            // Find children modules for the parent module
+            const childrenModules = subModules[parentModule] || [];
+            defaultRoleData[parentModule].Module = childrenModules; // Assign children modules
+    
+            // Populate features for each child module
+            childrenModules.forEach((childModule: string) => {
+                const features = moduleFeatures.find((modFeat: { module: string }) => modFeat.module === childModule);
+                defaultRoleData[parentModule].Feature[childModule] = features ? JSON.parse(features.features) : []; // Parse features if available
+            });
+        });
+    
+        return defaultRoleData;
+    };
+    
+    
+    
+    
+
+//   console.log(partnerModuleData.data["Partner module access"]["role_name"])
 
     const Roleoptions =  partnerModuleData.data["Partner module access"]["role_name"].map((role: any) => ({
         value: role,
         label: role,
     }));
 
-    console.log(Roleoptions)
-
+    // console.log(Roleoptions)
     const handleSubmit = () => {
+        console.log("entered");
         const errors: string[] = [];
+    
         // Check if role is null and push an error if it is
         if (!role) {
             errors.push('Role is required.');
@@ -201,32 +269,36 @@ const UserRole: React.FC = () => {
     
         setErrorMessages(errors);
     
-        // if (errors.length === 0) {
-        //     // Check that role is defined before accessing its value
-        //     const formattedData: { [key: string]: any } = {
-        //         [role!.value]: {} // Use non-null assertion if you are sure it won't be null
-        //     };
+        if (errors.length === 0) {
+            // Prepare the formatted data
+            const formattedData: FormattedData = {
+                role: role!.value, // Use non-null assertion if you are sure it won't be null
+                module: parentModules, // Assuming parentModules contains the selected module
+                sub_module: partnerModuleData.data["Partner module access"]["module"], // Use your desired sub-module data
+                module_features: []
+            };
     
-        //     Object.keys(selectedModules).forEach(category => {
-        //         const selectedModulesForCategory = selectedModules[category];
-        //         const selectedFeaturesForCategory = selectedFeatures[category] || [];
+            // Iterate through selected modules
+            Object.keys(selectedModules).forEach((category) => {
+                const selectedModulesForCategory = selectedModules[category];
+                const selectedFeaturesForCategory = selectedFeatures[category] || [];
     
-        //         formattedData[role!.value][category] = {
-        //             Module: selectedModulesForCategory,
-        //             Feature: {}
-        //         };
+                selectedModulesForCategory.forEach((selectedModule) => {
+                    const features = selectedFeaturesForCategory.filter((feature) =>
+                        map[category]?.Feature[selectedModule]?.includes(feature)
+                    );
     
-        //         selectedModulesForCategory.forEach(module => {
-        //             formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
-        //                 map[category]?.Feature[module]?.includes(feature)
-        //             );
-        //         });
-        //     });
+                    formattedData.module_features.push({
+                        module: selectedModule,
+                        features: features
+                    });
+                });
+            });
     
-        //     console.log("Formatted Data:", formattedData);
-        // } else {
-        //     console.log("Errors:", errors);
-        // }
+            console.log("Formatted Data:", formattedData);
+        } else {
+            console.log("Errors:", errors);
+        }
     };
     
 
@@ -241,7 +313,7 @@ const UserRole: React.FC = () => {
                         </label>
                         <Select
                             value={role}
-                            onChange={handlesetRole}
+                            onChange={handleSetRole}
                             options={Roleoptions}
                             styles={editableDrp}
                         />
@@ -263,7 +335,7 @@ const UserRole: React.FC = () => {
                                         value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                         onChange={(selected) => handleModuleChange(category, selected)}
                                         options={map[category].Module.map(module => ({ value: module, label: module }))}
-                                        styles={customStyles(category)} // Use customStyles for module colors
+                                        // styles={customStyles(category)}
                                     />
 
                                 </div>
@@ -277,7 +349,7 @@ const UserRole: React.FC = () => {
                                             map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
                                         )}
                                         onChange={(selected) => handleFeatureChange(category, selected)}
-                                        styles={customStyles(category)}
+                                        // styles={customStyles(category)}
                                         isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
                                     />
                                 </div>
