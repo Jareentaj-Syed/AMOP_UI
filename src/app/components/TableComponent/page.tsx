@@ -196,7 +196,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   // }, [searchQuery, initialData]);
 
   useEffect(() => {
-    // Filter row data based on search query and advanced filters
     const filteredData = initialData.filter(row => {
       const matchesSearchQuery = Object.values(row).some(value =>
         String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
@@ -205,13 +204,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
         ([key, values]) => {
           const valuesArray = values as string[];
-          // Always return true if valuesArray is empty
           if (valuesArray.length === 0) return true;
-          // Check if row[key] is defined before comparing
           if (valuesArray[0] && row[key]) {
             return String(row[key]).toLowerCase().includes(valuesArray[0].toLowerCase());
           }
-          // If the key does not exist in the row, return true
           return true;
         }
       );

@@ -73,7 +73,7 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4">
         <Button
           size="large"
-          className="w-full md:w-auto"
+          className="w-full md:w-auto save-btn"
           onClick={handleShowAdvanced}
           icon={showAdvanced ? <CaretUpOutlined /> : <CaretDownOutlined />}
           style={{ fontWeight: '450' }}

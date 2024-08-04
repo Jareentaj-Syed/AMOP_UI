@@ -23,9 +23,10 @@ const Notificationoptions = [
 
 interface UserInfoProps {
   rowData?: any;
+  isPopup?:any
 }
 
-const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
+const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
   const {
     username: user,
     tenantNames: tenants,
@@ -124,7 +125,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     };
 
     initializeData();
-  }, [rowData]);
+  }, [rowData,isPopup,usersData]);
 
 
   const {

@@ -229,6 +229,8 @@ const CustomerGroups: React.FC = () => {
           createModalData={createModalData}
           generalFields={generalFields}
           pagination={{}}
+          advancedFilters={filteredData}
+
         />
 
         <CreateModal
