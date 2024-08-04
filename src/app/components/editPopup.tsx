@@ -124,9 +124,9 @@ const EditModal: React.FC<EditModalProps> = ({
             username: username,
             path: "/update_partner_info",
             role_name: role,
-            module_name: "Customer groups",
+            module_name: "Customer Groups",
             action: "update",
-            updated_data: formData,
+            changed_data: formData,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -570,7 +570,7 @@ const EditModal: React.FC<EditModalProps> = ({
                       )}
                       {column.type === 'dropdown' && (
                         <Select
-                        isMulti={column.db_column_name === "Customer_names"}
+                        isMulti={column.db_column_name === "Customer_names" ||column.db_column_name === "rate_plan_name"}
                         styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
                         isDisabled={!isEditable}
                         classNamePrefix="select"

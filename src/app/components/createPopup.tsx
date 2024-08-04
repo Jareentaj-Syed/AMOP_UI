@@ -101,7 +101,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
           data = {
             tenant_name: partner || 'default_value',
             username: username,
-            path: '/create_partner_info',
+            path: '/update_partner_info',
             role_name: role,
             module_name: 'Customer groups',
             action: 'create',
@@ -461,13 +461,13 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 )}
                 {column.type === 'dropdown' && (
                   <Select
-                  isMulti={column.db_column_name === "Customer_names"}
+                  isMulti={column.db_column_name === "Customer_names"||column.db_column_name === "rate_plan_name"}
                   styles={editableDrp}
                   classNamePrefix="select"
                   placeholder="Select..."
                   value={
                     formData[column.db_column_name]
-                      ? Array.isArray(formData[column.db_column_name])
+                      ? Array.isArray(JSON.parse(formData[column.db_column_name]))
                         ? formData[column.db_column_name].map((item: string) => ({
                             label: item,
                             value: item,

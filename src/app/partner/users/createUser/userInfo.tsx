@@ -4,6 +4,10 @@ import Select, { MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { useUserStore } from './createUserStore';
 import { usePartnerStore } from '../../partnerStore';
+import { getCurrentDateTime } from '@/app/components/header_constants';
+import axios from 'axios';
+import { useAuth } from '@/app/components/auth_context';
+
 
 type OptionType = {
   value: string;
@@ -22,14 +26,35 @@ interface UserInfoProps {
 }
 
 const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
+  const {
+    username: user,
+    tenantNames: tenants,
+    role: userRole,
+    partner: userPartner,
+    settabledata: setData
+  } = useAuth();
 
-
-  const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [mobileNo, setMobileNo] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [businessName, setBusinessName] = useState('');
+  const [locale, setLocale] = useState('');
+  const [aptSuite, setAptSuite] = useState('');
+  const [addressLine1, setAddressLine1] = useState('');
+  const [addressLine2, setAddressLine2] = useState('');
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [timeZone, setTimeZone] = useState('');
+  const [zip, setZip] = useState('');
+  const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<SingleValue<OptionType>>(null);
   const [notification, setNotification] = useState<SingleValue<OptionType>>(null);
-  const [password, setPassword] = useState('');
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [selectedSubPartner, setSelectedSubPartner] = useState<string[]>([]);
   const [subPartners, setSubPartners] = useState<string[]>([]);
@@ -37,8 +62,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   const [Roleoptions, setRoleoptions] = useState<string[]>([]);
   const [generalFields, setGeneralFields] = useState<any[]>([]);
   const [subPartnersData, setsubPartnersData] = useState<any>({});
-  const [subPartnersoptions,setsubPartnersoptions]=useState<any[]>([]);
-
+  const [subPartnersoptions, setsubPartnersoptions] = useState<any[]>([]);
+  const [formData, setFormData] = useState<any>({})
 
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
@@ -50,8 +75,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     const initializeData = () => {
       const general_fields = partnerData["Partner users"]?.headers_map?.["Partner users"]?.general_fields || {}
       const partneroptions: any[] = usersData?.tenant ? Object.keys(usersData.tenant) : []
-      const subPartnersData=usersData?.tenant || {}
-      const subPartners=subPartnersData[tenant] || []
+      const subPartnersData = usersData?.tenant || {}
+      const subPartners = subPartnersData[tenant] || []
       const roleoptions: any[] = usersData?.role_name || []
       const subPartnersoptions = subPartners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
       setsubPartnersData(subPartnersData)
@@ -70,6 +95,35 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     initializeData();
   }, [usersData]);
 
+  useEffect(() => {
+    const initializeData = () => {
+      if (rowData) {
+        setPartner(getFieldValue('Partner'));
+        setFirstName(getFieldValue('First Name'));
+        setLastName(getFieldValue('Last Name'));
+        setUsername(getFieldValue('Username'));
+        setEmailId(getFieldValue('Email Id'));
+        setMobileNo(getFieldValue('Mobile No'));
+        setRole(getFieldValue('Role'));
+        setPassword(getFieldValue('Password'));
+        setPhone(getFieldValue('Phone'));
+        setBusinessName(getFieldValue('Business Name'));
+        setLocale(getFieldValue('Locale'));
+        setAptSuite(getFieldValue('Apt/Suite'));
+        setAddressLine1(getFieldValue('Address Line-1'));
+        setAddressLine2(getFieldValue('Address Line-2'));
+        setCountry(getFieldValue('Country'));
+        setState(getFieldValue('State'));
+        setCity(getFieldValue('City'));
+        setTimeZone(getFieldValue('Time Zone'));
+        setZip(getFieldValue('Zip'));
+        setFormData(rowData)
+      }
+    };
+
+    initializeData();
+  }, [rowData]);
+
 
   const {
     tenant,
@@ -80,29 +134,23 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     setSubTenant
   } = useUserStore();
 
-  // useEffect(() => {
-  //   if (rowData) {
-  //     setUsername(rowData['username'] || '');
-  //     setEmail(rowData['email'] || '');
-  //     setRole(rowData['role'] ? { value: rowData['role'], label: rowData['role'] } : null);
-  //     setPartner(rowData['tenant_name'] ? { value: rowData['tenant_name'], label: rowData['tenant_name'] } : null);
-  //     setSubPartners(subPartnersData[rowData['tenant_name']] || []);
-  //     setSelectedSubPartner(rowData['subtenant_name'] || '');
-  //     setSubTenant(rowData['subtenant_name'] || '');
-  //   }
-  // }, [rowData]);
 
   const handlePartnerChange = (selectedOption: SingleValue<OptionType>) => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setTenant(partner);
       setSubPartners(subPartnersData[partner] || []);
-      setSelectedSubPartner([]); // Reset sub-partner when partner changes
+      setSelectedSubPartner([]);
       setSubTenant([])
+      if (rowData) {
+        // formData[getFieldKey('Partner')]=partner
+        setFormData((prevState: any) => ({ ...prevState, [getFieldKey('Partner')]: partner }));
+
+      }
     } else {
       setTenant('');
       setSubPartners([]);
-      setSelectedSubPartner([]); // Reset sub-partner when no partner is selected
+      setSelectedSubPartner([]);
     }
   };
 
@@ -126,7 +174,52 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async() => {
+    try{
+      const url =
+        "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+  
+      let changedData: any = {};
+      changedData[getFieldKey('Partner')] = partner;
+    changedData[getFieldKey('Sub Partner')] = subPartners;
+    changedData[getFieldKey('First Name')] = firstName;
+    changedData[getFieldKey('Last Name')] = lastName;
+    changedData[getFieldKey('Username')] = username;
+    changedData[getFieldKey('Email Id')] = emailId;
+    changedData[getFieldKey('Mobile No')] = mobileNo;
+    changedData[getFieldKey('Role')] = role?.value;
+    changedData[getFieldKey('Password')] = password;
+    changedData[getFieldKey('Phone')] = phone;
+    changedData[getFieldKey('Business Name')] = businessName;
+    changedData[getFieldKey('Locale')] = locale;
+    changedData[getFieldKey('Apt/Suite')] = aptSuite;
+    changedData[getFieldKey('Address Line-1')] = addressLine1;
+    changedData[getFieldKey('Address Line-2')] = addressLine2;
+    changedData[getFieldKey('Country')] = country;
+    changedData[getFieldKey('State')] = state;
+    changedData[getFieldKey('City')] = city;
+    changedData[getFieldKey('Time Zone')] = timeZone;
+    changedData[getFieldKey('Zip')] = zip;
+  
+      const data = {
+          tenant_name: partner || "default_value",
+          username: user,
+          path: "/update_partner_info",
+          role_name: userRole,
+          module_name: "Partner users",
+          action:rowData?"update":"create",
+          request_received_at: getCurrentDateTime(),
+          changed_data: {
+              "user_info":changedData
+          }
+      };
+      const response = await axios.post(url, { data });
+  }
+  catch(error){
+      console.log(
+          error
+      )
+  }
     const errors: string[] = [];
     if (!partner) errors.push('Partner is required.');
     if (!username) errors.push('Username is required.');
@@ -151,51 +244,24 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
       behavior: 'auto'  // Optional: Smooth scroll animation
     });
   };
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setUsername(newValue);
-
-    // Remove 'Username is required.' from error messages if the input is not empty
-    if (newValue) {
-      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Username is required.'));
+  const getFieldKey = (label: any) => {
+    if (formData) {
+      const field = generalFields ? generalFields.find((f: any) => f.display_name === label) : null;
+      return field ? field.db_column_name : ''
     }
-  };
-  const handlePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setPassword(newValue);
-
-    // Remove 'Username is required.' from error messages if the input is not empty
-    if (newValue) {
-      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Password is required.'));
-    }
-  };
-  const handleEmailID = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setEmail(newValue);
-
-    // Remove 'Username is required.' from error messages if the input is not empty
-    if (newValue) {
-      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Email id is required.'));
-    }
-  };
-  const handleSelectChange = (selectedOption: any, fieldName: any) => {
-    if(rowData){
-      // rowData=[
-      //   ...rowData,
-      //   [getFieldValue(fieldName)]:selectedOption
-      // ]
-      rowData[getFieldValue(fieldName)]=selectedOption
+    else {
+      return ""
     }
   };
   const getFieldValue = (label: any) => {
-    if(rowData){
-      console.log("label",label)
-      const field = generalFields?generalFields.find((f: any) => f.display_name === label) :null;
+    if (rowData) {
+      console.log("label", label)
+      const field = generalFields ? generalFields.find((f: any) => f.display_name === label) : null;
       return field ? rowData[field.db_column_name] || '' : '';
     }
-   else{
-    return ""
-   }
+    else {
+      return "jareen"
+    }
   };
   return (
     <div className='bg-gray-50'>
@@ -204,7 +270,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Partner</label>
           <Select
-            value={rowData?{value:getFieldValue('Partner'),label:getFieldValue('Partner')}:{ value: tenant, label: tenant }}
+            value={rowData ? { value: getFieldValue('Partner'), label: getFieldValue('Partner') } : { value: tenant, label: tenant }}
             onChange={handlePartnerChange}
             options={Partneroptions.map((option: string) => ({
               label: option,
@@ -218,7 +284,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <label className="field-label">Sub Partner</label>
           <Select
             isMulti
-            value={rowData?{value:getFieldValue('Sub Partner'),label:getFieldValue('Sub Partner')}:subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
+            value={rowData ? { value: getFieldValue('Sub Partner'), label: getFieldValue('Sub Partner') } : subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
             onChange={handleSetSubPartner}
             options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
             styles={editableDrp}
@@ -227,18 +293,18 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         </div>
         <div>
           <label className="field-label">First Name</label>
-          <input type="text" className="input" value={getFieldValue('First Name')}  onChange={(option) => handleSelectChange(option, 'partner')}/>
+          <input type="text" className="input" value={firstName} onChange={(e) => setFirstName(e.target.value)}/>
         </div>
         <div>
           <label className="field-label">Last Name</label>
-          <input type="text" className="input" value={getFieldValue('Last Name')}  onChange={(option) => handleSelectChange(option, 'partner')} />
+          <input type="text" className="input" value={lastName} onChange={(e) => setLastName(e.target.value)}/>
         </div>
         <div>
           <label className="field-label">Username<span className="text-red-500">*</span></label>
           <input
             type="text"
-            value={getFieldValue('Username')}
-            onChange={handleUsernameChange}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             className="input"
           />
           {errorMessages.includes('Username is required.') && (
@@ -249,8 +315,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <label className="field-label">Email Id<span className="text-red-500">*</span></label>
           <input
             type="email"
-            value={getFieldValue('Email Id')}
-            onChange={handleEmailID}
+            value={emailId}
+            onChange={(e) => setEmailId(e.target.value)}
             className="input"
           />
           {errorMessages.includes('Email id is required.') && (
@@ -261,15 +327,15 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
 
           <label className="field-label">Mobile No</label>
           <input type="text"
-            className="input" 
-            value={getFieldValue('Mobile No')}
-            onChange={(option) => handleSelectChange(option, 'Mobile No')}
-            />
+            className="input"
+            value={mobileNo}
+            onChange={(e) => setMobileNo(e.target.value)}
+          />
         </div>
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
           <Select
-            value={rowData?{value:getFieldValue('Role'),label:getFieldValue('Role')}:{ value: role_name, label: role_name }}
+            value={rowData ? { value: getFieldValue('Role'), label: getFieldValue('Role') } : { value: role_name, label: role_name }}
             onChange={handlesetRole}
             options={Roleoptions.map((option: string) => ({
               label: option,
@@ -285,8 +351,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
           <label className="field-label">Password<span className="text-red-500">*</span></label>
           <input
             type="password"
-            value={getFieldValue('Password')}
-            onChange={handlePassword}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="input"
           />
           {errorMessages.includes('Password is required.') && (
@@ -296,10 +362,10 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         <div>
           <label className="field-label">Phone</label>
           <input type="text"
-            className="input" 
-            value={getFieldValue('Phone')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
-            />
+            className="input"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
       </div>
 
@@ -310,7 +376,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <label className="field-label">Notification Enable<span className="text-red-500">*</span></label>
             <Select
               styles={editableDrp}
-              value={rowData?{value:getFieldValue('Notification Enable'),label:getFieldValue('Notification Enable')}:{value:'',label:''}}
+              value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : { value: '', label: '' }}
               options={Notificationoptions}
               onChange={handleNotification}
             />
@@ -322,72 +388,72 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <label className="field-label">Business Name</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Business Name')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Locale</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Locale')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={locale}
+              onChange={(e) => setLocale(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Apt/Suite</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Apt/Suite')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={aptSuite}
+              onChange={(e) => setAptSuite(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Address Line-1</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Address Line-1')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={addressLine1}
+              onChange={(e) => setAddressLine1(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Address Line-2</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Address Line-2')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={rowData?getFieldValue('Address Line-2'):addressLine2}
+              onChange={(e) => setAddressLine2(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Country</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Country')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">State</label>
             <input type="text"
-              className="input" 
-            value={getFieldValue('State')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              className="input"
+              value={state}
+              onChange={(e) => setState(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">City</label>
             <input type="text"
               className="input"
-            value={getFieldValue('City')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
             />
           </div>
           <div>
             <label className="field-label">Time Zone</label>
             <input type="text"
-              className="input" 
-            value={getFieldValue('Time Zone')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              className="input"
+              value={timeZone}
+              onChange={(e) => setTimeZone(e.target.value)}
             />
           </div>
 
@@ -395,8 +461,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
             <label className="field-label">Zip</label>
             <input type="text"
               className="input"
-            value={getFieldValue('Zip')}
-            onChange={(option) => handleSelectChange(option, 'partner')}
+              value={zip}
+              onChange={(e) => setZip(e.target.value)}
             />
           </div>
         </div>

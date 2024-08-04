@@ -317,7 +317,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             module_name: "Customer groups",
             action: "delete",
-            updated_data: row,
+            changed_data: row,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -382,6 +382,35 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             style: messageStyle,
             placement: 'top', // Apply custom styles here
           });  
+          if (popupHeading === "Customer Group") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: ["Customer groups"],
+                        pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                        },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
+              console.log("tableData",tableData)
+              setRowData(tableData);
+            }
+          }
           
           if (popupHeading === "E911 Customer") {
             const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
@@ -439,6 +468,35 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
             const generalFields = parsedData.data
             setRowData(tableData);
+          }
+          if (popupHeading === "Customer Group") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+                        username: username,
+                        path: "/get_partner_info",
+                        role_name: role,
+                        modules_list: ["Partner users"],
+                        pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                        },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData =parsedData?.data?.["Partner users"]?.users  || [];
+              console.log("tableData",tableData)
+              setRowData(tableData);
+            }
           }
         }
 

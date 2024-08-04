@@ -13,6 +13,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
+import AdvancedFilter from '@/app/components/entire_table_search';
 const { RangePicker } = DatePicker;
 
 interface ExcelData {
@@ -37,6 +38,7 @@ const CustomerGroups: React.FC = () => {
   const [generalFields, setGeneralFields] = useState<any>({});
   const { partnerData } = usePartnerStore.getState();
   const customerGroupsData = partnerData["Customer groups"] || {};
+  const [filteredData, setFilteredData] = useState([]);
 
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
@@ -44,7 +46,14 @@ const CustomerGroups: React.FC = () => {
     entries.sort((a, b) => a[1][1] - b[1][1]);
     return Object.fromEntries(entries) as HeaderMap;
   };
-
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
+  };
   useEffect(() => {
     const initializeData = () => {
       const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
@@ -196,14 +205,15 @@ const disableFutureDates = (current:any) => {
             </button>
           </div>
         </div>
-
+        <div className="">
+        </div>
         <TableComponent
           headers={headers}
           headerMap={headerMap}
           initialData={data}
           searchQuery={searchTerm}
           visibleColumns={visibleColumns}
-          itemsPerPage={10}
+          itemsPerPage={100}
           allowedActions={["edit", "delete"]}
           popupHeading='Customer Group'
           createModalData={createModalData}

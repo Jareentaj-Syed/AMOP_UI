@@ -5,7 +5,9 @@ import Select, { ActionMeta, MultiValue, SingleValue } from 'react-select';
 import { NonEditableDropdownStyles, DropdownStyles } from '@/app/components/css/dropdown';
 import { useUserStore } from './createUserStore';
 import { usePartnerStore } from '../../partnerStore';
-
+import { useAuth } from '@/app/components/auth_context';
+import { getCurrentDateTime } from '@/app/components/header_constants';
+import axios from 'axios';
 type OptionType = {
     value: string;
     label: string;
@@ -17,6 +19,7 @@ interface TenantInfoProps {
 }
 
 const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
+  const { username, tenantNames, role, partner, settabledata} = useAuth();
     const [carriers, setCarriers] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
@@ -68,20 +71,56 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     //         setSubTenant(rowData['subtenant_name'] || '');
     //     }
     // }, [rowData]);
-    const handleSubmit = () => {
-        const errors: string[] = [];
-        if (CarrierNotification.length === 0) errors.push('Carrier is required.');
-        if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
-
-        setErrorMessages(errors);
-
-        if (errors.length === 0) {
-            console.log('Saving...');
-        }
-        else {
-            scrollToTop()
-        }
+    const handleSubmit = async() => {
+        try{
+        const url =
+          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+    
+        let changedData: any = {}; // Initialize changedData as an object
+    
+        // Ensure getFieldValue returns a valid field name or provide a default value
+        const serviceProviderFieldName = getFieldValue("Service Provider") || "Service Provider";
+        const customerGroupFieldName = getFieldValue("Customer Group") || "Customer Group";
+        const customersFieldName = getFieldValue("Customers") || "Customers";
+    
+        changedData[serviceProviderFieldName] = ServiceProvider.map(option => option.value);
+        changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
+        changedData[customersFieldName] = customer.map(option => option.value);
+    
+        const data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/update_partner_info",
+            role_name: role,
+            module_name: "Partner users",
+            action: "update",
+            request_received_at: getCurrentDateTime(),
+            changed_data: {
+                "customer_info":changedData
+            }
+        };
+        const response = await axios.post(url, { data });
+    }
+    catch(error){
+        console.log(
+            error
+        )
+    }
+    
+        // const errors: string[] = [];
+        // if (CarrierNotification.length === 0) errors.push('Carrier is required.');
+        // if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
+    
+        // setErrorMessages(errors);
+    
+        // if (errors.length === 0) {
+        //     console.log('Saving...');
+        //     // You can add the code to make an API request here
+        // } else {
+        //     scrollToTop();
+        // }
     };
+    
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
