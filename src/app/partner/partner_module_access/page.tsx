@@ -297,15 +297,20 @@ const UserRole: React.FC = () => {
             try {
                 const url =
                   "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-                const data = {
-                  tenant_name: partner || "default_value",
-                  username: username,
-                  path: "/update_partner_info",
-                  "parent_module": "Partner",
-                  "module_name": ["Partner Module Access"],
-                  action: "update",
-                  changed_data:formattedData
-                };
+                  const roleValue = role?.value; // Get the value from role if it exists
+
+                  const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
+                  
+                  const data = {
+                    tenant_name: partner || "default_value",
+                    username: username,
+                    path: "/update_partner_info",
+                    parent_module: "Partner",
+                    module_name: "Partner Module Access",
+                    action: action,
+                    changed_data: formattedData,
+                  };
+                  
                 const response = await axios.post(url, { data });
             
                 console.log(response);
@@ -319,6 +324,7 @@ const UserRole: React.FC = () => {
         // setSelectedFeatures({});
     };
     
+  
 
     return (
         <div className='p-4'>
@@ -349,11 +355,12 @@ const UserRole: React.FC = () => {
                                     <label className="field-label">Module</label>
                                     <Select
                                         isMulti
+                                        // defaultValue={ map[category].Module.map(module => ({ value: module, label: module }))}
                                         closeMenuOnSelect={false}
                                         value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
                                         onChange={(selected) => handleModuleChange(category, selected)}
                                         options={map[category].Module.map(module => ({ value: module, label: module }))}
-                                        // styles={customStyles(category)}
+                                        styles={customStyles(category)}
                                     />
 
                                 </div>
@@ -366,8 +373,11 @@ const UserRole: React.FC = () => {
                                         options={(selectedModules[category] || []).flatMap((module: any) =>
                                             map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
                                         )}
+                                        // defaultValue={(selectedModules[category] || []).flatMap((module: any) =>
+                                        //     map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
+                                        // )}
                                         onChange={(selected) => handleFeatureChange(category, selected)}
-                                        // styles={customStyles(category)}
+                                        styles={customStyles(category)}
                                         isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
                                     />
                                 </div>

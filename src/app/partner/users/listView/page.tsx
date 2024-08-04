@@ -96,7 +96,7 @@ const handleExport = async () => {
     path: "/export",
     username: username,
     table: "customers",
-    module_name:"Partner Users",
+    module_name:"Users",
     request_received_at: getCurrentDateTime(),
     start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
     end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
@@ -145,7 +145,7 @@ const downloadBlob = (base64Blob: string) => {
   const blobObject = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blobObject);
-  link.download = 'Customer Groups.xlsx'; // Set the file name to .xlsx
+  link.download = 'Partner Users.xlsx'; // Set the file name to .xlsx
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);

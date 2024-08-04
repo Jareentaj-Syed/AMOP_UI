@@ -75,7 +75,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         sub_tenant,
         setTenant,
         setRoleName,
-        setSubTenant
+        setSubTenant,
+        user_name
     } = useUserStore();
 
     useEffect(() => {
@@ -85,6 +86,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         }
     }, [rowData]);
 
+
+    console.log("username", user_name)
 
     const colorPalette = [
         '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
@@ -303,6 +306,14 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
             });
     
             console.log("Formatted Data:", formattedData);
+
+            const Changed_data ={
+                "Selected role": role_name,
+                "Selected Partner": tenant,
+                "data": formattedData,
+                "Username": user_name
+            }
+
             try {
                 const url =
                   "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
@@ -311,9 +322,10 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
                   username: username,
                   path: "/update_partner_info",
                   "parent_module": "Partner",
-                  "module_name": ["Partner Users"],
+                  "module_name": "Partner Users",
+                  
                   action: "update",
-                  changed_data:formattedData
+                  changed_data: Changed_data
                 };
                 const response = await axios.post(url, { data });
             
