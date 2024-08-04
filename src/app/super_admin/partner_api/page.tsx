@@ -36,7 +36,8 @@ const PartnerInfoForm: React.FC = () => {
 
     return (
       <div className="">
-        <div className={`bg-white shadow-md mb-4 gap-4 tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
+        <div className={`bg-white shadow-md mb-4 gap-4  tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
+
          
           <button 
             className={`tab-headings ${activeTab === 'carrierInfo' ? 'active-tab-heading' : ''}`}
@@ -55,6 +56,7 @@ const PartnerInfoForm: React.FC = () => {
         <div className="h-[calc(100vh-150px)] pt-[70px] container">
           {activeTab === 'carrierInfo' && <CarrierInfo />}
           {activeTab === 'apiInfo' && <APIInfo />}
+          
         </div>
       </div>
     );
