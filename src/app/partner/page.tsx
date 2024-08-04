@@ -9,13 +9,25 @@ import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { usePartnerStore} from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
-const PartnerInfo = dynamic(() => import('./partner_info/page'));
-const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'));
-const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'));
-const CustomerGroups = dynamic(() => import('./customer_groups/page'));
-const PartnerUsers = dynamic(() => import('./users/page'));
-const Notification = dynamic(() => import('./notification/page'));
-
+// Dynamic imports with fallback loading indicators
+const PartnerInfo = dynamic(() => import('./partner_info/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
+const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
+const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
+const CustomerGroups = dynamic(() => import('./customer_groups/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
+const PartnerUsers = dynamic(() => import('./users/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
+const Notification = dynamic(() => import('./notification/page'), {
+  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+});
 
 const Partner: React.FC = () => {
     const router = useRouter();
@@ -30,8 +42,6 @@ const Partner: React.FC = () => {
     const [notificationsLoaded, setNotificationsLoaded] = useState(false);
     const title = useLogoStore((state) => state.title);
 
-
-
     const isExpanded = useSidebarStore((state: any) => state.isExpanded);
     const setPartnerInfo = usePartnerStore((state) => state.setPartnerInfo);
     const setPartnerAuthentication = usePartnerStore((state) => state.setPartnerAuthentication);
@@ -41,147 +51,86 @@ const Partner: React.FC = () => {
     const setNotifications = usePartnerStore((state) => state.setNotifications);
     
     useEffect(() => {
-        if (title != "Partner") {
+        if (title !== "Partner") {
             setLoading(true)
         }
     }, [title])
 
-
     const hasFetchedData = useRef(false); // Ref to track if data has been fetched
+
+    const fetchTabData = async (tab: { module: string; setter: (data: any) => void; setLoaded: (loaded: boolean) => void }) => {
+        const data = {
+            tenant_name: partner || "default_value",
+            username: username,
+            path: "/get_partner_info",
+            role_name: role,
+            modules_list: [tab.module],
+            pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+            }
+        };
+
+        try {
+            const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+            if (response && response.status === 200) {
+                const parseddata = JSON.parse(response.data.body);
+                if (parseddata.flag) {
+                    tab.setter(parseddata);
+                    tab.setLoaded(true);
+                } else {
+                    tab.setter(parseddata.message);
+                    Modal.error({
+                        title: 'Error',
+                        content: parseddata.message,
+                        centered: true,
+                    });
+                }
+            } else {
+                Modal.error({
+                    title: 'Error',
+                    content: 'An error occurred during fetching data.',
+                    centered: true,
+                });
+            }
+        } catch (error) {
+            console.error('Error fetching', tab.module, ':', error);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log('Fetching data...'); // Debug: Log when fetching starts
-            try {
-                const tabs = [
-                    { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
-                    { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
-                    { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
-                    { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
-                    { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
-                    { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
-                ];
+            const tabs = [
+                { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
+                { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
+                { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
+                { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
+                { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
+                { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
+            ];
 
-                const promises = tabs.map(async (tab) => {
-                    const data = {
-                        tenant_name: partner || "default_value",
-                        username: username,
-                        path: "/get_partner_info",
-                        role_name: role,
-                        modules_list: [tab.module],
-                        pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                        }
-                    };
+            // Fetch active tab data first
+            const activeTabData = tabs.find(tab => tab.module.replace(/\s+/g, '').toLowerCase() === activeTab);
+            // await fetchTabData(activeTabData);
+            if (activeTabData) {
+                await fetchTabData(activeTabData);
+              } else {
+                console.error('Active tab data not found');
+              }
 
-                    try {
-                        const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-                        console.log(`Response for ${tab.module}:`, response); // Debug: Log the response
-                        if (response && response.status === 200) {
-                            const parseddata = JSON.parse(response.data.body);
-                            if (parseddata.flag) {
-                                tab.setter(parseddata);
-                                tab.setLoaded(true);
-                            } else {
-                                tab.setter(parseddata.message);
-                                Modal.error({
-                                    title: 'Error',
-                                    content: parseddata.message,
-                                    centered: true,
-                                });
-                            }
-                        } else {
-                            Modal.error({
-                                title: 'Error',
-                                content: 'An error occurred during fetching data.',
-                                centered: true,
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Error fetching', tab.module, ':', error);
-                    }
-                });
+            // Fetch remaining tabs data in the background
+            const remainingTabs = tabs.filter(tab => tab.module.replace(/\s+/g, '').toLowerCase() !== activeTab);
+            remainingTabs.forEach(tab => fetchTabData(tab));
 
-                await Promise.all(promises); // Wait until all requests are complete
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                setLoading(false);
-            }
+            setLoading(false); // Set loading to false after initialization
         };
 
         if (!hasFetchedData.current) { // Check if data has already been fetched
             fetchData();
             hasFetchedData.current = true; // Set to true after fetching
         }
-    }, [partner, username, role]);
+    }, [activeTab]);
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         console.log('Fetching data...'); // Debug: Log when fetching starts
-    //         try {
-    //             const tabs = [
-    //                 { module: "Partner info", setter: setPartnerInfo, setLoaded: setPartnerInfoLoaded },
-    //                 { module: "Partner authentication", setter: setPartnerAuthentication, setLoaded: setPartnerAuthenticationLoaded },
-    //                 { module: "Partner module access", setter: setPartnerModuleAccess, setLoaded: setPartnerModuleAccessLoaded },
-    //                 { module: "Customer groups", setter: setCustomerGroups, setLoaded: setCustomerGroupsLoaded },
-    //                 { module: "Partner users", setter: setPartnerUsers, setLoaded: setPartnerUsersLoaded },
-    //                 { module: "Notifications", setter: setNotifications, setLoaded: setNotificationsLoaded }
-    //             ];
-    
-    //             const promises = tabs.map(async (tab) => {
-    //                 const data = {
-    //                     tenant_name: partner || "default_value",
-    //                     username: username,
-    //                     path: "/get_partner_info",
-    //                     role_name: role,
-    //                     modules_list: [tab.module],
-    //                     pages: {
-    //                         "Customer groups": { start: 0, end: 500 },
-    //                         "Partner users": { start: 0, end: 500 }
-    //                     }
-    //                 };
-    
-    //                 try {
-    //                     const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-    //                     console.log(`Response for ${tab.module}:`, response); // Debug: Log the response
-    //                     if (response && response.status === 200) {
-    //                         const parseddata = JSON.parse(response.data.body);
-    //                         if (parseddata.flag) {
-    //                             tab.setter(parseddata);
-    //                             tab.setLoaded(true);
-    //                         } else {
-    //                             tab.setter(parseddata.message);
-    //                             Modal.error({
-    //                                 title: 'Error',
-    //                                 content: parseddata.message,
-    //                                 centered: true,
-    //                             });
-    //                         }
-    //                     } else {
-    //                         Modal.error({
-    //                             title: 'Error',
-    //                             content: 'An error occurred during fetching data.',
-    //                             centered: true,
-    //                         });
-    //                     }
-    //                 } catch (error) {
-    //                     console.error('Error fetching', tab.module, ':', error);
-    //                 }
-    //             });
-    
-    //             await Promise.all(promises); // Wait until all requests are complete
-    //         } catch (error) {
-    //             console.error('Error:', error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    
-    //     fetchData();
-    // }, [partner, username, role]); // Ensure dependencies are set correctly
-    
     const switchToCarrierInfoTab = () => {
         setActiveTab('carrierInfo');
     };
