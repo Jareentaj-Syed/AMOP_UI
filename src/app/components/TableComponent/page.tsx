@@ -216,7 +216,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         }
       );
 
-      return matchesSearchQuery && matchesAdvancedFilters;
+      return matchesAdvancedFilters;
     });
 
     setRowData(filteredData);

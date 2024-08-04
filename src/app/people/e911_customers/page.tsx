@@ -17,6 +17,7 @@ import { useLogoStore } from "@/app/stores/logoStore";
 import { getCurrentDateTime } from "@/app/components/header_constants";
 import FileSaver from "file-saver";
 import dayjs, { Dayjs } from "dayjs";
+import TableSearch from "@/app/components/entire_table_search";
 
 const { RangePicker } = DatePicker;
 
@@ -205,7 +206,7 @@ const E911Customers: React.FC = () => {
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
-          <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
           <ColumnFilter
             headers={headers}
             visibleColumns={visibleColumns}
@@ -225,6 +226,14 @@ const E911Customers: React.FC = () => {
           </button>
         </div>
       </div>
+      <div className='mb-4 ml-4'>
+        <TableSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          tableName={"e911_customer"}
+          headerMap={headerMap}
+        />
+        </div>
 
       <TableComponent
         headers={headers}

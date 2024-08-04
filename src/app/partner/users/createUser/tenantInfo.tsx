@@ -40,6 +40,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         tenant,
         role_name,
         sub_tenant,
+        user_name,
         setTenant,
         setRoleName,
         setSubTenant
@@ -86,6 +87,8 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         changedData[serviceProviderFieldName] = ServiceProvider.map(option => option.value);
         changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
         changedData[customersFieldName] = customer.map(option => option.value);
+        changedData["username"] = user_name
+
     
         const data = {
             tenant_name: partner || "default_value",

@@ -102,6 +102,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
         setFirstName(getFieldValue('First Name'));
         setLastName(getFieldValue('Last Name'));
         setUsername(getFieldValue('Username'));
+        setUser_Name(username)
         setEmailId(getFieldValue('Email Id'));
         setMobileNo(getFieldValue('Mobile No'));
         setRole(getFieldValue('Role'));
@@ -131,7 +132,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
     sub_tenant,
     setTenant,
     setRoleName,
-    setSubTenant
+    setSubTenant,
+    setUser_Name
   } = useUserStore();
 
 
@@ -175,6 +177,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData }) => {
   };
 
   const handleSave = async() => {
+    setUser_Name(username)
     try{
       const url =
         "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";

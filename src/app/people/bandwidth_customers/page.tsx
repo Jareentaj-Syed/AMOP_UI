@@ -251,6 +251,12 @@ const BandWidthCustomers: React.FC = () => {
     <div className="container mx-auto">
     <div className="p-4 flex items-center justify-end mt-1 mb-4">
   <div className="flex space-x-2">
+  <ColumnFilter
+        headers={headers}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        headerMap={headerMap}
+      />
     <button className="save-btn" onClick={handleCreateModalOpen}>
       <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
       Add Customer
@@ -262,26 +268,14 @@ const BandWidthCustomers: React.FC = () => {
   </div>
 </div>
 
-      <div className="mb-4">
-  <div className="flex justify-between">
-    <TableSearch
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-      tableName={"Bandwidth Customers"}
-      headerMap={headerMap}
-    />
-    <div className="flex space-x-2 mr-2">
-      <ColumnFilter
-        headers={headers}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        headerMap={headerMap}
-      />
-    </div>
-  </div>
-</div>
-
-      
+<div className='mb-4 ml-4'>
+        <TableSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          tableName={"bandwidth_customers"}
+          headerMap={headerMap}
+        />
+        </div>
 
       <TableComponent
         headers={headers}

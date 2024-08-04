@@ -24,7 +24,6 @@ const TableSearch: React.FC<SearchInputProps> = ({
   searchTerm,
   setSearchTerm,
   placeholder = 'Search...',
-  width = '50%',
   headerMap = {},
   tableName,
 }) => {
@@ -60,7 +59,7 @@ const TableSearch: React.FC<SearchInputProps> = ({
       console.log("parsed",parsedData)
       if(parsedData?.flag){
         const tableData=parsedData?.data?.table
-settabledata(tableData)
+        settabledata(tableData)
       }
       console.log(response);
     } catch (error) {
@@ -74,23 +73,16 @@ settabledata(tableData)
   };
 
   return (
-    <div className="flex items-center space-x-2" style={{ width }}>
-      <SearchOutlined className="text-gray-500" />
+    <div className="flex items-center space-x-2 w-[320px]">
+      <div className="flex items-center border border-gray-300 rounded-lg p-1">
+      <SearchOutlined className="text-gray-500 ml-2" />
       <Input
         placeholder={placeholder}
         value={searchTerm}
         onChange={handleSearch}
-        className='w-[320px] h-[40px]'
+        className="ml-2 h-8 border-none outline-none w-full"
       />
-      <Select
-        isMulti
-        value={selectedHeaders}
-        onChange={handleHeaderChange}
-        options={headers.map((header: string) => ({ value: header, label: headerMap[header][0] }))}
-        styles={DropdownStyles}
-        className='w-[320px] h-[40px]'
-
-      />
+    </div>
       <Button type="primary" onClick={handleButtonClick}>
         Search
       </Button>

@@ -15,6 +15,7 @@ import { getCurrentDateTime } from '@/app/components/header_constants';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
 import { Button, DatePicker, Modal } from 'antd';
+import TableSearch from '@/app/components/entire_table_search';
 const { RangePicker } = DatePicker;
 
 
@@ -167,7 +168,7 @@ return current && current > dayjs().endOf('day'); // Disable future dates
 
           <div className="p-4 flex items-center justify-between mt-2 mb-2">
             <div className="flex space-x-4">
-              <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+              {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
               <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}}/>
             </div>
 
@@ -185,6 +186,14 @@ return current && current > dayjs().endOf('day'); // Disable future dates
               </button>
             </div>
           </div>
+          <div className='mb-4 ml-2'>
+        <TableSearch
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          tableName={"partner_users"}
+          headerMap={headerMap}
+        />
+        </div>
 
           <div className="">
             <TableComponent
