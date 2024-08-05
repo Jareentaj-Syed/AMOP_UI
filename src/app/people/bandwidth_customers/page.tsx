@@ -212,6 +212,15 @@ const BandWidthCustomers: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
+      if (response.data.statusCode === 200 && resp.flag === true) {
+
+        notification.success({
+          message: 'Success',
+          description: 'Successfully Exported the record!',
+          style: messageStyle,
+          placement: 'top', // Apply custom styles here
+        });
+        
 
       if (resp.flag === false) {
         console.log(resp.message)
@@ -222,25 +231,16 @@ const BandWidthCustomers: React.FC = () => {
         });
       }
 
-      downloadBlob(blob)
+   
 
-
+    downloadBlob(blob)
 
       // Close the modal after exporting
       handleExportModalClose();
 
-      // if () {
-      // Show success message
-      // notification.success({
-      //   message: 'Success',
-      //   description: 'More than 500 records!',
-      //   style: messageStyle,
-      //   placement: 'top', // Apply custom styles here
-      // });
-      //   Modal.error({ title: 'Export Error', content: 'More than 500 records!' });
-
-      // }
-    } catch (error) {
+    
+    }
+   } catch (error) {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }

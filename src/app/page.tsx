@@ -6,7 +6,7 @@ import HomePage from './home/page';
 
 const Page: React.FC = () => {
   return (
-      <Partner/>
+      <HomePage/>
   );
 };
 
