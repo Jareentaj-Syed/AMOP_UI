@@ -37,6 +37,7 @@ const ChooseTenant: React.FC = () => {
       role_name: role,
       username: username,
       tenant_name: partnerName,
+      Partner:partnerName,
       request_received_at: getCurrentDateTime()
     };
     setLoading(false)

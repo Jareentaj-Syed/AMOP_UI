@@ -5,6 +5,7 @@ import { Modal } from 'antd';
 import axios from 'axios';
 import { useAuth } from "@/app/components/auth_context";
 import { usePartnerStore } from '../partnerStore';
+import { getCurrentDateTime } from '@/app/components/header_constants';
 
 
 interface PartnerInfo {
@@ -63,7 +64,11 @@ useEffect(()=>{
             email_ids: emailList,
             logo:"Logo-design-illustration-on-transparent-background-PNG"
 
-          }
+          },
+          request_received_at: getCurrentDateTime(),
+          Partner:partner,
+
+
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);

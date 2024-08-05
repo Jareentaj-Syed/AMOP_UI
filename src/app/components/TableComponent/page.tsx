@@ -86,6 +86,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               role_name: role,
               module_name: "Customer groups",
               action: "delete",
+              Partner:"partner",
+         
+         
+              request_received_at: getCurrentDateTime(),
+
             };
           }
           if (popupHeading === "User") {
@@ -96,6 +101,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               role_name: role,
               module_name: "Partner users",
               action: "delete",
+              Partner:partner,
+         
+              request_received_at: getCurrentDateTime(),
             };
           }
 
@@ -109,6 +117,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               "parent_module": "People",
               "module": "E911 Customer Customer",
               "table_name": "customers",
+              Partner:partner,
+         
+              request_received_at: getCurrentDateTime(),
             };
           }
           if (popupHeading === " NetSapien Customer") {
@@ -120,6 +131,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               "parent_module": "People",
               "module": " NetSapien Customer",
               "table_name": " customers",
+              Partner:partner,
+         
+              request_received_at: getCurrentDateTime(),
             };
           }
           const response = await axios.post(url, { data });
@@ -314,6 +328,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Customer groups",
             action: "delete",
             changed_data: row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -326,6 +341,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Partner users",
             action: "delete",
             updated_data: row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -346,6 +362,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": "customers",
             "changed_data": row,
             action: "delete",
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
 
           };
@@ -365,6 +382,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": " customers",
             "changed_data": row,
             action: "delete",
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
           
@@ -391,6 +409,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                             "Customer groups": { start: 0, end: 500 },
                             "Partner users": { start: 0, end: 500 }
                         },
+                        Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -421,6 +440,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -452,6 +472,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -477,7 +498,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                         pages: {
                             "Customer groups": { start: 0, end: 500 },
                             "Partner users": { start: 0, end: 500 }
-                        },
+                        }, 
+                        Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -587,6 +609,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -606,6 +629,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -622,6 +646,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "roles",
+            Partner:partner,
             "changed_data": row,
             request_received_at: getCurrentDateTime(),
           };
@@ -639,6 +664,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             sub_module: "Partner Modules",
             "table_name": "tenant_module",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -664,6 +690,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner API", 
                 sub_tab: "Carrier APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
               const response = await axios.post(url, { data: data });
@@ -696,6 +723,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner API",
                 sub_tab: "Amop APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
               
@@ -729,7 +757,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner Modules",
                 flag: "withparameters",
-                Partner: selectedPartnerModule,
+                Partner:partner,
+                Selected_Partner: selectedPartnerModule,
                 sub_partner:Environment,
                 modules:["role partner module","partner module"],
                 request_received_at: getCurrentDateTime()
@@ -768,10 +797,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner Modules",
                 flag: "withparameters",
-                Partner: selectedPartnerModule,
+                Selected_Partner: selectedPartnerModule,
                 sub_partner:Environment,
                 modules:["role partner module","partner module"],
-                request_received_at: getCurrentDateTime()
+                request_received_at: getCurrentDateTime(),
+                Partner:partner
                 
                  // Send selected sub-partner
               };

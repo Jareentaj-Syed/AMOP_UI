@@ -106,6 +106,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module_name: 'Customer groups',
             action: 'create',
             changed_data: formData,
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
           };
         }
         if (heading === 'Carrier') {
@@ -122,6 +125,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_tab: 'Carrier APIs',
             table_name: 'carrier_apis',
             changed_data: formData,
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
           };
         }
 
@@ -139,6 +145,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_tab: 'Amop APIs',
             table_name: 'amop_apis',
             changed_data: formData,
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
           };
         }
 
@@ -157,6 +166,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             table_name: 'weste911customer',
             action: 'create',
             changed_data: formData,
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
           };
         }
         if (heading === 'NetSapien Customer') {
@@ -174,6 +186,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             table_name: 'customers',
             action: 'create',
             changed_data: formData,
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
           };
         }
         if (heading === 'Bandwidth Customer') {
@@ -190,7 +205,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module: 'Bandwidth Customers',
             table_name: 'customers',
             changed_data: formData,
-            action: 'create'
+            action: 'create',
+            Partner:partner,
+            request_received_at: getCurrentDateTime()
+
 
           };
         }
@@ -225,7 +243,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
               "sub_module": "Partner API",
               "sub_tab": "Carrier APIs",
               "table_name": "carrier_apis",
-              "changed_data": formData
+              "changed_data": formData,
+              Partner:partner,
+              request_received_at: getCurrentDateTime()
+  
             };
           }
 
@@ -241,7 +262,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
               "sub_module": "Partner API",
               "sub_tab": "Amop APIs",
               "table_name": "amop_apis",
-              "changed_data": formData
+              "changed_data": formData,
+              Partner:partner,
+              request_received_at: getCurrentDateTime()
+  
             };
           }
 
@@ -258,6 +282,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
+              request_received_at: getCurrentDateTime()
+  
             };
 
             const response = await axios.post(url, { data });
@@ -288,6 +315,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
+              request_received_at: getCurrentDateTime()
+  
             };
 
             const response = await axios.post(url, { data });
@@ -314,6 +344,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
+              request_received_at: getCurrentDateTime()
+  
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
@@ -344,7 +377,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
                             "Customer groups": { start: 0, end: 500 },
                             "Partner users": { start: 0, end: 500 }
                         },
-              request_received_at: getCurrentDateTime(),
+                        Partner:partner,
+                        request_received_at: getCurrentDateTime()
+            
+            
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);

@@ -9,6 +9,7 @@ import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { createModalData } from './api_constants';
 import TableSearch from '@/app/components/entire_table_search';
 import AdvancedMultiFilter from '@/app/components/advanced_search';
+import { getCurrentDateTime } from '@/app/components/header_constants';
 
 interface ExcelData {
   [key: string]: any;
@@ -58,6 +59,8 @@ const CarrierInfo: React.FC = () => {
         role_name: role,
         sub_module: "Partner API",
         sub_tab: "Amop APIs",
+        request_received_at: getCurrentDateTime(),
+        Partner:partner,
       };
 
       const response = await axios.post(url, { data: data });
@@ -134,9 +137,10 @@ const CarrierInfo: React.FC = () => {
             role_name: role,
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
-
+            request_received_at: getCurrentDateTime(),
+            Partner:partner,
             "Environment": environment.value,
-            "Partner": selectedPartner.value
+             Selected_Partner: selectedPartner.value
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);

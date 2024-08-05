@@ -216,7 +216,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
           request_received_at: getCurrentDateTime(),
           changed_data: {
               "user_info":changedData
-          }
+          },
+         
+          Partner:partner,
       };
       const response = await axios.post(url, { data });
   }
