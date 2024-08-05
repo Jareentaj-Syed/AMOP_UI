@@ -52,7 +52,7 @@ const ChooseTenant: React.FC = () => {
       if (response.status === 200) {
         setShowPasswordUpdate(false)
         if (!showPasswordUpdate){
-           setTitle("Partner")
+           setTitle("Home")
         }
         const parsedData = JSON.parse(response.data.body); // Parse the response body
   
@@ -73,7 +73,7 @@ const ChooseTenant: React.FC = () => {
           setModules(parsedData.Modules); // Set the modules state
           setPartner(partnerName);
           
-          router.push('/partner');
+          router.push('/home');
         }
       } else {
         console.log('Fetching modules failed:', response.data);

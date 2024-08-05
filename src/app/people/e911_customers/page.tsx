@@ -4,7 +4,7 @@ import {
   PlusIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
-import { Button, Modal, Spin, DatePicker } from "antd";
+import { Button, Modal, Spin, DatePicker, notification } from "antd";
 // import TableComponent from "@/app/components/TableComponent/page";
 // import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
@@ -132,6 +132,13 @@ const E911Customers: React.FC = () => {
     handleCreateModalClose();
   };
 
+  
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
+  };
   const handleExportModalOpen = () => {
     setExportModalOpen(true);
   };
@@ -173,7 +180,15 @@ const E911Customers: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
-
+      if (resp.flag === true) {
+      notification.success({
+        message: 'Success',
+        description: 'Successfully Exported the record!',
+        style: messageStyle,
+        placement: 'top', // Apply custom styles here
+      });
+      
+    }
       if (resp.flag === false) {
         console.log(resp.message)
         Modal.error({

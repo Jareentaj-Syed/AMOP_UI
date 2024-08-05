@@ -212,6 +212,15 @@ const BandWidthCustomers: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
+      if (response.data.statusCode === 200 && resp.flag === true) {
+
+        notification.success({
+          message: 'Success',
+          description: 'Successfully Exported the record!',
+          style: messageStyle,
+          placement: 'top', // Apply custom styles here
+        });
+        
 
       if (resp.flag === false) {
         console.log(resp.message)
@@ -222,25 +231,16 @@ const BandWidthCustomers: React.FC = () => {
         });
       }
 
-      downloadBlob(blob)
+   
 
-
+    downloadBlob(blob)
 
       // Close the modal after exporting
       handleExportModalClose();
 
-      // if () {
-      // Show success message
-      // notification.success({
-      //   message: 'Success',
-      //   description: 'More than 500 records!',
-      //   style: messageStyle,
-      //   placement: 'top', // Apply custom styles here
-      // });
-      //   Modal.error({ title: 'Export Error', content: 'More than 500 records!' });
-
-      // }
-    } catch (error) {
+    
+    }
+   } catch (error) {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
@@ -273,35 +273,35 @@ const BandWidthCustomers: React.FC = () => {
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
       
     <div className="container mx-auto">
-      <div className="flex">
-        <div className="p-4 flex justify-start">
-          <TableSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            tableName={"bandwidth_customers"}
-            headerMap={headerMap}
-          />
-        </div>
-        <div className="p-4 flex justify-end ml-96">
+    <div className="flex justify-between">
+  <div className="p-4 flex justify-start">
+    <TableSearch
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      tableName={"bandwidth_customers"}
+      headerMap={headerMap}
+    />
+  </div>
+  <div className="p-4 flex justify-end">
+    <div className="flex space-x-2">
+      <ColumnFilter
+        headers={headers}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        headerMap={headerMap}
+      />
+      <button className="save-btn" onClick={handleCreateModalOpen}>
+        <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+        Add Customer
+      </button>
+      <button className="save-btn" onClick={handleExportModalOpen}>
+        <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+        <span>Export</span>
+      </button>
+    </div>
+  </div>
+</div>
 
-          <div className="flex space-x-2">
-            <ColumnFilter
-              headers={headers}
-              visibleColumns={visibleColumns}
-              setVisibleColumns={setVisibleColumns}
-              headerMap={headerMap}
-            />
-            <button className="save-btn" onClick={handleCreateModalOpen}>
-              <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-              Add Customer
-            </button>
-            <button className="save-btn" onClick={handleExportModalOpen}>
-              <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
-              <span>Export</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
 
 

@@ -92,89 +92,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
 
     console.log("username", user_name)
 
-    const colorPalette = [
-        '#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6', '#E6B333',
-        '#3366E6', '#999966', '#99FF99', '#B34D4D', '#FF4D4D', '#C2C2F0',
-        '#FFCC99', '#C2F0C2', '#FF99E6', '#FFB3E6', '#80BFFF', '#FFCC00',
-        '#FF6666', '#C2C2F0', '#6699FF'
-    ];
-
-    const getColor = (index: number) => colorPalette[index % colorPalette.length];
 
 
-    const handleModuleChange = (category: string, modules: any) => {
-        const moduleValues = modules ? modules.map((module: any) => module.value) : [];
-        const newColors = { ...moduleColors };
-    
-        moduleValues.forEach((module: string | number, index: number) => {
-            // Assign a color to the module if it doesn't have one
-            if (!newColors[module]) {
-                newColors[module] = getColor(index);
-            }
-    
-            // Get features associated with the module
-            const features = map[category]?.Feature[module] || [];
-            
-            // Assign the module's color to features only if they have not been assigned a color yet
-            features.forEach((feature: string) => {
-                if (!newColors[feature]) {
-                    newColors[feature] = newColors[module]; // Use the module's color for its features
-                }
-            });
-        });
-    
-        // Create a list of features with their colors
-        const defaultFeatures = moduleValues.flatMap((module: any) => {
-            const features = map[category]?.Feature[module] || [];
-            return features.map((feature: string) => ({
-                feature,
-                color: newColors[feature], // Use the feature's color
-            }));
-        });
-    
-        setModuleColors(newColors);
-        setSelectedModules(prevState => ({
-            ...prevState,
-            [category]: moduleValues
-        }));
-    
-        setSelectedFeatures(prevState => {
-            const updatedFeatures = {
-                ...prevState,
-                [category]: defaultFeatures.map((item: { feature: any; }) => item.feature)
-            };
-            return updatedFeatures;
-        });
-    };
-
-  
-    const customStyles = (category: string): StylesConfig<OptionType, true> => ({
-        option: (provided, { data }) => ({
-            ...provided,
-            color: 'black', // Keep options in default black color
-        }),
-        multiValue: (provided, { data }) => {
-            const moduleColor = moduleColors[data.value] || 'black'; // Get color for selected module or feature
-    
-            return {
-                ...provided,
-                backgroundColor: moduleColor,
-                color: 'white',
-            };
-        },
-        multiValueLabel: (provided) => ({
-            ...provided,
-            color: 'white',
-        }),
-        multiValueRemove: (provided) => ({
-            ...provided,
-            color: 'white',
-            ':hover': {
-                backgroundColor: 'red',
-                color: 'white',
-            },
-        }),
-    });
     
     
     const rawData = partnerModuleData.data["Partner module access"]["role_module"];
@@ -208,32 +127,200 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
 
 
 
-    const handleFeatureChange = (category: string, features: any) => {
-        const featureValues = features ? features.map((feature: any) => feature.value) : [];
-        setSelectedFeatures(prevState => ({
-            ...prevState,
-            [category]: featureValues,
-        }));
-    };
-
     const handleSetRole = (selectedOption: SingleValue<OptionType>) => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
-            console.log(selectedOption)
-            // let selectedRoleData ;
-           
-               const  selectedRoleData = generateDefaultRoleData();
-                mockRoleData[role] = selectedRoleData; // Save the generated default data
-            
     
-            console.log(selectedRoleData);
+            let selectedRoleData;
+    
+            if (!mockRoleData[role]) {
+                selectedRoleData = generateDefaultRoleData();
+            } else {
+                selectedRoleData = combineRoleData(generateDefaultRoleData(), mockRoleData[role]);
+            }
+    
             setMap(selectedRoleData);
-            setSelectedModules({});
-            setSelectedFeatures({});
-            setModuleColors({}); // Reset colors when role changes
+    
+            // Initialize selected modules and features based on the selected role
+            const initialSelectedModules: { [key: string]: string[] } = {};
+            const initialSelectedFeatures: { [key: string]: string[] } = {};
+    
+            Object.keys(selectedRoleData).forEach((category) => {
+                initialSelectedModules[category] = selectedRoleData[category].Module
+                    .filter((module) => module.includes('-active'))
+                    .map((module) => module.replace('-active', '')); // Remove '-active'
+    
+                Object.keys(selectedRoleData[category]?.Feature || {}).forEach((module) => {
+                    initialSelectedFeatures[category] = initialSelectedFeatures[category] || [];
+                    selectedRoleData[category].Feature[module].forEach((feature) => {
+                        if (feature.includes('-active')) {
+                            initialSelectedFeatures[category].push(feature.replace('-active', '')); // Remove '-active'
+                        }
+                    });
+                });
+            });
+    
+            setSelectedModules(initialSelectedModules);
+            setSelectedFeatures(initialSelectedFeatures);
+            console.log("Initial Selected Modules:", initialSelectedModules);
+console.log("Initial Selected Features:", initialSelectedFeatures);
+console.log("Selected Role Data:", selectedRoleData);
+
         }
+        
     };
+    
+    
+
+
+    const generateDefaultRoleData = (): CategoryData => {
+        const subModules = partnerModuleData.data["Partner module access"]["module"];
+        const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
+        const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
+
+        const defaultRoleData: CategoryData = {};
+
+        // Iterate through each parent module
+        parentModules.forEach((parentModule: string) => {
+            defaultRoleData[parentModule] = {
+                Module: [], // Initialize Module as an empty array
+                Feature: {}
+            };
+
+            // Find children modules for the parent module
+            const childrenModules = subModules[parentModule] || [];
+            defaultRoleData[parentModule].Module = childrenModules; // Assign children modules
+
+            // Populate features for each child module
+            childrenModules.forEach((childModule: string) => {
+                const features = moduleFeatures.find((modFeat: { module: string }) => modFeat.module === childModule);
+                defaultRoleData[parentModule].Feature[childModule] = features ? JSON.parse(features.features) : []; // Parse features if available
+            });
+        });
+
+        console.log(defaultRoleData)
+        return defaultRoleData;
+    };
+
+  const combineRoleData = (
+    defaultData: CategoryData,
+    selectedRoleData: CategoryData
+): CategoryData => {
+    for (const [moduleKey, moduleValue] of Object.entries(defaultData)) {
+        console.log(`Processing module: ${moduleKey}`);
+
+        // Check if the module exists in the selected role data
+        if (selectedRoleData[moduleKey]) {
+            console.log(`Module ${moduleKey} found in selectedRoleData`);
+
+            // Mark the module as active if it exists in selectedRoleData
+            moduleValue.Module = moduleValue.Module.map((module: string) => {
+                const isActive = selectedRoleData[moduleKey].Module.includes(module.replace('-active', ''));
+                const newModuleName = isActive ? `${module.replace('-active', '')}-active` : module.replace('-active', '');
+                console.log(`Module: ${module} => New Module: ${newModuleName}`);
+                return newModuleName;
+            });
+
+            // Get the selected features for the current module
+            const selectedFeatures = selectedRoleData[moduleKey].Feature || {};
+            console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
+
+            // Process features for the current module
+            for (const featureKey of Object.keys(moduleValue.Feature)) {
+                console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
+
+                // Check if features exist in selected role data
+                for (const featureKey of Object.keys(moduleValue.Feature)) {
+                    if (selectedFeatures[featureKey]) {
+                        moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].map((feature: string) => {
+                            const isActiveFeature = selectedFeatures[featureKey].includes(feature.replace('-active', ''));
+                            return isActiveFeature ? `${feature.replace('-active', '')}-active` : feature;
+                        });
+                    }
+                }
+            }
+        } else {
+            console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
+
+            // If the module doesn't exist in selectedRoleData, retain its original state
+            moduleValue.Module = moduleValue.Module.map(module => module.replace('-active', ''));
+
+            // Retain original features state as well
+            for (const featureKey of Object.keys(moduleValue.Feature)) {
+                moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].filter(
+                    feature => !feature.endsWith('-active')
+                );
+            }
+        }
+    }
+
+    console.log("Combined data:", defaultData);
+    return defaultData; // Returns modified defaultData
+};
+
+    
+
+
+
+
+   
+const toggleModule = (category: string, module: string) => {
+    setSelectedModules((prev) => {
+        const modules = prev[category] || [];
+        const isSelected = modules.includes(module);
+        const features = map[category]?.Feature[module] || [];
+
+        // If the module is being selected, also select its features
+        if (!isSelected) {
+            setSelectedFeatures((prevFeatures) => ({
+                ...prevFeatures,
+                [category]: [
+                    ...(prevFeatures[category] || []),
+                    ...features.map(feature => feature.replace('-active', '')) // Remove '-active' for display
+                ],
+            }));
+        } else {
+            // If the module is being deselected, also deselect its features
+            setSelectedFeatures((prevFeatures) => ({
+                ...prevFeatures,
+                [category]: (prevFeatures[category] || []).filter(
+                    (feature) => !features.includes(feature.replace('-active', '')) // Remove related features
+                ),
+            }));
+        }
+
+        return {
+            ...prev,
+            [category]: isSelected
+                ? modules.filter((m) => m !== module) // Deselect module
+                : [...modules, module] // Select module
+        };
+    });
+};
+
+    const toggleFeature = (category: string, feature: string) => {
+        setSelectedFeatures((prev) => {
+            const features = prev[category] || [];
+            const isSelected = features.includes(feature);
+            return {
+                ...prev,
+                [category]: isSelected
+                    ? features.filter((f) => f !== feature)
+                    : [...features, feature]
+            };
+        });
+    };
+
+
+    
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
+  };
+
     
     useEffect(() => {
         if (role_name) {
@@ -246,40 +333,14 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         }
     }, [role_name]);
 
-    const generateDefaultRoleData = (): CategoryData => {
-        const subModules = partnerModuleData.data["Partner module access"]["module"];
-        const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
-        const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
-        
-        const defaultRoleData: CategoryData = {};
-    
-        // Iterate through each parent module
-        parentModules.forEach((parentModule: string) => {
-            defaultRoleData[parentModule] = {
-                Module: [], // Initialize Module as an empty array
-                Feature: {}
-            };
-    
-            // Find children modules for the parent module
-            const childrenModules = subModules[parentModule] || [];
-            defaultRoleData[parentModule].Module = childrenModules; // Assign children modules
-    
-            // Populate features for each child module  
-            childrenModules.forEach((childModule: string) => {
-                const features = moduleFeatures.find((modFeat: { module: string }) => modFeat.module === childModule);
-                defaultRoleData[parentModule].Feature[childModule] = features ? JSON.parse(features.features) : []; // Parse features if available
-            });
-        });
-    
-        return defaultRoleData;
-    };
+
  
     const handleSubmit =async ()=> {
         
 
         scrollToTop()
         const errors: string[] = [];
-        // Check if role is null and push an error if it is
+    
         if (!role) {
             errors.push('Role is required.');
         }
@@ -287,11 +348,14 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         setErrorMessages(errors);
     
         if (errors.length === 0) {
-            // Check that role is defined before accessing its value
             const formattedData: { [key: string]: any } = {
-                [role!.value]: {} // Use non-null assertion if you are sure it won't be null
+                [role!.value]: {}
             };
     
+            console.log("Selected Modules:", selectedModules);
+            console.log("Selected Features:", selectedFeatures);
+    
+            // Loop through selectedModules and selectedFeatures
             Object.keys(selectedModules).forEach(category => {
                 const selectedModulesForCategory = selectedModules[category];
                 const selectedFeaturesForCategory = selectedFeatures[category] || [];
@@ -302,9 +366,32 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
                 };
     
                 selectedModulesForCategory.forEach(module => {
-                    formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
-                        map[category]?.Feature[module]?.includes(feature)
-                    );
+                    // Retrieve related features from the map
+                    const relatedFeatures = map[category]?.Feature[module.replace('-active', '')];
+                    console.log(`Related features for ${module} in ${category}:`, relatedFeatures);
+    
+                    if (relatedFeatures) {
+                        // Normalize the selected features by removing the '-active' suffix
+                        const normalizedSelectedFeatures = selectedFeaturesForCategory.map(feature =>
+                            feature.replace('-active', '')
+                        );
+    
+                        console.log("Normalized Selected Features:", normalizedSelectedFeatures);
+    
+                        // Filter normalized features against related features
+                        const filteredFeatures = normalizedSelectedFeatures.filter(feature => {
+                            // Check if the related feature contains the normalized feature
+                            return relatedFeatures.includes(feature) || relatedFeatures.includes(feature + '-active');
+                        });
+    
+                        // Store filtered features in the formatted data
+                        formattedData[role!.value][category].Feature[module] = filteredFeatures;
+    
+                        // Log the filtered features for debugging
+                        console.log(`Filtered features for ${module}:`, filteredFeatures);
+                    } else {
+                        console.log(`No features found for module: ${module} in category: ${category}`);
+                    }
                 });
             });
     
@@ -382,42 +469,66 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
                     />
                 </div>
             </div>
-            <h3 className="tabs-sub-headings">Module Info</h3>
-            <div className="grid grid-cols-1 gap-4 mt-4">
-                    {Object.keys(map).map((category) => (
-                        <div key={category} className="col-span-1">
-                            <h4 className="text-md font-medium text-blue-600">{category}</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                                <div>
-                                    <label className="field-label">Module</label>
-                                    <Select
-                                        isMulti
-                                        closeMenuOnSelect={false}
-                                        value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
-                                        onChange={(selected) => handleModuleChange(category, selected)}
-                                        options={map[category].Module.map(module => ({ value: module, label: module }))}
-                                        // styles={customStyles(category)}
-                                    />
+            {role_name && (
+    <>
+        <h3 className="tabs-sub-headings">Module Info</h3>
+        <div className="grid grid-cols-1 gap-4 mt-4">
+            {Object.keys(map).map((category) => (
+                <div key={category} className="col-span-1">
+                    <h4 className="text-md font-medium text-blue-600">{category}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                        <div>
+                            <label className="field-label">Module</label>
+                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
+                                {map[category].Module.map((module) => {
+                                    const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
+                                    const isSelected = selectedModules[category]?.includes(cleanedModule);
+                                    const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
 
-                                </div>
-                                <div>
-                                    <label className="field-label">Features</label>
-                                    <Select
-                                        isMulti
-                                        closeMenuOnSelect={false}
-                                        value={selectedFeatures[category]?.map((feature: any) => ({ value: feature, label: feature })) || []}
-                                        options={(selectedModules[category] || []).flatMap((module: any) =>
-                                            map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
-                                        )}
-                                        onChange={(selected) => handleFeatureChange(category, selected)}
-                                        // styles={customStyles(category)}
-                                        isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
-                                    />
-                                </div>
+                                    return (
+                                        <button
+                                            key={module}
+                                            className={`px-2 py-1 rounded-lg border`}
+                                            style={{ backgroundColor: bgColor }}
+                                            onClick={() => toggleModule(category, cleanedModule)}
+                                        >
+                                            {cleanedModule}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
-                    ))}
+
+                        <div>
+                            <label className="field-label">Features</label>
+                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
+                                {Object.keys(map[category]?.Feature || {}).flatMap((module) =>
+                                    map[category].Feature[module]?.map((feature) => {
+                                        const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
+                                        const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
+                                        const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+
+                                        return (
+                                            <button
+                                                key={feature}
+                                                className={`px-2 py-1 rounded-lg border`}
+                                                style={{ backgroundColor: bgColor }}
+                                                onClick={() => toggleFeature(category, cleanedFeature)}
+                                            >
+                                                {cleanedFeature}
+                                            </button>
+                                        );
+                                    }) || []
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            ))}
+        </div>
+    </>
+)}
+
             <div className="flex justify-end space-x-4">
                 <button className="cancel-btn">
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />

@@ -9,6 +9,9 @@ import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { usePartnerStore} from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
+
+
+
 // Dynamic imports with fallback loading indicators
 const PartnerInfo = dynamic(() => import('./partner_info/page'), {
   loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
@@ -31,6 +34,7 @@ const Notification = dynamic(() => import('./notification/page'), {
 
 const Partner: React.FC = () => {
     const router = useRouter();
+    const setTitle = useLogoStore((state) => state.setTitle);
     const { username, partner, role } = useAuth();
     const [loading, setLoading] = useState(true); // State to manage loading
     const [activeTab, setActiveTab] = useState('partnerInfo');
@@ -55,6 +59,10 @@ const Partner: React.FC = () => {
             setLoading(true)
         }
     }, [title])
+
+    useEffect(() => {
+        setTitle("Partner")
+    })
 
     const hasFetchedData = useRef(false); // Ref to track if data has been fetched
 

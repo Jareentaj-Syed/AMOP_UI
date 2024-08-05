@@ -5,7 +5,7 @@ import { useAuth } from '../components/auth_context';
 const HomePage: React.FC = () => {
   // Mock data
   const router = useRouter(); // Use the router hook to handle navigation
-  const { username, partner } = useAuth();
+  const { username, partner , role} = useAuth();
   useEffect(() => {
       // Ensure the URL is set to /login when the component mounts
       router.push('/home');
@@ -23,6 +23,7 @@ const HomePage: React.FC = () => {
         <div className="text-center">
           <div className="text-xl font-medium text-black">{username}</div>
           <p className="text-gray-500">{partner}</p>
+          <p className="text-gray-500">{role}</p>
         </div>
       </div>
     </div>
