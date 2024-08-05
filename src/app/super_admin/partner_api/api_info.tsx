@@ -8,6 +8,7 @@ import { DropdownStyles } from '@/app/components/css/dropdown';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import { createModalData } from './api_constants';
 import TableSearch from '@/app/components/entire_table_search';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 
 interface ExcelData {
   [key: string]: any;
@@ -30,6 +31,15 @@ const CarrierInfo: React.FC = () => {
   const [createModalData, setcreateModalData] = useState<any[]>([]);
   const [generalFields, setgeneralFields] = useState<any[]>([])
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
+  };
 
   useEffect(() => {
 
@@ -223,9 +233,9 @@ const CarrierInfo: React.FC = () => {
               headerMap={headerMap}
             />
           </div>
+          <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
         </div>
-
-        <div className="container mx-auto">
 
           <TableComponent
             headers={headers}

@@ -215,7 +215,6 @@ const CustomerGroups: React.FC = () => {
         </div>
         <div className=' mb-4 space-x-2'>
             <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
-
         </div>
         <TableComponent
           headers={headers}

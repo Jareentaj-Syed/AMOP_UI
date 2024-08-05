@@ -18,6 +18,7 @@ import { getCurrentDateTime } from "@/app/components/header_constants";
 import FileSaver from "file-saver";
 import dayjs, { Dayjs } from "dayjs";
 import TableSearch from "@/app/components/entire_table_search";
+import AdvancedMultiFilter from "@/app/components/advanced_search";
 
 const { RangePicker } = DatePicker;
 
@@ -36,8 +37,16 @@ const E911Customers: React.FC = () => {
   const [headerMap, setHeaderMap] = useState<any>({});
   const [createModalData, setCreateModalData] = useState<any[]>([]);
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
+  const [filteredData, setFilteredData] = useState([]);
 
-
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
+  };
   useEffect(() => {
     if (title !== "People") {
       setLoading(true);
@@ -233,10 +242,9 @@ const E911Customers: React.FC = () => {
           />
         </div>
       </div>
-      <div className='mb-4 ml-4'>
-        
+      <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
         </div>
-
       <TableComponent
         headers={headers}
         headerMap={headerMap}

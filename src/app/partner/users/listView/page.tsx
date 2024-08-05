@@ -16,6 +16,7 @@ import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
 import { Button, DatePicker, Modal } from 'antd';
 import TableSearch from '@/app/components/entire_table_search';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 const { RangePicker } = DatePicker;
 
 
@@ -39,6 +40,16 @@ const ListView: React.FC = () => {
 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const { username, partner, role } = useAuth();
+
+  const [filteredData, setFilteredData] = useState([]);
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
+  };
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
@@ -192,9 +203,9 @@ const ListView: React.FC = () => {
               <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}} />
             </div>
           </div>
-          <div className='mb-4 ml-2'>
-
-          </div>
+          <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+        </div>
 
           <div className="">
             <TableComponent

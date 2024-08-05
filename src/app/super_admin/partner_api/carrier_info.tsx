@@ -11,6 +11,7 @@ import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import axios from 'axios';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import TableSearch from '@/app/components/entire_table_search';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 
 interface ExcelData {
   [key: string]: any;
@@ -38,6 +39,16 @@ const CarrierInfo: React.FC = () => {
   const [headerMap,setHeaderMap]=useState<any>({});
   const [createModalData,setcreateModalData]=useState<any[]>([]);
   const [generalFields,setgeneralFields]=useState<any[]>([])
+  const [filteredData, setFilteredData] = useState([]);
+
+  const handleFilter = (advancedFilters: any) => {
+    console.log(advancedFilters)
+    setFilteredData(advancedFilters);
+  };
+  const handleReset = (EmptyFilters: any) => {
+    console.log(EmptyFilters)
+    setFilteredData(EmptyFilters);
+  };
   useEffect(() => {
     fetchData();
   }, []); // Fetch initial data once on mount
@@ -254,7 +265,9 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             />
           </div>
         </div>
-
+        <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+        </div>
         <div className="container mx-auto">
           {(
             <TableComponent
