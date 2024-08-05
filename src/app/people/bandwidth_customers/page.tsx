@@ -284,12 +284,7 @@ const BandWidthCustomers: React.FC = () => {
   </div>
   <div className="p-4 flex justify-end">
     <div className="flex space-x-2">
-      <ColumnFilter
-        headers={headers}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        headerMap={headerMap}
-      />
+      
       <button className="save-btn" onClick={handleCreateModalOpen}>
         <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
         Add Customer
@@ -298,6 +293,12 @@ const BandWidthCustomers: React.FC = () => {
         <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
         <span>Export</span>
       </button>
+      <ColumnFilter
+        headers={headers}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        headerMap={headerMap}
+      />
     </div>
   </div>
 </div>
