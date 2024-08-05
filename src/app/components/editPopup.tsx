@@ -74,9 +74,10 @@ const EditModal: React.FC<EditModalProps> = ({
   };
   const handleSelectChange = (name: string, value: any) => {
     console.log("values",value)
+    console.log("values",JSON.stringify(value))
     setFormData((prevState: any) => ({
       ...prevState,
-      [name]: value,
+      [name]: JSON.stringify(value),
     }));
   };
   const getOptions = (column: any) => {
