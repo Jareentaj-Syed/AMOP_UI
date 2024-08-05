@@ -194,8 +194,8 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className=''>
       <div className="">
-        <div className="p-4 items-center justify-between mb-2">
-          <div className="flex space-x-4 mb-4">
+      <div className="p-4 flex items-center justify-between mb-2">
+          <div className="flex space-x-4">
             <div className='w-[250px]'>
               <label className="block text-gray-700">
                 Environment<span className="text-red-500">*</span>
@@ -218,36 +218,37 @@ const CarrierInfo: React.FC = () => {
                 styles={editableDrp}
               />
             </div>
-            <div className='mt-5 ml-3'>
-              <button
-                className='save-btn'
-                type="submit"
-                onClick={() => fetchData()}
-              >
-                Clear
-              </button>
-            </div>
-            <div className="ml-auto mt-4">
-              {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-              <TableSearch
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-                tableName={"amop_apis"}
-                headerMap={headerMap}
-              />
-            </div>
           </div>
-
-
-          <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter
-              onFilter={handleFilter}
-              onReset={handleReset}
-              headers={headers}
+          <div className='mt-5 ml-3'>
+            <button
+              className='save-btn'
+              type="submit"
+              onClick={() => fetchData()}
+            >
+              Clear
+            </button>
+          </div>
+          <div className="ml-auto mt-4">
+            {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+            <TableSearch
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              tableName={"carrier_apis"}
               headerMap={headerMap}
-              tableName={"amop_apis"} />
+            />
           </div>
-
+        </div>
+        <div className=' mb-4 space-x-2'>
+          <AdvancedMultiFilter
+            onFilter={handleFilter}
+            onReset={handleReset}
+            headers={headers}
+            headerMap={headerMap}
+            tableName={"carrier_apis"}
+          />
+        </div>
+        <div className="container mx-auto">
+        {(
           <TableComponent
             headers={headers}
             headerMap={headerMap}
@@ -261,10 +262,11 @@ const CarrierInfo: React.FC = () => {
             pagination={pagination}
             advancedFilters={filteredData}
           />
-
+        )}
+        </div>
         </div>
       </div>
-    </div >
+    
   );
 };
 
