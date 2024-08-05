@@ -75,15 +75,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   useEffect(() => {
     const newRowData = tabledata? tabledata : initialData;
     setRowData(newRowData);
-    console.log("New rowData set:", newRowData);
   }, [tabledata, initialData]);
   
-  useEffect(() => {
-    console.log("tabledata", rowData);
-  }, [rowData])
-  useEffect(() => {
-    console.log("initialdata", rowData);
-  }, [initialData])
   useEffect(() => {
     const start = pagination?.start || 1;
     const total = pagination?.total || 1;
