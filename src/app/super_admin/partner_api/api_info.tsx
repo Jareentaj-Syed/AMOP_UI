@@ -60,7 +60,7 @@ const CarrierInfo: React.FC = () => {
         sub_module: "Partner API",
         sub_tab: "Amop APIs",
         request_received_at: getCurrentDateTime(),
-        Partner:partner,
+        Partner: partner,
       };
 
       const response = await axios.post(url, { data: data });
@@ -138,9 +138,9 @@ const CarrierInfo: React.FC = () => {
             "sub_module": "Partner API",
             "sub_tab": "Amop APIs",
             request_received_at: getCurrentDateTime(),
-            Partner:partner,
+            Partner: partner,
             "Environment": environment.value,
-             Selected_Partner: selectedPartner.value
+            Selected_Partner: selectedPartner.value
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);
@@ -194,8 +194,8 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className=''>
       <div className="">
-        <div className="p-4 flex items-center justify-between mb-2">
-          <div className="flex space-x-4">
+      <div className="p-4 items-center justify-between mb-2">
+          <div className="flex space-x-4 mb-4">
             <div className='w-[250px]'>
               <label className="block text-gray-700">
                 Environment<span className="text-red-500">*</span>
@@ -205,59 +205,61 @@ const CarrierInfo: React.FC = () => {
                 onChange={(selectedOption) => setEnvironment(selectedOption)}
                 options={environmentOptions}
                 styles={editableDrp}
+                
               />
             </div>
-            
-            <div className='w-[250px] '>
+            <div className='w-[250px]'>
               <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
               <Select
                 value={selectedPartner}
                 onChange={(selectedOption) => setSelectedPartner(selectedOption)}
                 options={Partneroptions}
+               
                 styles={editableDrp}
               />
             </div>
-
-          </div>
           <div className='mt-5 ml-3'>
-            <button
+          <button
               className='save-btn'
               type="submit"
               onClick={() => fetchData()}
             >
               Clear
             </button>
-          </div>
+            </div>
           <div className="ml-auto mt-4">
             {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
             <TableSearch
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              tableName={"amop_apis "}
+              tableName={"carrier_apis "}
               headerMap={headerMap}
             />
           </div>
-          <div className=' mb-4 space-x-2'>
+        </div>
+
+
+        <div className=' mb-4 space-x-2'>
             <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
         </div>
 
-          <TableComponent
-            headers={headers}
-            headerMap={headerMap}
-            initialData={tableData}
-            searchQuery={searchTerm}
-            visibleColumns={headers}
-            itemsPerPage={100}
-            allowedActions={["edit"]}
-            popupHeading='API'
-            createModalData={createModalData}
-            pagination={pagination}
-            advancedFilters={[]}
-          />
+        <TableComponent
+          headers={headers}
+          headerMap={headerMap}
+          initialData={tableData}
+          searchQuery={searchTerm}
+          visibleColumns={headers}
+          itemsPerPage={100}
+          allowedActions={["edit"]}
+          popupHeading='API'
+          createModalData={createModalData}
+          pagination={pagination}
+          advancedFilters={[]}
+        />
 
-        </div>
       </div>
     </div>
+    </div >
   );
 };
 

@@ -40,7 +40,7 @@ const CustomerGroups: React.FC = () => {
   const { partnerData } = usePartnerStore.getState();
   const customerGroupsData = partnerData["Customer groups"] || {};
   const [filteredData, setFilteredData] = useState([]);
-
+ const [pagination,setPagination]=useState<any>({});
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
@@ -48,18 +48,18 @@ const CustomerGroups: React.FC = () => {
     return Object.fromEntries(entries) as HeaderMap;
   };
   const handleFilter = (advancedFilters: any) => {
-    console.log(advancedFilters)
     setFilteredData(advancedFilters);
   };
   const handleReset = (EmptyFilters: any) => {
-    console.log(EmptyFilters)
     setFilteredData(EmptyFilters);
   };
   useEffect(() => {
     const initializeData = () => {
+      const pagination_=customerGroupsData?.data?.pages?.["Customer groups"]||{}
+      console.log(pagination_)
+      setPagination(pagination_)
       const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
       setData(data);
-
       const header_Map = sortHeaderMap(customerGroupsData?.headers_map?.["Customer groups"]?.header_map || {});
       const headers_ = Object.keys(header_Map);
       const createModalData_ = customerGroupsData?.headers_map?.["Customer groups"]?.pop_up || [];
@@ -191,7 +191,6 @@ const CustomerGroups: React.FC = () => {
               tableName={"customer_groups"}
               headerMap={headerMap}
             />
-
           </div>
 
           <div className="flex space-x-2">
@@ -228,7 +227,7 @@ const CustomerGroups: React.FC = () => {
           popupHeading='Customer Group'
           createModalData={createModalData}
           generalFields={generalFields}
-          pagination={{}}
+          pagination={pagination||{}}
           advancedFilters={filteredData}
 
         />
