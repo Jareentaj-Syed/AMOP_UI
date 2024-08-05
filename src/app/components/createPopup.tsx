@@ -506,7 +506,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 )}
                 {column.type === 'dropdown' && (
                   <Select
-                  isMulti={column.db_column_name === "Customer_names"||column.db_column_name === "rate_plan_name"}
+                  isMulti={column.db_column_name === "customer_names"||column.db_column_name === "rate_plan_name"}
                   styles={editableDrp}
                   classNamePrefix="select"
                   placeholder="Select..."
