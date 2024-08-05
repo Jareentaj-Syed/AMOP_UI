@@ -73,7 +73,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   }, [router]);
 
   useEffect(() => {
-    const newRowData = tabledata.length > 0 ? tabledata : initialData;
+    const newRowData = tabledata? tabledata : initialData;
     setRowData(newRowData);
     console.log("New rowData set:", newRowData);
   }, [tabledata, initialData]);
