@@ -565,10 +565,24 @@ const EditModal: React.FC<EditModalProps> = ({
                 <h3 className='popup-heading'>{isEditable ? `Edit ${heading}` : `${heading} Details`}</h3>
               }
               width={modalWidth}
+              footer={isEditable ? (
+                <div className="justify-center flex space-x-2">
+                  <button onClick={handleCancel} className="cancel-btn">
+                    <CloseOutlined className="h-5 w-5 text-black-500 mr-2" />
+                    Cancel
+                  </button>
+                  <button onClick={showConfirmation} className="save-btn">
+                    <CheckOutlined className="h-5 w-5 text-black-500 mr-2" />
+                    Save
+                  </button>
+                </div>
+              ) : null
+              }
               styles={{ body: { height: infoModalHeight, padding: '4px' } }}
+              
             >
               <div className='popup'>
-                <InfoPopup rate_plan={rate_plan_name_drp} />
+                <InfoPopup rate_plan={rate_plan_name_drp}  />
 
               </div>
 
