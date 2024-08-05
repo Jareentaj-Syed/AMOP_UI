@@ -2,14 +2,19 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../components/auth_context';
+import { useLogoStore } from '../stores/logoStore';
 const HomePage: React.FC = () => {
   // Mock data
   const router = useRouter(); // Use the router hook to handle navigation
   const { username, partner , role} = useAuth();
+  const setTitle = useLogoStore((state) => state.setTitle);
   useEffect(() => {
       // Ensure the URL is set to /login when the component mounts
       router.push('/home');
   }, [router]);
+  useEffect(() => {
+    setTitle("Home")
+})
   const userImage = "https://www.w3schools.com/w3images/avatar2.png";
  
 

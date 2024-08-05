@@ -180,17 +180,30 @@ const E911Customers: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
-      if (resp.flag === true) {
-      notification.success({
-        message: 'Success',
-        description: 'Successfully Exported the record!',
-        style: messageStyle,
-        placement: 'top', // Apply custom styles here
-      });
+      if (response.data.statusCode === 200) {
+        if (resp.flag === true) {
+          notification.success({
+            message: 'Success',
+            description: 'Successfully exported the record!',
+            style: messageStyle,
+            placement: 'top',
+          });
+  
+          // Trigger the download after a successful export
+          downloadBlob(blob);
+        } else {
+          // Log and show error message
+          console.log('Error message:', resp.message);
+          Modal.error({
+            title: 'Export Error',
+            content: resp.message,
+            centered: true,
+          });
       
-    }
-      if (resp.flag === false) {
-        console.log(resp.message)
+        }
+      } else {
+        // Handle unexpected status codes
+        console.log('Unexpected status code:', response.data.statusCode);
         Modal.error({
           title: 'Export Error',
           content: resp.message,
@@ -199,7 +212,7 @@ const E911Customers: React.FC = () => {
       }
 
       handleExportModalClose();
-      downloadBlob(blob)
+
 
     } catch (error) {
       // console.error("Error downloading the file:", error);

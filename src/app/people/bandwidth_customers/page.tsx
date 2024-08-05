@@ -181,13 +181,14 @@ const BandWidthCustomers: React.FC = () => {
 
 
   const handleExport = async () => {
+    // Check for a valid date range
     if (!dateRange || dateRange[0] === null || dateRange[1] === null) {
       Modal.error({ title: 'Error', content: 'Please select a date range.' });
       return;
     }
-
+  
     const [startDate, endDate] = dateRange;
-
+  
     const data = {
       path: "/export",
       username: username,
@@ -196,10 +197,9 @@ const BandWidthCustomers: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
-
       Partner: partner,
     };
-
+  
     try {
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
       const response = await axios.post(url, { data: data }, {
@@ -207,45 +207,54 @@ const BandWidthCustomers: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-
+  
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
-      console.log(resp)
-      // Close the modal after exporting
-      if (response.data.statusCode === 200 && resp.flag === true) {
-
-        notification.success({
-          message: 'Success',
-          description: 'Successfully Exported the record!',
-          style: messageStyle,
-          placement: 'top', // Apply custom styles here
-        });
-        
-
-      if (resp.flag === false) {
-        console.log(resp.message)
+  
+      // Log the response to check its structure
+      console.log('Response:', resp);
+  
+      // Handle response based on status code
+      if (response.data.statusCode === 200) {
+        if (resp.flag === true) {
+          notification.success({
+            message: 'Success',
+            description: 'Successfully exported the record!',
+            style: messageStyle,
+            placement: 'top',
+          });
+  
+          // Trigger the download after a successful export
+          downloadBlob(blob);
+        } else {
+          // Log and show error message
+          console.log('Error message:', resp.message);
+          Modal.error({
+            title: 'Export Error',
+            content: resp.message,
+            centered: true,
+          });
+      
+        }
+      } else {
+        // Handle unexpected status codes
+        console.log('Unexpected status code:', response.data.statusCode);
         Modal.error({
           title: 'Export Error',
           content: resp.message,
           centered: true,
         });
       }
-
-   
-
-    downloadBlob(blob)
-
-      // Close the modal after exporting
+  
+      // Close the modal after processing the export
       handleExportModalClose();
-
-    
-    }
-   } catch (error) {
+    } catch (error) {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
-
+  
+  
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);

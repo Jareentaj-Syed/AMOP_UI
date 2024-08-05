@@ -9,7 +9,7 @@ import { useAuth } from './auth_context';
 import { usePathname, useRouter } from 'next/navigation';
 import { truncate } from 'fs';
 const Header: React.FC = () => {
-  const { username, partner,  setShowPasswordUpdate, showPasswordUpdate } = useAuth();
+  const { username, partner, role, setShowPasswordUpdate, showPasswordUpdate } = useAuth();
   const { toggleSidebar } = useSidebarStore();
   const { logoUrl } = useLogoStore();
   const title = useLogoStore((state) => state.title);
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
   </div>
   <div className="ml-2 flex flex-col justify-center">
     <p className="text-base font-medium">{username}</p>
-    <p className="text-xs text-gray-500">{partner}</p>
+    <p className="text-xs text-gray-500">{partner}, {role}</p>
   </div>
   <div className="ml-2">
     <DownOutlined className='w-3 h-3'/>
