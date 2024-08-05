@@ -66,6 +66,14 @@ const EditModal: React.FC<EditModalProps> = ({
   }, [isOpen, rowData]);
 
   const handleChange = (name: string, value: any) => {
+    console.log("values",value)
+    setFormData((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+  const handleSelectChange = (name: string, value: any) => {
+    console.log("values",value)
     setFormData((prevState: any) => ({
       ...prevState,
       [name]: value,
@@ -630,7 +638,7 @@ const EditModal: React.FC<EditModalProps> = ({
                       {column.type === 'dropdown' && (
                       <Select
                       isMulti={
-                        column.db_column_name === "Customer_names" ||
+                        column.db_column_name === "customer_names" ||
                         column.db_column_name === "rate_plan_name"
                       }
                       styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
@@ -642,18 +650,13 @@ const EditModal: React.FC<EditModalProps> = ({
                         formData[column.db_column_name] && formData[column.db_column_name] !== "None"
                           ? (() => {
                               try {
-                                // Try to parse formData as JSON
                                 const parsedData = JSON.parse(formData[column.db_column_name]);
-                    
-                                // Check if parsedData is an array
                                 if (Array.isArray(parsedData)) {
                                   return parsedData.map((item) => ({ label: item, value: item }));
                                 } else {
-                                  // If parsedData is not an array, assume it's a string value
                                   return { label: parsedData, value: parsedData };
                                 }
                               } catch (e) {
-                                // If parsing fails, treat it as a simple string
                                 return { label: formData[column.db_column_name], value: formData[column.db_column_name] };
                               }
                             })()
@@ -661,11 +664,9 @@ const EditModal: React.FC<EditModalProps> = ({
                       }
                       onChange={(selectedOption) => {
                         if (Array.isArray(selectedOption)) {
-                          // Handle multiple selections
                           const values = selectedOption.map((option) => option.value);
-                          handleChange(column.db_column_name, values);
+                          handleSelectChange(column.db_column_name, values);
                         } else if (selectedOption && 'value' in selectedOption) {
-                          // Handle single selection
                           handleChange(column.db_column_name, selectedOption.value);
                         }
                       }}
