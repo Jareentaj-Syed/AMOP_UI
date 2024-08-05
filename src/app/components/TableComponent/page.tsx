@@ -1044,6 +1044,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
 
   // Calculate pagination
+  const totalPages = Math.ceil(rowData?.length / itemsPerPage);
+  const paginatedData = rowData?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
   const colorMap = {
     Activated: '#19AF91', // Light Green
     Deactivated: '#E95463', // Light Red

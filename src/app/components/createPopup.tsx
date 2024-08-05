@@ -46,7 +46,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const { username, tenantNames, role, partner, settabledata } = useAuth();
 
   useEffect(() => {
-    const initialFormData = header.reduce((acc, column) => {
+    const initialFormData = header?.reduce((acc, column) => {
       acc[column] = ''; // Initialize each header item as an empty string
       return acc;
     }, {} as Record<string, any>);
