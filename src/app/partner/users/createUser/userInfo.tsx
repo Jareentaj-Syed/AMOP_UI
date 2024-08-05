@@ -7,6 +7,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
+import { Modal } from 'antd';
 
 
 type OptionType = {
@@ -64,7 +65,9 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
   const [generalFields, setGeneralFields] = useState<any[]>([]);
   const [subPartnersData, setsubPartnersData] = useState<any>({});
   const [subPartnersoptions, setsubPartnersoptions] = useState<any[]>([]);
-  const [formData, setFormData] = useState<any>({})
+  const [formData, setFormData] = useState<any>({});
+  //Show Modal
+  const [showModal, setShowModal] = useState(false);
 
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
@@ -244,6 +247,17 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
       scrollToTop()
     }
   };
+
+  //Handling modal save
+  const handleConfirmSave = () => {
+    handleSave();
+    setShowModal(false);
+  };
+//Handling modal cancel
+  const handleCancelSave = () => {
+    setShowModal(false);
+  };
+
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -482,12 +496,24 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
         </button>
         <button
           className="save-btn"
-          onClick={handleSave}
+          onClick={()=>setShowModal(true)}
         >
           <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
           <span>Save</span>
+
         </button>
       </div>
+      {showModal && (
+        <Modal
+          title="Confirmation"
+          open={showModal}
+          onOk={handleConfirmSave}
+          onCancel={handleCancelSave}
+          centered
+        >
+          <p>Are you sure you want to save this page?</p>
+        </Modal>
+      )}
     </div>
   );
 };

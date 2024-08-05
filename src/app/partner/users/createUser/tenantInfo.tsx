@@ -8,6 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
+import { Modal } from 'antd';
 type OptionType = {
     value: string;
     label: string;
@@ -35,6 +36,8 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
     const { partnerData } = usePartnerStore.getState();
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
+    //Show Modal
+  const [showModal, setShowModal] = useState(false);
 
     const {
         tenant,
@@ -125,6 +128,15 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         //     scrollToTop();
         // }
     };
+      //Handling modal save
+  const handleConfirmSave = () => {
+    handleSubmit();
+    setShowModal(false);
+  };
+//Handling modal cancel
+  const handleCancelSave = () => {
+    setShowModal(false);
+  };
     
     const scrollToTop = () => {
         window.scrollTo({
@@ -249,12 +261,23 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button>
-                <button className="save-btn" onClick={handleSubmit}
+                <button className="save-btn" onClick={()=>setShowModal(true)}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Submit</span>
                 </button>
             </div>
+            {showModal && (
+        <Modal
+          title="Confirmation"
+          open={showModal}
+          onOk={handleConfirmSave}
+          onCancel={handleCancelSave}
+          centered
+        >
+          <p>Are you sure you want to submit the data?</p>
+        </Modal>
+      )}
         </div>
     );
 };

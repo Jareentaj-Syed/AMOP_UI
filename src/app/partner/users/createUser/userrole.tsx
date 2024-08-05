@@ -8,6 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
+import { Modal } from 'antd';
 // import { OptionType } from 'dayjs';
 
 interface ExcelData {
@@ -65,7 +66,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-
+    //Show Modal
+  const [showModal, setShowModal] = useState(false);
 
   const { partnerData } = usePartnerStore.getState();  
   const partnerModuleData=partnerData["Partner module access"]
@@ -342,6 +344,15 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
         // setSelectedModules({});
         // setSelectedFeatures({});
     };
+    //Handling modal save
+  const handleConfirmSave = () => {
+    handleSubmit();
+    setShowModal(false);
+  };
+//Handling modal cancel
+  const handleCancelSave = () => {
+    setShowModal(false);
+  };
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -414,12 +425,23 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
                 </button>
                 <button
                     className="save-btn"
-                    onClick={handleSubmit}
+                    onClick={()=>setShowModal(true)}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Submit</span>
                 </button>
             </div>
+            {showModal && (
+        <Modal
+          title="Confirmation"
+          open={showModal}
+          onOk={handleConfirmSave}
+          onCancel={handleCancelSave}
+          centered
+        >
+          <p>Are you sure you want to submit the data?</p>
+        </Modal>
+      )}
         </div>
     );
 };
