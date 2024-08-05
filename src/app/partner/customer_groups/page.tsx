@@ -7,7 +7,7 @@ import CreateModal from '@/app/components/createPopup';
 import SearchInput from '@/app/components/Search-Input';
 import ColumnFilter from '@/app/components/columnfilter';
 import { usePartnerStore } from '../partnerStore';
-import { Button, DatePicker, Modal } from 'antd';
+import { Button, DatePicker, Modal, notification } from 'antd';
 
 import dayjs, { Dayjs } from "dayjs";
 import { getCurrentDateTime } from '@/app/components/header_constants';
@@ -130,7 +130,17 @@ const CustomerGroups: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
+      if (resp.flag === true) {
+        notification.success({
+          message: 'Success',
+          description: 'Successfully Exported the record!',
+          style: messageStyle,
+          placement: 'top', // Apply custom styles here
+        });
+        
+      }
 
+   
       if (resp.flag === false) {
         console.log(resp.message)
         Modal.error({
@@ -147,6 +157,14 @@ const CustomerGroups: React.FC = () => {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
+  };
+
+  
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
   };
 
   const downloadBlob = (base64Blob: string) => {

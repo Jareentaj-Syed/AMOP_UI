@@ -14,7 +14,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
-import { Button, DatePicker, Modal } from 'antd';
+import { Button, DatePicker, Modal, notification } from 'antd';
 import TableSearch from '@/app/components/entire_table_search';
 import AdvancedMultiFilter from '@/app/components/advanced_search';
 const { RangePicker } = DatePicker;
@@ -130,6 +130,15 @@ const ListView: React.FC = () => {
       const blob = resp.blob;
       console.log(resp)
       // Close the modal after exporting
+      if (resp.flag === true) {
+        notification.success({
+          message: 'Success',
+          description: 'Successfully Exported the record!',
+          style: messageStyle,
+          placement: 'top', // Apply custom styles here
+        });
+        
+      }
 
       if (resp.flag === false) {
         console.log(resp.message)
@@ -147,6 +156,13 @@ const ListView: React.FC = () => {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
+  };
+
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
   };
 
   const downloadBlob = (base64Blob: string) => {

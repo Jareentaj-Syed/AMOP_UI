@@ -67,7 +67,7 @@ const UserRole: React.FC = () => {
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [map, setMap] = useState<ExcelData>({});
     console.log("partner module data:", partnerModuleData)
 
@@ -377,7 +377,6 @@ const toggleModule = (category: string, module: string) => {
                   const roleValue = role?.value; // Get the value from role if it exists
 
                   const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
-                  
                   const data = {
                     tenant_name: partner || "default_value",
                     username: username,
@@ -385,6 +384,7 @@ const toggleModule = (category: string, module: string) => {
                     parent_module: "Partner",
                     module_name: "Partner Module Access",
                     action: action,
+                    
                     changed_data: formattedData,
                   };
                   
@@ -400,41 +400,47 @@ const toggleModule = (category: string, module: string) => {
                       placement: 'top', // Apply custom styles here
                     });
 
-                    setLoading(true)
+                    // setLoading(true)
+
                     const data = {
                         tenant_name: partner || "default_value",
                         username: username,
                         path: "/get_partner_info",
                         role_name: role,
-                        modules_list: "Partner Module Access",
+                        modules_list: ["Partner Module Access"],
+                        "pages":{"Customer groups":{"start":0,"end":500},
+                        "Partner users":{"start":0,"end":500}}
                        
                     };
-                    try {
-                        const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-                        if (response && response.status === 200) {
-                            const parseddata = JSON.parse(response.data.body);
-                            if (parseddata.flag) {
+                    // try {
+                    //     const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+                    //     if (response && response.status === 200) {
+                    //         const parseddata = JSON.parse(response.data.body);
+                    //         if (parseddata.flag) {
 
-                                console.log(parseddata.flag)
+                    //             console.log(parseddata)
+
+                    //             console.log("")
                               
-                            } else {
-                              
-                                Modal.error({
-                                    title: 'Error',
-                                    content: parseddata.message,
-                                    centered: true,
-                                });
-                            }
-                        } else {
-                            Modal.error({
-                                title: 'Error',
-                                content: 'An error occurred during fetching data.',
-                                centered: true,
-                            });
-                        }
-                    } catch (error) {
-                        console.error('Error fetching');
-                    }
+                    //         } else {
+                                
+                    //             Modal.error({
+                    //                 title: 'Error',
+                    //                 content: parseddata.message,
+                    //                 centered: true,
+                    //             });
+                    //             setLoading(false)
+                    //         }
+                    //     } else {
+                    //         Modal.error({
+                    //             title: 'Error',
+                    //             content: 'An error occurred during fetching data.',
+                    //             centered: true,
+                    //         });
+                    //     }
+                    // } catch (error) {
+                    //     console.error('Error fetching');
+                    // }
                     
                 }
                 console.log(response);
