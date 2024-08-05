@@ -11,6 +11,7 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import InfoPopup from '../people/info_popup';
 import error from 'next/error';
+import{ MultiValue, SingleValue } from 'react-select';
 
 import { getCurrentDateTime } from './header_constants';
 interface Column {
@@ -584,35 +585,57 @@ const EditModal: React.FC<EditModalProps> = ({
                         />
                       )}
                       {column.type === 'dropdown' && (
-                        <Select
-                        isMulti={column.db_column_name === "Customer_names" ||column.db_column_name === "rate_plan_name"}
-                        styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
-                        isDisabled={!isEditable}
-                        classNamePrefix="select"
-                        placeholder="Select..."
-                        value={
-                          formData[column.db_column_name] && formData[column.db_column_name] !== "None"
-                            ? Array.isArray(formData[column.db_column_name])
-                              ? formData[column.db_column_name].map((item: string) => ({ label: item, value: item }))
-                              : { label: formData[column.db_column_name], value: formData[column.db_column_name] }
-                            : null
+                      <Select
+                      isMulti={
+                        column.db_column_name === "Customer_names" ||
+                        column.db_column_name === "rate_plan_name"
+                      }
+                      styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
+                      isDisabled={!isEditable}
+                      classNamePrefix="select"
+                      placeholder="Select..."
+                      value={
+                        // Ensure formData[column.db_column_name] is not "None" or empty
+                        formData[column.db_column_name] && formData[column.db_column_name] !== "None"
+                          ? (() => {
+                              try {
+                                // Try to parse formData as JSON
+                                const parsedData = JSON.parse(formData[column.db_column_name]);
+                    
+                                // Check if parsedData is an array
+                                if (Array.isArray(parsedData)) {
+                                  return parsedData.map((item) => ({ label: item, value: item }));
+                                } else {
+                                  // If parsedData is not an array, assume it's a string value
+                                  return { label: parsedData, value: parsedData };
+                                }
+                              } catch (e) {
+                                // If parsing fails, treat it as a simple string
+                                return { label: formData[column.db_column_name], value: formData[column.db_column_name] };
+                              }
+                            })()
+                          : null
+                      }
+                      onChange={(selectedOption) => {
+                        if (Array.isArray(selectedOption)) {
+                          // Handle multiple selections
+                          const values = selectedOption.map((option) => option.value);
+                          handleChange(column.db_column_name, values);
+                        } else if (selectedOption && 'value' in selectedOption) {
+                          // Handle single selection
+                          handleChange(column.db_column_name, selectedOption.value);
                         }
-                        onChange={(selectedOption) => {
-                          const value = Array.isArray(selectedOption)
-                            ? selectedOption.map(option => option.value)
-                            : selectedOption?.value;
-                          handleChange(column.db_column_name, value);
-                        }}
-                        options={
-                          column.db_column_name!==null?(generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
-                            ? generalFields[column.db_column_name].map((option: any) => ({
-                                label: option,
-                                value: option
-                              }))
-                            : [{ label: "No options", value: "No options" }]):[[{ label: "No options", value: "No options" }]]
-                        }
-                      />
-                      
+                      }}
+                      options={
+                        column.db_column_name !== null && generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                          ? generalFields[column.db_column_name].map((option:any) => ({
+                              label: option,
+                              value: option
+                            }))
+                          : [{ label: "No options", value: "No options" }]
+                      }
+                    />
+                              
                       )}
 
                       {column.type === 'checkbox' && (

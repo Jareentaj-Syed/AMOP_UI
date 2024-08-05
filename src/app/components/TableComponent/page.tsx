@@ -74,13 +74,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
 
   useEffect(() => {
-    if (tabledata) {
-      setRowData(tabledata);
-
-    } else {
-      setRowData(initialData);
-    }
-  }, [tabledata, initialData]);
+    const newRowData = tabledata.length > 0 ? tabledata : initialData;
+    setRowData(newRowData);
+    console.log("New rowData set:", newRowData); // Log the new data after setting it
+  }, [tabledata, initialData]); // Dependencies on both tabledata and initialData
+  useEffect(() => {
+    console.log("rowdata updated", rowData); // This will log when rowData changes
+  }, [rowData])
   useEffect(() => {
     const start = pagination?.start || 1;
     const total = pagination?.total || 1;
