@@ -417,8 +417,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
         else {
           const errorMsg = JSON.parse(response.data.body).message
           Modal.error({
-            title: 'Data Fetch Error',
-            content: errorMsg ? errorMsg : 'An unexpected error occurred while editing the customer.',
+            title: 'Saving Error',
+            content: errorMsg,
             centered: true,
           });
         }
@@ -431,6 +431,15 @@ const CreateModal: React.FC<CreateModalProps> = ({
             placement: 'top', // Apply custom styles here
           });
         }
+        else{
+          const errorMsg = JSON.parse(response.data.body).message
+          Modal.error({
+            title: 'Saving Error',
+            content: errorMsg,
+            centered: true,
+          });
+        }
+          
 
       } catch (err) {
         console.error('Error fetching data:', err);

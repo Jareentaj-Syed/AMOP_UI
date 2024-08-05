@@ -65,6 +65,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   }, [isOpen, rowData]);
 
+
   const handleChange = (name: string, value: any) => {
     console.log("values",value)
     setFormData((prevState: any) => ({
@@ -476,7 +477,15 @@ const EditModal: React.FC<EditModalProps> = ({
               setLoading(false)
             }
           }
+        
 
+        }
+        else{
+          Modal.error({
+            title: 'Saving Error',
+            content: resp.message,
+            centered: true,
+          });
         }
           
       } catch (error) {

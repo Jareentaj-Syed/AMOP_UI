@@ -676,6 +676,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             }
           }
         }
+        else{
+          const errorMsg = JSON.parse(response.data.body).message
+          Modal.error({
+            title: 'Saving Error',
+            content: errorMsg,
+            centered: true,
+          });
+        }
+          
 
       } catch (err) {
         // console.error("Error fetching data:", err);
@@ -1257,7 +1266,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         </div>
       )}
 
-      <EditModal
+     <EditModal
         createModalData={createModalData || []}
         isOpen={editModalOpen}
         isEditable={isEditable}

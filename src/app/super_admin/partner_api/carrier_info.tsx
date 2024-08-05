@@ -279,8 +279,7 @@ const CarrierInfo: React.FC = () => {
             tableName={"carrier_apis"}
           />
         </div>
-        <div className="container mx-auto">
-          {(
+   
             <TableComponent
               headers={headers}
               headerMap={headerMap}
@@ -294,8 +293,7 @@ const CarrierInfo: React.FC = () => {
               advancedFilters={filteredData}
               pagination={pagination}
             />
-          )}
-        </div>
+       
       </div>
     </div>
   );
