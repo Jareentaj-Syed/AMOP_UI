@@ -42,7 +42,6 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
     setActiveFilters(advancedFilters);
     onFilter(advancedFilters);
     handleButtonClick(advancedFilters)
-    handleShowAdvanced();
   };
 
   const handleClear = () => {

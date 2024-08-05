@@ -43,7 +43,7 @@ const Pagination: React.FC<PaginationProps> = ({
   const pageNumbers = calculatePagesToShow();
 
   // If there is only one page, do not display pagination
-  if (totalPages <= 1) {
+  if (totalPages <= 0) {
     return null;
   }
 
