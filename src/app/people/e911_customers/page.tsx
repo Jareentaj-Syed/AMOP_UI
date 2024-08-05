@@ -1,14 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense  } from "react";
 import {
   PlusIcon,
   ArrowDownTrayIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Modal, Spin, DatePicker } from "antd";
-import TableComponent from "@/app/components/TableComponent/page";
-import CreateModal from "@/app/components/createPopup";
+// import TableComponent from "@/app/components/TableComponent/page";
+// import CreateModal from "@/app/components/createPopup";
 import SearchInput from "@/app/components/Search-Input";
-import ColumnFilter from "@/app/components/columnfilter";
+// import ColumnFilter from "@/app/components/columnfilter";
 import { createModalData, headerMap, headers } from "./e911_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
@@ -17,10 +17,17 @@ import { useLogoStore } from "@/app/stores/logoStore";
 import { getCurrentDateTime } from "@/app/components/header_constants";
 import FileSaver from "file-saver";
 import dayjs, { Dayjs } from "dayjs";
-import TableSearch from "@/app/components/entire_table_search";
-import AdvancedMultiFilter from "@/app/components/advanced_search";
+// import TableSearch from "@/app/components/entire_table_search";
+// import AdvancedMultiFilter from "@/app/components/advanced_search";
 
 const { RangePicker } = DatePicker;
+//Lazy loading components
+const TableComponent = lazy(()=>import("@/app/components/TableComponent/page"));
+const CreateModal = lazy(()=>import("@/app/components/createPopup"));
+const ColumnFilter = lazy(()=>import("@/app/components/columnfilter"));
+const TableSearch = lazy(()=>import("@/app/components/entire_table_search"));
+const AdvancedMultiFilter = lazy(()=>import("@/app/components/advanced_search"));
+
 
 const E911Customers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -216,6 +223,7 @@ const E911Customers: React.FC = () => {
 
 
   return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
@@ -309,6 +317,7 @@ const E911Customers: React.FC = () => {
         </div>
       </Modal>
     </div>
+    </Suspense>
   );
 };
 
