@@ -100,7 +100,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             request_received_at: getCurrentDateTime(),
             changed_data: {
                 "customer_info":changedData
-            }
+            },
+          
+            Partner:partner,
         };
         const response = await axios.post(url, { data });
     }

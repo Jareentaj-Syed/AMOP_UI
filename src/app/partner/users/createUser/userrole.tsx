@@ -7,6 +7,7 @@ import { useUserStore } from './createUserStore';
 import { usePartnerStore } from '../../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
+import { getCurrentDateTime } from '@/app/components/header_constants';
 // import { OptionType } from 'dayjs';
 
 interface ExcelData {
@@ -218,11 +219,11 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
             const role = selectedOption.value;
             setRole(selectedOption);
             console.log(selectedOption)
-            let selectedRoleData = mockRoleData[role];
-            if (!selectedRoleData) {
-                selectedRoleData = generateDefaultRoleData();
+            // let selectedRoleData ;
+           
+               const  selectedRoleData = generateDefaultRoleData();
                 mockRoleData[role] = selectedRoleData; // Save the generated default data
-            }
+            
     
             console.log(selectedRoleData);
             setMap(selectedRoleData);
@@ -325,7 +326,9 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
                   "module_name": "Partner Users",
                   
                   action: "update",
-                  changed_data: Changed_data
+                  changed_data: Changed_data,
+                  request_received_at: getCurrentDateTime(),
+                  Partner:partner
                 };
                 const response = await axios.post(url, { data });
             

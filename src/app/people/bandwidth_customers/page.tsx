@@ -87,6 +87,8 @@ const BandWidthCustomers: React.FC = () => {
             start: 0,
             end: 500,
           },
+          request_received_at: getCurrentDateTime(),
+          Partner:partner,
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
@@ -185,6 +187,8 @@ const BandWidthCustomers: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
+      
+      Partner:partner,
     };
 
     try {

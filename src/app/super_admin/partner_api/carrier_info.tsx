@@ -12,6 +12,7 @@ import axios from 'axios';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import TableSearch from '@/app/components/entire_table_search';
 import AdvancedMultiFilter from '@/app/components/advanced_search';
+import { getCurrentDateTime } from '@/app/components/header_constants';
 
 interface ExcelData {
   [key: string]: any;
@@ -66,6 +67,8 @@ const CarrierInfo: React.FC = () => {
         role_name: role,
         sub_module: "Partner API", 
         sub_tab: "Carrier APIs",
+        request_received_at: getCurrentDateTime(),
+        Partner:partner,
       };
       
       const response = await axios.post(url, { data: data });
@@ -134,7 +137,9 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             sub_module: "Partner API", 
             sub_tab: "Carrier APIs",
             Environment: environment.value,
-            Partner: selectedPartner.value,
+            Selected_Partner: selectedPartner.value,
+            request_received_at: getCurrentDateTime(),
+            Partner:partner,
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);

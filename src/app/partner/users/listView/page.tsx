@@ -40,7 +40,7 @@ const ListView: React.FC = () => {
 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const { username, partner, role } = useAuth();
-
+  const [pagination,setPagination]=useState<any>({});
   const [filteredData, setFilteredData] = useState([]);
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
@@ -64,6 +64,8 @@ const ListView: React.FC = () => {
       const headers_ = Object.keys(header_Map);
       const createModalData_ = usersData?.headers_map?.["Partner users"]?.pop_up || [];
       const generalFields_ = usersData?.data?.["Partner users"] || {}
+      const pagination_=usersData?.data?.pages?.["Partner users"] ||{}
+      setPagination(pagination_)
       setHeaders(headers_);
       setHeadersMap(header_Map);
       setVisibleColumns(headers_);
@@ -111,6 +113,8 @@ const ListView: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
+    
+      Partner:partner,
     };
 
     try {
@@ -200,13 +204,12 @@ const ListView: React.FC = () => {
                 <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
                 <span>Export</span>
               </button>
-              <ColumnFilter headers={[]} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={{}} />
+              <ColumnFilter headers={headers} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns} headerMap={headerMap} />
             </div>
           </div>
           <div className=' mb-4 space-x-2'>
             <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
         </div>
-
           <div className="">
             <TableComponent
               headers={headers}
@@ -218,7 +221,7 @@ const ListView: React.FC = () => {
               allowedActions={["tabsEdit", "delete", "tabsInfo"]}
               popupHeading='User'
               createModalData={createModalData}
-              pagination={{}}
+              pagination={pagination}
               generalFields={generalFields}
             />
 

@@ -1,6 +1,7 @@
 import { Badge, Button, Input } from "antd";
-import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, CaretUpOutlined, SearchOutlined } from '@ant-design/icons';
 import React, { useMemo, useState } from "react";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface FilterShape {
   [key: string]: string[];
@@ -11,13 +12,13 @@ const splitAndFilter = (input?: string): string[] => {
 };
 
 interface AdvancedFilterProps {
-  onFilter: (filters: FilterShape) => void; 
-  onReset: (filters: FilterShape) => void; 
+  onFilter: (filters: FilterShape) => void;
+  onReset: (filters: FilterShape) => void;
   headers?: string[];
-  headerMap?:any;
+  headerMap?: any;
 }
 
-const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset, headers,headerMap }) => {
+const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset, headers, headerMap }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<FilterShape>({});
   const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
@@ -34,7 +35,6 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       },
       {}
     );
-    console.log("advancedFilters",advancedFilters);
     setActiveFilters(advancedFilters);
 
     onFilter(advancedFilters);
@@ -49,8 +49,7 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       },
       {} as FilterShape
     );
-  
-    console.log("empty filters:", emptyFilters);
+
     onReset(emptyFilters);
     setFormValues({});
     setActiveFilters({});
@@ -86,6 +85,34 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
           className="w-full md:w-auto"
           color={countActiveFilters > 0 ? "green" : "blue"}
         >
+
+          <Button
+            type="default"
+            size="large"
+            className="outline-none border-none"
+            onClick={handleFilter}
+            disabled={!showAdvanced}
+          >
+            <SearchOutlined className="text-gray-500 ml-2" />
+
+          </Button>
+        </Badge>
+        <Button
+          type="default"
+          size="large"
+          className="outline-none border-none"
+          onClick={handleClear}
+        >
+          <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+
+        </Button>
+        {/* <Badge
+          count={countActiveFilters}
+          showZero
+          className="w-full md:w-auto"
+          color={countActiveFilters > 0 ? "green" : "blue"}
+        >
+
           <Button
             type="default"
             size="large"
@@ -103,23 +130,27 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
           onClick={handleClear}
         >
           Clear
-        </Button>
+        </Button> */}
       </div>
       {showAdvanced && headers && (
         <div className="overflow-x-auto border border-gray-500 rounded-md mt-4 block">
           <div className="flex space-x-4 p-2">
             {headers.map((header, index) => (
-              <div className="flex-none w-64">
-                {/* <label htmlFor={header} className="block mb-2 font-medium">{headerMap?headerMap[header][0]:""}</label> */}
-                <Input
-                  id={header}
-                  value={formValues[header] || ''}
-                  onChange={e => handleInputChange(header, e.target.value)}
-                  placeholder={headerMap?headerMap[header][0]:""}
-                  key={index} 
-                  className="resize-none text-left max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis border border-gray-500"
-                />
-              </div>
+              header !== "modified_by" && header !== "modified_date"
+              && (
+                <div className="flex-none w-64">
+                  {/* <label htmlFor={header} className="block mb-2 font-medium">{headerMap?headerMap[header][0]:""}</label> */}
+                  <Input
+                    id={header}
+                    value={formValues[header] || ''}
+                    onChange={e => handleInputChange(header, e.target.value)}
+                    placeholder={headerMap ? headerMap[header][0] : ""}
+                    key={index}
+                    className="resize-none text-left max-w-[250px] whitespace-nowrap overflow-hidden text-ellipsis input"
+                  />
+                </div>
+              )
+
             ))}
           </div>
         </div>

@@ -127,6 +127,8 @@ const EditModal: React.FC<EditModalProps> = ({
             module_name: "Customer Groups",
             action: "update",
             changed_data: formData,
+            Partner:partner,
+         
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -144,6 +146,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -162,6 +165,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -181,6 +185,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "weste911customer",
             action: "update",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -199,6 +204,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -217,6 +223,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -234,6 +241,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -260,6 +268,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 role_name: role,
                 sub_module: "Partner API", 
                 sub_tab: "Carrier APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
               const response = await axios.post(url, { data: data });
@@ -291,6 +300,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 role_name: role,
                 sub_module: "Partner API",
                 sub_tab: "Amop APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
               
@@ -326,6 +336,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -357,6 +368,8 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
+              request_received_at: getCurrentDateTime(),
             };
 
             const response = await axios.post(url, { data });
@@ -383,6 +396,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -414,6 +428,7 @@ const EditModal: React.FC<EditModalProps> = ({
                             "Customer groups": { start: 0, end: 500 },
                             "Partner users": { start: 0, end: 500 }
                         },
+                        Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });

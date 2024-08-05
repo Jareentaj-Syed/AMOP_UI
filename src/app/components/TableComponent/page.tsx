@@ -62,67 +62,269 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
   const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata } = useAuth()
+  const [totalPages, setTotalPages] = useState(1);
+  const [lastPageWithData, setLastPageWithData] = useState(1);
 
+  // const [paginatedData, setPaginatedData] = useState<{ [key: string]: any }[]>(initialData)
   useEffect(() => {
     if (!router) {
       console.error('NextRouter is not available.');
     }
   }, [router]);
 
-  useEffect(() => {
-    const lastPageWithData = 5
-    const updatePaginator = async () => {
-      if (currentPage > lastPageWithData) {
-        try {
-          const url =
-            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
-          let data = {};
-          if (popupHeading === "Customer Group") {
-            data = {
+  useEffect(() => {
+    if (tabledata) {
+      setRowData(tabledata);
+    } else {
+      setRowData(initialData);
+    }
+  }, [tabledata, initialData]);
+  useEffect(() => {
+    console.log("pagination", pagination)
+    const start = pagination?.start || 0;
+    const total = pagination?.total || 0;
+    const end = pagination?.end || 0;
+    const lastPageWithData_ = Math.floor(end / itemsPerPage);
+    const totalPages_ = Math.ceil(total / itemsPerPage);
+    const currentPage_ = Math.floor(start / itemsPerPage) + 1;
+    setTotalPages(totalPages_);
+    setCurrentPage(currentPage_);
+    setLastPageWithData(lastPageWithData_)
+
+  }, [tabledata, initialData]);
+  useEffect(() => {
+    console.log("currentPage",currentPage);
+    console.log("totalPages",totalPages);
+    console.log("lastPageWithData",lastPageWithData);
+    let pagination_:any
+    const updatePaginator = async () => {
+      let end = Math.floor(lastPageWithData * itemsPerPage)
+      if (lastPageWithData < currentPage) {
+        try {
+          if (popupHeading === "Carrier") {
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API",
+                sub_tab: "Carrier APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
+              const tableData_ = [...rowData, carrierApis]
+              setRowData(tableData_)
+            }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
+          }
+          if (popupHeading === "API") {
+
+            try {
+              const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+              const data = {
+                tenant_name: partner || "default_value",
+                username: username,
+                path: "/get_superadmin_info",
+                role_name: role,
+                sub_module: "Partner API",
+                sub_tab: "Amop APIs",
+                request_received_at: getCurrentDateTime(),
+              };
+
+              const response = await axios.post(url, { data: data });
+              const resp = JSON.parse(response.data.body);
+              const carrierApis = resp.data.amop_apis_data.amop_apis;
+              const tableData_ = [...rowData, carrierApis];
+              setRowData(carrierApis)
+
+            }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
+          }
+          if (popupHeading === "E911 Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
               tenant_name: partner || "default_value",
               username: username,
-              path: "/update_partner_info",
+              path: "/get_module_data",
               role_name: role,
-              module_name: "Customer groups",
-              action: "delete",
+              parent_module_name: "people",
+              module_name: "E911 Customers",
+              mod_pages: {
+                start: end,
+                end: end + end,
+              },
+              request_received_at: getCurrentDateTime(),
             };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+              const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
+              const customertableData = parsedData.data.WestE911Customer;
+              const tableData_ = [...rowData, customertableData]
+              setRowData(tableData_);
+            }
+          }
+          if (popupHeading === "NetSapien Customer") {
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people", // Corrected spelling from 'poeple'
+              module_name: "NetSapiens Customers",
+              mod_pages: {
+                start: end,
+                end: end + end,
+              },
+              Partner:partner,
+              request_received_at:getCurrentDateTime()
+            };
+
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            // Check if the flag is false in the parsed data
+            const tableData = parsedData.data.customers;
+            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+            const generalFields = parsedData.data
+            const tableData_ = [...rowData, tableData]
+            setRowData(tableData_);
+          }
+          if (popupHeading === "Bandwidth Customer") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_module_data",
+              role_name: role,
+              parent_module_name: "people",
+              module_name: "Bandwidth Customers",
+              mod_pages: {
+                start: 0,
+                end: 500,
+              },
+              Partner:partner,
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              const tableData_ = [...rowData, tableData]
+              setRowData(tableData_);
+            }
+          }
+          if (popupHeading === "Customer Group") {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_partner_info",
+              role_name: role,
+              modules_list: ["Customer groups"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
+              Partner:partner,
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData = parsedData?.data?.["Customer groups"]?.customergroups || [];
+              const tableData_ = [...rowData, tableData]
+              setRowData(tableData_);
+            }
           }
           if (popupHeading === "User") {
-            data = {
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
               tenant_name: partner || "default_value",
               username: username,
-              path: "/update_partner_info",
+              path: "/get_partner_info",
               role_name: role,
-              module_name: "Partner users",
-              action: "delete",
+              modules_list: ["Partner users"],
+              pages: {
+                "Customer groups": { start: end, end: end + end },
+                "Partner users": { start: end, end: end + end }
+              },
+              Partner:partner,
+              request_received_at: getCurrentDateTime(),
             };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              const tableData = parsedData?.data?.["Partner users"]?.users || [];
+              const userPagination = parsedData?.data?.pages?.["Partner users"] || {}
+              pagination_=userPagination
+              const updatedRowData = [...rowData, ...tableData];
+              console.log("tableDataaa", tableData)
+              console.log("newDataaa",updatedRowData)
+              setRowData(updatedRowData);
+            }
           }
-
-          if (popupHeading === "E911 Customer") {
-
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_people_data",
-              role_name: role,
-              "parent_module": "People",
-              "module": "E911 Customer Customer",
-              "table_name": "customers",
-            };
-          }
-          if (popupHeading === " NetSapien Customer") {
-            data = {
-              tenant_name: partner || "default_value",
-              username: username,
-              path: "/update_people_data",
-              role_name: role,
-              "parent_module": "People",
-              "module": " NetSapien Customer",
-              "table_name": " customers",
-            };
-          }
-          const response = await axios.post(url, { data });
+          const end_ = pagination_?.end || 0;
+          const lastPageWithData_ = Math.floor(end_ / itemsPerPage);
+          console.log("lastPageWithData_",lastPageWithData_)
+          setLastPageWithData(lastPageWithData_)
+          paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
         } catch (err) {
           console.error("Error fetching data:", err);
@@ -130,8 +332,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       }
     };
     updatePaginator()
-  }, [currentPage]);
-
+  }, [currentPage])
 
   const handleActionSingleClick = () => {
     if (router) {
@@ -150,12 +351,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   };
 
-    
+
   const messageStyle = {
     fontSize: '14px',  // Adjust font size
     fontWeight: 'bold', // Make the text bold
-    padding: '16px', 
-       // Add padding
+    padding: '16px',
+    // Add padding
   };
 
   const handleRowCheckboxChange = (index: number) => {
@@ -170,19 +371,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
     setSelectedRows(newSelectedRows);
   };
-  
-  
-  useEffect(() => {
-   
-    if (tabledata) {
-      console.log("table data", tabledata);
-      setRowData(tabledata);
-      console.log("rowdata", rowData)
-      // window.location.reload(); // Refresh the page if there is tabledata
-    } else {
-      setRowData(initialData);
-    }
-  }, [tabledata, initialData]);
+
+
 
   // useEffect(() => {
   //   // Filter row data based on search query
@@ -194,6 +384,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   //   setRowData(filteredData);
   //   setCurrentPage(1);
   // }, [searchQuery, initialData]);
+  let paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
     const filteredData = initialData.filter(row => {
@@ -266,9 +457,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   };
 
-  const handleSaveModal = (updatedRow: { [key: string]: any },tableData:any) => {
+  const handleSaveModal = (updatedRow: { [key: string]: any }, tableData: any) => {
     if (editRowIndex !== null) {
-      // console.log("updated",tableData)
       // const updatedData = [...rowData];
       // updatedData[editRowIndex] = updatedRow;
       // setRowData(updatedData);
@@ -314,6 +504,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Customer groups",
             action: "delete",
             changed_data: row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -326,6 +517,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Partner users",
             action: "delete",
             updated_data: row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -334,7 +526,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
           if (row) {
             row["modified_by"] = username;
-            row["modified_date"]= getCurrentDateTime()
+            row["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -346,6 +538,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": "customers",
             "changed_data": row,
             action: "delete",
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
 
           };
@@ -353,7 +546,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         if (popupHeading === " NetSapien Customer") {
           if (row) {
             row["modified_by"] = username;
-            row["modified_date"]= getCurrentDateTime()
+            row["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -365,9 +558,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": " customers",
             "changed_data": row,
             action: "delete",
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
-          
+
         }
         const response = await axios.post(url, { data });
         if (response && response.status === 200) {
@@ -377,20 +571,21 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             description: 'Successfully Deleted the record!',
             style: messageStyle,
             placement: 'top', // Apply custom styles here
-          });  
+          });
           if (popupHeading === "Customer Group") {
             const url =
               "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
             const data = {
               tenant_name: partner || "default_value",
-                        username: username,
-                        path: "/get_partner_info",
-                        role_name: role,
-                        modules_list: ["Customer groups"],
-                        pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                        },
+              username: username,
+              path: "/get_partner_info",
+              role_name: role,
+              modules_list: ["Customer groups"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -402,12 +597,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 centered: true,
               });
             } else {
-              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
-              console.log("tableData",tableData)
+              const tableData = parsedData?.data?.["Customer groups"]?.customergroups || [];
               setRowData(tableData);
             }
           }
-          
+
           if (popupHeading === "E911 Customer") {
             const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
             const data = {
@@ -421,6 +615,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -452,12 +647,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
+              Partner:partner,
               request_received_at: getCurrentDateTime(),
             };
 
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
-            console.log(parsedData)
             // Check if the flag is false in the parsed data
             const tableData = parsedData.data.customers;
             const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
@@ -465,19 +660,19 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             const generalFields = parsedData.data
             setRowData(tableData);
           }
-          if (popupHeading === "Customer Group") {
+          if (popupHeading === "User") {
             const url =
               "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
             const data = {
               tenant_name: partner || "default_value",
-                        username: username,
-                        path: "/get_partner_info",
-                        role_name: role,
-                        modules_list: ["Partner users"],
-                        pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                        },
+              username: username,
+              path: "/get_partner_info",
+              role_name: role,
+              modules_list: ["Partner users"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -489,8 +684,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 centered: true,
               });
             } else {
-              const tableData =parsedData?.data?.["Partner users"]?.users  || [];
-              console.log("tableData",tableData)
+              const tableData = parsedData?.data?.["Partner users"]?.users || [];
               setRowData(tableData);
             }
           }
@@ -501,7 +695,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         notification.error({
           message: 'Error',
           description: 'Failed to Deleted the record. Please try again.',
-          style: messageStyle, 
+          style: messageStyle,
           placement: 'top',// Apply custom styles here
         });  //// place it after you make the call to load the table data
       }
@@ -542,17 +736,16 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const confirmSubmit = async (rowIndex: number, col: string, apiState: boolean) => {
     const updatedData = [...rowData];
     const row = updatedData[rowIndex];
-    //  console.log("row:", row)
     if (apiState) {
       if (col === "Module State" || col === "Role Status") {
-       // Set to true for enable
+        // Set to true for enable
         row.is_active = true;  // Set to true for active
       } else {
         row.api_state = true; // Set to true for active
       }
     } else {
       if (col === "Module State" || col === "Role Status") {
-       // Set to false for disable
+        // Set to false for disable
         row.is_active = false;  // Set to false for inactive
       } else {
         row.api_state = false;   // Set to false for inactive
@@ -560,12 +753,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
 
     updatedData[rowIndex] = row;
-    console.log(row)
     // setCurrentRowData(row)
     // setRowData(updatedData);
     setEnableModalOpen(false);
     setDisableModalOpen(false);
-  
+
     if (row) {
       try {
         const url =
@@ -575,8 +767,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         if (popupHeading === "Carrier") {
           if (row) {
             row["last_modified_by"] = username
-            row["last_modified_date_time"]=getCurrentDateTime()
-            
+            row["last_modified_date_time"] = getCurrentDateTime()
+
           }
           data = {
             tenant_name: partner || "default_value",
@@ -587,6 +779,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -594,8 +787,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         if (popupHeading === "API") {
           if (row) {
             row["last_modified_by"] = username
-            row["last_modified_date_time"]=getCurrentDateTime()
-            console.log(row)
+            row["last_modified_date_time"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -606,13 +798,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
         if (popupHeading === "User") {
           if (row) {
             row["modified_by"] = username
-            row["modified_date"]=getCurrentDateTime()
+            row["modified_date"] = getCurrentDateTime()
 
           }
           data = {
@@ -622,6 +815,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "roles",
+            Partner:partner,
             "changed_data": row,
             request_received_at: getCurrentDateTime(),
           };
@@ -629,7 +823,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         if (popupHeading === "UserModule") {
           if (row) {
             row["modified_by"] = username
-            row["modified_date"]=getCurrentDateTime()
+            row["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -639,12 +833,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             sub_module: "Partner Modules",
             "table_name": "tenant_module",
             "changed_data": row,
+            Partner:partner,
             request_received_at: getCurrentDateTime(),
           };
         }
         const response = await axios.post(url, { data });
         const resp = JSON.parse(response.data.body);
-        console.log(resp)
         if (response.data.statusCode === 200 && resp.flag === true) {
 
           notification.success({
@@ -654,7 +848,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             placement: 'top', // Apply custom styles here
           });
           if (popupHeading === "Carrier") {
-          
+
             try {
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
@@ -662,31 +856,29 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 username: username,
                 path: "/get_superadmin_info",
                 role_name: role,
-                sub_module: "Partner API", 
+                sub_module: "Partner API",
                 sub_tab: "Carrier APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
-              console.log(resp)
               const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-              console.log(carrierApis);
               setRowData(carrierApis)
-              console.log("rowdata:", rowData)
             }
-              catch (err) {
-                console.error("Error fetching data:", err);
-                // Modal.error({
-                //   title: 'Data Fetch Error',
-                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                //   centered: true,
-                // });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
           if (popupHeading === "API") {
-          
+
             try {
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
@@ -696,30 +888,28 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner API",
                 sub_tab: "Amop APIs",
+                Partner:partner,
                 request_received_at: getCurrentDateTime(),
               };
-              
+
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
-              console.log(resp)
               const carrierApis = resp.data.amop_apis_data.amop_apis;
-              // console.log(carrierApis);
               setRowData(carrierApis)
-              console.log("rowdata:", rowData)
             }
-              catch (err) {
-                console.error("Error fetching data:", err);
-                // Modal.error({
-                //   title: 'Data Fetch Error',
-                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                //   centered: true,
-                // });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
           if (popupHeading === "UserModule") {
-          
+
             try {
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
@@ -730,35 +920,30 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 sub_module: "Partner Modules",
                 flag: "withparameters",
                 Partner: selectedPartnerModule,
-                sub_partner:Environment,
-                modules:["role partner module","partner module"],
+                sub_partner: Environment,
+                modules: ["role partner module", "partner module"],
                 request_received_at: getCurrentDateTime()
-                 // Send selected sub-partner
+                // Send selected sub-partner
               };
-              
+
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
-              console.log(resp)
-              console.log("role data:", resp.data.roles_data);
-              console.log("module data:", resp.data.role_module_data);
               // setRowData(resp.data.roles_data)
-              // console.log(rowData)
               setRowData(resp.data.role_module_data)
-              console.log(rowData)
             }
-              catch (err) {
-                console.error("Error fetching data:", err);
-                Modal.error({
-                  title: 'Data Fetch Error',
-                  content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                  centered: true,
-                });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+                centered: true,
+              });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
           if (popupHeading === "User") {
-          
+
             try {
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
@@ -769,40 +954,35 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 sub_module: "Partner Modules",
                 flag: "withparameters",
                 Partner: selectedPartnerModule,
-                sub_partner:Environment,
-                modules:["role partner module","partner module"],
+                sub_partner: Environment,
+                modules: ["role partner module", "partner module"],
                 request_received_at: getCurrentDateTime()
-                
-                 // Send selected sub-partner
+
+                // Send selected sub-partner
               };
-              
+
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
-              console.log(resp)
-              console.log("role data:", resp.data.roles_data);
-              console.log("module data:", resp.data.role_module_data);
               setRowData(resp.data.roles_data)
-              console.log(rowData)
               // setRowData(resp.data.role_module_data)
-              // console.log(rowData)
             }
-              catch (err) {
-                console.error("Error fetching data:", err);
-                // Modal.error({
-                //   title: 'Data Fetch Error',
-                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                //   centered: true,
-                // });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
-        
-          
-          
- 
+
+
+
+
         }
-          
+
 
       } catch (err) {
         console.error("Error fetching data:", err);
