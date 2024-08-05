@@ -74,24 +74,20 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
 
 
 
-  console.log("userData", usersData)
   useEffect(() => {
     const initializeData = () => {
       const general_fields = partnerData["Partner users"]?.headers_map?.["Partner users"]?.general_fields || {}
-      const partneroptions: any[] = usersData?.tenant ? Object.keys(usersData.tenant) : []
-      const subPartnersData = usersData?.tenant || {}
-      const subPartners = subPartnersData[tenant] || []
-      const roleoptions: any[] = usersData?.role_name || []
-      const subPartnersoptions = subPartners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
-      setsubPartnersData(subPartnersData)
-      setsubPartnersoptions(subPartnersoptions)
-      setRoleoptions(roleoptions)
-      setPartneroptions(partneroptions)
+      const partner_options: any[] = usersData?.tenant ? Object.keys(usersData.tenant) : []
+      const subPartners_Data = usersData?.tenant || {}
+      const sub_partners = subPartners_Data[tenant] || []
+      const role_options: any[] = usersData?.role_name || []
+      const subPartners_options = sub_partners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
+      setsubPartnersData(subPartners_Data)
+      setSubPartners(sub_partners);
+      setsubPartnersoptions(subPartners_options)
+      setRoleoptions(role_options)
+      setPartneroptions(partner_options)
       setGeneralFields(general_fields)
-      setSubPartners(subPartners);
-      setSubPartners(subPartnersData[tenant] || []);
-
-      console.log("general_fields", general_fields)
 
 
     };
@@ -141,12 +137,17 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
     setUser_Name
   } = useUserStore();
 
-
+let sub_partners;
   const handlePartnerChange = (selectedOption: SingleValue<OptionType>) => {
     if (selectedOption) {
       const partner = selectedOption.value;
       setTenant(partner);
-      setSubPartners(subPartnersData[partner] || []);
+      const sub_partners=subPartnersData[partner]|| []
+      const role_options: any[] = usersData?.role_name || []
+      const subPartners_options = sub_partners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
+      setSubPartners(sub_partners);
+      setsubPartnersoptions(subPartners_options)
+      setSubPartners(sub_partners);
       setSelectedSubPartner([]);
       setSubTenant([])
       if (rowData) {
@@ -307,7 +308,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
             isMulti
             value={rowData ? { value: getFieldValue('Sub Partner'), label: getFieldValue('Sub Partner') } : subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
             onChange={handleSetSubPartner}
-            options={subPartners.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+            options={subPartnersoptions?.length > 0 ? subPartnersoptions : subPartnersnoOptions}
             styles={editableDrp}
           />
 
