@@ -61,7 +61,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata ,storedpagination} = useAuth()
+  const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata, storedpagination } = useAuth()
   const [totalPages, setTotalPages] = useState(1);
   const [lastPageWithData, setLastPageWithData] = useState(1);
 
@@ -76,7 +76,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   useEffect(() => {
     if (tabledata) {
       setRowData(tabledata);
-      pagination=storedpagination
+
     } else {
       setRowData(initialData);
     }
@@ -92,9 +92,9 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setCurrentPage(currentPage_);
     setLastPageWithData(lastPageWithData_)
 
-  }, [tabledata, initialData,pagination]);
+  }, [tabledata, initialData, pagination]);
   useEffect(() => {
-    let pagination_:any
+    let pagination_: any
     const updatePaginator = async () => {
       let end = Math.floor(lastPageWithData * itemsPerPage)
       if (lastPageWithData < currentPage) {
@@ -205,8 +205,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: end,
                 end: end + end,
               },
-              Partner:partner,
-              request_received_at:getCurrentDateTime()
+              Partner: partner,
+              request_received_at: getCurrentDateTime()
             };
 
             const response = await axios.post(url, { data });
@@ -233,7 +233,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -266,7 +266,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 "Customer groups": { start: 0, end: 500 },
                 "Partner users": { start: 0, end: 500 }
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -296,7 +296,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 "Customer groups": { start: end, end: end + end },
                 "Partner users": { start: end, end: end + end }
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -310,14 +310,14 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             } else {
               const tableData = parsedData?.data?.["Partner users"]?.users || [];
               const userPagination = parsedData?.data?.pages?.["Partner users"] || {}
-              pagination_=userPagination
+              pagination_ = userPagination
               const updatedRowData = [...rowData, ...tableData];
               setRowData(updatedRowData);
             }
           }
           const end_ = pagination_?.end || 0;
           const lastPageWithData_ = Math.floor(end_ / itemsPerPage);
-          console.log("lastPageWithData_",lastPageWithData_)
+          console.log("lastPageWithData_", lastPageWithData_)
           setLastPageWithData(lastPageWithData_)
           paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
@@ -488,7 +488,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Customer groups",
             action: "delete",
             changed_data: row,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -501,7 +501,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             module_name: "Partner users",
             action: "delete",
             updated_data: row,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -522,7 +522,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": "customers",
             "changed_data": row,
             action: "delete",
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
 
           };
@@ -542,7 +542,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "table_name": " customers",
             "changed_data": row,
             action: "delete",
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
 
@@ -569,7 +569,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 "Customer groups": { start: 0, end: 500 },
                 "Partner users": { start: 0, end: 500 }
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -599,7 +599,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -631,7 +631,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -763,7 +763,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
             "changed_data": row,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -782,7 +782,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
             "changed_data": row,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -799,7 +799,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             sub_module: "Partner Modules",
             "table_name": "roles",
-            Partner:partner,
+            Partner: partner,
             "changed_data": row,
             request_received_at: getCurrentDateTime(),
           };
@@ -817,7 +817,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             sub_module: "Partner Modules",
             "table_name": "tenant_module",
             "changed_data": row,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -842,7 +842,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner API",
                 sub_tab: "Carrier APIs",
-                Partner:partner,
+                Partner: partner,
                 request_received_at: getCurrentDateTime(),
               };
               const response = await axios.post(url, { data: data });
@@ -872,7 +872,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
                 role_name: role,
                 sub_module: "Partner API",
                 sub_tab: "Amop APIs",
-                Partner:partner,
+                Partner: partner,
                 request_received_at: getCurrentDateTime(),
               };
 
