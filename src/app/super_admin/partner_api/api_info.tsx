@@ -259,7 +259,7 @@ const CarrierInfo: React.FC = () => {
             popupHeading='API'
             createModalData={createModalData}
             pagination={pagination}
-            advancedFilters={[]}
+            advancedFilters={filteredData}
           />
 
         </div>

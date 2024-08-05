@@ -291,7 +291,7 @@ const CarrierInfo: React.FC = () => {
               allowedActions={["edit"]}
               popupHeading='Carrier'
               createModalData={createModalData}
-              advancedFilters={[]}
+              advancedFilters={filteredData}
               pagination={pagination}
             />
           )}

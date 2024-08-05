@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useState, useEffect } from 'react';
-import { Checkbox, Input, Modal, notification } from 'antd';
+import { Checkbox, Input, Modal, notification, Spin } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles, NonEditableDropdownStyles } from './css/dropdown';
 import CreateUser from '../partner/users/createUser/page';
@@ -53,6 +53,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
   const { username, tenantNames, role, partner, settabledata} = useAuth();
   const rate_plan_name_drp = generalFields && generalFields.rate_plan_name && Array.isArray(generalFields.rate_plan_name) ? generalFields.rate_plan_name : []
+  const [loading, setLoading] = useState(false);
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
   const [initialData, setTableData] = useState<any>(tableData)
@@ -251,7 +252,7 @@ const EditModal: React.FC<EditModalProps> = ({
         const resp = JSON.parse(response.data.body);
         console.log(resp)
         if (response.data.statusCode === 200 && resp.flag === true) {
-
+        setLoading(true)
           notification.success({
             message: 'Success',
             description: 'Successfully Edit the record!',
@@ -344,6 +345,7 @@ const EditModal: React.FC<EditModalProps> = ({
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
+              setLoading(false)
               Modal.error({
                 title: 'Data Fetch Error',
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
@@ -354,6 +356,8 @@ const EditModal: React.FC<EditModalProps> = ({
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
               const customertableData = parsedData.data.WestE911Customer;
               settabledata(customertableData);
+              setLoading(false)
+
             }
           }
           if (heading === "NetSapien Customer") {
@@ -375,13 +379,24 @@ const EditModal: React.FC<EditModalProps> = ({
 
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
-            console.log(parsedData)
+            if (parsedData.flag === false) {
+              setLoading(false)
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            }else{
+              console.log(parsedData)
             // Check if the flag is false in the parsed data
             const tableData = parsedData.data.customers;
             const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
             const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
             const generalFields = parsedData.data
             settabledata(tableData);
+            setLoading(false)
+            }
+            
           }
           if (heading === "Bandwidth Customer") {
             const url =
@@ -403,18 +418,22 @@ const EditModal: React.FC<EditModalProps> = ({
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
+              setLoading(false)
               Modal.error({
                 title: 'Data Fetch Error',
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
                 centered: true,
               });
+
             } else {
               const tableData = parsedData.data.customers;
               const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
               const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
               const generalFields = parsedData.data
               settabledata(tableData);
+              setLoading(false)
             }
+
           }
           if (heading === "Customer Group") {
             const url =
@@ -435,6 +454,7 @@ const EditModal: React.FC<EditModalProps> = ({
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
+              setLoading(false)
               Modal.error({
                 title: 'Data Fetch Error',
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
@@ -444,6 +464,7 @@ const EditModal: React.FC<EditModalProps> = ({
               const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
               console.log("tableData",tableData)
               settabledata(tableData);
+              setLoading(false)
             }
           }
 
@@ -502,6 +523,14 @@ const EditModal: React.FC<EditModalProps> = ({
   const modalWidth = typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
   const infoModalHeight = typeof window !== 'undefined' ? (window.innerHeight * 2) / 4 : 0;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
 
 
   return (
