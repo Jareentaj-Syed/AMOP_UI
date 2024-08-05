@@ -183,70 +183,70 @@ let sub_partners;
   };
 
   const handleSave = async() => {
-    setUser_Name(username)
-    try{
-      const url =
-        "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-  
-      let changedData: any = {};
-      changedData[getFieldKey('Partner')] = partner;
-    changedData[getFieldKey('Sub Partner')] = subPartners;
-    changedData[getFieldKey('First Name')] = firstName;
-    changedData[getFieldKey('Last Name')] = lastName;
-    changedData[getFieldKey('Username')] = username;
-    changedData[getFieldKey('Email Id')] = emailId;
-    changedData[getFieldKey('Mobile No')] = mobileNo;
-    changedData[getFieldKey('Role')] = role?.value;
-    changedData[getFieldKey('Password')] = password;
-    changedData[getFieldKey('Phone')] = phone;
-    changedData[getFieldKey('Business Name')] = businessName;
-    changedData[getFieldKey('Locale')] = locale;
-    changedData[getFieldKey('Apt/Suite')] = aptSuite;
-    changedData[getFieldKey('Address Line-1')] = addressLine1;
-    changedData[getFieldKey('Address Line-2')] = addressLine2;
-    changedData[getFieldKey('Country')] = country;
-    changedData[getFieldKey('State')] = state;
-    changedData[getFieldKey('City')] = city;
-    changedData[getFieldKey('Time Zone')] = timeZone;
-    changedData[getFieldKey('Zip')] = zip;
-  
-      const data = {
-          tenant_name: partner || "default_value",
-          username: user,
-          path: "/update_partner_info",
-          role_name: userRole,
-          module_name: "Partner users",
-          action:rowData?"update":"create",
-          request_received_at: getCurrentDateTime(),
-          changed_data: {
-              "user_info":changedData
-          },
-         
-          Partner:partner,
-      };
-      const response = await axios.post(url, { data });
-  }
-  catch(error){
-      console.log(
-          error
-      )
-  }
     const errors: string[] = [];
     if (!partner) errors.push('Partner is required.');
     if (!username) errors.push('Username is required.');
-    if (!email) errors.push('Email id is required.');
+    if (!emailId) errors.push('Email id is required.');
     if (!role) errors.push('Role is required.');
     if (!password) errors.push('Password is required.');
     if (!notification) errors.push('Notification is required.')
-
     setErrorMessages(errors);
+      if (errors.length === 0) {
+        setUser_Name(username)
+        try{
+          const url =
+            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+      
+          let changedData: any = {};
+          changedData[getFieldKey('Partner')] = partner;
+        changedData[getFieldKey('Sub Partner')] = subPartners;
+        changedData[getFieldKey('First Name')] = firstName;
+        changedData[getFieldKey('Last Name')] = lastName;
+        changedData[getFieldKey('Username')] = username;
+        changedData[getFieldKey('Email Id')] = emailId;
+        changedData[getFieldKey('Mobile No')] = mobileNo;
+        changedData[getFieldKey('Role')] = role?.value;
+        changedData[getFieldKey('Password')] = password;
+        changedData[getFieldKey('Phone')] = phone;
+        changedData[getFieldKey('Business Name')] = businessName;
+        changedData[getFieldKey('Locale')] = locale;
+        changedData[getFieldKey('Apt/Suite')] = aptSuite;
+        changedData[getFieldKey('Address Line-1')] = addressLine1;
+        changedData[getFieldKey('Address Line-2')] = addressLine2;
+        changedData[getFieldKey('Country')] = country;
+        changedData[getFieldKey('State')] = state;
+        changedData[getFieldKey('City')] = city;
+        changedData[getFieldKey('Time Zone')] = timeZone;
+        changedData[getFieldKey('Zip')] = zip;
+      
+          const data = {
+              tenant_name: partner || "default_value",
+              username: user,
+              path: "/update_partner_info",
+              role_name: userRole,
+              module_name: "Partner users",
+              action:rowData?"update":"create",
+              request_received_at: getCurrentDateTime(),
+              changed_data: {
+                  "user_info":changedData
+              },
+             
+              Partner:partner,
+          };
+          const response = await axios.post(url, { data });
+      }
+      catch(error){
+          console.log(
+              error
+          )
+      }
+      }
+      else {
+        scrollToTop()
+      }
 
-    if (errors.length === 0) {
-      console.log('Saving...');
-    }
-    else {
-      scrollToTop()
-    }
+   
+    
   };
 
   //Handling modal save
@@ -398,7 +398,7 @@ let sub_partners;
             <label className="field-label">Notification Enable<span className="text-red-500">*</span></label>
             <Select
               styles={editableDrp}
-              value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : { value: '', label: '' }}
+              value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : notification}
               options={Notificationoptions}
               onChange={handleNotification}
             />
