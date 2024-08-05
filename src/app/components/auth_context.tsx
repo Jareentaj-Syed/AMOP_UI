@@ -36,6 +36,8 @@ interface AuthContextType {
    setLoading: (value: boolean) => void;
    tabledata: any[];
    settabledata: (data: any[]) => void;// Method to set modules
+   storedpagination: any;
+   setStoredPagination: (data: any) => void;// Method to set modules
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -56,6 +58,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [role, setRole] = useState<string | null>(null);
   const [modules, setModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(false); // State to manage loading
+  const [storedpagination, setStoredPagination] = useState<any>({});
   const login = async (username: string, password: string) => {
     setUsername(username);
     const data = {
@@ -185,6 +188,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setRole,
         modules,
         setModules,
+        storedpagination,
+        setStoredPagination,
       }}
     >
       {children}

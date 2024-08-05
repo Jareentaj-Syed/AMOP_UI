@@ -194,7 +194,7 @@ const CarrierInfo: React.FC = () => {
   return (
     <div className=''>
       <div className="">
-      <div className="p-4 items-center justify-between mb-2">
+        <div className="p-4 items-center justify-between mb-2">
           <div className="flex space-x-4 mb-4">
             <div className='w-[250px]'>
               <label className="block text-gray-700">
@@ -205,7 +205,7 @@ const CarrierInfo: React.FC = () => {
                 onChange={(selectedOption) => setEnvironment(selectedOption)}
                 options={environmentOptions}
                 styles={editableDrp}
-                
+
               />
             </div>
             <div className='w-[250px]'>
@@ -214,51 +214,56 @@ const CarrierInfo: React.FC = () => {
                 value={selectedPartner}
                 onChange={(selectedOption) => setSelectedPartner(selectedOption)}
                 options={Partneroptions}
-               
+
                 styles={editableDrp}
               />
             </div>
-          <div className='mt-5 ml-3'>
-          <button
-              className='save-btn'
-              type="submit"
-              onClick={() => fetchData()}
-            >
-              Clear
-            </button>
+            <div className='mt-5 ml-3'>
+              <button
+                className='save-btn'
+                type="submit"
+                onClick={() => fetchData()}
+              >
+                Clear
+              </button>
             </div>
-          <div className="ml-auto mt-4">
-            {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-            <TableSearch
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              tableName={"carrier_apis "}
-              headerMap={headerMap}
-            />
+            <div className="ml-auto mt-4">
+              {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+              <TableSearch
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                tableName={"amop_apis"}
+                headerMap={headerMap}
+              />
+            </div>
           </div>
+
+
+          <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter
+              onFilter={handleFilter}
+              onReset={handleReset}
+              headers={headers}
+              headerMap={headerMap}
+              tableName={"amop_apis"} />
+          </div>
+
+          <TableComponent
+            headers={headers}
+            headerMap={headerMap}
+            initialData={tableData}
+            searchQuery={searchTerm}
+            visibleColumns={headers}
+            itemsPerPage={100}
+            allowedActions={["edit"]}
+            popupHeading='API'
+            createModalData={createModalData}
+            pagination={pagination}
+            advancedFilters={[]}
+          />
+
         </div>
-
-
-        <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
-        </div>
-
-        <TableComponent
-          headers={headers}
-          headerMap={headerMap}
-          initialData={tableData}
-          searchQuery={searchTerm}
-          visibleColumns={headers}
-          itemsPerPage={100}
-          allowedActions={["edit"]}
-          popupHeading='API'
-          createModalData={createModalData}
-          pagination={pagination}
-          advancedFilters={[]}
-        />
-
       </div>
-    </div>
     </div >
   );
 };

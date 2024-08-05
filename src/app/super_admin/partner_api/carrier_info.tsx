@@ -34,12 +34,12 @@ const CarrierInfo: React.FC = () => {
   const [tableData, setTableData] = useState<any>([]);
   const editableDrp = DropdownStyles;
   const [loading, setLoading] = useState(true); // State to manage loading
-  const [pagination,setpagination]=useState<any>({});
-  const module_name= "Carrier Api"
-  const [headers,setHeaders]=useState<any[]>([]);
-  const [headerMap,setHeaderMap]=useState<any>({});
-  const [createModalData,setcreateModalData]=useState<any[]>([]);
-  const [generalFields,setgeneralFields]=useState<any[]>([])
+  const [pagination, setpagination] = useState<any>({});
+  const module_name = "Carrier Api"
+  const [headers, setHeaders] = useState<any[]>([]);
+  const [headerMap, setHeaderMap] = useState<any>({});
+  const [createModalData, setcreateModalData] = useState<any[]>([]);
+  const [generalFields, setgeneralFields] = useState<any[]>([])
   const [filteredData, setFilteredData] = useState([]);
 
   const handleFilter = (advancedFilters: any) => {
@@ -56,7 +56,7 @@ const CarrierInfo: React.FC = () => {
   const fetchData = async () => {
     setEnvironment(null)
     setSelectedPartner(null)
-    setLoading(true); 
+    setLoading(true);
     // Set loading to true before the request
     try {
       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
@@ -65,12 +65,12 @@ const CarrierInfo: React.FC = () => {
         username: username,
         path: "/get_superadmin_info",
         role_name: role,
-        sub_module: "Partner API", 
+        sub_module: "Partner API",
         sub_tab: "Carrier APIs",
         request_received_at: getCurrentDateTime(),
-        Partner:partner,
+        Partner: partner,
       };
-      
+
       const response = await axios.post(url, { data: data });
       const resp = JSON.parse(response.data.body);
       console.log(resp)
@@ -83,19 +83,19 @@ const CarrierInfo: React.FC = () => {
         });
         return; // Exit early if there's an error
       }
-  
+
       const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
       console.log(carrierApis);
       setTableData(carrierApis);
-          const headersMap=resp.headers_map["carrier apis"].header_map
-          const sortedheaderMap=sortHeaderMap(headersMap)
-          setHeaderMap(sortedheaderMap)
-          const headers=Object.keys(sortedheaderMap)
-          setHeaders(headers)
-    
+      const headersMap = resp.headers_map["carrier apis"].header_map
+      const sortedheaderMap = sortHeaderMap(headersMap)
+      setHeaderMap(sortedheaderMap)
+      const headers = Object.keys(sortedheaderMap)
+      setHeaders(headers)
+
       const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
       setEnvironmentOptions(environments);
-  
+
       const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
       setPartnerOptions(partners);
     } catch (err) {
@@ -112,17 +112,17 @@ const CarrierInfo: React.FC = () => {
 
   type HeaderMap = Record<string, [string, number]>;
 
-const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
-  // Convert the object to an array of [key, value] pairs
-  const entries = Object.entries(headerMap) as [string, [string, number]][];
+  const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
+    // Convert the object to an array of [key, value] pairs
+    const entries = Object.entries(headerMap) as [string, [string, number]][];
 
-  // Sort the array based on the second item of each value
-  entries.sort((a, b) => a[1][1] - b[1][1]);
+    // Sort the array based on the second item of each value
+    entries.sort((a, b) => a[1][1] - b[1][1]);
 
-  // Convert the sorted array back to an object
-  return Object.fromEntries(entries) as HeaderMap;
-}
-  
+    // Convert the sorted array back to an object
+    return Object.fromEntries(entries) as HeaderMap;
+  }
+
   useEffect(() => {
     if (environment && selectedPartner) {
       const fetchData = async () => {
@@ -134,12 +134,12 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             username: username,
             path: "/get_superadmin_info",
             role_name: role,
-            sub_module: "Partner API", 
+            sub_module: "Partner API",
             sub_tab: "Carrier APIs",
             Environment: environment.value,
             Selected_Partner: selectedPartner.value,
             request_received_at: getCurrentDateTime(),
-            Partner:partner,
+            Partner: partner,
           };
           const response = await axios.post(url, { data });
           const resp = JSON.parse(response.data.body);
@@ -153,20 +153,20 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
             });
             return; // Exit early if there's an error
           }
-  
+
           const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-  
+
           setTableData(carrierApis);
-          console.log("response",resp)
-          const headersMap=resp.headers_map["carrier apis"].header_map
-          const sortedheaderMap=sortHeaderMap(headersMap)
+          console.log("response", resp)
+          const headersMap = resp.headers_map["carrier apis"].header_map
+          const sortedheaderMap = sortHeaderMap(headersMap)
           setHeaderMap(sortedheaderMap)
-          const headers=Object.keys(sortedheaderMap)
+          const headers = Object.keys(sortedheaderMap)
           setHeaders(headers)
-          console.log("headersMap",sortedheaderMap,headers)
+          console.log("headersMap", sortedheaderMap, headers)
           const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
           setEnvironmentOptions(environments);
-  
+
           const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
           setPartnerOptions(partners);
         } catch (err) {
@@ -180,7 +180,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
           setLoading(false); // Ensure loading is set to false after the request
         }
       };
-  
+
       fetchData();
     }
   }, [environment, selectedPartner]);
@@ -194,19 +194,19 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     );
   }
 
-//   const headers = ["service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
-//   const headersmap = {
-  
-//     "service_provider_name":"Service provider name",
-//    "api_name":"API name",
-//   "api_url": "API url",
-//    "api_params":"API params",
-//    "api_state": "API state", 
-//    "env": "Environment",
-//    "partner":"Partner",
-//    "last_modified_by":"Last modified by", 
-//    "last_modified_datetime":"Last modified date & time"
-// }
+  //   const headers = ["service_provider_name", "api_name", "api_url", "api_params", "api_state",  "env", "partner","last_modified_by", "last_modified_datetime"];
+  //   const headersmap = {
+
+  //     "service_provider_name":"Service provider name",
+  //    "api_name":"API name",
+  //   "api_url": "API url",
+  //    "api_params":"API params",
+  //    "api_state": "API state", 
+  //    "env": "Environment",
+  //    "partner":"Partner",
+  //    "last_modified_by":"Last modified by", 
+  //    "last_modified_datetime":"Last modified date & time"
+  // }
 
   const formatColumnName = (name: string) => {
     return name.replace(/_/g, ' ');
@@ -237,7 +237,7 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
                 onChange={(selectedOption) => setEnvironment(selectedOption)}
                 options={environmentOptions}
                 styles={editableDrp}
-                
+
               />
             </div>
             <div className='w-[250px]'>
@@ -246,32 +246,38 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
                 value={selectedPartner}
                 onChange={(selectedOption) => setSelectedPartner(selectedOption)}
                 options={Partneroptions}
-               
+
                 styles={editableDrp}
               />
             </div>
           </div>
           <div className='mt-5 ml-3'>
-          <button
+            <button
               className='save-btn'
               type="submit"
               onClick={() => fetchData()}
             >
               Clear
             </button>
-            </div>
+          </div>
           <div className="ml-auto mt-4">
             {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
             <TableSearch
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              tableName={"carrier_apis "}
+              tableName={"carrier_apis"}
               headerMap={headerMap}
             />
           </div>
         </div>
         <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+          <AdvancedMultiFilter
+            onFilter={handleFilter}
+            onReset={handleReset}
+            headers={headers}
+            headerMap={headerMap}
+            tableName={"carrier_apis"}
+          />
         </div>
         <div className="container mx-auto">
           {(
@@ -285,8 +291,8 @@ const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
               allowedActions={["edit"]}
               popupHeading='Carrier'
               createModalData={createModalData}
-              advancedFilters={[]}     
-              pagination={pagination}   
+              advancedFilters={[]}
+              pagination={pagination}
             />
           )}
         </div>

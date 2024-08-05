@@ -40,7 +40,7 @@ const ListView: React.FC = () => {
 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const { username, partner, role } = useAuth();
-  const [pagination,setPagination]=useState<any>({});
+  const [pagination, setPagination] = useState<any>({});
   const [filteredData, setFilteredData] = useState([]);
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
@@ -64,7 +64,7 @@ const ListView: React.FC = () => {
       const headers_ = Object.keys(header_Map);
       const createModalData_ = usersData?.headers_map?.["Partner users"]?.pop_up || [];
       const generalFields_ = usersData?.data?.["Partner users"] || {}
-      const pagination_=usersData?.data?.pages?.["Partner users"] ||{}
+      const pagination_ = usersData?.data?.pages?.["Partner users"] || {}
       setPagination(pagination_)
       setHeaders(headers_);
       setHeadersMap(header_Map);
@@ -113,8 +113,8 @@ const ListView: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
-    
-      Partner:partner,
+
+      Partner: partner,
     };
 
     try {
@@ -208,8 +208,14 @@ const ListView: React.FC = () => {
             </div>
           </div>
           <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
-        </div>
+
+            <AdvancedMultiFilter
+              onFilter={handleFilter}
+              onReset={handleReset}
+              headers={headers}
+              headerMap={headerMap}
+              tableName={"partner_users"} />
+          </div>
           <div className="">
             <TableComponent
               headers={headers}

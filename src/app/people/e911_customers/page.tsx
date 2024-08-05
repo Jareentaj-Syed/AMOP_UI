@@ -70,12 +70,12 @@ const E911Customers: React.FC = () => {
             end: 500,
           },
           request_received_at: getCurrentDateTime(),
-          Partner:partner,
+          Partner: partner,
         };
 
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
-        
+
         if (parsedData.flag === false) {
           Modal.error({
             title: 'Data Fetch Error',
@@ -117,7 +117,7 @@ const E911Customers: React.FC = () => {
     setNewRowData({});
   };
 
-  const handleCreateRow = (newRow: any,tableData:any) => {
+  const handleCreateRow = (newRow: any, tableData: any) => {
     const updatedData = [...tableData, newRow];
     setTable(tableData);
     setTableData(tableData);
@@ -145,12 +145,12 @@ const E911Customers: React.FC = () => {
       path: "/export",
       username: username,
       table: "customers",
-      module_name:"E911 Customers",
+      module_name: "E911 Customers",
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
-        end_date: endDate.format("YYYY-MM-DD 23:59:59"), 
-      
-        Partner:partner,
+      end_date: endDate.format("YYYY-MM-DD 23:59:59"),
+
+      Partner: partner,
     };
 
     try {
@@ -164,32 +164,32 @@ const E911Customers: React.FC = () => {
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
       console.log(resp)
-        // Close the modal after exporting
-      
+      // Close the modal after exporting
+
       if (resp.flag === false) {
         console.log(resp.message)
         Modal.error({
           title: 'Export Error',
-          content: resp.message ,
+          content: resp.message,
           centered: true,
         });
       }
- 
+
       handleExportModalClose();
       downloadBlob(blob)
-    
+
     } catch (error) {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
- 
+
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);
     const byteNumbers = new Array(byteCharacters.length);
     for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
     }
     const byteArray = new Uint8Array(byteNumbers);
 
@@ -200,7 +200,7 @@ const E911Customers: React.FC = () => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-};
+  };
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -209,11 +209,11 @@ const E911Customers: React.FC = () => {
     );
   }
 
-  const disableFutureDates = (current:any) => {
-    console.log("future dates:",current && current > dayjs().endOf('day'));
+  const disableFutureDates = (current: any) => {
+    console.log("future dates:", current && current > dayjs().endOf('day'));
     return current && current > dayjs().endOf('day'); // Disable future dates
   };
-  
+
 
   return (
     <div className="container mx-auto">
@@ -221,12 +221,12 @@ const E911Customers: React.FC = () => {
         <div className="flex space-x-2">
           {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
           <TableSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          tableName={"e911_customer"}
-          headerMap={headerMap}
-        />
-         
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            tableName={"e911_customer"}
+            headerMap={headerMap}
+          />
+
         </div>
 
         <div className="flex space-x-2">
@@ -247,8 +247,13 @@ const E911Customers: React.FC = () => {
         </div>
       </div>
       <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
-        </div>
+        <AdvancedMultiFilter
+          onFilter={handleFilter}
+          onReset={handleReset}
+          headers={headers}
+          headerMap={headerMap}
+          tableName={"e911_customer"} />
+      </div>
       <TableComponent
         headers={headers}
         headerMap={headerMap}
@@ -258,7 +263,7 @@ const E911Customers: React.FC = () => {
         itemsPerPage={100}
         allowedActions={["edit", "delete"]}
         popupHeading="E911 Customer"
-        createModalData={createModalData} pagination={undefined}      />
+        createModalData={createModalData} pagination={undefined} />
 
       <CreateModal
         isOpen={isCreateModalOpen}
@@ -284,8 +289,8 @@ const E911Customers: React.FC = () => {
       >
         <div className="flex flex-col space-y-4">
           <span>Select Date Range:</span>
-          <RangePicker 
-         value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+          <RangePicker
+            value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
             onChange={(dates) => {
               console.log("Selected dates:", dates); // Debug log
               if (dates && dates.length === 2) {
@@ -293,7 +298,7 @@ const E911Customers: React.FC = () => {
               } else {
                 setDateRange([null, null]); // Reset to null if dates are not both available
               }
-            }} 
+            }}
             format="YYYY-MM-DD"
             disabledDate={disableFutureDates}
           />

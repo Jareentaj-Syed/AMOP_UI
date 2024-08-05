@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Modal } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useAuth } from './auth_context';
 import axios from 'axios';
@@ -30,7 +30,7 @@ const TableSearch: React.FC<SearchInputProps> = ({
   const headers = Object.keys(headerMap); // Get the keys of the headerMap
   const [selectedHeaders, setSelectedHeaders] = useState<HeaderOption[]>([]);
   const [colsList, setColsList] = useState<string[]>([]);
-  const { username, partner, role ,settabledata} = useAuth();
+  const { username, partner, role ,settabledata,setStoredPagination} = useAuth();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -51,7 +51,7 @@ const TableSearch: React.FC<SearchInputProps> = ({
           search_word: searchTerm,
           search_all_columns:colsList.length===headers.length||colsList.length===0?"True":"False",
           index_name:tableName,
-          cols:colsList
+          search:"whole"
         }
       };
       const response = await axios.post(url, data);
@@ -60,6 +60,13 @@ const TableSearch: React.FC<SearchInputProps> = ({
       if(parsedData?.flag){
         const tableData=parsedData?.data?.table
         settabledata(tableData)
+        setStoredPagination({})
+      }
+      else{
+        Modal.error({
+          title: 'Search error',
+          content: parsedData.error || 'An error occurred while searching. Please try again.',
+        });
       }
       console.log(response);
     } catch (error) {

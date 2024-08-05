@@ -268,7 +268,13 @@ useEffect(() => {
         </div>
       </div>
       <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+            <AdvancedMultiFilter 
+            onFilter={handleFilter} 
+            onReset={handleReset} 
+            headers={headers} 
+            headerMap={headerMap}
+            tableName={"netsapiens_customers"}
+            />
         </div>
 
         <TableComponent

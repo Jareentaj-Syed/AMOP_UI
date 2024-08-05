@@ -1,7 +1,9 @@
-import { Badge, Button, Input } from "antd";
+import { Badge, Button, Input, Modal } from "antd";
 import { CaretDownOutlined, CaretUpOutlined, SearchOutlined } from '@ant-design/icons';
 import React, { useMemo, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import axios from "axios";
+import { useAuth } from './auth_context';
 
 interface FilterShape {
   [key: string]: string[];
@@ -16,12 +18,14 @@ interface AdvancedFilterProps {
   onReset: (filters: FilterShape) => void;
   headers?: string[];
   headerMap?: any;
+  tableName?: string;
 }
 
-const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset, headers, headerMap }) => {
+const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset, headers = [], headerMap, tableName = "" }) => {
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [activeFilters, setActiveFilters] = useState<FilterShape>({});
   const [formValues, setFormValues] = useState<{ [key: string]: string }>({});
+  const { username, partner, role, settabledata ,setStoredPagination} = useAuth();
 
   const handleShowAdvanced = () => {
     setShowAdvanced(!showAdvanced);
@@ -36,8 +40,8 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       {}
     );
     setActiveFilters(advancedFilters);
-
     onFilter(advancedFilters);
+    handleButtonClick(advancedFilters)
     handleShowAdvanced();
   };
 
@@ -62,7 +66,39 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       [key]: value
     }));
   };
+  const handleButtonClick = async (filters:any) => {
+    try {
+      const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/opensearch";
+      
+      const data = {
+        data: {
+           path: "/perform_search",
+          search: "advanced",
+          filters: filters,
+          index_name: tableName,
+        }
+      };
 
+      const response = await axios.post(url, data);
+      const parsedData = JSON.parse(response.data.body)
+      if (parsedData?.flag) {
+        const tableData = parsedData?.data?.table
+        settabledata(tableData)
+        setStoredPagination({})
+      }
+      else{
+        Modal.error({
+          title: 'Search error',
+          content: parsedData.error || 'An error occurred while searching. Please try again.',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // Log selected header keys instead of values
+    console.log('advanced:', activeFilters); // Log colsList
+  };
   const countActiveFilters = useMemo(() => {
     return Object.values(activeFilters).filter(value => value.length > 0).length;
   }, [activeFilters]);

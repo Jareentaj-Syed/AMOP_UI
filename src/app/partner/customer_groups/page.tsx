@@ -40,7 +40,7 @@ const CustomerGroups: React.FC = () => {
   const { partnerData } = usePartnerStore.getState();
   const customerGroupsData = partnerData["Customer groups"] || {};
   const [filteredData, setFilteredData] = useState([]);
- const [pagination,setPagination]=useState<any>({});
+  const [pagination, setPagination] = useState<any>({});
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
@@ -55,7 +55,7 @@ const CustomerGroups: React.FC = () => {
   };
   useEffect(() => {
     const initializeData = () => {
-      const pagination_=customerGroupsData?.data?.pages?.["Customer groups"]||{}
+      const pagination_ = customerGroupsData?.data?.pages?.["Customer groups"] || {}
       console.log(pagination_)
       setPagination(pagination_)
       const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
@@ -114,7 +114,7 @@ const CustomerGroups: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
-      Partner:partner
+      Partner: partner
     };
 
     try {
@@ -214,7 +214,12 @@ const CustomerGroups: React.FC = () => {
           </div>
         </div>
         <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
+          <AdvancedMultiFilter
+            onFilter={handleFilter}
+            onReset={handleReset}
+            headers={headers}
+            headerMap={headerMap}
+            tableName={"customer_groups"} />
         </div>
         <TableComponent
           headers={headers}
@@ -227,9 +232,7 @@ const CustomerGroups: React.FC = () => {
           popupHeading='Customer Group'
           createModalData={createModalData}
           generalFields={generalFields}
-          pagination={pagination||{}}
-          advancedFilters={filteredData}
-
+          pagination={pagination || {}}
         />
 
         <CreateModal

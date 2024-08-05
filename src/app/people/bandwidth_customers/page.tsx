@@ -88,7 +88,7 @@ const BandWidthCustomers: React.FC = () => {
             end: 500,
           },
           request_received_at: getCurrentDateTime(),
-          Partner:partner,
+          Partner: partner,
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
@@ -187,8 +187,8 @@ const BandWidthCustomers: React.FC = () => {
       request_received_at: getCurrentDateTime(),
       start_date: startDate.format("YYYY-MM-DD 00:00:00"), // Start of the day
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
-      
-      Partner:partner,
+
+      Partner: partner,
     };
 
     try {
@@ -202,8 +202,8 @@ const BandWidthCustomers: React.FC = () => {
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
       console.log(resp)
-        // Close the modal after exporting
-      
+      // Close the modal after exporting
+
       if (resp.flag === false) {
         console.log(resp.message)
         Modal.error({
@@ -263,41 +263,46 @@ const BandWidthCustomers: React.FC = () => {
   return (
     <div className="container mx-auto">
       <div className="flex">
-      <div className="p-4 flex justify-start">
-      <TableSearch
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          tableName={"bandwidth_customers"}
-          headerMap={headerMap}
-        />
-      </div>
-      <div className="p-4 flex justify-end ml-96">
-      
-      <div className="flex space-x-2">
-      <ColumnFilter
-            headers={headers}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
+        <div className="p-4 flex justify-start">
+          <TableSearch
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            tableName={"bandwidth_customers"}
             headerMap={headerMap}
           />
-        <button className="save-btn" onClick={handleCreateModalOpen}>
-          <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-          Add Customer
-        </button>
-        <button className="save-btn" onClick={handleExportModalOpen}>
-          <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
-          <span>Export</span>
-        </button>
+        </div>
+        <div className="p-4 flex justify-end ml-96">
+
+          <div className="flex space-x-2">
+            <ColumnFilter
+              headers={headers}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              headerMap={headerMap}
+            />
+            <button className="save-btn" onClick={handleCreateModalOpen}>
+              <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+              Add Customer
+            </button>
+            <button className="save-btn" onClick={handleExportModalOpen}>
+              <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+              <span>Export</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-      </div>
-      
-    
+
+
 
 
       <div className=' mb-4 space-x-2'>
-            <AdvancedMultiFilter onFilter={handleFilter} onReset={handleReset} headers={headers} headerMap={headerMap}/>
-        </div>
+        <AdvancedMultiFilter
+          onFilter={handleFilter}
+          onReset={handleReset}
+          headers={headers}
+          headerMap={headerMap}
+          tableName={"bandwidth_customers"} />
+      </div>
 
       <TableComponent
         headers={headers}
@@ -363,4 +368,4 @@ const BandWidthCustomers: React.FC = () => {
 export default BandWidthCustomers;
 
 
-     {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+{/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */ }

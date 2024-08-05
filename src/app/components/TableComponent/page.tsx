@@ -61,7 +61,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [deleteRowIndex, setDeleteRowIndex] = useState<number | null>(null);
   const [sortConfig, setSortConfig] = useState<{ key: string, direction: 'ascending' | 'descending' } | null>(null);
   const [tabsEdit, setTabsEdit] = useState(false)
-  const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata } = useAuth()
+  const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata ,storedpagination} = useAuth()
   const [totalPages, setTotalPages] = useState(1);
   const [lastPageWithData, setLastPageWithData] = useState(1);
 
@@ -76,15 +76,15 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   useEffect(() => {
     if (tabledata) {
       setRowData(tabledata);
+      pagination=storedpagination
     } else {
       setRowData(initialData);
     }
   }, [tabledata, initialData]);
   useEffect(() => {
-    console.log("pagination", pagination)
-    const start = pagination?.start || 0;
-    const total = pagination?.total || 0;
-    const end = pagination?.end || 0;
+    const start = pagination?.start || 1;
+    const total = pagination?.total || 1;
+    const end = pagination?.end || 1;
     const lastPageWithData_ = Math.floor(end / itemsPerPage);
     const totalPages_ = Math.ceil(total / itemsPerPage);
     const currentPage_ = Math.floor(start / itemsPerPage) + 1;
@@ -92,11 +92,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     setCurrentPage(currentPage_);
     setLastPageWithData(lastPageWithData_)
 
-  }, [tabledata, initialData]);
+  }, [tabledata, initialData,pagination]);
   useEffect(() => {
-    console.log("currentPage",currentPage);
-    console.log("totalPages",totalPages);
-    console.log("lastPageWithData",lastPageWithData);
     let pagination_:any
     const updatePaginator = async () => {
       let end = Math.floor(lastPageWithData * itemsPerPage)
@@ -315,8 +312,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
               const userPagination = parsedData?.data?.pages?.["Partner users"] || {}
               pagination_=userPagination
               const updatedRowData = [...rowData, ...tableData];
-              console.log("tableDataaa", tableData)
-              console.log("newDataaa",updatedRowData)
               setRowData(updatedRowData);
             }
           }
@@ -373,17 +368,6 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
 
 
-
-  // useEffect(() => {
-  //   // Filter row data based on search query
-  //   const filteredData = initialData.filter(row =>
-  //     Object.values(row).some(value =>
-  //       typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
-  //     )
-  //   );
-  //   setRowData(filteredData);
-  //   setCurrentPage(1);
-  // }, [searchQuery, initialData]);
   let paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
