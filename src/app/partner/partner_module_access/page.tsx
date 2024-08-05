@@ -1,12 +1,13 @@
 "use client";
 import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import { partnerModuleData } from './partner_module_access_constants';
 import { usePartnerStore } from '../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
+import { getCurrentDateTime } from '@/app/components/header_constants';
 
 
 interface FormattedData {
@@ -34,7 +35,7 @@ type Feature = {
 
 type ModuleData = {
     Module: string[];
-    Feature: Feature;
+    Feature: Feature; // This allows dynamic module names as keys
 };
 
 type CategoryData = {
@@ -44,6 +45,7 @@ type CategoryData = {
 type Data = {
     [role: string]: CategoryData;
 };
+
 
 interface ExcelData {
     [key: string]: {
@@ -57,113 +59,24 @@ interface ExcelData {
 const UserRole: React.FC = () => {
     const { partnerData } = usePartnerStore.getState();
     const { username, partner } = useAuth();
-    const partnermoduleaccess=partnerData["Partner module access"]
-    // console.log("Partner module access",partnermoduleaccess)
+ 
+
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [map, setMap] = useState<ExcelData>({});
-    // console.log("partner module data:", partnerModuleData)
-    // console.log("partner data:", partnerModuleData.data["Partner module access"])
-    // console.log("roledata",partnerModuleData.data["Partner module access"]["role_module"])
-    // console.log("modules",partnerModuleData.data["Partner module access"]["module"])
+    console.log("partner module data:", partnerModuleData)
+
     const subModules = partnerModuleData.data["Partner module access"]["module"];
     const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
- 
-    const module_features=partnerModuleData.data["Partner module access"]["module_features"]
 
-    // console.log("parent modules",partnerModuleData.data["Partner module access"]["tenant_module"])
+    const module_features = partnerModuleData.data["Partner module access"]["module_features"]
+
     const editableDrp = DropdownStyles;
-    const colorPalette = [
-        '#FF6F61', '#D7B2A1', '#D45D79', '#E6E1A1', '#4CA1B5', '#E3B33A',
-        '#3B5998', '#B3B3B3', '#B8EBAF', '#C34A4A', '#FF5C5C', '#A3A9E3',
-        '#FFCC99', '#A7E7A5', '#FF85B5', '#FFB3C1', '#A8D5FF', '#FFC300',
-        '#FF8C8C', '#B3B3E3', '#6699CC'
-    ];
-    
-    const getColor = (index: number) => colorPalette[index % colorPalette.length];
 
-    const handleModuleChange = (category: string, modules: any) => {
-        const moduleValues = modules ? modules.map((module: any) => module.value) : [];
-        const newColors = { ...moduleColors };
-    
-        moduleValues.forEach((module: string | number, index: number) => {
-            // Assign a color to the module if it doesn't have one
-            if (!newColors[module]) {
-                newColors[module] = getColor(index);
-            }
-    
-            // Get features associated with the module
-            const features = map[category]?.Feature[module] || [];
-            
-            // Assign the module's color to features only if they have not been assigned a color yet
-            features.forEach((feature: string) => {
-                if (!newColors[feature]) {
-                    newColors[feature] = newColors[module]; // Use the module's color for its features
-                }
-            });
-        });
-    
-        // Create a list of features with their colors
-        const defaultFeatures = moduleValues.flatMap((module: any) => {
-            const features = map[category]?.Feature[module] || [];
-            return features.map((feature: string) => ({
-                feature,
-                color: newColors[feature], // Use the feature's color
-            }));
-        });
-    
-        setModuleColors(newColors);
-        setSelectedModules(prevState => ({
-            ...prevState,
-            [category]: moduleValues
-        }));
-    
-        setSelectedFeatures(prevState => {
-            const updatedFeatures = {
-                ...prevState,
-                [category]: defaultFeatures.map((item: { feature: any; }) => item.feature)
-            };
-            return updatedFeatures;
-        });
-    };
-    
-    
-    
-    
-    const customStyles = (category: string): StylesConfig<OptionType, true> => ({
-        option: (provided, { data }) => ({
-            ...provided,
-            color: 'black', // Keep options in default black color
-        }),
-        multiValue: (provided, { data }) => {
-            const moduleColor = moduleColors[data.value] || 'black'; // Get color for selected module or feature
-    
-            return {
-                ...provided,
-                backgroundColor: moduleColor,
-                color: 'white',
-            };
-        },
-        multiValueLabel: (provided) => ({
-            ...provided,
-            color: 'white',
-        }),
-        multiValueRemove: (provided) => ({
-            ...provided,
-            color: 'white',
-            ':hover': {
-                backgroundColor: 'red',
-                color: 'white',
-            },
-        }),
-    });
-    
-    
     const rawData = partnerModuleData.data["Partner module access"]["role_module"];
-
 
     const transformData = (data: typeof rawData): Data => {
         const transformedData: Data = {};
@@ -193,138 +106,243 @@ const UserRole: React.FC = () => {
 
 
 
-    const handleFeatureChange = (category: string, features: any) => {
-        const featureValues = features ? features.map((feature: any) => feature.value) : [];
-        setSelectedFeatures(prevState => ({
-            ...prevState,
-            [category]: featureValues,
-        }));
-    };
-
     const handleSetRole = (selectedOption: SingleValue<OptionType>) => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
-    
-            let selectedRoleData = mockRoleData[role];
-            if (!selectedRoleData) {
+            console.log("mockdata for role:", mockRoleData[role])
+
+            let selectedRoleData;
+
+            if (!mockRoleData[role]) {
                 selectedRoleData = generateDefaultRoleData();
-                mockRoleData[role] = selectedRoleData; // Save the generated default data
+            } else {
+                selectedRoleData = combineRoleData(generateDefaultRoleData(), mockRoleData[role]);
             }
-    
-            console.log(selectedRoleData);
+
             setMap(selectedRoleData);
+
             setSelectedModules({});
             setSelectedFeatures({});
-            setModuleColors({}); // Reset colors when role changes
+
         }
     };
-    
+
 
     const generateDefaultRoleData = (): CategoryData => {
         const subModules = partnerModuleData.data["Partner module access"]["module"];
         const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
         const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
-        
+
         const defaultRoleData: CategoryData = {};
-    
+
         // Iterate through each parent module
         parentModules.forEach((parentModule: string) => {
             defaultRoleData[parentModule] = {
                 Module: [], // Initialize Module as an empty array
                 Feature: {}
             };
-    
+
             // Find children modules for the parent module
             const childrenModules = subModules[parentModule] || [];
             defaultRoleData[parentModule].Module = childrenModules; // Assign children modules
-    
+
             // Populate features for each child module
             childrenModules.forEach((childModule: string) => {
                 const features = moduleFeatures.find((modFeat: { module: string }) => modFeat.module === childModule);
                 defaultRoleData[parentModule].Feature[childModule] = features ? JSON.parse(features.features) : []; // Parse features if available
             });
         });
-    
+
+        console.log(defaultRoleData)
         return defaultRoleData;
     };
-    
-    
-    
+
+  const combineRoleData = (
+    defaultData: CategoryData,
+    selectedRoleData: CategoryData
+): CategoryData => {
+    for (const [moduleKey, moduleValue] of Object.entries(defaultData)) {
+        console.log(`Processing module: ${moduleKey}`);
+
+        // Check if the module exists in the selected role data
+        if (selectedRoleData[moduleKey]) {
+            console.log(`Module ${moduleKey} found in selectedRoleData`);
+
+            // Mark the module as active if it exists in selectedRoleData
+            moduleValue.Module = moduleValue.Module.map((module: string) => {
+                const isActive = selectedRoleData[moduleKey].Module.includes(module.replace('-active', ''));
+                const newModuleName = isActive ? `${module.replace('-active', '')}-active` : module.replace('-active', '');
+                console.log(`Module: ${module} => New Module: ${newModuleName}`);
+                return newModuleName;
+            });
+
+            // Get the selected features for the current module
+            const selectedFeatures = selectedRoleData[moduleKey].Feature || {};
+            console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
+
+            // Process features for the current module
+            for (const featureKey of Object.keys(moduleValue.Feature)) {
+                console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
+
+                // Check if features exist in selected role data
+                if (selectedFeatures[featureKey]) {
+                    moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].map((feature: string) => {
+                        const isActiveFeature = selectedFeatures[featureKey].includes(feature.replace('-active', ''));
+                        const newFeatureName = isActiveFeature ? `${feature.replace('-active', '')}-active` : feature;
+                        console.log(`Feature: ${feature} => New Feature: ${newFeatureName}`);
+                        return newFeatureName;
+                    });
+                }
+            }
+        } else {
+            console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
+
+            // If the module doesn't exist in selectedRoleData, retain its original state
+            moduleValue.Module = moduleValue.Module.map(module => module.replace('-active', ''));
+
+            // Retain original features state as well
+            for (const featureKey of Object.keys(moduleValue.Feature)) {
+                moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].filter(
+                    feature => !feature.endsWith('-active')
+                );
+            }
+        }
+    }
+
+    console.log("Combined data:", defaultData);
+    return defaultData; // Returns modified defaultData
+};
+
     
 
-//   console.log(partnerModuleData.data["Partner module access"]["role_name"])
+    useEffect(() => {
+        const initialSelectedModules: { [key: string]: string[] } = {};
+        const initialSelectedFeatures: { [key: string]: string[] } = {};
 
-    const Roleoptions =  partnerModuleData.data["Partner module access"]["role_name"].map((role: any) => ({
+        Object.keys(map).forEach((category) => {
+            initialSelectedModules[category] = map[category].Module
+                .filter((module) => module.includes('-active'))
+                .map((module) => module.replace('-active', '')); // Remove '-active'
+
+            Object.keys(map[category]?.Feature || {}).forEach((module) => {
+                initialSelectedFeatures[category] = initialSelectedFeatures[category] || [];
+                map[category].Feature[module].forEach((feature) => {
+                    if (feature.includes('-active')) {
+                        initialSelectedFeatures[category].push(feature.replace('-active', '')); // Remove '-active'
+                    }
+                });
+            });
+        });
+
+        setSelectedModules(initialSelectedModules);
+        setSelectedFeatures(initialSelectedFeatures);
+    }, [map]);
+
+    const toggleModule = (category: string, module: string) => {
+        setSelectedModules((prev) => {
+            const modules = prev[category] || [];
+            const isSelected = modules.includes(module);
+            return {
+                ...prev,
+                [category]: isSelected
+                    ? modules.filter((m) => m !== module)
+                    : [...modules, module]
+            };
+        });
+    };
+
+    const toggleFeature = (category: string, feature: string) => {
+        setSelectedFeatures((prev) => {
+            const features = prev[category] || [];
+            const isSelected = features.includes(feature);
+            return {
+                ...prev,
+                [category]: isSelected
+                    ? features.filter((f) => f !== feature)
+                    : [...features, feature]
+            };
+        });
+    };
+
+
+
+
+
+    //   console.log(partnerModuleData.data["Partner module access"]["role_name"])
+
+    const Roleoptions = partnerModuleData.data["Partner module access"]["role_name"].map((role: any) => ({
         value: role,
         label: role,
     }));
 
     // console.log(Roleoptions)
 
-    const handleSubmit =async ()=> {
+    const handleSubmit = async () => {
         const errors: string[] = [];
         // Check if role is null and push an error if it is
         if (!role) {
             errors.push('Role is required.');
         }
-    
+
         setErrorMessages(errors);
-    
+
         if (errors.length === 0) {
             // Check that role is defined before accessing its value
             const formattedData: { [key: string]: any } = {
                 [role!.value]: {} // Use non-null assertion if you are sure it won't be null
             };
-    
+
             Object.keys(selectedModules).forEach(category => {
                 const selectedModulesForCategory = selectedModules[category];
                 const selectedFeaturesForCategory = selectedFeatures[category] || [];
-    
+
                 formattedData[role!.value][category] = {
                     Module: selectedModulesForCategory,
                     Feature: {}
                 };
-    
+
                 selectedModulesForCategory.forEach(module => {
                     formattedData[role!.value][category].Feature[module] = selectedFeaturesForCategory.filter(feature =>
                         map[category]?.Feature[module]?.includes(feature)
                     );
                 });
             });
-    
-            console.log("Formatted Data:", formattedData);
-            try {
-                const url =
-                  "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-                  const roleValue = role?.value; // Get the value from role if it exists
 
-                  const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
-                  
-                  const data = {
-                    tenant_name: partner || "default_value",
-                    username: username,
-                    path: "/update_partner_info",
-                    parent_module: "Partner",
-                    module_name: "Partner Module Access",
-                    action: action,
-                    changed_data: formattedData,
-                  };
-                  
-                const response = await axios.post(url, { data });
-            
-                console.log(response);
-              } catch (err) {
-                console.error("Error fetching data:", err);
-              }
+            console.log("Formatted Data:", formattedData);
+            // try {
+            //     const url =
+            //         "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            //     const roleValue = role?.value; // Get the value from role if it exists
+
+            //     const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
+
+            //     const data = {
+            //         tenant_name: partner || "default_value",
+            //         username: username,
+            //         path: "/update_partner_info",
+            //         parent_module: "Partner",
+            //         module_name: "Partner Module Access",
+            //         action: action,
+            //         changed_data: formattedData,
+            //         request_received_at: getCurrentDateTime(),
+            //         Partner: partner,
+            //     };
+
+            //     const response = await axios.post(url, { data });
+
+            //     console.log(response);
+            // } catch (err) {
+            //     console.error("Error fetching data:", err);
+            // }
         } else {
             console.log("Errors:", errors);
         }
         // setSelectedModules({});
         // setSelectedFeatures({});
     };
-    
-  
+
+
 
     return (
         <div className='p-4'>
@@ -347,44 +365,61 @@ const UserRole: React.FC = () => {
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 mt-4">
-                    {Object.keys(map).map((category) => (
-                        <div key={category} className="col-span-1">
-                            <h4 className="text-md font-medium text-blue-600">{category}</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                                <div>
-                                    <label className="field-label">Module</label>
-                                    <Select
-                                        isMulti
-                                        // defaultValue={ map[category].Module.map(module => ({ value: module, label: module }))}
-                                        closeMenuOnSelect={false}
-                                        value={selectedModules[category]?.map(module => ({ value: module, label: module })) || []}
-                                        onChange={(selected) => handleModuleChange(category, selected)}
-                                        options={map[category].Module.map(module => ({ value: module, label: module }))}
-                                        styles={customStyles(category)}
-                                    />
+            {Object.keys(map).map((category) => (
+                <div key={category} className="col-span-1">
+                    <h4 className="text-md font-medium text-blue-600">{category}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+                        <div>
+                            <label className="field-label">Module</label>
+                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
+                                {map[category].Module.map((module) => {
+                                    const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
+                                    const isSelected = selectedModules[category]?.includes(cleanedModule);
+                                    const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
 
-                                </div>
-                                <div>
-                                    <label className="field-label">Features</label>
-                                    <Select
-                                        isMulti
-                                        closeMenuOnSelect={false}
-                                        value={selectedFeatures[category]?.map((feature: any) => ({ value: feature, label: feature })) || []}
-                                        options={(selectedModules[category] || []).flatMap((module: any) =>
-                                            map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
-                                        )}
-                                        // defaultValue={(selectedModules[category] || []).flatMap((module: any) =>
-                                        //     map[category].Feature[module]?.map((feature: any) => ({ value: feature, label: feature })) || []
-                                        // )}
-                                        onChange={(selected) => handleFeatureChange(category, selected)}
-                                        styles={customStyles(category)}
-                                        isDisabled={!selectedModules[category] || selectedModules[category].length === 0}
-                                    />
-                                </div>
+                                    return (
+                                        <button
+                                            key={module}
+                                            className={`px-2 py-1 rounded-lg border`}
+                                            style={{ backgroundColor: bgColor }}
+                                            onClick={() => toggleModule(category, cleanedModule)}
+                                        >
+                                            {cleanedModule}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
-                    ))}
+
+                        <div>
+                            <label className="field-label">Features</label>
+                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
+                                {Object.keys(map[category]?.Feature || {}).flatMap((module) =>
+                                    map[category].Feature[module]?.map((feature) => {
+                                        const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
+                                        const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
+                                        const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+
+                                        return (
+                                            <button
+                                                key={feature}
+                                                className={`px-2 py-1 rounded-lg border`}
+                                                style={{ backgroundColor: bgColor }}
+                                                onClick={() => toggleFeature(category, cleanedFeature)}
+                                            >
+                                                {cleanedFeature}
+                                            </button>
+                                        );
+                                    }) || []
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            ))}
+        </div>
+
+
             </div>
 
             <div className="flex justify-end space-x-4">
