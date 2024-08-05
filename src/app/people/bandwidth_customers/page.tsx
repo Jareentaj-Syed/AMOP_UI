@@ -273,35 +273,35 @@ const BandWidthCustomers: React.FC = () => {
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
       
     <div className="container mx-auto">
-      <div className="flex">
-        <div className="p-4 flex justify-start">
-          <TableSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            tableName={"bandwidth_customers"}
-            headerMap={headerMap}
-          />
-        </div>
-        <div className="p-4 flex justify-end ml-96">
+    <div className="flex justify-between">
+  <div className="p-4 flex justify-start">
+    <TableSearch
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      tableName={"bandwidth_customers"}
+      headerMap={headerMap}
+    />
+  </div>
+  <div className="p-4 flex justify-end">
+    <div className="flex space-x-2">
+      <ColumnFilter
+        headers={headers}
+        visibleColumns={visibleColumns}
+        setVisibleColumns={setVisibleColumns}
+        headerMap={headerMap}
+      />
+      <button className="save-btn" onClick={handleCreateModalOpen}>
+        <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+        Add Customer
+      </button>
+      <button className="save-btn" onClick={handleExportModalOpen}>
+        <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+        <span>Export</span>
+      </button>
+    </div>
+  </div>
+</div>
 
-          <div className="flex space-x-2">
-            <ColumnFilter
-              headers={headers}
-              visibleColumns={visibleColumns}
-              setVisibleColumns={setVisibleColumns}
-              headerMap={headerMap}
-            />
-            <button className="save-btn" onClick={handleCreateModalOpen}>
-              <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-              Add Customer
-            </button>
-            <button className="save-btn" onClick={handleExportModalOpen}>
-              <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
-              <span>Export</span>
-            </button>
-          </div>
-        </div>
-      </div>
 
 
 
