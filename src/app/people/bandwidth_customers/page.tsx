@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import * as XLSX from "xlsx";
 import {
   PlusIcon,
@@ -8,24 +8,24 @@ import {
   ArrowUpTrayIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Modal, Popover, Spin, DatePicker, notification } from "antd";
-import TableComponent from "@/app/components/TableComponent/page";
-import CreateModal from "@/app/components/createPopup";
-import SearchInput from "@/app/components/Search-Input";
-import ColumnFilter from "@/app/components/columnfilter";
-// import { createModalData } from "./bandwidth_customers_constants";
 import { useAuth } from "@/app/components/auth_context";
 import axios from "axios";
 import { useLogoStore } from "@/app/stores/logoStore";
 import dayjs, { Dayjs } from "dayjs";
-import TableSearch from "@/app/components/entire_table_search";
-
 // State to manage loading
 
 import { useBandWidthStore } from "./bandwidth_customers_constants";
 import { getCurrentDateTime } from "@/app/components/header_constants";
-import AdvancedMultiFilter from "@/app/components/advanced_search";
+
 const { RangePicker } = DatePicker;
 
+//Lazy Loading
+const TableComponent = lazy(() => import("@/app/components/TableComponent/page"));
+const CreateModal = lazy(() => import("@/app/components/createPopup"));
+const SearchInput = lazy(() => import("@/app/components/Search-Input"));
+const ColumnFilter = lazy(() => import("@/app/components/columnfilter"));
+const TableSearch = lazy(() => import("@/app/components/entire_table_search"));
+const AdvancedMultiFilter = lazy(() => import("@/app/components/advanced_search"));
 
 const BandWidthCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
@@ -257,6 +257,11 @@ const BandWidthCustomers: React.FC = () => {
   };
 
   return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    }>
     <div className="container mx-auto">
       <div className="flex">
       <div className="p-4 flex justify-start">
@@ -353,6 +358,7 @@ const BandWidthCustomers: React.FC = () => {
         </div>
       </Modal>
     </div>
+    </Suspense>
   );
 
 }
@@ -360,3 +366,4 @@ export default BandWidthCustomers;
 
 
      {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+
