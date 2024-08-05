@@ -20,11 +20,22 @@ const HomePage: React.FC = () => {
         <div className="flex-shrink-0">
           <img className="h-40 w-40 object-cover rounded-lg mx-auto" src={userImage} alt='user' />
         </div>
-        <div className="text-center">
-          <div className="text-xl font-medium text-black">{username}</div>
-          <p className="text-gray-500">{partner}</p>
-          <p className="text-gray-500">{role}</p>
-        </div>
+        <div className="flex flex-col items-center space-y-2">
+  <div className="">
+    <span className="text-gray-400">Username: </span>
+    {username}
+  </div>
+  <p className="text-gray-500">
+    <span className="text-sm text-gray-400">Partner: </span>
+    {partner}
+  </p>
+  <p className="text-gray-500">
+    <span className="text-sm text-gray-400">Role: </span>
+    {role}
+  </p>
+</div>
+
+
       </div>
     </div>
   );
