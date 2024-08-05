@@ -24,10 +24,10 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
 useEffect(()=>{
   let email_list:any
   if(partnerInfo?.email_id){
-    email_list=JSON.parse(partnerInfo.email_id)
+    email_list=partnerInfo.email_id
   }
   if(Array.isArray(email_list)){
-    setEmailList(partnerInfo.email_list||[])
+    setEmailList(email_list||[])
   }
   console.log("email_list",email_list)
 },[partnerInfo])

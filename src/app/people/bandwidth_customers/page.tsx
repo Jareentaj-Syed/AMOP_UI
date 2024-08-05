@@ -327,6 +327,7 @@ const BandWidthCustomers: React.FC = () => {
         createModalData={createModalData}
         pagination={pagination}
         generalFields={generalFields}
+        advancedFilters={filteredData}
       />
 
 

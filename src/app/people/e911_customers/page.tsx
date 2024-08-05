@@ -287,7 +287,10 @@ const E911Customers: React.FC = () => {
         itemsPerPage={100}
         allowedActions={["edit", "delete"]}
         popupHeading="E911 Customer"
-        createModalData={createModalData} pagination={undefined} />
+        createModalData={createModalData} 
+        pagination={undefined} 
+        advancedFilters={filteredData}
+        />
 
       <CreateModal
         isOpen={isCreateModalOpen}

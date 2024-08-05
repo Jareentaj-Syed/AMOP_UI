@@ -318,6 +318,7 @@ useEffect(() => {
           createModalData={createModalData}
           pagination={pagination}
           generalFields={generalFields}
+          advancedFilters={filteredData}
         />
      
 

@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
-import { Checkbox, Input, Modal, notification } from 'antd';
+import { Checkbox, Input, Modal, notification, Spin } from 'antd';
 import Select from 'react-select';
 import { DropdownStyles } from './css/dropdown';
 import axios from 'axios';
@@ -44,6 +44,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
   const { username, tenantNames, role, partner, settabledata } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const initialFormData = header?.reduce((acc, column) => {
@@ -453,6 +454,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
     typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight =
     typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
+    if (loading) {
+      return (
+        <div className="flex justify-center items-center h-screen">
+          <Spin size="large" />
+        </div>
+      );
+    }
+  
 
   return (
     <div>
@@ -503,7 +512,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
                   placeholder="Select..."
                   value={
                     formData[column.db_column_name]
-                      ? Array.isArray(JSON.parse(formData[column.db_column_name]))
+                      ? Array.isArray(formData[column.db_column_name])
                         ? formData[column.db_column_name].map((item: string) => ({
                             label: item,
                             value: item,
