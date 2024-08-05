@@ -105,7 +105,7 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
 
   return (
     <div className="mb-4">
-      <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4">
+      <div className="flex flex-col md:flex-row md:justify-end space-y-4 md:space-y-0 md:space-x-4 mr-4">
         <Button
           size="large"
           className="w-full md:w-auto save-btn"
@@ -125,21 +125,23 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
           <Button
             type="default"
             size="large"
-            className="outline-none border-none"
+            className=""
             onClick={handleFilter}
             disabled={!showAdvanced}
           >
-            <SearchOutlined className="text-gray-500 ml-2" />
+            {/* <SearchOutlined className="text-gray-500 ml-2" /> */}
+            Filter
 
           </Button>
         </Badge>
         <Button
           type="default"
           size="large"
-          className="outline-none border-none"
+          className=""
           onClick={handleClear}
         >
-          <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+          {/* <XMarkIcon className="h-5 w-5 text-black-500 mr-2" /> */}
+          Clear
 
         </Button>
         {/* <Badge
@@ -169,7 +171,7 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
         </Button> */}
       </div>
       {showAdvanced && headers && (
-        <div className="overflow-x-auto border border-gray-500 rounded-md mt-4 block">
+        <div className="overflow-x-auto border border-gray-300 rounded-md mt-4 block">
           <div className="flex space-x-4 p-2">
             {headers.map((header, index) => (
               header !== "modified_by" && header !== "modified_date"
