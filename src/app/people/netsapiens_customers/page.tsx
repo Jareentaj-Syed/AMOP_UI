@@ -34,7 +34,7 @@ const NetSapiensCustomers: React.FC = () => {
 
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   // const createColumns = createModalData;
-  const { username, partner, role } = useAuth();
+  const { username, partner, role ,settabledata} = useAuth();
   const { customers_table, setTable } = useNetSapiensStore();
   const [tableData, setTableData] = useState<any[]>([]);
   const title = useLogoStore((state) => state.title);
@@ -118,6 +118,7 @@ useEffect(() => {
       // setTable(tableData);
       setVisibleColumns(headers)
       setTableData(tableData);
+      settabledata(tableData)
       setLoading(false)
       if (parsedData.flag === false) {
         Modal.error({

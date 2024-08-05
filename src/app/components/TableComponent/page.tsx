@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { PencilIcon, TrashIcon, InformationCircleIcon } from '@heroicons/react/24/outline';
@@ -64,7 +64,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const { username, tenantNames, role, partner, selectedPartnerModule, Environment, tabledata, storedpagination } = useAuth()
   const [totalPages, setTotalPages] = useState(1);
   const [lastPageWithData, setLastPageWithData] = useState(1);
-
+  const hasMounted = useRef(false);
   // const [paginatedData, setPaginatedData] = useState<{ [key: string]: any }[]>(initialData)
   useEffect(() => {
     if (!router) {
@@ -72,15 +72,18 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     }
   }, [router]);
 
-
   useEffect(() => {
     const newRowData = tabledata.length > 0 ? tabledata : initialData;
     setRowData(newRowData);
-    console.log("New rowData set:", newRowData); // Log the new data after setting it
-  }, [tabledata, initialData]); // Dependencies on both tabledata and initialData
+    console.log("New rowData set:", newRowData);
+  }, [tabledata, initialData]);
+  
   useEffect(() => {
-    console.log("rowdata updated", rowData); // This will log when rowData changes
+    console.log("tabledata", rowData);
   }, [rowData])
+  useEffect(() => {
+    console.log("initialdata", rowData);
+  }, [initialData])
   useEffect(() => {
     const start = pagination?.start || 1;
     const total = pagination?.total || 1;
@@ -370,29 +373,29 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
   let paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-  useEffect(() => {
-    const filteredData = initialData.filter(row => {
-      const matchesSearchQuery = Object.values(row).some(value =>
-        String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
-      );
+  // useEffect(() => {
+  //   const filteredData = initialData.filter(row => {
+  //     const matchesSearchQuery = Object.values(row).some(value =>
+  //       String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
+  //     );
 
-      const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
-        ([key, values]) => {
-          const valuesArray = values as string[];
-          if (valuesArray.length === 0) return true;
-          if (valuesArray[0] && row[key]) {
-            return String(row[key]).toLowerCase().includes(valuesArray[0].toLowerCase());
-          }
-          return true;
-        }
-      );
+  //     const matchesAdvancedFilters = Object.entries(advancedFilters || {}).every(
+  //       ([key, values]) => {
+  //         const valuesArray = values as string[];
+  //         if (valuesArray.length === 0) return true;
+  //         if (valuesArray[0] && row[key]) {
+  //           return String(row[key]).toLowerCase().includes(valuesArray[0].toLowerCase());
+  //         }
+  //         return true;
+  //       }
+  //     );
 
-      return matchesAdvancedFilters;
-    });
+  //     return matchesAdvancedFilters;
+  //   });
 
-    setRowData(filteredData);
-    setCurrentPage(1);
-  }, [searchQuery, initialData, advancedFilters]);
+  //   setRowData(filteredData);
+  //   setCurrentPage(1);
+  // }, [searchQuery, initialData, advancedFilters]);
 
 
 

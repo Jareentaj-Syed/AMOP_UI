@@ -39,7 +39,7 @@ const ListView: React.FC = () => {
   const [isExportModalOpen, setExportModalOpen] = useState(false);
 
   const [dateRange, setDateRange] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
-  const { username, partner, role } = useAuth();
+  const { username, partner, role,settabledata } = useAuth();
   const [pagination, setPagination] = useState<any>({});
   const [filteredData, setFilteredData] = useState([]);
   const handleFilter = (advancedFilters: any) => {
@@ -60,6 +60,7 @@ const ListView: React.FC = () => {
     const initializeData = () => {
       const data = usersData?.data?.["Partner users"]?.users || [];
       setData(data);
+      settabledata(data)
       const header_Map = sortHeaderMap(usersData?.headers_map?.["Partner users"]?.header_map || {});
       const headers_ = Object.keys(header_Map);
       const createModalData_ = usersData?.headers_map?.["Partner users"]?.pop_up || [];

@@ -35,7 +35,7 @@ const E911Customers: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const { username, partner, role } = useAuth();
+  const { username, partner, role,settabledata } = useAuth();
   const [loading, setLoading] = useState(true);
   const title = useLogoStore((state) => state.title);
   const [tableData, setTableData] = useState<any>([]);
@@ -94,6 +94,7 @@ const E911Customers: React.FC = () => {
           const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
           const customertableData = parsedData.data.WestE911Customer;
           setTableData(customertableData);
+          settabledata(customertableData)
           const headers = Object.keys(headerMap);
           setHeaders(headers);
           setHeaderMap(headerMap);

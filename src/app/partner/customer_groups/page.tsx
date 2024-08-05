@@ -32,7 +32,7 @@ const CustomerGroups: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState('');
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const { username, partner, role } = useAuth();
+  const { username, partner, role,settabledata } = useAuth();
   const [headers, setHeaders] = useState<string[]>([]);
   const [headerMap, setHeadersMap] = useState<HeaderMap>({});
   const [createModalData, setCreateModalData] = useState<any[]>([]);
@@ -59,6 +59,7 @@ const CustomerGroups: React.FC = () => {
       console.log(pagination_)
       setPagination(pagination_)
       const data = customerGroupsData?.data?.["Customer groups"]?.customergroups || [];
+      settabledata(data)
       setData(data);
       const header_Map = sortHeaderMap(customerGroupsData?.headers_map?.["Customer groups"]?.header_map || {});
       const headers_ = Object.keys(header_Map);

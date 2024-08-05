@@ -42,7 +42,7 @@ const BandWidthCustomers: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   // const createColumns = createModalData;
-  const { username, partner, role } = useAuth();
+  const { username, partner, role ,settabledata} = useAuth();
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
   const title = useLogoStore((state) => state.title);
@@ -119,6 +119,7 @@ const BandWidthCustomers: React.FC = () => {
           setcreateModalData(createModalData)
           setTable(tableData);
           setTableData(tableData);
+          settabledata(tableData)
           setVisibleColumns(headers)
           setLoading(false)
 
