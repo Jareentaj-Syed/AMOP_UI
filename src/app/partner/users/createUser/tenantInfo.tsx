@@ -20,7 +20,7 @@ interface TenantInfoProps {
 }
 
 const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
-  const { username, tenantNames, role, partner, settabledata} = useAuth();
+  const { username, tenantNames, role, partner:userPartner, settabledata} = useAuth();
     const [carriers, setCarriers] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
@@ -110,7 +110,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
 
     
         const data = {
-            tenant_name: partner || "default_value",
+            tenant_name: userPartner || "default_value",
             username: username,
             path: "/update_partner_info",
             role_name: role,
@@ -121,7 +121,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                 "customer_info":changedData
             },
           
-            Partner:partner,
+            Partner:userPartner,
         };
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);

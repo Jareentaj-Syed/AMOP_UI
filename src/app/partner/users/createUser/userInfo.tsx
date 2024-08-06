@@ -258,7 +258,7 @@ let sub_partners;
         changedData[getFieldKey('Zip')] = zip;
       
           const data = {
-              tenant_name: partner || "default_value",
+              tenant_name: userPartner || "default_value",
               username: user,
               path: "/update_partner_info",
               role_name: userRole,
@@ -269,7 +269,7 @@ let sub_partners;
                   "user_info":changedData
               },
              
-              Partner:partner,
+              Partner:userPartner,
           };
           const response = await axios.post(url, { data });
           const parsedData = JSON.parse(response.data.body);

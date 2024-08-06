@@ -1,25 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import Select from 'react-select';
-import TableComponent from '../../components/TableComponent/page';
-import SearchInput from '../../components/Search-Input';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { DropdownStyles } from '@/app/components/css/dropdown';
-import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
+import { Modal, Spin } from 'antd'; 
 import { createModalData } from './api_constants';
-import TableSearch from '@/app/components/entire_table_search';
-import AdvancedMultiFilter from '@/app/components/advanced_search';
 import { getCurrentDateTime } from '@/app/components/header_constants';
+
+const TableComponent = lazy(() => import('../../components/TableComponent/page'));
+const SearchInput = lazy(() => import('../../components/Search-Input'));
+const AdvancedMultiFilter = lazy(() => import('@/app/components/advanced_search'));
+const TableSearch = lazy(()=>import("@/app/components/entire_table_search"));
+
 
 interface ExcelData {
   [key: string]: any;
 }
 
+
 const CarrierInfo: React.FC = () => {
   const { username, partner, role } = useAuth();
   const editableDrp = DropdownStyles;
   const [environmentOptions, setEnvironmentOptions] = useState<{ value: string; label: string }[]>([]);
-  const [loading, setLoading] = useState(true); // State to manage loading
+  const [loading, setLoading] = useState(false); // State to manage loading
   const [Partneroptions, setPartnerOptions] = useState<{ value: string; label: string }[]>([]);
   const [tableData, setTableData] = useState<any>([]);
   // const editColumns = createModalData; // Initialize as empty array or with appropriate columns if needed
@@ -98,6 +101,8 @@ const CarrierInfo: React.FC = () => {
       setcreateModalData(createModalData)
       // setTable(tableData);
       setVisibleColumns(headers)
+      setEnvironment(null)
+      setSelectedPartner(null)
 
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -192,6 +197,8 @@ const CarrierInfo: React.FC = () => {
   }
 
   return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
+
     <div className=''>
       <div className="">
       <div className="p-4 flex items-center justify-between mb-2">
@@ -264,7 +271,7 @@ const CarrierInfo: React.FC = () => {
       
         </div>
         </div>
-      
+        </Suspense>
     
   );
 };

@@ -154,6 +154,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
 
         if (heading === 'E911 Customer') {
           if (formData) {
+            formData["is_deleted"] = false
+            formData["is_active"] = true
             formData['created_by'] = username;
             formData["modified_date"]= getCurrentDateTime()
           }
@@ -174,6 +176,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
         if (heading === 'NetSapien Customer') {
           if (formData) {
+            formData["is_deleted"] = false
+            formData["is_active"] = true
             formData['created_by'] = username;
             formData["modified_date"]= getCurrentDateTime()
           }
@@ -194,6 +198,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
         }
         if (heading === 'Bandwidth Customer') {
           if (formData) {
+            formData["is_deleted"] = false
+            formData["is_active"] = true
             formData['created_by'] = username;
             formData["modified_date"]= getCurrentDateTime()
           }
