@@ -36,6 +36,14 @@ useEffect(() => {
   setActiveTab('userInfo')
 }, [rowData]);
 
+useEffect(() => {
+  if(!rowData){
+    setTenant("")
+    setSubTenant([])
+    setRoleName("")
+  }
+}, []);
+
   const handleCloseClick = () => {
     setHideCreateUser(true);
   };
