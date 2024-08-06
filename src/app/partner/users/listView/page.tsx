@@ -44,7 +44,7 @@ const ListView: React.FC = () => {
   const [filteredData, setFilteredData] = useState([]);
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
-    setFilteredData(advancedFilters);
+    // setFilteredData(advancedFilters);
   };
   const handleReset = (EmptyFilters: any) => {
     console.log(EmptyFilters)

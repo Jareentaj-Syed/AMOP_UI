@@ -84,7 +84,16 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
       const parsedData = JSON.parse(response.data.body)
       if (parsedData?.flag) {
         const tableData = parsedData?.data?.table
+        if(tableData.length>0){
         settabledata(tableData)
+        }
+        else{
+          settabledata(tableData)
+          Modal.error({
+            title: 'No Records found',
+            // content: parsedData.error || 'An error occurred while searching. Please try again.',
+          });
+        }
         setStoredPagination({})
       }
       else{

@@ -59,7 +59,7 @@ const sortPopup = (fields: any[]): any[] => {
 
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
-    setFilteredData(advancedFilters);
+    // setFilteredData(advancedFilters);
   };
   const handleReset = (EmptyFilters: any) => {
     console.log(EmptyFilters)

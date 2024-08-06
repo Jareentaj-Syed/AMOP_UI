@@ -52,7 +52,7 @@ const sortPopup = (fields: any[]): any[] => {
   return fields.sort((a:any, b:any) => a?.id - b?.id);
 };
   const handleFilter = (advancedFilters: any) => {
-    setFilteredData(advancedFilters);
+    // setFilteredData(advancedFilters);
   };
   const handleReset = (EmptyFilters: any) => {
     setFilteredData(EmptyFilters);

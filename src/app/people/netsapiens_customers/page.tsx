@@ -49,7 +49,7 @@ const NetSapiensCustomers: React.FC = () => {
 
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
-    setFilteredData(advancedFilters);
+    // setFilteredData(advancedFilters);
   };
   const handleReset = (EmptyFilters: any) => {
     console.log(EmptyFilters)
