@@ -467,9 +467,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
     if (rowIndex >= 0 && rowIndex < rowData.length) {
       const updatedData: any = [...rowData];
       const row = rowData[rowIndex]
+      console.log(row)
       row["deleted_by"] = username
-      row["isdeleted"] = true
-      row["isactive"] = false
+      row["is_deleted"] = true
+      row["is_active"] = false
       try {
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
@@ -523,7 +524,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": "E911 Customer Customer",
+            "module": "E911 Customers",
             "table_name": "customers",
             "changed_data": row,
             action: "delete",
@@ -532,7 +533,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
           };
         }
-        if (popupHeading === " NetSapien Customer") {
+        if (popupHeading === "NetSapien Customer") {
           if (row) {
             row["modified_by"] = username;
             row["modified_date"] = getCurrentDateTime()
@@ -543,7 +544,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             path: "/update_people_data",
             role_name: role,
             "parent_module": "People",
-            "module": " NetSapien Customer",
+            "module": "NetSapien Customers",
             "table_name": " customers",
             "changed_data": row,
             action: "delete",
