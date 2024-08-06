@@ -58,7 +58,7 @@ useEffect(()=>{
           path: "/update_partner_info",
           role_name: role,
           "parent_module": "Partner",
-          "module_name": ["Partner info"],
+          "module_name": "Partner info",
           action: "update",
           changed_data:{
             email_ids: emailList,
