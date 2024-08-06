@@ -10,6 +10,7 @@ import {
   NodeExpandOutlined,
   Loading3QuartersOutlined,
   FilterOutlined,
+  FileSyncOutlined
   
 } from "@ant-design/icons";
 
@@ -26,7 +27,8 @@ export const moduleIconMap = {
   'Net Sapiens': GlobalOutlined,
   'Partner': ClipboardDocumentCheckIcon,
 'Super Admin': UserCircleIcon,
-'Home': HomeOutlined
+'Home': HomeOutlined,
+'Reports': FileSyncOutlined
 };
 
 // 
