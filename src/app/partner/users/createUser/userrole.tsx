@@ -93,7 +93,15 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
     console.log("username", user_name)
 
 
-
+   //Clearing the data afer the successful message
+   const handleClearFields = () => {
+    setPartner('');
+    setRole(null);
+    setSelectedModules({});
+    setSelectedFeatures({});
+    setMap({});
+    setErrorMessages([]);
+  };
     
     
     const rawData = partnerModuleData.data["Partner module access"]["role_module"];
@@ -429,6 +437,7 @@ const toggleModule = (category: string, module: string) => {
               style: messageStyle,
               placement: 'top', // Apply custom styles here
             });
+            handleClearFields(); // Clear all fields
           }
           else{
             Modal.error({

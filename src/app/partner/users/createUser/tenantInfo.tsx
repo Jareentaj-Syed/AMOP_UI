@@ -80,6 +80,17 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         fontWeight: 'bold', // Make the text bold
         padding: '16px',
       };
+
+    //Clearing all the fields after successful submition
+    const handleClearFields = () => {
+        setCarrierNotification([]);
+        setServiceProvider([]);
+        setCustomerGroup(null);
+        setCustomer([]);
+        setErrorMessages([]);
+        setTenant('');
+        // setSubTenant('');
+      };
     const handleSubmit = async() => {
         try{
         const url =
@@ -122,6 +133,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
               style: messageStyle,
               placement: 'top', // Apply custom styles here
             });
+            handleClearFields(); // Clear all fields
           }
           else{
             Modal.error({

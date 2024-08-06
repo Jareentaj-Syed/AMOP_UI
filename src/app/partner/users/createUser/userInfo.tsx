@@ -190,6 +190,33 @@ let sub_partners;
     // Add padding
   };
 
+  //Clearing fields after the form submission
+  const handleClearFields = () => {
+    setFirstName('');
+    setLastName('');
+    setUsername('');
+    setEmailId('');
+    setMobileNo('');
+    setPassword('');
+    setPhone('');
+    setBusinessName('');
+    setLocale('');
+    setAptSuite('');
+    setAddressLine1('');
+    setAddressLine2('');
+    setCountry('');
+    setState('');
+    setCity('');
+    setTimeZone('');
+    setZip('');
+    setPartner(null);
+    setRole(null);
+    setNotification(null);
+    setSelectedSubPartner([]);
+    setSubPartners([]);
+    setFormData({});
+  };
+
   const handleSave = async() => {
     const errors: string[] = [];
     if (!partner) errors.push('Partner is required.');
@@ -254,6 +281,7 @@ let sub_partners;
               style: messageStyle,
               placement: 'top', // Apply custom styles here
             });
+            handleClearFields(); 
           }
           else{
             Modal.error({
@@ -521,10 +549,10 @@ let sub_partners;
       </div>
 
       <div className="flex justify-end space-x-4 mt-3">
-        <button className="cancel-btn">
+        {/* <button className="cancel-btn">
           <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
           <span>Cancel</span>
-        </button>
+        </button> */}
         <button
           className="save-btn"
           onClick={()=>setShowModal(true)}
