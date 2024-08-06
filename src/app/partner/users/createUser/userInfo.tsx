@@ -146,6 +146,7 @@ let sub_partners;
       const role_options: any[] = usersData?.role_name || []
       const subPartners_options = sub_partners.map((subPartner: any) => ({ value: subPartner, label: subPartner }));
       setSubPartners(sub_partners);
+      setPartner(selectedOption)
       setsubPartnersoptions(subPartners_options)
       setSubPartners(sub_partners);
       setSelectedSubPartner([]);
@@ -155,6 +156,7 @@ let sub_partners;
         setFormData((prevState: any) => ({ ...prevState, [getFieldKey('Partner')]: partner }));
 
       }
+      setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Partner is required.'));
     } else {
       setTenant('');
       setSubPartners([]);
@@ -197,7 +199,10 @@ let sub_partners;
     if (!password) errors.push('Password is required.');
     if (!Notification) errors.push('Notification is required.')
     setErrorMessages(errors);
+    console.log("Hellooo",errors)
+
       if (errors.length === 0) {
+        console.log("Hello")
         setUser_Name(username)
         try{
           const url =
@@ -240,6 +245,7 @@ let sub_partners;
               Partner:partner,
           };
           const response = await axios.post(url, { data });
+          const parsedData = JSON.parse(response.data.body);
           if (response && response.data.statusCode===200) {
             // Show success message
             notification.success({
@@ -247,6 +253,13 @@ let sub_partners;
               description: 'Successfully saved the form',
               style: messageStyle,
               placement: 'top', // Apply custom styles here
+            });
+          }
+          else{
+            Modal.error({
+              title: 'Submit Error',
+              content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+              centered: true,
             });
           }
       }
@@ -292,12 +305,11 @@ let sub_partners;
   };
   const getFieldValue = (label: any) => {
     if (rowData) {
-      console.log("label", label)
       const field = generalFields ? generalFields.find((f: any) => f.display_name === label) : null;
       return field ? rowData[field.db_column_name] || '' : '';
     }
     else {
-      return "jareen"
+      return ""
     }
   };
   return (
@@ -305,7 +317,7 @@ let sub_partners;
       <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-2 py-2">Basic Information</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div>
-          <label className="field-label">Partner</label>
+          <label className="field-label">Partner<span className="text-red-500">*</span></label>
           <Select
             value={rowData ? { value: getFieldValue('Partner'), label: getFieldValue('Partner') } : { value: tenant, label: tenant }}
             onChange={handlePartnerChange}
@@ -315,6 +327,7 @@ let sub_partners;
             }))}
             styles={editableDrp}
           />
+            <span className="text-red-600 ml-1">Partner is required.</span>
         </div>
 
         <div>
