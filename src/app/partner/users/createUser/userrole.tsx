@@ -409,7 +409,9 @@ const toggleModule = (category: string, module: string) => {
                 "Selected role": role_name,
                 "Selected Partner": tenant,
                 "data": formattedData,
-                "Username": user_name
+                "Username": user_name,
+                "is_active":true,
+                "is_deleted": false
             }
 
             try {

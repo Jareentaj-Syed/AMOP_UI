@@ -106,7 +106,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         changedData[serviceProviderFieldName] = ServiceProvider.map(option => option.value);
         changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
         changedData[customersFieldName] = customer.map(option => option.value);
-        changedData["username"] = user_name
+        changedData["username"] = user_name;
+        changedData["is_active"] = true;
+        changedData["is_deleted"] = false;
 
     
         const data = {
