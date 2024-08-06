@@ -364,10 +364,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   };
 
 
-  let paginatedData = rowData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  let paginatedData = rowData?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   useEffect(() => {
-    const filteredData = initialData.filter(row => {
+    const filteredData = initialData?.filter(row => {
       const matchesSearchQuery = Object.values(row).some(value =>
         String(value).toLowerCase().includes(String(searchQuery).toLowerCase())
       );
@@ -1125,7 +1125,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
           </thead>
           <tbody>
-            {paginatedData.map((row, index) => (
+            {paginatedData?.map((row, index) => (
 
               <tr
                 key={index}
