@@ -296,18 +296,18 @@ const BandWidthCustomers: React.FC = () => {
             </div>
             <div className="p-4 flex justify-end">
                 <div className="flex space-x-2">
-                    {features.includes("Add Customers-BandwithCustomers") && (
+                    {/* {features.includes("Add Customers-BandwithCustomers") && ( */}
                         <button className="save-btn" onClick={handleCreateModalOpen}>
                             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
                             Add Customer
                         </button>
-                    )}
-                    {features.includes("Export-BandwithCustomers") && (
+                    {/* )} */}
+                    {/* {features.includes("Export-BandwithCustomers") && ( */}
                         <button className="save-btn" onClick={handleExportModalOpen}>
                             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
                             <span>Export</span>
                         </button>
-                    )}
+                    {/* )} */}
                     <ColumnFilter
                         headers={headers}
                         visibleColumns={visibleColumns}
