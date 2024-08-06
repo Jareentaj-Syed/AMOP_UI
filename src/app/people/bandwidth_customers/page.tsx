@@ -77,6 +77,9 @@ const BandWidthCustomers: React.FC = () => {
 
     return Object.fromEntries(entries) as HeaderMap;
   }
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -253,9 +256,7 @@ const BandWidthCustomers: React.FC = () => {
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
-  const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
-  };
+
   
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string

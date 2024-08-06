@@ -57,6 +57,7 @@ interface UserRoleProps {
 }
 
 const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
+    const setPartnerModuleAccess = usePartnerStore((state) => state.setPartnerModuleAccess);
     const [Selectedpartner, setPartner] = useState<string>('');
     const [map, setMap] = useState<ExcelData>({});
     const { username, partner:userPartner } = useAuth();
@@ -69,9 +70,14 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
     //Show Modal
   const [showModal, setShowModal] = useState(false);
 
-  const { partnerData } = usePartnerStore.getState();  
-  const partnerModuleData=partnerData["Partner module access"]
-  console.log("Partner module access",partnerModuleData)
+
+
+
+ 
+
+  const { partnerData } = usePartnerStore.getState();
+  const PartnerModuleData=partnerData?.["Partner module access"] ||{}
+console.log("partner module data:", PartnerModuleData)
     const {
         tenant,
         role_name,
@@ -104,7 +110,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
   };
     
     
-    const rawData = partnerModuleData.data["Partner module access"]["role_module"];
+    const rawData = PartnerModuleData.data["Partner module access"]["role_module"];
 
 
     const transformData = (data: typeof rawData): Data => {
@@ -183,9 +189,9 @@ console.log("Selected Role Data:", selectedRoleData);
 
 
     const generateDefaultRoleData = (): CategoryData => {
-        const subModules = partnerModuleData.data["Partner module access"]["module"];
-        const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
-        const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
+        const subModules = PartnerModuleData.data["Partner module access"]["module"];
+        const parentModules = PartnerModuleData.data["Partner module access"]["tenant_module"];
+        const moduleFeatures = PartnerModuleData.data["Partner module access"]["module_features"];
 
         const defaultRoleData: CategoryData = {};
 
@@ -272,7 +278,7 @@ console.log("Selected Role Data:", selectedRoleData);
 
 
 
-   
+
 const toggleModule = (category: string, module: string) => {
     setSelectedModules((prev) => {
         const modules = prev[category] || [];
@@ -289,15 +295,13 @@ const toggleModule = (category: string, module: string) => {
                 ],
             }));
         } else {
-            // If the module is being deselected, also deselect its features
-            setSelectedFeatures((prevFeatures) => ({
-                ...prevFeatures,
-                [category]: (prevFeatures[category] || []).filter(
-                    (feature) => !features.includes(feature.replace('-active', '')) // Remove related features
-                ),
-            }));
+            // If the module is being deselected, deselect its features
+            features.forEach((feature) => {
+                toggleFeature(category, feature.replace('-active', '')); // Call toggleFeature to deselect related features
+            });
         }
 
+        // Update selected modules
         return {
             ...prev,
             [category]: isSelected
@@ -307,18 +311,19 @@ const toggleModule = (category: string, module: string) => {
     });
 };
 
-    const toggleFeature = (category: string, feature: string) => {
-        setSelectedFeatures((prev) => {
-            const features = prev[category] || [];
-            const isSelected = features.includes(feature);
-            return {
-                ...prev,
-                [category]: isSelected
-                    ? features.filter((f) => f !== feature)
-                    : [...features, feature]
-            };
-        });
-    };
+
+const toggleFeature = (category: string, feature: string) => {
+    setSelectedFeatures((prev) => {
+        const features = prev[category] || [];
+        const isSelected = features.includes(feature);
+        return {
+            ...prev,
+            [category]: isSelected
+                ? features.filter((f) => f !== feature) // Deselect feature
+                : [...features, feature] // Select feature
+        };
+    });
+};
 
 
     
@@ -433,13 +438,66 @@ const toggleModule = (category: string, module: string) => {
                 const parsedData = JSON.parse(response.data.body);
           if (response && response.data.statusCode===200) {
             // Show success message
-            notification.success({
-              message: 'Success',
-              description: 'Successfully saved the form',
-              style: messageStyle,
-              placement: 'top', // Apply custom styles here
-            });
-            handleClearFields(); // Clear all fields
+          
+            const parseddata = JSON.parse(response.data.body);
+            const resp = JSON.parse(response.data.body);
+            console.log(resp)
+            if (response.data.statusCode === 200 && resp.flag === true) {
+
+                notification.success({
+                    message: 'Success',
+                    description: 'Successfully saved the form',
+                    style: messageStyle,
+                    placement: 'top', // Apply custom styles here
+                  });
+
+                // setLoading(true)
+
+                const data = {
+                    tenant_name: userPartner || "default_value",
+                    username: username,
+                    path: "/get_partner_info",
+                    role_name: role,
+                    modules_list: ["Partner module access"],
+                    "pages": {
+                        "Customer groups": { "start": 0, "end": 500 },
+                        "Partner users": { "start": 0, "end": 500 }
+                    },
+                 
+
+                   
+                };
+                try {
+                    const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+                    if (response && response.status === 200) {
+                        const parseddata = JSON.parse(response.data.body);
+                        if (parseddata.flag) {
+                            console.log(parseddata);
+                            // setPartnerModuleData(parseddata);
+                            setPartnerModuleAccess(parseddata);
+                            console.log("Updated partnerModuleData:", parseddata);
+                        }
+                    else {
+
+                            Modal.error({
+                                title: 'Error',
+                                content: parseddata.message,
+                                centered: true,
+                            });
+                       
+                        }
+                    } else {
+                        Modal.error({
+                            title: 'Error',
+                            content: 'An error occurred during fetching data.',
+                            centered: true,
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error fetching');
+                }
+
+            }
           }
           else{
             Modal.error({
@@ -499,63 +557,64 @@ const toggleModule = (category: string, module: string) => {
     <>
         <h3 className="tabs-sub-headings">Module Info</h3>
         <div className="grid grid-cols-1 gap-4 mt-4">
-            {Object.keys(map).map((category) => (
-                <div key={category} className="col-span-1">
-                    <h4 className="text-md font-medium text-blue-600">{category}</h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                        <div>
-                            <label className="field-label">Module</label>
-                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
-                                {map[category].Module.map((module) => {
-                                    const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
-                                    const isSelected = selectedModules[category]?.includes(cleanedModule);
-                                    const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
-
-                                    return (
-                                        <button
-                                            key={module}
-                                            className={`px-2 py-1 rounded-lg border`}
-                                            style={{ backgroundColor: bgColor }}
-                                            onClick={() => toggleModule(category, cleanedModule)}
-                                        >
-                                            {cleanedModule}
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        <div>
-                            <label className="field-label">Features</label>
-                            <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
-                                {Object.keys(map[category]?.Feature || {}).flatMap((module) =>
-                                    map[category].Feature[module]?.map((feature) => {
-                                        const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
-                                        const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
+                    {Object.keys(map).map((category) => (
+                        <div key={category} className="col-span-1 border border-gray-300 p-4 rounded-lg">
+                            <h4 className="text-xl font-medium text-blue-600 ml-2 mb-2">{category}</h4>
+                            <div className="mb-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {map[category].Module.map((module) => {
+                                        const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
+                                        const isSelected = selectedModules[category]?.includes(cleanedModule);
                                         const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
 
+                                    
+                                        const relatedFeatures = map[category]?.Feature[cleanedModule] || [];
+
                                         return (
-                                            <button
-                                                key={feature}
-                                                className={`px-2 py-1 rounded-lg border`}
-                                                style={{ backgroundColor: bgColor }}
-                                                onClick={() => toggleFeature(category, cleanedFeature)}
-                                            >
-                                                {cleanedFeature}
-                                            </button>
+                                            <div key={module} className="border border-gray-300 p-4 rounded-lg mb-4">
+                                                <div className="flex items-center">
+                                                    <span className="text-blue-600 text-sm font-medium mr-2">Module:</span>
+                                                    <button
+                                                        className={`px-2 py-1 rounded-lg border`}
+                                                        style={{ backgroundColor: bgColor }}
+                                                        onClick={() => toggleModule(category, cleanedModule)}
+                                                    >
+                                                        {cleanedModule}
+                                                    </button>
+                                                </div>
+                                                <div className="mt-2">
+                                                    <span className="text-blue-600 text-sm font-medium">Features:</span>
+                                                    <div className="flex flex-wrap gap-2 mt-2">
+                                                        {relatedFeatures.map((feature) => {
+                                                            const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
+                                                            const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
+                                                            const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+
+                                                            return (
+                                                                <button
+                                                                    key={feature}
+                                                                    className={`px-2 py-1 rounded-lg border`}
+                                                                    style={{ backgroundColor: bgColor }}
+                                                                    onClick={() => toggleFeature(category, cleanedFeature)}
+                                                                >
+                                                                    {cleanedFeature}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         );
-                                    }) || []
-                                )}
+                                    })}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
-            ))}
-        </div>
     </>
 )}
 
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end space-x-4 mt-2">
                 {/* <button className="cancel-btn">
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
