@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import * as XLSX from "xlsx";
 import { PlusIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Button, Modal ,Spin ,DatePicker, notification} from "antd";
@@ -84,6 +84,8 @@ const disableFutureDates = (current:any) => {
 const sortPopup = (fields: any[]): any[] => {
   return fields.sort((a:any, b:any) => a?.id - b?.id);
 };
+
+const hasFetchedData = useRef(false); // Ref to track if data has been fetched
 useEffect(() => {
   const fetchData = async () => {
     setLoading(true); // Set loading to true at the start
@@ -145,7 +147,11 @@ useEffect(() => {
     }
   };
 
-  fetchData();
+  // fetchData();
+  if (!hasFetchedData.current) { // Check if data has already been fetched
+    fetchData();
+    hasFetchedData.current = true; // Set to true after fetching
+}
 }, []);
 
   const handleCreateModalOpen = () => {

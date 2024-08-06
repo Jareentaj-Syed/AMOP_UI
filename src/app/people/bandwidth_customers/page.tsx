@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, lazy, Suspense } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import * as XLSX from "xlsx";
 import {
   PlusIcon,
@@ -81,6 +81,8 @@ const BandWidthCustomers: React.FC = () => {
     return fields.sort((a:any, b:any) => a?.id - b?.id);
   };
 
+  const hasFetchedData = useRef(false); // Ref to track if data has been fetched
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
@@ -141,7 +143,11 @@ const BandWidthCustomers: React.FC = () => {
         setLoading(false); // Ensure loading is set to false in the finally block
       }
     };
-    fetchData()
+    // fetchData()
+    if (!hasFetchedData.current) { // Check if data has already been fetched
+      fetchData();
+      hasFetchedData.current = true; // Set to true after fetching
+  }
   }, [])
 
   const handleCreateModalOpen = () => {
@@ -282,6 +288,7 @@ const BandWidthCustomers: React.FC = () => {
     return current && current > dayjs().endOf('day'); // Disable future dates
   };
 
+  
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className="container mx-auto">

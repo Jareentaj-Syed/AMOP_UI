@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, lazy, Suspense  } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef  } from "react";
 import {
   PlusIcon,
   ArrowDownTrayIcon,
@@ -63,6 +63,8 @@ const E911Customers: React.FC = () => {
     return fields.sort((a:any, b:any) => a?.id - b?.id);
   };
 
+  const hasFetchedData = useRef(false); // Ref to track if data has been fetched
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -116,7 +118,11 @@ const E911Customers: React.FC = () => {
       }
     };
 
-    fetchData();
+    // fetchData();
+    if (!hasFetchedData.current) { // Check if data has already been fetched
+      fetchData();
+      hasFetchedData.current = true; // Set to true after fetching
+  }
   }, [username, partner, role]);
 
   const handleCreateModalOpen = () => {
