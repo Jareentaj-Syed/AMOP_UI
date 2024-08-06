@@ -327,7 +327,9 @@ let sub_partners;
             }))}
             styles={editableDrp}
           />
+            {errorMessages.includes('Partner is required.') && (
             <span className="text-red-600 ml-1">Partner is required.</span>
+          )}
         </div>
 
         <div>
