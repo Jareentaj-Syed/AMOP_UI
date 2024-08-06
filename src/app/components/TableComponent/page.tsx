@@ -75,8 +75,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   useEffect(() => {
     const newRowData = tabledata? tabledata : initialData;
     setRowData(newRowData);
-
-    console.log("updated data:", newRowData)
+console.log("newdata",newRowData)
   }, [tabledata, initialData]);
   
   useEffect(() => {
@@ -188,7 +187,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             } else {
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.WestE911Customer;
+              const customertableData = parsedData.data.e911_customers;
               const tableData_ = [...rowData, customertableData]
               setRowData(tableData_);
             }
@@ -630,7 +629,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             } else {
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.WestE911Customer;
+              const customertableData = parsedData.data.e911_customers;
               setRowData(customertableData);
             }
           }

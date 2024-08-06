@@ -203,7 +203,7 @@ const EditModal: React.FC<EditModalProps> = ({
             role_name: role,
             "parent_module": "People",
             "module": "E911 Customers",
-            "table_name": "weste911customer",
+            "table_name": "e911_customers",
             action: "update",
             "changed_data": formData,
             Partner:partner,
@@ -377,7 +377,7 @@ const EditModal: React.FC<EditModalProps> = ({
             } else {
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.weste911customer;
+              const customertableData = parsedData.data.e911_customers;
               settabledata(customertableData);
               setLoading(false)
 

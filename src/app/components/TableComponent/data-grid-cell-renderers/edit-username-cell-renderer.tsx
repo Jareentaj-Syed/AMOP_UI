@@ -70,7 +70,6 @@ const EditUsernameCellRenderer: FC<{ value: string }> = ({ value }) => {
 
   const handleUpdateUsername = (newUsername: string) => {
     // Logic to update username (e.g., API call)
-    console.log("Updating username:", newUsername);
     handleCloseModal(); // Close modal after update
   };
 

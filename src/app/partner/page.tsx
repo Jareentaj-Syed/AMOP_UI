@@ -6,30 +6,30 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useAuth } from '../components/auth_context';
 import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
-import { usePartnerStore} from './partnerStore';
+import { usePartnerStore } from './partnerStore';
 import { useLogoStore } from '../stores/logoStore';
 
-
+import { useUserStore } from './users/createUser/createUserStore';
 
 
 // Dynamic imports with fallback loading indicators
 const PartnerInfo = dynamic(() => import('./partner_info/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 const PartnerAuthentication = dynamic(() => import('./partner_authentication/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 const PartnerModuleAccess = dynamic(() => import('./partner_module_access/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 const CustomerGroups = dynamic(() => import('./customer_groups/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 const PartnerUsers = dynamic(() => import('./users/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 const Notification = dynamic(() => import('./notification/page'), {
-  loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
+    loading: () => <div className="flex justify-center items-center h-screen"><Spin size="large" /></div>,
 });
 
 const Partner: React.FC = () => {
@@ -53,11 +53,22 @@ const Partner: React.FC = () => {
     const setCustomerGroups = usePartnerStore((state) => state.setCustomerGroups);
     const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
     const setNotifications = usePartnerStore((state) => state.setNotifications);
-    
+    const {
+        tenant,
+        role_name,
+        sub_tenant,
+        setTenant,
+        setRoleName,
+        setSubTenant,
+        setUser_Name,
+        emailsList, 
+        setEmailsList
+    } = useUserStore();
     useEffect(() => {
         if (title !== "Partner") {
             setLoading(true)
         }
+        // setEmailsList([])
     }, [title])
 
     useEffect(() => {
@@ -72,7 +83,7 @@ const Partner: React.FC = () => {
             username: username,
             path: "/get_partner_info",
             role_name: role,
-            parent_module:"Partner",
+            parent_module: "Partner",
             modules_list: [tab.module],
             pages: {
                 "Customer groups": { start: 0, end: 500 },
@@ -123,9 +134,9 @@ const Partner: React.FC = () => {
             // await fetchTabData(activeTabData);
             if (activeTabData) {
                 await fetchTabData(activeTabData);
-              } else {
+            } else {
                 console.error('Active tab data not found');
-              }
+            }
 
             // Fetch remaining tabs data in the background
             const remainingTabs = tabs.filter(tab => tab.module.replace(/\s+/g, '').toLowerCase() !== activeTab);

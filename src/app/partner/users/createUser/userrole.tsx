@@ -409,7 +409,6 @@ const toggleFeature = (category: string, feature: string) => {
                 });
             });
     
-            console.log("Formatted Data:", formattedData);
 
             const Changed_data ={
                 "Selected role": role_name,
@@ -477,7 +476,6 @@ const toggleFeature = (category: string, feature: string) => {
                             console.log(parseddata);
                             // setPartnerModuleData(parseddata);
                             setPartnerModuleAccess(parseddata);
-                            console.log("Updated partnerModuleData:", parseddata);
                         }
                     else {
 
