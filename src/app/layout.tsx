@@ -1,6 +1,6 @@
 // src/app/layout.tsx
 "use client"
-import { useEffect } from "react";
+import { useEffect} from "react";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
@@ -8,10 +8,13 @@ import SideNav from "./components/sideNav";
 import { useSidebarStore } from './stores/navBarStore';
 import { AuthProvider, useAuth } from '.././app/components/auth_context';
 import Login from '../app/components/login_page';
-import ChooseTenant from "./components/choose_tenant";
+// import ChooseTenant from "./components/choose_tenant";
 import { useRouter } from 'next/navigation';
 import  PasswordUpdate  from './components/password_update';
+import dynamic from "next/dynamic";
 const inter = Inter({ subsets: ["latin"] });
+
+const ChooseTenant = dynamic(()=>import("./components/choose_tenant"));
 
 const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
@@ -30,6 +33,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
 
 
   return (
+    
     <div className="min-h-screen grid">
   {!selectedPartner && !isReset ? (
     <ChooseTenant />
@@ -49,6 +53,7 @@ const LayoutContent: React.FC<{ children: React.ReactNode }> = ({ children }) =>
     </>
   )}
 </div>
+
 
   );
 };

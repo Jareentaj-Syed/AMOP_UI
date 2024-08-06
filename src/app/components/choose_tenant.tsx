@@ -1,5 +1,5 @@
 // pages/choose_tenant.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,Suspense } from 'react';
 import Image from 'next/image';
 import { Button, Modal, Spin } from 'antd';
 import { Footer } from './footer-nested';
@@ -111,6 +111,7 @@ const ChooseTenant: React.FC = () => {
   }
 
   return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
       <div className="w-[300px] h-[55px] mb-1">
         <Image
@@ -148,6 +149,7 @@ const ChooseTenant: React.FC = () => {
 
       {/* <Footer /> */}
     </div>
+    </Suspense>
   );
 };
 
