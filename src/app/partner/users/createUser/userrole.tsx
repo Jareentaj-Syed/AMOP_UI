@@ -59,7 +59,7 @@ interface UserRoleProps {
 const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
     const [Selectedpartner, setPartner] = useState<string>('');
     const [map, setMap] = useState<ExcelData>({});
-    const { username, partner } = useAuth();
+    const { username, partner:userPartner } = useAuth();
 
     const [role, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
@@ -408,7 +408,7 @@ const toggleModule = (category: string, module: string) => {
                 const url =
                   "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
                 const data = {
-                  tenant_name: partner || "default_value",
+                  tenant_name: userPartner || "default_value",
                   username: username,
                   path: "/update_partner_info",
                   "parent_module": "Partner",
@@ -417,7 +417,7 @@ const toggleModule = (category: string, module: string) => {
                   action: "update",
                   changed_data: Changed_data,
                   request_received_at: getCurrentDateTime(),
-                  Partner:partner
+                  Partner:userPartner
                 };
                 const response = await axios.post(url, { data });
                 const parsedData = JSON.parse(response.data.body);

@@ -65,7 +65,7 @@ const Header: React.FC = () => {
         )}
       </div > */}
       <div className='absolute left-[5px] p-2 '>
-      <span className=" p-4 font-[100] text-[24px]">{title}</span>
+      <span className=" p-4 font-[500] text-[24px]">{title}</span>
       </div>
       <div className="flex items-center space-x-2 absolute right-[20px]">
         <div className="relative">
