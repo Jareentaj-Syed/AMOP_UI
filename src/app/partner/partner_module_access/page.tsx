@@ -83,7 +83,7 @@ const UserRole: React.FC = () => {
 
     const editableDrp = DropdownStyles;
 
-    const rawData = partnerModuleData.data["Partner module access"]["role_module"];
+    const rawData = partnerModuleData?.data["Partner module access"]["role_module"];
 
     const transformData = (data: typeof rawData): Data => {
         const transformedData: Data = {};
