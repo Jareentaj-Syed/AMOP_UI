@@ -94,8 +94,8 @@ useEffect(() => {
         username: username,
         path: "/get_module_data",
         role_name: role,
-        parent_module_name: "people", // Corrected spelling from 'poeple'
-        module_name: "NetSapiens Customers",
+        parent_module:"People", // Corrected spelling from 'poeple'
+        module_name:"NetSapiens Customers",
         mod_pages: {
           start: 0,
           end: 500,

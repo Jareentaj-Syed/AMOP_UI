@@ -407,6 +407,7 @@ console.log("partner module data:", PartnerModuleData)
                         username: username,
                         path: "/get_partner_info",
                         role_name: role,
+                        parent_module:"Partner",
                         modules_list: ["Partner module access"],
                         "pages": {
                             "Customer groups": { "start": 0, "end": 500 },

@@ -72,6 +72,7 @@ const Partner: React.FC = () => {
             username: username,
             path: "/get_partner_info",
             role_name: role,
+            parent_module:"Partner",
             modules_list: [tab.module],
             pages: {
                 "Customer groups": { start: 0, end: 500 },

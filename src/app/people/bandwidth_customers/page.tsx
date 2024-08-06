@@ -92,8 +92,8 @@ const BandWidthCustomers: React.FC = () => {
           username: username,
           path: "/get_module_data",
           role_name: role,
-          parent_module_name: "people",
-          module_name: "Bandwidth Customers",
+          parent_module:"People",
+          sub_parent_module:"Bandwidth Customers",
           mod_pages: {
             start: 0,
             end: 500,

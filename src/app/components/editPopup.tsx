@@ -273,9 +273,11 @@ const EditModal: React.FC<EditModalProps> = ({
               const data = {
                 tenant_name: partner || "default_value",
                 username: username,
+                parent_module:"Super Admin",
+                sub_parent_module: "Partner API", 
                 path: "/get_superadmin_info",
                 role_name: role,
-                sub_module: "Partner API", 
+               
                 sub_tab: "Carrier APIs",
                 Partner:partner,
                 request_received_at: getCurrentDateTime(),
@@ -307,7 +309,9 @@ const EditModal: React.FC<EditModalProps> = ({
                 username: username,
                 path: "/get_superadmin_info",
                 role_name: role,
-                sub_module: "Partner API",
+                parent_module:"Super Admin",
+                sub_parent_module: "Partner API", 
+               
                 sub_tab: "Amop APIs",
                 Partner:partner,
                 request_received_at: getCurrentDateTime(),
@@ -450,6 +454,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         username: username,
                         path: "/get_partner_info",
                         role_name: role,
+                        parent_module:"Partner",
                         modules_list: ["Customer groups"],
                         pages: {
                             "Customer groups": { start: 0, end: 500 },

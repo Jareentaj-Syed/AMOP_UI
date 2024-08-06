@@ -73,8 +73,8 @@ const E911Customers: React.FC = () => {
           username: username,
           path: "/get_module_data",
           role_name: role,
-          parent_module_name: "people",
-          module_name: "E911 Customers",
+          parent_module:"People",
+          module_name:"E911 Customers",
           mod_pages: {
             start: 0,
             end: 500,
