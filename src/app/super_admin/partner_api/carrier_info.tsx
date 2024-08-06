@@ -13,6 +13,7 @@ import { DropdownStyles } from '@/app/components/css/dropdown';
 import TableSearch from '@/app/components/entire_table_search';
 import AdvancedMultiFilter from '@/app/components/advanced_search';
 import { getCurrentDateTime } from '@/app/components/header_constants';
+import { useLogoStore } from '@/app/stores/logoStore';
 
 interface ExcelData {
   [key: string]: any;
@@ -41,6 +42,14 @@ const CarrierInfo: React.FC = () => {
   const [createModalData, setcreateModalData] = useState<any[]>([]);
   const [generalFields, setgeneralFields] = useState<any[]>([])
   const [filteredData, setFilteredData] = useState([]);
+  const title = useLogoStore((state) => state.title);
+
+  
+  useEffect(() => {
+    if(title!="Super Admin"){
+        setLoading(true)
+    }
+},[title])
 
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)

@@ -5,7 +5,7 @@ export const getPartnerData = () => {
 };
 const partnerData = getPartnerData();
 
-export const partnerModuleData=partnerData["Partner module access"]
+export const PartnerModuleData=partnerData["Partner module access"]
 
 type Feature = {
     [module: string]: string[];
