@@ -90,7 +90,7 @@ const sortPopup = (fields: any[]): any[] => {
 
   const handleCreateRow = (newRow: any) => {
     const updatedData = [...data, newRow];
-    setData(updatedData);
+    // setData(updatedData);
     handleCreateModalClose();
   };
 

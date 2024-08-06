@@ -108,8 +108,8 @@ useEffect(() => {
 
   const handleCreateRow = (newRow: any) => {
     const updatedData = [...tableData, newRow];
-    setTable(updatedData);
-    setTableData(updatedData);
+    // setTable(updatedData);
+    // setTableData(updatedData);
     handleCreateModalClose();
   };
 

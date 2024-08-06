@@ -71,7 +71,7 @@ const CustomerFeatureCodes: React.FC = () => {
 
   const handleCreateRow = (newRow: any) => {
     const updatedData = [...data, newRow];
-    setData(updatedData);
+    // setData(updatedData);
     handleCreateModalClose();
   };
   const handleExport = () => {

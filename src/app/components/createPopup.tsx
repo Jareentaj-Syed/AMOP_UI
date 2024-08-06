@@ -43,7 +43,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
-  const { username, tenantNames, role, partner, settabledata } = useAuth();
+  const { username, tenantNames, role, partner, settabledata,setStoredPagination } = useAuth();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -63,7 +63,6 @@ const CreateModal: React.FC<CreateModalProps> = ({
   };
 
   const handleCreate = () => {
-    console.log('form data:', formData);
     onSave(formData,tableData);
     onClose();
   };
@@ -387,13 +386,12 @@ const CreateModal: React.FC<CreateModalProps> = ({
                             "Partner users": { start: 0, end: 500 }
                         },
                         Partner:partner,
-                        request_received_at: getCurrentDateTime()
-            
-            
+                        request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
+              setLoading(false)
               Modal.error({
                 title: 'Data Fetch Error',
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
@@ -403,8 +401,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
               const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
               console.log("tableData",tableData)
               settabledata(tableData);
+              setLoading(false)
             }
           }
+        
           // if (heading === "RevIO Customer") {
           //   if (formData) {
           //     formData["modified_by"] = username;

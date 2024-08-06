@@ -142,8 +142,8 @@ const E911Customers: React.FC = () => {
 
   const handleCreateRow = (newRow: any, tableData: any) => {
     const updatedData = [...tableData, newRow];
-    setTable(tableData);
-    setTableData(tableData);
+    // setTable(tableData);
+    // setTableData(tableData);
     handleCreateModalClose();
   };
 
