@@ -172,6 +172,8 @@ const Page: React.FC = () => {
 
       setRolesDataHeaders(headers1)
       setShowUserRole(true);
+    
+
     } catch (err) {
       console.error("Error fetching data:", err);
       Modal.error({
@@ -198,7 +200,7 @@ const Page: React.FC = () => {
     };
   }, []);
 
-  
+
 
   const handlePartnerChange = (selectedOption: { value: string; label: string } | null) => {
     if (selectedOption) {
@@ -216,7 +218,9 @@ const Page: React.FC = () => {
   const handleSubpartnerChange = (selectedOption: { value: string; label: string } | null) => {
     if (selectedOption) {
       const subPartner = selectedOption.value;
+    
       setSelectedSubPartner(subPartner);
+      console.log(subPartner)
       setSelectedEnvironment(subPartner)
       setSubPartnerMenuIsOpen(false)
     } else {
@@ -248,6 +252,11 @@ const Page: React.FC = () => {
   const handleSubPartnerFocus = () => {
     setSubPartnerMenuIsOpen(true);
   };
+
+  const ClearData = ()=>{
+    setSelectedPartner('')
+    setSelectedSubPartner('')
+  }
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className='bg-gray-50'>
@@ -290,6 +299,16 @@ const Page: React.FC = () => {
     >
       Submit
     </button>
+    <div className='mt-7'>
+            <button
+              className='save-btn'
+              type="submit"
+              onClick={() => ClearData()}
+            >
+              Clear
+            </button>
+            </div>
+        
   </div>
 </div>
 

@@ -121,24 +121,31 @@ const ChooseTenant: React.FC = () => {
         />
       </div>
       <h1 className="text-[28px] text-[#00C1F1] font-medium mb-2">Choose Partner</h1>
-      <div className="space-y-[1px] flex flex-col mb-2">
-        {partners.map((partner) => (
-          <Button
-            key={partner}
-            onClick={() => handleSelectedPartner(partner)}
-            className="rounded-full"
-            style={{
-              width: '200px',
-              height: '35px',
-              borderColor: selectedPartnerName === partner ? '#00C1F1' : '#00C1F1',
-              borderWidth: selectedPartnerName === partner ? '3px' : '1px',
-              color: '#00C1F1',
-            }}
-          >
-            {partner}
-          </Button>
-        ))}
-      </div>
+      <div className={`grid ${partners.length > 11 ? 'grid-cols-2' : 'grid-cols-1'} gap-1 mb-2`}>
+  {partners.map((partner) => (
+    <Button
+      key={partner}
+      onClick={() => handleSelectedPartner(partner)}
+      className="rounded-full"
+      style={{
+        width: '200px',
+        height: '35px',
+        borderColor: selectedPartnerName === partner ? '#00C1F1' : '#00C1F1',
+        borderWidth: selectedPartnerName === partner ? '3px' : '1px',
+        color: '#00C1F1',
+        margin: '0', // Remove margin to avoid spacing between buttons
+      }}
+    >
+      {partner}
+    </Button>
+  ))}
+</div>
+
+
+
+
+
+
       {/* <Footer /> */}
     </div>
   );
