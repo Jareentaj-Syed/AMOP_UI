@@ -183,7 +183,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             path: '/update_people_data',
             role_name: role,
             parent_module: 'People',
-            module: ' NetSapiens Customers',
+            module: 'NetSapiens Customers',
             table_name: 'customers',
             action: 'create',
             changed_data: formData,
