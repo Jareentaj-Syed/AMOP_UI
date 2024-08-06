@@ -248,7 +248,7 @@ let sub_partners;
       
           let changedData: any = {};
           const tenant_name=selectedSubPartner?selectedSubPartner:partner||[]
-        changedData[getFieldKey('Partner')] = partner;
+        changedData[getFieldKey('Partner')] = tenant;
         changedData[getFieldKey('Sub Partner')] = selectedSubPartner;
         changedData[getFieldKey('First Name')] = firstName;
         changedData[getFieldKey('Last Name')] = lastName;

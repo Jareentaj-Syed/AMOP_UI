@@ -40,6 +40,9 @@ const CarrierInfo: React.FC = () => {
     console.log(advancedFilters)
     setFilteredData(advancedFilters);
   };
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
   const handleReset = (EmptyFilters: any) => {
     console.log(EmptyFilters)
     setFilteredData(EmptyFilters);
@@ -98,7 +101,7 @@ const CarrierInfo: React.FC = () => {
       // setgeneralFields(generalFields)
       setHeaders(headers)
       setHeaderMap(sortedheaderMap)
-      setcreateModalData(createModalData)
+      setcreateModalData(sortPopup(createModalData))
       // setTable(tableData);
       setVisibleColumns(headers)
       setEnvironment(null)
