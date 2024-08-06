@@ -38,8 +38,10 @@ const E911Customers: React.FC = () => {
   const { username, partner, role,settabledata } = useAuth();
   const [loading, setLoading] = useState(true);
   const title = useLogoStore((state) => state.title);
+  
   const [tableData, setTableData] = useState<any>([]);
   const { setTable } = useE911CustomersStore();
+  const [features, setFeatures] = useState<string[]>([]);
   const [headers, setHeaders] = useState<any[]>([]);
   const [headerMap, setHeaderMap] = useState<any>({});
   const [createModalData, setCreateModalData] = useState<any[]>([]);
@@ -96,6 +98,10 @@ const E911Customers: React.FC = () => {
           });
         } else {
           const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
+          const features = parsedData.headers_map["E911 Customers"]["module_features"]
+
+          console.log("features", features)
+          setFeatures(features)
           const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
           const customertableData = parsedData.data.e911_customers;
           setTableData(customertableData);
@@ -140,6 +146,7 @@ const E911Customers: React.FC = () => {
     setTableData(tableData);
     handleCreateModalClose();
   };
+
 
   
   const messageStyle = {
@@ -267,24 +274,28 @@ const E911Customers: React.FC = () => {
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
           {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+          {features.includes("Search-E911 Customers") && (
+
           <TableSearch
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             tableName={"e911_customer"}
             headerMap={headerMap}
           />
-
+          )}
         </div>
 
         <div className="flex space-x-2">
+        {features.includes("Add Customers-E911 Customers") && (
           <button className="save-btn" onClick={handleCreateModalOpen}>
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
-          </button>
+          </button>)}
+          {features.includes("Export-E911 Customers") && (
           <button className="save-btn" onClick={handleExportModalOpen}>
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
-          </button>
+          </button>)}
           <ColumnFilter
             headers={headers}
             visibleColumns={visibleColumns}
@@ -294,12 +305,14 @@ const E911Customers: React.FC = () => {
         </div>
       </div>
       <div className=' mb-4 space-x-2'>
+      {features.includes("Advance Filter-E911 Customers") && (
+
         <AdvancedMultiFilter
           onFilter={handleFilter}
           onReset={handleReset}
           headers={headers}
           headerMap={headerMap}
-          tableName={"e911_customer"} />
+          tableName={"e911_customer"} />)}
       </div>
       <TableComponent
         headers={headers}

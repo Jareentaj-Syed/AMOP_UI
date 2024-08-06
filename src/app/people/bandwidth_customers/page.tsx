@@ -31,18 +31,20 @@ const TableComponent = lazy(() => import('@/app/components/TableComponent/page')
 const SearchInput = lazy(() => import('../../components/Search-Input'));
 const TableSearch = lazy(() => import('@/app/components/entire_table_search'));
 const AdvancedMultiFilter = lazy(() => import('@/app/components/advanced_search'));
-const ColumnFilter = lazy(()=> import("@/app/components/columnfilter"));
-const CreateModal = lazy(()=> import("@/app/components/createPopup"));
+const ColumnFilter = lazy(() => import("@/app/components/columnfilter"));
+const CreateModal = lazy(() => import("@/app/components/createPopup"));
 
 
 const BandWidthCustomers: React.FC = () => {
   const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [newRowData, setNewRowData] = useState<any>({});
+  const [features, setFeatures] = useState<string[]>([]);
+  const hasFetchedData = useRef(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   // const createColumns = createModalData;
-  const { username, partner, role ,settabledata} = useAuth();
+  const { username, partner, role, settabledata } = useAuth();
   const [tableData, setTableData] = useState<any[]>([]);
   const { customers_table, setTable } = useBandWidthStore();
   const title = useLogoStore((state) => state.title);
@@ -68,6 +70,8 @@ const BandWidthCustomers: React.FC = () => {
     }
   }, [title])
 
+  
+
   type HeaderMap = Record<string, [string, number]>;
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
@@ -78,10 +82,8 @@ const BandWidthCustomers: React.FC = () => {
     return Object.fromEntries(entries) as HeaderMap;
   }
   const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
+    return fields.sort((a: any, b: any) => a?.id - b?.id);
   };
-
-  const hasFetchedData = useRef(false); // Ref to track if data has been fetched
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,8 +96,8 @@ const BandWidthCustomers: React.FC = () => {
           username: username,
           path: "/get_module_data",
           role_name: role,
-          parent_module:"People",
-          module_name:"Bandwidth Customers",
+          parent_module: "People",
+          module_name: "Bandwidth Customers",
           mod_pages: {
             start: 0,
             end: 500,
@@ -115,6 +117,9 @@ const BandWidthCustomers: React.FC = () => {
           const tableData = parsedData.data.customers;
           const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
           const features = parsedData.headers_map["Bandwidth Customers"]["module_features"]
+
+          console.log("features", features)
+          setFeatures(features)
           const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
           const sortedheaderMap = sortHeaderMap(headerMap)
           const headers = Object.keys(sortedheaderMap)
@@ -143,13 +148,14 @@ const BandWidthCustomers: React.FC = () => {
         setLoading(false); // Ensure loading is set to false in the finally block
       }
     };
-    // fetchData()
-    if (!hasFetchedData.current) { // Check if data has already been fetched
+  
+     if (!hasFetchedData.current) { // Check if data has already been fetched
       fetchData();
       hasFetchedData.current = true; // Set to true after fetching
   }
   }, [])
 
+  
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
@@ -196,9 +202,9 @@ const BandWidthCustomers: React.FC = () => {
       Modal.error({ title: 'Error', content: 'Please select a date range.' });
       return;
     }
-  
+
     const [startDate, endDate] = dateRange;
-  
+
     const data = {
       path: "/export",
       username: username,
@@ -209,7 +215,7 @@ const BandWidthCustomers: React.FC = () => {
       end_date: endDate.format("YYYY-MM-DD 23:59:59"),
       Partner: partner,
     };
-  
+
     try {
       const url = "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
       const response = await axios.post(url, { data: data }, {
@@ -217,13 +223,13 @@ const BandWidthCustomers: React.FC = () => {
           'Content-Type': 'application/json',
         },
       });
-  
+
       const resp = JSON.parse(response.data.body);
       const blob = resp.blob;
-  
+
       // Log the response to check its structure
       console.log('Response:', resp);
-  
+
       // Handle response based on status code
       if (response.data.statusCode === 200) {
         if (resp.flag === true) {
@@ -233,7 +239,7 @@ const BandWidthCustomers: React.FC = () => {
             style: messageStyle,
             placement: 'top',
           });
-  
+
           // Trigger the download after a successful export
           downloadBlob(blob);
         } else {
@@ -244,7 +250,7 @@ const BandWidthCustomers: React.FC = () => {
             content: resp.message,
             centered: true,
           });
-      
+
         }
       } else {
         // Handle unexpected status codes
@@ -255,7 +261,7 @@ const BandWidthCustomers: React.FC = () => {
           centered: true,
         });
       }
-  
+
       // Close the modal after processing the export
       handleExportModalClose();
     } catch (error) {
@@ -264,7 +270,7 @@ const BandWidthCustomers: React.FC = () => {
     }
   };
 
-  
+
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);
@@ -288,111 +294,117 @@ const BandWidthCustomers: React.FC = () => {
     return current && current > dayjs().endOf('day'); // Disable future dates
   };
 
-  
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
-    <div className="container mx-auto">
+      <div className="container mx-auto">
         <div className="flex justify-between">
-            <div className="p-4 flex justify-start">
-                <TableSearch
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    tableName={"bandwidth_customers"}
-                    headerMap={headerMap}
-                />
+          <div className="p-4 flex justify-start">
+            {features.includes("Search-Bandwidth Customers") && (
+              <TableSearch
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                tableName={"bandwidth_customers"}
+                headerMap={headerMap}
+              />
+            )}
+
+          </div>
+          <div className="p-4 flex justify-end">
+            <div className="flex space-x-2">
+              {features.includes("Add Customers-BandwithCustomers") && (
+                <button className="save-btn" onClick={handleCreateModalOpen}>
+                  <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+                  Add Customer
+                </button>
+              )}
+
+              {features.includes("Export-BandwithCustomers") && (
+                <button className="save-btn" onClick={handleExportModalOpen}>
+                  <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+                  <span>Export</span>
+                </button>
+              )}
+
+              <ColumnFilter
+                headers={headers}
+                visibleColumns={visibleColumns}
+                setVisibleColumns={setVisibleColumns}
+                headerMap={headerMap}
+              />
             </div>
-            <div className="p-4 flex justify-end">
-                <div className="flex space-x-2">
-                    {/* {features.includes("Add Customers-BandwithCustomers") && ( */}
-                        <button className="save-btn" onClick={handleCreateModalOpen}>
-                            <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-                            Add Customer
-                        </button>
-                    {/* )} */}
-                    {/* {features.includes("Export-BandwithCustomers") && ( */}
-                        <button className="save-btn" onClick={handleExportModalOpen}>
-                            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
-                            <span>Export</span>
-                        </button>
-                    {/* )} */}
-                    <ColumnFilter
-                        headers={headers}
-                        visibleColumns={visibleColumns}
-                        setVisibleColumns={setVisibleColumns}
-                        headerMap={headerMap}
-                    />
-                </div>
-            </div>
+          </div>
         </div>
 
         <div className=' mb-4 space-x-2'>
+          {features.includes("Advance Filter-Bandwidth Customers") && (
             <AdvancedMultiFilter
-                onFilter={handleFilter}
-                onReset={handleReset}
-                headers={headers}
-                headerMap={headerMap}
-                tableName={"bandwidth_customers"} />
+              onFilter={handleFilter}
+              onReset={handleReset}
+              headers={headers}
+              headerMap={headerMap}
+              tableName={"bandwidth_customers"} />
+          )}
         </div>
 
         <TableComponent
-            headers={headers}
-            headerMap={headerMap}
-            initialData={tableData}
-            searchQuery={searchTerm}
-            visibleColumns={visibleColumns}
-            itemsPerPage={100}
-            allowedActions={["info", "edit"]}
-            popupHeading="Bandwidth Customer"
-            createModalData={createModalData}
-            pagination={pagination}
-            generalFields={generalFields}
-            advancedFilters={filteredData}
+          headers={headers}
+          headerMap={headerMap}
+          initialData={tableData}
+          searchQuery={searchTerm}
+          visibleColumns={visibleColumns}
+          itemsPerPage={100}
+          allowedActions={["info", "edit"]}
+          popupHeading="Bandwidth Customer"
+          createModalData={createModalData}
+          pagination={pagination}
+          generalFields={generalFields}
+          advancedFilters={filteredData}
         />
 
         <CreateModal
-            isOpen={isCreateModalOpen}
-            onClose={handleCreateModalClose}
-            onSave={handleCreateRow}
-            columnNames={createModalData}
-            heading="Bandwidth Customer"
-            header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
-            generalFields={generalFields}
-            tableData={tableData}
+          isOpen={isCreateModalOpen}
+          onClose={handleCreateModalClose}
+          onSave={handleCreateRow}
+          columnNames={createModalData}
+          heading="Bandwidth Customer"
+          header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+          generalFields={generalFields}
+          tableData={tableData}
         />
         <Modal
-            title="Export Output"
-            visible={isExportModalOpen}
-            onCancel={() => {
-                handleExportModalClose();
-                setDateRange([null, null]); // Reset date range here for good measure
-            }}
-            footer={null}
-            centered
-            afterClose={() => setDateRange([null, null])}
+          title="Export Output"
+          visible={isExportModalOpen}
+          onCancel={() => {
+            handleExportModalClose();
+            setDateRange([null, null]); // Reset date range here for good measure
+          }}
+          footer={null}
+          centered
+          afterClose={() => setDateRange([null, null])}
         >
-            <div className="flex flex-col space-y-4">
-                <span>Select Date Range:</span>
-                <RangePicker
-                    value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
-                    onChange={(dates) => {
-                        console.log("Selected dates:", dates); // Debug log
-                        if (dates && dates.length === 2) {
-                            setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
-                        } else {
-                            setDateRange([null, null]); // Reset to null if dates are not both available
-                        }
-                    }}
-                    format="YYYY-MM-DD"
-                    disabledDate={disableFutureDates}
-                />
-                <div className="flex justify-end space-x-2">
-                    <Button onClick={handleExportModalClose}>Cancel</Button>
-                    <Button type="primary" onClick={handleExport}>Export</Button>
-                </div>
+          <div className="flex flex-col space-y-4">
+            <span>Select Date Range:</span>
+            <RangePicker
+              value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+              onChange={(dates) => {
+                console.log("Selected dates:", dates); // Debug log
+                if (dates && dates.length === 2) {
+                  setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
+                } else {
+                  setDateRange([null, null]); // Reset to null if dates are not both available
+                }
+              }}
+              format="YYYY-MM-DD"
+              disabledDate={disableFutureDates}
+            />
+            <div className="flex justify-end space-x-2">
+              <Button onClick={handleExportModalClose}>Cancel</Button>
+              <Button type="primary" onClick={handleExport}>Export</Button>
             </div>
+          </div>
         </Modal>
-    </div>
-</Suspense>
+      </div>
+    </Suspense>
 
   );
 

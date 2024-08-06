@@ -37,6 +37,7 @@ const NetSapiensCustomers: React.FC = () => {
   const { username, partner, role ,settabledata} = useAuth();
   const { customers_table, setTable } = useNetSapiensStore();
   const [tableData, setTableData] = useState<any[]>([]);
+  const [features, setFeatures] = useState<string[]>([]);
   const title = useLogoStore((state) => state.title);
   const [pagination,setpagination]=useState<any>({});
   const [headers,setHeaders]=useState<any[]>([]);
@@ -112,6 +113,10 @@ useEffect(() => {
       // Check if the flag is false in the parsed data
       const tableData = parsedData.data.customers;
       const headerMap=parsedData.headers_map["NetSapiens Customers"]["header_map"]
+      const features = parsedData.headers_map["NetSapiens Customers"]["module_features"]
+
+      console.log("features", features)
+      setFeatures(features)
       const createModalData=parsedData.headers_map["NetSapiens Customers"]["pop_up"]
       const sortedheaderMap=sortHeaderMap(headerMap)
       const headers=Object.keys(sortedheaderMap)
@@ -282,30 +287,37 @@ useEffect(() => {
       </div>
     );
   }
+
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className="container mx-auto">
       <div className="p-4 flex items-center justify-between mt-1 mb-4">
         <div className="flex space-x-2">
           {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+          {features.includes("Search-NetSapiens Customers") && (
+
           <TableSearch
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
           tableName={"netsapiens_customers"}
           headerMap={headerMap}
-        />
+        />)}
           
         </div>
 
         <div className="flex space-x-2">
+        {features.includes("Add Customers-NetSapiens Customers") && (
+
           <button className="save-btn" onClick={handleCreateModalOpen}>
             <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
             Add Customer
-          </button>
+          </button>)}
+          {features.includes("Export-NetSapiens Customers") && (
+
           <button className="save-btn" onClick={handleExportModalOpen}>
             <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
             <span>Export</span>
-          </button>
+          </button>)}
           <ColumnFilter
             headers={headers}
             visibleColumns={visibleColumns}
@@ -315,13 +327,14 @@ useEffect(() => {
         </div>
       </div>
       <div className=' mb-4 space-x-2'>
+      {features.includes("Advance Filter-NetSapiens Customers") && (
             <AdvancedMultiFilter 
             onFilter={handleFilter} 
             onReset={handleReset} 
             headers={headers} 
             headerMap={headerMap}
             tableName={"netsapiens_customers"}
-            />
+            />)}
         </div>
 
         <TableComponent
