@@ -1,11 +1,11 @@
 // app/createUser/page.tsx
 
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '@/app/stores/navBarStore';
 import Page from '../page';
-
+import { useUserStore } from './createUserStore';
 
 // Dynamically import the UserInfo and TenantInfo components
 const UserInfo = dynamic(() => import('./userInfo'));
@@ -22,6 +22,20 @@ const CreateUser: React.FC<CreateUserProps> = ({ isPopup, rowData }) => {
   const [activeTab, setActiveTab] = useState('userInfo');
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
   const [hideCreateUser, setHideCreateUser] = useState(false);
+  const {
+    tenant,
+    role_name,
+    sub_tenant,
+    user_name,
+    setTenant,
+    setRoleName,
+    setSubTenant
+} = useUserStore();
+
+useEffect(() => {
+  setActiveTab('userInfo')
+}, [rowData]);
+
   const handleCloseClick = () => {
     setHideCreateUser(true);
   };

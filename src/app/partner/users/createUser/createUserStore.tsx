@@ -1,14 +1,14 @@
 import create from 'zustand';
 
 interface UserState {
-    tenant: string;
-    role_name: string;
-    sub_tenant: string[];
-    user_name:string;
-    setTenant: (partner: string) => void;
-    setRoleName: (role_name: string) => void;
-    setSubTenant: (subPartners: string[]) => void;
-    setUser_Name:(user_name: string) => void;
+    tenant: any;
+    role_name: any;
+    sub_tenant: any[];
+    user_name:any;
+    setTenant: (partner: any) => void;
+    setRoleName: (role_name: any) => void;
+    setSubTenant: (subPartners: any[]) => void;
+    setUser_Name:(user_name: any) => void;
 }
 
 export const useUserStore = create<UserState>((set) => ({
