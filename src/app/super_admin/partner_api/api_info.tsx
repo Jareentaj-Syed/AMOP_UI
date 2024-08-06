@@ -6,11 +6,10 @@ import { DropdownStyles } from '@/app/components/css/dropdown';
 import { Modal, Spin } from 'antd'; 
 import { createModalData } from './api_constants';
 import { getCurrentDateTime } from '@/app/components/header_constants';
-
-const TableComponent = lazy(() => import('../../components/TableComponent/page'));
-const SearchInput = lazy(() => import('../../components/Search-Input'));
-const AdvancedMultiFilter = lazy(() => import('@/app/components/advanced_search'));
-const TableSearch = lazy(()=>import("@/app/components/entire_table_search"));
+import TableComponent from '../../components/TableComponent/page';
+import SearchInput from '../../components/Search-Input';
+import TableSearch from '@/app/components/entire_table_search';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 
 
 interface ExcelData {

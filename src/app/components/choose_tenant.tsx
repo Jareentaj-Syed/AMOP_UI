@@ -73,7 +73,7 @@ const ChooseTenant: React.FC = () => {
           setModules(parsedData.Modules); // Set the modules state
           setPartner(partnerName);
           
-          router.push('/home');
+          router.push('/dashboard');
         }
       } else {
         console.log('Fetching modules failed:', response.data);
