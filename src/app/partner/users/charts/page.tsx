@@ -6,50 +6,49 @@ const ChartsPage: React.FC = () => {
   const usersData = partnerData["Partner users"] || {};
 
   const totalUsers = usersData?.data?.["Partner users"]?.total_count || 0;
-  const activeUsers = usersData?.data?.["Partner users"]?.active_user_count ||0;
-  const migratedUsers =usersData?.data?.["Partner users"]?.migrated_count ||0;
+  const activeUsers = usersData?.data?.["Partner users"]?.active_user_count || 0;
+  const migratedUsers = usersData?.data?.["Partner users"]?.migrated_count || 0;
 
   return (
-    <div className="p-2">
-    <div className="flex flex-wrap gap-4">
- 
-      <div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '180px', height: '60px' }}>
-  <UserIcon className="h-5 w-5 text-gray-600 mr-2" />
-  <div className="chart">
-    <div className='chart-heading'>
-      <h2 className="text-xxs md:text-xs font-[500] text-gray-800 truncate" style={{ maxWidth: '100px' }}>Total Users</h2>
-    </div>
-    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{totalUsers}</p>
-  </div>
-</div>
-  
+    <div className="py-2 px-6 w-full">
+      <div className="grid grid-cols-3 gap-4 md:grid-cols-3 flex flex-wrap">
+
+        <div className="chart">
+          <div className="">
+            <div className='flex'>
+              <UserIcon className="h-6 w-6 text-gray-600 mr-2" />
+              <h2 className="chart-heading">Total Users</h2>
+            </div>
+            <p className="chart-count">{totalUsers}</p>
+          </div>
+        </div>
 
 
-<div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '180px', height: '60px' }}>
-  <CheckCircleIcon className="h-5 w-5 text-gray-600 mr-2" />
-  <div className="chart">
-    <div className='chart-heading'>
-      <h2 className="text-xxs md:text-xs font-[500] text-gray-800 truncate" style={{ maxWidth: '100px' }}>Active Users</h2>
-    </div>
-    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{activeUsers}</p>
-  </div>
-</div>
+        <div className="chart">
+          <div>
+            <div className='flex'>
+              <CheckCircleIcon className="h-6 w-6 text-gray-600 mr-2" />
+              <h2 className="chart-heading">Active Users</h2>
+            </div>
+            <p className="chart-count">{activeUsers}</p>
+          </div>
+        </div>
 
-<div className="bg-white p-1 rounded-lg shadow-md flex items-center" style={{ width: '180px', height: '60px' }}>
-  <ReceiptPercentIcon className="h-5 w-5 text-gray-600 mr-2" />
-  <div className="chart">
-    <div className='chart-heading'>
-      <h2 className="text-xxs md:text-xs font-[500] text-gray-800 truncate" style={{ maxWidth: '100px' }}>Migrated Users</h2>
-    </div>
-    <p className="text-xxs md:text-xs font-bold text-gray-900 mt-1 truncate" style={{ maxWidth: '100px' }}>{migratedUsers}</p>
-  </div>
-</div>
+        <div className="chart">
+          <div className="">
+            <div className='flex'>
+              <ReceiptPercentIcon className="h-6 w-6 text-gray-600 mr-2" />
+              <h2 className="chart-heading">Migrated Users</h2>
+            </div>
+            <p className="chart-count">{migratedUsers}</p>
+          </div>
+        </div>
 
-  
+
+      </div>
     </div>
-  </div>
-  
-  
+
+
   );
 };
 

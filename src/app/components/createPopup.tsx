@@ -87,7 +87,6 @@ const CreateModal: React.FC<CreateModalProps> = ({
     }, {} as Record<string, any>);
 
     setFormData(initialFormData);
-    console.log("formData", formData)
     if (formData) {
       try {
         const url =
@@ -97,7 +96,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'Customer Group') {
           if (formData) {
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            // formData["modified_date"]= getCurrentDateTime()
             formData["is_deleted"] = false
             formData["is_active"] = true
           }
@@ -168,7 +167,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             role_name: role,
             parent_module: 'People',
             module: 'E911 Customers',
-            table_name: 'weste911customer',
+            table_name: 'e911_customers',
             action: 'create',
             changed_data: formData,
             Partner:partner,
@@ -307,7 +306,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             } else {
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-              const customertableData = parsedData.data.WestE911Customer;
+              const customertableData = parsedData.data.e911_customers;
               settabledata(customertableData);
             }
           }

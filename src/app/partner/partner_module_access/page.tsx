@@ -423,7 +423,6 @@ console.log("partner module data:", PartnerModuleData)
                                 console.log(parseddata);
                                 // setPartnerModuleData(parseddata);
                                 setPartnerModuleAccess(parseddata);
-                                console.log("Updated partnerModuleData:", parseddata);
                             }
                         else {
 

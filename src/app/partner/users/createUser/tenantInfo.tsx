@@ -17,11 +17,11 @@ const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 interface TenantInfoProps {
     rowData?: any;
-    editable?:boolean;
+    editable?: boolean;
 }
 
-const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
-  const { username, tenantNames, role, partner:userPartner, settabledata} = useAuth();
+const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) => {
+    const { username, tenantNames, role, partner: userPartner, settabledata } = useAuth();
     const [carriers, setCarriers] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [CarrierNotification, setCarrierNotification] = useState<any[]>([]);
@@ -38,7 +38,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
     const { partnerData } = usePartnerStore.getState();
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
     //Show Modal
-  const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
 
     const {
         tenant,
@@ -73,26 +73,26 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
 
     useEffect(() => {
         if (rowData) {
-        const serviceProviderFieldValue = rowData?.["Service Provider"] || ""
-        let selected_provider: string[] = [];
-        try {
-            selected_provider = JSON.parse(serviceProviderFieldValue);
-        } catch (error) {
-          if (serviceProviderFieldValue && serviceProviderFieldValue !== 'None') {
-            selected_provider = [serviceProviderFieldValue];
-          }
-        }
-        setServiceProvider(selected_provider)
-        const customersFieldValue = rowData?.["Customer Group"] || ""
-        let selected_customer: string[] = [];
-        try {
-            selected_customer = JSON.parse(customersFieldValue);
-        } catch (error) {
-          if (customersFieldValue && customersFieldValue !== 'None') {
-            selected_customer = [customersFieldValue];
-          }
-        }
-        setCustomer(selected_customer)
+            const serviceProviderFieldValue = rowData?.["Service Provider"] || ""
+            let selected_provider: string[] = [];
+            try {
+                selected_provider = JSON.parse(serviceProviderFieldValue);
+            } catch (error) {
+                if (serviceProviderFieldValue && serviceProviderFieldValue !== 'None') {
+                    selected_provider = [serviceProviderFieldValue];
+                }
+            }
+            setServiceProvider(selected_provider)
+            const customersFieldValue = rowData?.["Customer Group"] || ""
+            let selected_customer: string[] = [];
+            try {
+                selected_customer = JSON.parse(customersFieldValue);
+            } catch (error) {
+                if (customersFieldValue && customersFieldValue !== 'None') {
+                    selected_customer = [customersFieldValue];
+                }
+            }
+            setCustomer(selected_customer)
 
         }
     }, [rowData]);
@@ -101,7 +101,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
         fontSize: '14px',  // Adjust font size
         fontWeight: 'bold', // Make the text bold
         padding: '16px',
-      };
+    };
 
     const handleClearFields = () => {
         setCarrierNotification([]);
@@ -111,34 +111,34 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
         setErrorMessages([]);
         setTenant('');
         setSubTenant([]);
-      };
-    const handleSubmit = async() => {
+    };
+    const handleSubmit = async () => {
         const errors: string[] = [];
         if (CarrierNotification.length === 0) errors.push('Carrier is required.');
         if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
-    
+
         setErrorMessages(errors);
-    
+
         if (errors.length === 0) {
-            try{
+            try {
                 const url =
-                  "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-            
+                    "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+
                 let changedData: any = {}; // Initialize changedData as an object
-            
+
                 // Ensure getFieldValue returns a valid field name or provide a default value
                 const serviceProviderFieldName = getFieldValue("Service Provider") || "Service Provider";
                 const customerGroupFieldName = getFieldValue("Customer Group") || "Customer Group";
                 const customersFieldName = getFieldValue("Customers") || "Customers";
-            
+
                 changedData[serviceProviderFieldName] = ServiceProvider;
                 changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
                 changedData[customersFieldName] = customer;
                 changedData["username"] = user_name;
                 changedData["is_active"] = true;
                 changedData["is_deleted"] = false;
-        
-            
+
+
                 const data = {
                     tenant_name: userPartner || "default_value",
                     username: username,
@@ -148,32 +148,32 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                     action: "update",
                     request_received_at: getCurrentDateTime(),
                     changed_data: {
-                        "customer_info":changedData
+                        "customer_info": changedData
                     },
-                  
-                    Partner:userPartner,
+
+                    Partner: userPartner,
                 };
                 const response = await axios.post(url, { data });
                 const parsedData = JSON.parse(response.data.body);
-                  if (response && response.data.statusCode===200) {
+                if (response && response.data.statusCode === 200) {
                     // Show success message
                     notification.success({
-                      message: 'Success',
-                      description: 'Successfully saved the form',
-                      style: messageStyle,
-                      placement: 'top', // Apply custom styles here
+                        message: 'Success',
+                        description: 'Successfully saved the form',
+                        style: messageStyle,
+                        placement: 'top', // Apply custom styles here
                     });
                     handleClearFields(); // Clear all fields
-                  }
-                  else{
+                }
+                else {
                     Modal.error({
-                      title: 'Submit Error',
-                      content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
-                      centered: true,
+                        title: 'Submit Error',
+                        content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+                        centered: true,
                     });
-                  }
+                }
             }
-            catch(error){
+            catch (error) {
                 console.log(
                     error
                 )
@@ -181,19 +181,19 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
         } else {
             scrollToTop();
         }
-     
-    
+
+
     };
-      //Handling modal save
-  const handleConfirmSave = () => {
-    handleSubmit();
-    setShowModal(false);
-  };
-//Handling modal cancel
-  const handleCancelSave = () => {
-    setShowModal(false);
-  };
-    
+    //Handling modal save
+    const handleConfirmSave = () => {
+        handleSubmit();
+        setShowModal(false);
+    };
+    //Handling modal cancel
+    const handleCancelSave = () => {
+        setShowModal(false);
+    };
+
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
@@ -201,7 +201,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
         });
     };
     const handleCarrier = (selectedOptions: MultiValue<OptionType>) => {
-    const selectedCarriers = selectedOptions.map(option => option.value);
+        const selectedCarriers = selectedOptions.map(option => option.value);
 
         setCarrierNotification(selectedCarriers);
         if (selectedCarriers.length > 0) {
@@ -216,7 +216,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
         }
     };
     const customerGroupChange = (selectedOption: SingleValue<OptionType>) => {
-        
+
         if (selectedOption) {
             setCustomerGroup(selectedOption);
         }
@@ -263,9 +263,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                             isMulti
                             value={CarrierNotification}
                             options={Carrieroptions}
-                            styles={tenant ? editableDrp : nonEditableDrp}
+                            styles={!tenant || !editable ? editableDrp : nonEditableDrp}
                             onChange={handleCarrier}
-                            isDisabled={!tenant}
+                            isDisabled={!tenant || !editable}
 
                         />
                         {errorMessages.includes('Carrier is required.') && (
@@ -277,9 +277,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                         <Select
                             isMulti
                             options={ServiceProviderOptions}
-                            styles={editableDrp}
+                            styles={editable ? editableDrp : nonEditableDrp}
                             value={ServiceProviderOptions.filter(option => ServiceProvider.includes(option.value))}
                             onChange={serviceProviderChange}
+                            isDisabled={!editable}
+
 
                         />
                         {errorMessages.includes('Service Provider is required.') && (
@@ -293,9 +295,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                                 ? { value: getFieldValue('Customer Group'), label: getFieldValue('Customer Group') }
                                 : customerGroup
                             }
-                            styles={editableDrp}
+                            styles={editable ? editableDrp : nonEditableDrp}
                             options={CustomerGroupOptions}
                             onChange={customerGroupChange}
+                            isDisabled={!editable}
+
                         />
                     </div>
                     <div>
@@ -303,9 +307,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                         <Select
                             isMulti
                             options={customerOptions}
-                            styles={editableDrp}
+                            styles={editable ? editableDrp : nonEditableDrp}
                             value={customerOptions.filter(option => customer.includes(option.value))}
                             onChange={customerChange}
+                            isDisabled={!editable}
+
                         />
                     </div>
                 </div>
@@ -315,23 +321,23 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button> */}
-                <button className="save-btn" onClick={()=>setShowModal(true)}
+                <button className="save-btn" onClick={() => setShowModal(true)}
                 >
                     <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Submit</span>
                 </button>
             </div>
             {showModal && (
-        <Modal
-          title="Confirmation"
-          open={showModal}
-          onOk={handleConfirmSave}
-          onCancel={handleCancelSave}
-          centered
-        >
-          <p>Are you sure you want to submit the data?</p>
-        </Modal>
-      )}
+                <Modal
+                    title="Confirmation"
+                    open={showModal}
+                    onOk={handleConfirmSave}
+                    onCancel={handleCancelSave}
+                    centered
+                >
+                    <p>Are you sure you want to submit the data?</p>
+                </Modal>
+            )}
         </div>
     );
 };
