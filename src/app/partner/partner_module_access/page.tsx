@@ -3,7 +3,7 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useEffect, useState } from 'react';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 import { DropdownStyles } from '@/app/components/css/dropdown';
-import { partnerModuleData } from './partner_module_access_constants';
+import { PartnerModuleData } from './partner_module_access_constants';
 import { usePartnerStore } from '../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
@@ -58,11 +58,20 @@ interface ExcelData {
 }
 
 const UserRole: React.FC = () => {
-    const { partnerData } = usePartnerStore.getState();
-    const { username, partner } = useAuth();
- 
 
-    const [role, setRole] = useState<SingleValue<OptionType>>(null);
+       const [partnerModuleData, setPartnerModuleData] = useState<any>(PartnerModuleData);
+
+    useEffect(() => {
+        
+          setPartnerModuleData(PartnerModuleData || {});
+
+    
+      }, [PartnerModuleData]);
+    const { partnerData } = usePartnerStore.getState();
+    const { username, partner, role } = useAuth();
+
+
+    const [Selectedrole, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
@@ -70,11 +79,7 @@ const UserRole: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [map, setMap] = useState<ExcelData>({});
     console.log("partner module data:", partnerModuleData)
-
-    const subModules = partnerModuleData.data["Partner module access"]["module"];
-    const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
-
-    const module_features = partnerModuleData.data["Partner module access"]["module_features"]
+  
 
     const editableDrp = DropdownStyles;
 
@@ -112,26 +117,26 @@ const UserRole: React.FC = () => {
         if (selectedOption) {
             const role = selectedOption.value;
             setRole(selectedOption);
-    
+
             let selectedRoleData;
-    
+
             if (!mockRoleData[role]) {
                 selectedRoleData = generateDefaultRoleData();
             } else {
                 selectedRoleData = combineRoleData(generateDefaultRoleData(), mockRoleData[role]);
             }
-    
+
             setMap(selectedRoleData);
-    
+
             // Initialize selected modules and features based on the selected role
             const initialSelectedModules: { [key: string]: string[] } = {};
             const initialSelectedFeatures: { [key: string]: string[] } = {};
-    
+
             Object.keys(selectedRoleData).forEach((category) => {
                 initialSelectedModules[category] = selectedRoleData[category].Module
                     .filter((module) => module.includes('-active'))
                     .map((module) => module.replace('-active', '')); // Remove '-active'
-    
+
                 Object.keys(selectedRoleData[category]?.Feature || {}).forEach((module) => {
                     initialSelectedFeatures[category] = initialSelectedFeatures[category] || [];
                     selectedRoleData[category].Feature[module].forEach((feature) => {
@@ -141,18 +146,18 @@ const UserRole: React.FC = () => {
                     });
                 });
             });
-    
+
             setSelectedModules(initialSelectedModules);
             setSelectedFeatures(initialSelectedFeatures);
             console.log("Initial Selected Modules:", initialSelectedModules);
-console.log("Initial Selected Features:", initialSelectedFeatures);
-console.log("Selected Role Data:", selectedRoleData);
+            console.log("Initial Selected Features:", initialSelectedFeatures);
+            console.log("Selected Role Data:", selectedRoleData);
 
         }
-        
+
     };
-    
-    
+
+
 
 
     const generateDefaultRoleData = (): CategoryData => {
@@ -184,100 +189,98 @@ console.log("Selected Role Data:", selectedRoleData);
         return defaultRoleData;
     };
 
-  const combineRoleData = (
-    defaultData: CategoryData,
-    selectedRoleData: CategoryData
-): CategoryData => {
-    for (const [moduleKey, moduleValue] of Object.entries(defaultData)) {
-        console.log(`Processing module: ${moduleKey}`);
+    const combineRoleData = (
+        defaultData: CategoryData,
+        selectedRoleData: CategoryData
+    ): CategoryData => {
+        for (const [moduleKey, moduleValue] of Object.entries(defaultData)) {
+            console.log(`Processing module: ${moduleKey}`);
 
-        // Check if the module exists in the selected role data
-        if (selectedRoleData[moduleKey]) {
-            console.log(`Module ${moduleKey} found in selectedRoleData`);
+            // Check if the module exists in the selected role data
+            if (selectedRoleData[moduleKey]) {
+                console.log(`Module ${moduleKey} found in selectedRoleData`);
 
-            // Mark the module as active if it exists in selectedRoleData
-            moduleValue.Module = moduleValue.Module.map((module: string) => {
-                const isActive = selectedRoleData[moduleKey].Module.includes(module.replace('-active', ''));
-                const newModuleName = isActive ? `${module.replace('-active', '')}-active` : module.replace('-active', '');
-                console.log(`Module: ${module} => New Module: ${newModuleName}`);
-                return newModuleName;
-            });
+                // Mark the module as active if it exists in selectedRoleData
+                moduleValue.Module = moduleValue.Module.map((module: string) => {
+                    const isActive = selectedRoleData[moduleKey].Module.includes(module.replace('-active', ''));
+                    const newModuleName = isActive ? `${module.replace('-active', '')}-active` : module.replace('-active', '');
+                    console.log(`Module: ${module} => New Module: ${newModuleName}`);
+                    return newModuleName;
+                });
 
-            // Get the selected features for the current module
-            const selectedFeatures = selectedRoleData[moduleKey].Feature || {};
-            console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
+                // Get the selected features for the current module
+                const selectedFeatures = selectedRoleData[moduleKey].Feature || {};
+                console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
 
-            // Process features for the current module
-            for (const featureKey of Object.keys(moduleValue.Feature)) {
-                console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
-
-                // Check if features exist in selected role data
+                // Process features for the current module
                 for (const featureKey of Object.keys(moduleValue.Feature)) {
-                    if (selectedFeatures[featureKey]) {
-                        moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].map((feature: string) => {
-                            const isActiveFeature = selectedFeatures[featureKey].includes(feature.replace('-active', ''));
-                            return isActiveFeature ? `${feature.replace('-active', '')}-active` : feature;
-                        });
+                    console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
+
+                    // Check if features exist in selected role data
+                    for (const featureKey of Object.keys(moduleValue.Feature)) {
+                        if (selectedFeatures[featureKey]) {
+                            moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].map((feature: string) => {
+                                const isActiveFeature = selectedFeatures[featureKey].includes(feature.replace('-active', ''));
+                                return isActiveFeature ? `${feature.replace('-active', '')}-active` : feature;
+                            });
+                        }
                     }
                 }
-            }
-        } else {
-            console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
+            } else {
+                console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
 
-            // If the module doesn't exist in selectedRoleData, retain its original state
-            moduleValue.Module = moduleValue.Module.map(module => module.replace('-active', ''));
+                // If the module doesn't exist in selectedRoleData, retain its original state
+                moduleValue.Module = moduleValue.Module.map(module => module.replace('-active', ''));
 
-            // Retain original features state as well
-            for (const featureKey of Object.keys(moduleValue.Feature)) {
-                moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].filter(
-                    feature => !feature.endsWith('-active')
-                );
+                // Retain original features state as well
+                for (const featureKey of Object.keys(moduleValue.Feature)) {
+                    moduleValue.Feature[featureKey] = moduleValue.Feature[featureKey].filter(
+                        feature => !feature.endsWith('-active')
+                    );
+                }
             }
         }
-    }
 
-    console.log("Combined data:", defaultData);
-    return defaultData; // Returns modified defaultData
-};
-
-    
+        console.log("Combined data:", defaultData);
+        return defaultData; // Returns modified defaultData
+    };
 
 
 
 
-const toggleModule = (category: string, module: string) => {
-    setSelectedModules((prev) => {
-        const modules = prev[category] || [];
-        const isSelected = modules.includes(module);
-        const features = map[category]?.Feature[module] || [];
 
-        // If the module is being selected, also select its features
-        if (!isSelected) {
-            setSelectedFeatures((prevFeatures) => ({
-                ...prevFeatures,
-                [category]: [
-                    ...(prevFeatures[category] || []),
-                    ...features.map(feature => feature.replace('-active', '')) // Remove '-active' for display
-                ],
-            }));
-        } else {
-            // If the module is being deselected, also deselect its features
-            setSelectedFeatures((prevFeatures) => ({
-                ...prevFeatures,
-                [category]: (prevFeatures[category] || []).filter(
-                    (feature) => !features.includes(feature.replace('-active', '')) // Remove related features
-                ),
-            }));
-        }
+    const toggleModule = (category: string, module: string) => {
+        setSelectedModules((prev) => {
+            const modules = prev[category] || [];
+            const isSelected = modules.includes(module);
+            const features = map[category]?.Feature[module] || [];
 
-        return {
-            ...prev,
-            [category]: isSelected
-                ? modules.filter((m) => m !== module) // Deselect module
-                : [...modules, module] // Select module
-        };
-    });
-};
+            // If the module is being selected, also select its features
+            if (!isSelected) {
+                setSelectedFeatures((prevFeatures) => ({
+                    ...prevFeatures,
+                    [category]: [
+                        ...(prevFeatures[category] || []),
+                        ...features.map(feature => feature.replace('-active', '')) // Remove '-active' for display
+                    ],
+                }));
+            } else {
+                // If the module is being deselected, deselect its features
+                features.forEach((feature) => {
+                    toggleFeature(category, feature.replace('-active', '')); // Call toggleFeature to deselect related features
+                });
+            }
+
+            // Update selected modules
+            return {
+                ...prev,
+                [category]: isSelected
+                    ? modules.filter((m) => m !== module) // Deselect module
+                    : [...modules, module] // Select module
+            };
+        });
+    };
+
 
     const toggleFeature = (category: string, feature: string) => {
         setSelectedFeatures((prev) => {
@@ -286,20 +289,19 @@ const toggleModule = (category: string, module: string) => {
             return {
                 ...prev,
                 [category]: isSelected
-                    ? features.filter((f) => f !== feature)
-                    : [...features, feature]
+                    ? features.filter((f) => f !== feature) // Deselect feature
+                    : [...features, feature] // Select feature
             };
         });
     };
 
 
-    
-  const messageStyle = {
-    fontSize: '14px',  // Adjust font size
-    fontWeight: 'bold', // Make the text bold
-    padding: '16px',
-    // Add padding
-  };
+    const messageStyle = {
+        fontSize: '14px',  // Adjust font size
+        fontWeight: 'bold', // Make the text bold
+        padding: '16px',
+        // Add padding
+    };
 
 
 
@@ -314,53 +316,53 @@ const toggleModule = (category: string, module: string) => {
     // console.log(Roleoptions)
     const handleSubmit = async () => {
         const errors: string[] = [];
-    
-        if (!role) {
+
+        if (!Selectedrole) {
             errors.push('Role is required.');
         }
-    
+
         setErrorMessages(errors);
-    
+
         if (errors.length === 0) {
             const formattedData: { [key: string]: any } = {
-                [role!.value]: {}
+                [Selectedrole!.value]: {}
             };
-    
+
             console.log("Selected Modules:", selectedModules);
             console.log("Selected Features:", selectedFeatures);
-    
+
             // Loop through selectedModules and selectedFeatures
             Object.keys(selectedModules).forEach(category => {
                 const selectedModulesForCategory = selectedModules[category];
                 const selectedFeaturesForCategory = selectedFeatures[category] || [];
-    
-                formattedData[role!.value][category] = {
+
+                formattedData[Selectedrole!.value][category] = {
                     Module: selectedModulesForCategory,
                     Feature: {}
                 };
-    
+
                 selectedModulesForCategory.forEach(module => {
                     // Retrieve related features from the map
                     const relatedFeatures = map[category]?.Feature[module.replace('-active', '')];
                     console.log(`Related features for ${module} in ${category}:`, relatedFeatures);
-    
+
                     if (relatedFeatures) {
                         // Normalize the selected features by removing the '-active' suffix
                         const normalizedSelectedFeatures = selectedFeaturesForCategory.map(feature =>
                             feature.replace('-active', '')
                         );
-    
+
                         console.log("Normalized Selected Features:", normalizedSelectedFeatures);
-    
+
                         // Filter normalized features against related features
                         const filteredFeatures = normalizedSelectedFeatures.filter(feature => {
                             // Check if the related feature contains the normalized feature
                             return relatedFeatures.includes(feature) || relatedFeatures.includes(feature + '-active');
                         });
-    
+
                         // Store filtered features in the formatted data
-                        formattedData[role!.value][category].Feature[module] = filteredFeatures;
-    
+                        formattedData[Selectedrole!.value][category].Feature[module] = filteredFeatures;
+
                         // Log the filtered features for debugging
                         console.log(`Filtered features for ${module}:`, filteredFeatures);
                     } else {
@@ -368,36 +370,36 @@ const toggleModule = (category: string, module: string) => {
                     }
                 });
             });
-    
+
             console.log("Formatted Data:", formattedData);
-            
+
             try {
                 const url =
-                  "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
-                  const roleValue = role?.value; // Get the value from role if it exists
+                    "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+                const roleValue = Selectedrole?.value; // Get the value from role if it exists
 
-                  const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
-                  const data = {
+                const action = roleValue && mockRoleData[roleValue] ? "update" : "create"; // Check if roleValue is defined and valid
+                const data = {
                     tenant_name: partner || "default_value",
                     username: username,
                     path: "/update_partner_info",
                     parent_module: "Partner",
                     module_name: "Partner Module Access",
                     action: action,
-                    
+
                     changed_data: formattedData,
-                  };
-                  
+                };
+
                 const response = await axios.post(url, { data });
                 const resp = JSON.parse(response.data.body);
                 console.log(resp)
                 if (response.data.statusCode === 200 && resp.flag === true) {
 
                     notification.success({
-                      message: 'Success',
-                      description: 'Successfully Saved the record!',
-                      style: messageStyle,
-                      placement: 'top', // Apply custom styles here
+                        message: 'Success',
+                        description: 'Successfully Saved the record!',
+                        style: messageStyle,
+                        placement: 'top', // Apply custom styles here
                     });
 
                     // setLoading(true)
@@ -407,66 +409,72 @@ const toggleModule = (category: string, module: string) => {
                         username: username,
                         path: "/get_partner_info",
                         role_name: role,
-                        modules_list: ["Partner Module Access"],
-                        "pages":{"Customer groups":{"start":0,"end":500},
-                        "Partner users":{"start":0,"end":500}}
-                       
+                        modules_list: ["Partner module access"],
+                        "pages": {
+                            "Customer groups": { "start": 0, "end": 500 },
+                            "Partner users": { "start": 0, "end": 500 }
+                        }
+
                     };
-                    // try {
-                    //     const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-                    //     if (response && response.status === 200) {
-                    //         const parseddata = JSON.parse(response.data.body);
-                    //         if (parseddata.flag) {
+                    try {
+                        const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+                        if (response && response.status === 200) {
+                            const parseddata = JSON.parse(response.data.body);
+                            if (parseddata.flag) {
 
-                    //             console.log(parseddata)
+                                console.log(parseddata)
+                                // setPartnerModuleData
 
-                    //             console.log("")
-                              
-                    //         } else {
-                                
-                    //             Modal.error({
-                    //                 title: 'Error',
-                    //                 content: parseddata.message,
-                    //                 centered: true,
-                    //             });
-                    //             setLoading(false)
-                    //         }
-                    //     } else {
-                    //         Modal.error({
-                    //             title: 'Error',
-                    //             content: 'An error occurred during fetching data.',
-                    //             centered: true,
-                    //         });
-                    //     }
-                    // } catch (error) {
-                    //     console.error('Error fetching');
-                    // }
-                    
+                                // console.log(partnerModuleData.data["Partner module access"])
+                                setPartnerModuleData(parseddata)
+                                // partnerModuleData=partnerModuleData.data["Partner module access"]
+
+
+                            } else {
+
+                                Modal.error({
+                                    title: 'Error',
+                                    content: parseddata.message,
+                                    centered: true,
+                                });
+                                setLoading(false)
+                            }
+                        } else {
+                            Modal.error({
+                                title: 'Error',
+                                content: 'An error occurred during fetching data.',
+                                centered: true,
+                            });
+                        }
+                    } catch (error) {
+                        console.error('Error fetching');
+                    }
+
                 }
                 console.log(response);
-              } catch (err) {
+            } catch (err) {
                 console.error("Error fetching data:", err);
-              }
             }
-         
-         else {
+        }
+
+        else {
             console.log("Errors:", errors);
         }
     };
-    
-    
-    
-    
+
+
+
+
     if (loading) {
         return (
-          <div className="flex justify-center items-center h-screen">
-            <Spin size="large" />
-          </div>
+            <div className="flex justify-center items-center h-screen">
+                <Spin size="large" />
+            </div>
         );
-      }
-    
-    
-    
+    }
+
+
+
 
 
 
@@ -480,7 +488,7 @@ const toggleModule = (category: string, module: string) => {
                             <span className="font-semibold text-lg">Role</span><span className="text-red-500">*</span>
                         </label>
                         <Select
-                            value={role}
+                            value={Selectedrole}
                             onChange={handleSetRole}
                             options={Roleoptions}
                             styles={editableDrp}
@@ -492,59 +500,65 @@ const toggleModule = (category: string, module: string) => {
                 </div>
                 <div className="grid grid-cols-1 gap-4 mt-4">
                     {Object.keys(map).map((category) => (
-                        <div key={category} className="col-span-1">
-                            <h4 className="text-md font-medium text-blue-600">{category}</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-                                <div>
-                                    <label className="field-label">Module</label>
-                                    <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
-                                        {map[category].Module.map((module) => {
-                                            const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
-                                            const isSelected = selectedModules[category]?.includes(cleanedModule);
-                                            const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
-    
-                                            return (
-                                                <button
-                                                    key={module}
-                                                    className={`px-2 py-1 rounded-lg border`}
-                                                    style={{ backgroundColor: bgColor }}
-                                                    onClick={() => toggleModule(category, cleanedModule)}
-                                                >
-                                                    {cleanedModule}
-                                                </button>
-                                            );
-                                        })}
-                                    </div>
-                                </div>
-    
-                                <div>
-                                    <label className="field-label">Features</label>
-                                    <div className="flex flex-wrap gap-2 border border-gray-300 p-2 rounded-lg">
-                                        {Object.keys(map[category]?.Feature || {}).flatMap((module) =>
-                                            map[category].Feature[module]?.map((feature) => {
-                                                const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
-                                                const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
-                                                const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
-    
-                                                return (
+                        <div key={category} className="col-span-1 border border-gray-300 p-4 rounded-lg">
+                            <h4 className="text-xl font-medium text-blue-600 ml-2 mb-2">{category}</h4>
+                            <div className="mb-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {map[category].Module.map((module) => {
+                                        const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
+                                        const isSelected = selectedModules[category]?.includes(cleanedModule);
+                                        const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+
+                                    
+                                        const relatedFeatures = map[category]?.Feature[cleanedModule] || [];
+
+                                        return (
+                                            <div key={module} className="border border-gray-300 p-4 rounded-lg mb-4">
+                                                <div className="flex items-center">
+                                                    <span className="text-blue-600 text-sm font-medium mr-2">Module:</span>
                                                     <button
-                                                        key={feature}
                                                         className={`px-2 py-1 rounded-lg border`}
                                                         style={{ backgroundColor: bgColor }}
-                                                        onClick={() => toggleFeature(category, cleanedFeature)}
+                                                        onClick={() => toggleModule(category, cleanedModule)}
                                                     >
-                                                        {cleanedFeature}
+                                                        {cleanedModule}
                                                     </button>
-                                                );
-                                            }) || []
-                                        )}
-                                    </div>
+                                                </div>
+                                                <div className="mt-2">
+                                                    <span className="text-blue-600 text-sm font-medium">Features:</span>
+                                                    <div className="flex flex-wrap gap-2 mt-2">
+                                                        {relatedFeatures.map((feature) => {
+                                                            const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
+                                                            const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
+                                                            const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+
+                                                            return (
+                                                                <button
+                                                                    key={feature}
+                                                                    className={`px-2 py-1 rounded-lg border`}
+                                                                    style={{ backgroundColor: bgColor }}
+                                                                    onClick={() => toggleFeature(category, cleanedFeature)}
+                                                                >
+                                                                    {cleanedFeature}
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-                <div className="flex justify-end space-x-4">
+
+
+
+
+
+                <div className="flex justify-end space-x-4 mt-4">
                     <button className="cancel-btn">
                         <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                         <span>Cancel</span>
@@ -560,7 +574,7 @@ const toggleModule = (category: string, module: string) => {
             </div>
         </div>
     );
-    
+
 };
 
 export default UserRole;

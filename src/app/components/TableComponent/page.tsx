@@ -476,6 +476,11 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
 
         let data;
         if (popupHeading === "Customer Group") {
+          if (row) {
+            row["modified_by"] = username;
+            row["modified_date"] = getCurrentDateTime()
+          }
+
           data = {
             tenant_name: partner || "default_value",
             username: username,
@@ -489,6 +494,10 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
           };
         }
         if (popupHeading === "User") {
+          if (row) {
+            row["modified_by"] = username;
+            row["modified_date"] = getCurrentDateTime()
+          }
           data = {
             tenant_name: partner || "default_value",
             username: username,
@@ -828,6 +837,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         }
         const response = await axios.post(url, { data });
         const resp = JSON.parse(response.data.body);
+     
         if (response.data.statusCode === 200 && resp.flag === true) {
 
           notification.success({
@@ -836,6 +846,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             style: messageStyle,
             placement: 'top', // Apply custom styles here
           });
+          if (response.data.statusCode === 400 && resp.flag === false){
+            Modal.error({
+              title: 'Saving Error',
+              content: resp.message,
+              centered: true,
+            });
+          }
           if (popupHeading === "Carrier") {
 
             try {
