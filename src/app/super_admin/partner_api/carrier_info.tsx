@@ -154,7 +154,7 @@ const sortPopup = (fields: any[]): any[] => {
             sub_parent_module:"Partner API",
             sub_tab:"Carrier APIs",
             Environment: environment.value,
-            Selected_Partner: selectedPartner.value,
+            Selected_Partner: selectedPartner,
             request_received_at: getCurrentDateTime(),
             Partner: partner,
           };
