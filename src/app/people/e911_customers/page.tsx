@@ -279,7 +279,7 @@ const E911Customers: React.FC = () => {
           <TableSearch
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
-            tableName={"e911_customer"}
+            tableName={"e911customers"}
             headerMap={headerMap}
           />
           )}
@@ -312,7 +312,7 @@ const E911Customers: React.FC = () => {
           onReset={handleReset}
           headers={headers}
           headerMap={headerMap}
-          tableName={"e911_customer"} />)}
+          tableName={"e911customers"} />)}
       </div>
       <TableComponent
         headers={headers}
