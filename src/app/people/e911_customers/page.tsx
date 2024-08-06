@@ -92,7 +92,7 @@ const E911Customers: React.FC = () => {
         } else {
           const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
           const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
-          const customertableData = parsedData.data.WestE911Customer;
+          const customertableData = parsedData.data.weste911customer;
           setTableData(customertableData);
           settabledata(customertableData)
           const headers = Object.keys(headerMap);

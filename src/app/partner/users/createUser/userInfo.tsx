@@ -256,6 +256,9 @@ let sub_partners;
         changedData[getFieldKey('City')] = city;
         changedData[getFieldKey('Time Zone')] = timeZone;
         changedData[getFieldKey('Zip')] = zip;
+        changedData["is_active"] = true;
+        changedData["is_deleted"] = false;
+
       
           const data = {
               tenant_name: userPartner || "default_value",
