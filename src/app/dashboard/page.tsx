@@ -20,7 +20,7 @@ const HomePage: React.FC = () => {
 
   
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
 
     <div className="border border-gray-300 p-4 mb-4 rounded-md flex space-x-2">
       <button
