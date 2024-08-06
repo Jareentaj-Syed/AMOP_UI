@@ -19,10 +19,11 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const title = useLogoStore((state) => state.title);
   const [loading, setLoading] = useState(false);
-
+  const setTitle = useLogoStore((state) => state.setTitle);
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
+    setTitle("Super Admin")
     if(title!="Super Admin"){
         setLoading(true)
     }

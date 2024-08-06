@@ -14,18 +14,26 @@ const APIInfo = dynamic(() => import('./api_info'));
 
 
 const PartnerInfoForm: React.FC = () => {
+  const title = useLogoStore((state) => state.title);
+  const setTitle = useLogoStore((state) => state.setTitle);
 
+ 
+ 
+  useEffect(() => {
+    setTitle("Super Admin")
+    if(title!="Super Admin"){
+        setLoading(true)
+    }
+},[title])
     const [activeTab, setActiveTab] = useState('carrierInfo');
     const isExpanded = useSidebarStore((state:any) => state.isExpanded);
-    const title = useLogoStore((state) => state.title);
+
     const [loading, setLoading] = useState(false); // State to manage loading
 
 
-    useEffect(() => {
-      if(title!="Super Admin"){
-          setLoading(true)
-      }
-  },[title])
+
+
+   
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">

@@ -43,15 +43,18 @@ const CarrierInfo: React.FC = () => {
   const [generalFields, setgeneralFields] = useState<any[]>([])
   const [filteredData, setFilteredData] = useState([]);
   const title = useLogoStore((state) => state.title);
-  const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
-  };
+
   
   useEffect(() => {
     if(title!="Super Admin"){
         setLoading(true)
     }
 },[title])
+ 
+const sortPopup = (fields: any[]): any[] => {
+  return fields.sort((a:any, b:any) => a?.id - b?.id);
+};
+
 
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
