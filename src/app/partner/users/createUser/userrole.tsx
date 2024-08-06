@@ -8,7 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
-import { Modal } from 'antd';
+import { Modal, notification } from 'antd';
 // import { OptionType } from 'dayjs';
 
 interface ExcelData {
@@ -420,8 +420,23 @@ const toggleModule = (category: string, module: string) => {
                   Partner:partner
                 };
                 const response = await axios.post(url, { data });
-            
-                console.log(response);
+                const parsedData = JSON.parse(response.data.body);
+          if (response && response.data.statusCode===200) {
+            // Show success message
+            notification.success({
+              message: 'Success',
+              description: 'Successfully saved the form',
+              style: messageStyle,
+              placement: 'top', // Apply custom styles here
+            });
+          }
+          else{
+            Modal.error({
+              title: 'Submit Error',
+              content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+              centered: true,
+            });
+          }
               } catch (err) {
                 console.error("Error fetching data:", err);
               }

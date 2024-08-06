@@ -8,7 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
-import { Modal } from 'antd';
+import { Modal, notification } from 'antd';
 type OptionType = {
     value: string;
     label: string;
@@ -75,6 +75,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
     //         setSubTenant(rowData['subtenant_name'] || '');
     //     }
     // }, [rowData]);
+    const messageStyle = {
+        fontSize: '14px',  // Adjust font size
+        fontWeight: 'bold', // Make the text bold
+        padding: '16px',
+      };
     const handleSubmit = async() => {
         try{
         const url =
@@ -108,6 +113,23 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             Partner:partner,
         };
         const response = await axios.post(url, { data });
+        const parsedData = JSON.parse(response.data.body);
+          if (response && response.data.statusCode===200) {
+            // Show success message
+            notification.success({
+              message: 'Success',
+              description: 'Successfully saved the form',
+              style: messageStyle,
+              placement: 'top', // Apply custom styles here
+            });
+          }
+          else{
+            Modal.error({
+              title: 'Submit Error',
+              content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+              centered: true,
+            });
+          }
     }
     catch(error){
         console.log(
