@@ -429,7 +429,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
       case 'tabsInfo':
         setTabsEdit(true)
         setEditRowIndex(rowIndex);
-        setIsEditable(true);
+        setIsEditable(false);
         setEditModalOpen(true);
         break;
       case 'delete':

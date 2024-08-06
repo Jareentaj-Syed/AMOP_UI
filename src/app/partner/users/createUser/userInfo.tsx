@@ -25,10 +25,11 @@ const Notificationoptions = [
 
 interface UserInfoProps {
   rowData?: any;
-  isPopup?: any
+  isPopup?: any;
+  editable?: boolean;
 }
 
-const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
+const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
   const {
     username: user,
     tenantNames: tenants,
@@ -36,7 +37,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
     partner: userPartner,
     settabledata: setData
   } = useAuth();
-
+  console.log("editable", editable)
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -70,6 +71,15 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
   //Show Modal
   const [showModal, setShowModal] = useState(false);
 
+  const {
+    tenant,
+    role_name,
+    sub_tenant,
+    setTenant,
+    setRoleName,
+    setSubTenant,
+    setUser_Name
+  } = useUserStore();
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
   const getFieldValue = (label: any) => {
@@ -98,7 +108,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
       setRoleoptions(role_options)
       setPartneroptions(partner_options)
       setGeneralFields(general_fields)
-
+      setTenant('')
 
     };
 
@@ -106,19 +116,21 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
   }, [usersData]);
 
   useEffect(() => {
-    setFormData(rowData)
-  }, [rowData, usersData]);
+    if (rowData) {
+      setFormData(rowData)
+    }
+  }, [rowData]);
 
   useEffect(() => {
     const initializeData = () => {
       if (rowData) {
         setFormData(rowData)
-        const tenant_name =tenant?tenant: getFieldValue('Partner')
+        console.log("tenant",`bbb${tenant}bbb`)
 
+        const tenant_name = tenant !== "" ? tenant : getFieldValue('Partner');
         setPartner(tenant_name);
         setTenant(tenant_name)
-        console.log("tenant", tenant)
-
+        console.log("tenant",`aaa${tenant}aaa`)
         const role_name = getFieldValue('Role') || ""
         setRole(role_name)
         setRoleName(role_name)
@@ -134,8 +146,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
         }
         const sub_partners = subPartners_Data[tenant_name] || []
         const subpartner_options = sub_partners.map((subPartner: any) => ({ value: subPartner, label: subPartner }))
-        console.log("sub_partners",subPartners_Data)
-        console.log("subpartner_options",subpartner_options)
         setSelectedSubPartner(parsedSubPartners)
         setSubPartners(sub_partners)
         setSubTenant(sub_partners)
@@ -171,17 +181,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
 
     initializeData();
   }, [usersData, rowData]);
-
-
-  const {
-    tenant,
-    role_name,
-    sub_tenant,
-    setTenant,
-    setRoleName,
-    setSubTenant,
-    setUser_Name
-  } = useUserStore();
 
   let sub_partners;
   const handlePartnerChange = (selectedOption: SingleValue<OptionType>) => {
@@ -396,13 +395,14 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
         <div>
           <label className="field-label">Partner<span className="text-red-500">*</span></label>
           <Select
+            isDisabled={!editable}
             value={{ value: tenant, label: tenant }}
             onChange={handlePartnerChange}
             options={Partneroptions.map((option: string) => ({
               label: option,
               value: option,
             }))}
-            styles={editableDrp}
+            styles={editable ? editableDrp : nonEditableDrp}
           />
           {errorMessages.includes('Partner is required.') && (
             <span className="text-red-600 ml-1">Partner is required.</span>
@@ -413,16 +413,22 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
           <label className="field-label">Sub Partner</label>
           <Select
             isMulti
+            isDisabled={!editable}
             value={subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
             onChange={handleSetSubPartner}
             options={subPartnersoptions?.length > 0 ? subPartnersoptions : subPartnersnoOptions}
-            styles={editableDrp}
+            styles={editable ? editableDrp : nonEditableDrp}
           />
 
         </div>
         <div>
           <label className="field-label">First Name</label>
-          <input type="text" className="input" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          <input
+            type="text"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            disabled={!editable} />
         </div>
         <div>
           <label className="field-label">Last Name</label>
@@ -464,13 +470,14 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
           <Select
+            isDisabled={!editable}
             value={{ value: role_name, label: role_name }}
             onChange={handlesetRole}
             options={Roleoptions.map((option: string) => ({
               label: option,
               value: option,
             }))}
-            styles={editableDrp}
+            styles={editable ? editableDrp : nonEditableDrp}
           />
           {errorMessages.includes('Role is required.') && (
             <span className="text-red-600 ml-1">Role is required.</span>
@@ -504,7 +511,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup }) => {
           <div>
             <label className="field-label">Notification Enable<span className="text-red-500">*</span></label>
             <Select
-              styles={editableDrp}
+              isDisabled={!editable}
+              styles={editable ? editableDrp : nonEditableDrp}
               value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : Notification}
               options={Notificationoptions}
               onChange={handleNotification}

@@ -16,9 +16,10 @@ const UserRole = dynamic(() => import('./userrole'));
 interface CreateUserProps {
   isPopup?: boolean;
   rowData?: any;
+  editable?:boolean
 }
 
-const CreateUser: React.FC<CreateUserProps> = ({ isPopup, rowData }) => {
+const CreateUser: React.FC<CreateUserProps> = ({ isPopup, rowData,editable }) => {
   const [activeTab, setActiveTab] = useState('userInfo');
   const isExpanded = useSidebarStore((state: any) => state.isExpanded);
   const [hideCreateUser, setHideCreateUser] = useState(false);
@@ -36,15 +37,11 @@ useEffect(() => {
   setActiveTab('userInfo')
 }, [rowData]);
 
-useEffect(() => {
-  if(!rowData){
-    setTenant("")
-    setSubTenant([])
-    setRoleName("")
-  }
-}, []);
 
   const handleCloseClick = () => {
+    setTenant('')
+    setSubTenant([])
+    setRoleName('')
     setHideCreateUser(true);
   };
 
@@ -83,9 +80,9 @@ useEffect(() => {
 
           </div>
           <div className={`shadow-md p-4 ${isPopup ? '' : 'mt-[-10px] pt-[70px]'}`}>
-            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup}/>}
-            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} />}
-            {activeTab === 'userrole' && <UserRole rowData={rowData} />}
+            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup} editable={editable}/>}
+            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} editable={editable}/>}
+            {activeTab === 'userrole' && <UserRole rowData={rowData} editable={editable}/>}
           </div>
         </div>
       )}</div>

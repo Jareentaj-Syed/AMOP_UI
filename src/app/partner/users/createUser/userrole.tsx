@@ -54,9 +54,10 @@ const nonEditableDrp = NonEditableDropdownStyles;
 
 interface UserRoleProps {
     rowData?: any;
+    editable?:boolean;
 }
 
-const UserRole: React.FC<UserRoleProps> = ({ rowData }) => {
+const UserRole: React.FC<UserRoleProps> = ({ rowData ,editable}) => {
     const setPartnerModuleAccess = usePartnerStore((state) => state.setPartnerModuleAccess);
     const [Selectedpartner, setPartner] = useState<string>('');
     const [map, setMap] = useState<ExcelData>({});

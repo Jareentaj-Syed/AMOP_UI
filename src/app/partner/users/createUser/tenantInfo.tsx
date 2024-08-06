@@ -17,16 +17,17 @@ const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 interface TenantInfoProps {
     rowData?: any;
+    editable?:boolean;
 }
 
-const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
+const TenantInfo: React.FC<TenantInfoProps> = ({ rowData ,editable=false}) => {
   const { username, tenantNames, role, partner:userPartner, settabledata} = useAuth();
     const [carriers, setCarriers] = useState<string[]>([]);
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
-    const [CarrierNotification, setCarrierNotification] = useState<MultiValue<OptionType>>([]);
-    const [ServiceProvider, setServiceProvider] = useState<MultiValue<OptionType>>([]);
+    const [CarrierNotification, setCarrierNotification] = useState<any[]>([]);
+    const [ServiceProvider, setServiceProvider] = useState<any[]>([]);
     const [customerGroup, setCustomerGroup] = useState<SingleValue<OptionType>>(null);
-    const [customer, setCustomer] = useState<MultiValue<OptionType>>([]);
+    const [customer, setCustomer] = useState<any[]>([]);
 
     const [CustomerGroupOptions, setCustomerGroupOptions] = useState<any[]>([])
     const [ServiceProviderOptions, setServiceProviderOptions] = useState<any[]>([])
@@ -69,19 +70,39 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
 
         initializeData();
     }, [usersData]);
-    // useEffect(() => {
-    //     if (rowData) {
-    //         setTenant(rowData['tenant_name'] || '');
-    //         setSubTenant(rowData['subtenant_name'] || '');
-    //     }
-    // }, [rowData]);
+
+    useEffect(() => {
+        if (rowData) {
+        const serviceProviderFieldValue = rowData?.["Service Provider"] || ""
+        let selected_provider: string[] = [];
+        try {
+            selected_provider = JSON.parse(serviceProviderFieldValue);
+        } catch (error) {
+          if (serviceProviderFieldValue && serviceProviderFieldValue !== 'None') {
+            selected_provider = [serviceProviderFieldValue];
+          }
+        }
+        setServiceProvider(selected_provider)
+        const customersFieldValue = rowData?.["Customer Group"] || ""
+        let selected_customer: string[] = [];
+        try {
+            selected_customer = JSON.parse(customersFieldValue);
+        } catch (error) {
+          if (customersFieldValue && customersFieldValue !== 'None') {
+            selected_customer = [customersFieldValue];
+          }
+        }
+        setCustomer(selected_customer)
+
+        }
+    }, [rowData]);
+
     const messageStyle = {
         fontSize: '14px',  // Adjust font size
         fontWeight: 'bold', // Make the text bold
         padding: '16px',
       };
 
-    //Clearing all the fields after successful submition
     const handleClearFields = () => {
         setCarrierNotification([]);
         setServiceProvider([]);
@@ -89,80 +110,79 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
         setCustomer([]);
         setErrorMessages([]);
         setTenant('');
-        // setSubTenant('');
+        setSubTenant([]);
       };
     const handleSubmit = async() => {
-        try{
-        const url =
-          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+        const errors: string[] = [];
+        if (CarrierNotification.length === 0) errors.push('Carrier is required.');
+        if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
     
-        let changedData: any = {}; // Initialize changedData as an object
+        setErrorMessages(errors);
     
-        // Ensure getFieldValue returns a valid field name or provide a default value
-        const serviceProviderFieldName = getFieldValue("Service Provider") || "Service Provider";
-        const customerGroupFieldName = getFieldValue("Customer Group") || "Customer Group";
-        const customersFieldName = getFieldValue("Customers") || "Customers";
+        if (errors.length === 0) {
+            try{
+                const url =
+                  "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            
+                let changedData: any = {}; // Initialize changedData as an object
+            
+                // Ensure getFieldValue returns a valid field name or provide a default value
+                const serviceProviderFieldName = getFieldValue("Service Provider") || "Service Provider";
+                const customerGroupFieldName = getFieldValue("Customer Group") || "Customer Group";
+                const customersFieldName = getFieldValue("Customers") || "Customers";
+            
+                changedData[serviceProviderFieldName] = ServiceProvider;
+                changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
+                changedData[customersFieldName] = customer;
+                changedData["username"] = user_name;
+                changedData["is_active"] = true;
+                changedData["is_deleted"] = false;
+        
+            
+                const data = {
+                    tenant_name: userPartner || "default_value",
+                    username: username,
+                    path: "/update_partner_info",
+                    role_name: role,
+                    module_name: "Partner users",
+                    action: "update",
+                    request_received_at: getCurrentDateTime(),
+                    changed_data: {
+                        "customer_info":changedData
+                    },
+                  
+                    Partner:userPartner,
+                };
+                const response = await axios.post(url, { data });
+                const parsedData = JSON.parse(response.data.body);
+                  if (response && response.data.statusCode===200) {
+                    // Show success message
+                    notification.success({
+                      message: 'Success',
+                      description: 'Successfully saved the form',
+                      style: messageStyle,
+                      placement: 'top', // Apply custom styles here
+                    });
+                    handleClearFields(); // Clear all fields
+                  }
+                  else{
+                    Modal.error({
+                      title: 'Submit Error',
+                      content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+                      centered: true,
+                    });
+                  }
+            }
+            catch(error){
+                console.log(
+                    error
+                )
+            }
+        } else {
+            scrollToTop();
+        }
+     
     
-        changedData[serviceProviderFieldName] = ServiceProvider.map(option => option.value);
-        changedData[customerGroupFieldName] = customerGroup ? customerGroup.value : '';
-        changedData[customersFieldName] = customer.map(option => option.value);
-        changedData["username"] = user_name;
-        changedData["is_active"] = true;
-        changedData["is_deleted"] = false;
-
-    
-        const data = {
-            tenant_name: userPartner || "default_value",
-            username: username,
-            path: "/update_partner_info",
-            role_name: role,
-            module_name: "Partner users",
-            action: "update",
-            request_received_at: getCurrentDateTime(),
-            changed_data: {
-                "customer_info":changedData
-            },
-          
-            Partner:userPartner,
-        };
-        const response = await axios.post(url, { data });
-        const parsedData = JSON.parse(response.data.body);
-          if (response && response.data.statusCode===200) {
-            // Show success message
-            notification.success({
-              message: 'Success',
-              description: 'Successfully saved the form',
-              style: messageStyle,
-              placement: 'top', // Apply custom styles here
-            });
-            handleClearFields(); // Clear all fields
-          }
-          else{
-            Modal.error({
-              title: 'Submit Error',
-              content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
-              centered: true,
-            });
-          }
-    }
-    catch(error){
-        console.log(
-            error
-        )
-    }
-    
-        // const errors: string[] = [];
-        // if (CarrierNotification.length === 0) errors.push('Carrier is required.');
-        // if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
-    
-        // setErrorMessages(errors);
-    
-        // if (errors.length === 0) {
-        //     console.log('Saving...');
-        //     // You can add the code to make an API request here
-        // } else {
-        //     scrollToTop();
-        // }
     };
       //Handling modal save
   const handleConfirmSave = () => {
@@ -180,26 +200,30 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             behavior: 'auto'  // Optional: Smooth scroll animation
         });
     };
-    const handleCarrier = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        setCarrierNotification(newValue);
-        if (newValue.length > 0) {
+    const handleCarrier = (selectedOptions: MultiValue<OptionType>) => {
+    const selectedCarriers = selectedOptions.map(option => option.value);
+
+        setCarrierNotification(selectedCarriers);
+        if (selectedCarriers.length > 0) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
         }
     };
-    const serviceProviderChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-
-        setServiceProvider(newValue);
-        if (newValue.length > 0) {
+    const serviceProviderChange = (selectedOptions: MultiValue<OptionType>) => {
+        const selectedProviders = selectedOptions.map(option => option.value);
+        setServiceProvider(selectedProviders);
+        if (selectedProviders.length > 0) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
         }
     };
     const customerGroupChange = (selectedOption: SingleValue<OptionType>) => {
+        
         if (selectedOption) {
             setCustomerGroup(selectedOption);
         }
     }
-    const customerChange = (newValue: MultiValue<OptionType>, actionMeta: ActionMeta<OptionType>) => {
-        setCustomer(newValue);
+    const customerChange = (selectedOptions: MultiValue<OptionType>) => {
+        const selectedCustomers = selectedOptions.map(option => option.value)
+        setCustomer(selectedCustomers);
     };
     const getFieldValue = (label: any) => {
         if (rowData) {
@@ -254,10 +278,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                             isMulti
                             options={ServiceProviderOptions}
                             styles={editableDrp}
-                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Service Provider'))
-                            ? { value: getFieldValue('Service Provider'), label: getFieldValue('Service Provider') }
-                            : ServiceProvider
-                        }
+                            value={ServiceProviderOptions.filter(option => ServiceProvider.includes(option.value))}
                             onChange={serviceProviderChange}
 
                         />
@@ -283,10 +304,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
                             isMulti
                             options={customerOptions}
                             styles={editableDrp}
-                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Customers'))
-                                ? { value: getFieldValue('Customers'), label: getFieldValue('Customers') }
-                                : customer
-                            }
+                            value={customerOptions.filter(option => customer.includes(option.value))}
                             onChange={customerChange}
                         />
                     </div>

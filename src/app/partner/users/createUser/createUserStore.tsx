@@ -5,7 +5,7 @@ interface UserState {
     role_name: any;
     sub_tenant: any[];
     user_name:any;
-    setTenant: (partner: any) => void;
+    setTenant: (tenant: any) => void;
     setRoleName: (role_name: any) => void;
     setSubTenant: (subPartners: any[]) => void;
     setUser_Name:(user_name: any) => void;

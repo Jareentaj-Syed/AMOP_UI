@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import InfoPopup from '../people/info_popup';
 import error from 'next/error';
 import{ MultiValue, SingleValue } from 'react-select';
-
+import { useUserStore } from '../partner/users/createUser/createUserStore';
 import { getCurrentDateTime } from './header_constants';
 interface Column {
   display_name: string;
@@ -57,6 +57,15 @@ const EditModal: React.FC<EditModalProps> = ({
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
   const [initialData, setTableData] = useState<any>(tableData)
+  const {
+    tenant,
+    role_name,
+    sub_tenant,
+    user_name,
+    setTenant,
+    setRoleName,
+    setSubTenant
+} = useUserStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -101,6 +110,9 @@ const EditModal: React.FC<EditModalProps> = ({
   };
 
   const handleCancel = () => {
+    setTenant('')
+    setSubTenant([])
+    setRoleName('')
     onClose();
   };
 
@@ -569,6 +581,7 @@ const EditModal: React.FC<EditModalProps> = ({
               <CreateUser
                 isPopup={true}
                 rowData={rowData}
+                editable={isEditable}
               />
 
             </div>
