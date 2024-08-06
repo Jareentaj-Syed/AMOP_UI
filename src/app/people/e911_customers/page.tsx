@@ -59,6 +59,9 @@ const E911Customers: React.FC = () => {
       setLoading(true);
     }
   }, [title]);
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -219,9 +222,7 @@ const E911Customers: React.FC = () => {
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
-  const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
-  };
+
 
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string

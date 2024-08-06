@@ -81,6 +81,9 @@ const disableFutureDates = (current:any) => {
   return current && current > dayjs().endOf('day'); // Disable future dates
 };
 
+const sortPopup = (fields: any[]): any[] => {
+  return fields.sort((a:any, b:any) => a?.id - b?.id);
+};
 useEffect(() => {
   const fetchData = async () => {
     setLoading(true); // Set loading to true at the start
@@ -247,9 +250,7 @@ useEffect(() => {
       Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
-  const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
-  };
+
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);
