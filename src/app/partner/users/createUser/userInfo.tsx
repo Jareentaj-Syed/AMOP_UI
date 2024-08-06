@@ -125,12 +125,12 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
     const initializeData = () => {
       if (rowData) {
         setFormData(rowData)
-        console.log("tenant",`bbb${tenant}bbb`)
+        console.log("tenant", `bbb${tenant}bbb`)
 
         const tenant_name = tenant !== "" ? tenant : getFieldValue('Partner');
         setPartner(tenant_name);
         setTenant(tenant_name)
-        console.log("tenant",`aaa${tenant}aaa`)
+        console.log("tenant", `aaa${tenant}aaa`)
         const role_name = getFieldValue('Role') || ""
         setRole(role_name)
         setRoleName(role_name)
@@ -432,7 +432,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
         </div>
         <div>
           <label className="field-label">Last Name</label>
-          <input type="text" className="input" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          <input type="text" className={`${editable ? 'input' : 'non-editable-input'}`} value={lastName} onChange={(e) => setLastName(e.target.value)} disabled={!editable} />
         </div>
         <div>
           <label className="field-label">Username<span className="text-red-500">*</span></label>
@@ -440,7 +440,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="input"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
+            disabled={!editable}
           />
           {errorMessages.includes('Username is required.') && (
             <span className="text-red-600 ml-1">Username is required.</span>
@@ -452,7 +453,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             type="email"
             value={emailId}
             onChange={(e) => setEmailId(e.target.value)}
-            className="input"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
+            disabled={!editable}
           />
           {errorMessages.includes('Email id is required.') && (
             <span className="text-red-600 ml-1">Email id is required.</span>
@@ -462,10 +464,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
 
           <label className="field-label">Mobile No</label>
           <input type="text"
-            className="input"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
             value={mobileNo}
             onChange={(e) => setMobileNo(e.target.value)}
-          />
+            disabled={!editable} />
+          
         </div>
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
@@ -489,7 +492,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="input"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
+            disabled={!editable}
           />
           {errorMessages.includes('Password is required.') && (
             <span className="text-red-600 ml-1">Password is required.</span>
@@ -498,10 +502,11 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
         <div>
           <label className="field-label">Phone</label>
           <input type="text"
-            className="input"
+            className={`${editable ? 'input' : 'non-editable-input'}`}
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-          />
+            disabled={!editable} />
+        
         </div>
       </div>
 
@@ -524,82 +529,92 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
           <div>
             <label className="field-label">Business Name</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={businessName}
               onChange={(e) => setBusinessName(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Locale</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={locale}
               onChange={(e) => setLocale(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Apt/Suite</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={aptSuite}
               onChange={(e) => setAptSuite(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Address Line-1</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={addressLine1}
               onChange={(e) => setAddressLine1(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Address Line-2</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={rowData ? getFieldValue('Address Line-2') : addressLine2}
               onChange={(e) => setAddressLine2(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Country</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">State</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={state}
               onChange={(e) => setState(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">City</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={city}
               onChange={(e) => setCity(e.target.value)}
+              disabled={!editable}
             />
           </div>
           <div>
             <label className="field-label">Time Zone</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={timeZone}
               onChange={(e) => setTimeZone(e.target.value)}
+              disabled={!editable}
             />
           </div>
 
           <div>
             <label className="field-label">Zip</label>
             <input type="text"
-              className="input"
+              className={`${editable ? 'input' : 'non-editable-input'}`}
               value={zip}
               onChange={(e) => setZip(e.target.value)}
+              disabled={!editable}
             />
           </div>
         </div>
