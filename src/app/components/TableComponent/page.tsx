@@ -75,6 +75,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   useEffect(() => {
     const newRowData = tabledata? tabledata : initialData;
     setRowData(newRowData);
+
+    console.log("updated data:", newRowData)
   }, [tabledata, initialData]);
   
   useEffect(() => {
@@ -410,6 +412,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         setEditRowIndex(rowIndex);
         setIsEditable(true);
         setEditModalOpen(true);
+        console.log(editModalOpen)
         break;
       case 'tabsEdit':
         setTabsEdit(true)
@@ -1277,18 +1280,20 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
         </div>
       )}
 
-     <EditModal
-        createModalData={createModalData || []}
-        isOpen={editModalOpen}
-        isEditable={isEditable}
-        rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
-        onSave={handleSaveModal}
-        onClose={handleCloseModal}
-        heading={popupHeading}
-        isTabEdit={tabsEdit}
-        generalFields={generalFields}
-        tableData={rowData}
-      />
+{editModalOpen && (
+        <EditModal
+          createModalData={createModalData || []}
+          isOpen={editModalOpen}
+          isEditable={isEditable}
+          rowData={editRowIndex !== null ? rowData[editRowIndex] : null}
+          onSave={handleSaveModal}
+          onClose={handleCloseModal}
+          heading={popupHeading}
+          isTabEdit={tabsEdit}
+          generalFields={generalFields}
+          tableData={rowData}
+        />
+      )}
       <Modal
         title="Confirm Deletion"
         open={deleteModalOpen}

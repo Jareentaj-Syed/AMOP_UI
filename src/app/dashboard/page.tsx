@@ -10,10 +10,10 @@ const HomePage: React.FC = () => {
   const setTitle = useLogoStore((state) => state.setTitle);
   useEffect(() => {
       // Ensure the URL is set to /login when the component mounts
-      router.push('/home');
+      router.push('/dashboard');
   }, [router]);
   useEffect(() => {
-    setTitle("Home")
+    setTitle("Dashboard")
 })
   const userImage = "https://www.w3schools.com/w3images/avatar2.png";
  

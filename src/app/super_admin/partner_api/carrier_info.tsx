@@ -11,9 +11,10 @@ import { Modal, Spin } from 'antd'; // Import Ant Design Spin component
 import axios from 'axios';
 import { DropdownStyles } from '@/app/components/css/dropdown';
 import TableSearch from '@/app/components/entire_table_search';
-import AdvancedMultiFilter from '@/app/components/advanced_search';
+
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import { useLogoStore } from '@/app/stores/logoStore';
+import AdvancedMultiFilter from '@/app/components/advanced_search';
 
 interface ExcelData {
   [key: string]: any;
@@ -43,15 +44,18 @@ const CarrierInfo: React.FC = () => {
   const [generalFields, setgeneralFields] = useState<any[]>([])
   const [filteredData, setFilteredData] = useState([]);
   const title = useLogoStore((state) => state.title);
-  const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
-  };
+
   
   useEffect(() => {
     if(title!="Super Admin"){
         setLoading(true)
     }
 },[title])
+ 
+const sortPopup = (fields: any[]): any[] => {
+  return fields.sort((a:any, b:any) => a?.id - b?.id);
+};
+
 
   const handleFilter = (advancedFilters: any) => {
     console.log(advancedFilters)
