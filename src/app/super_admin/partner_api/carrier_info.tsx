@@ -81,7 +81,7 @@ const sortPopup = (fields: any[]): any[] => {
         path: "/get_superadmin_info",
         role_name: role,
         parent_module:"Super Admin",
-        sub_parent_module:"Partner API",
+        sub_module:"Partner API",
         sub_tab:"Carrier APIs",
         request_received_at: getCurrentDateTime(),
         Partner: partner,
