@@ -55,7 +55,7 @@ const Page: React.FC = () => {
         path: "/get_superadmin_info",
         role_name: role,
         parent_module:"Super Admin",
-        sub_parent_module:"Partner Modules",
+        sub_module:"Partner Modules",
         flag: "withoutparameters",
         request_received_at: getCurrentDateTime(),
         Partner:partner,
@@ -111,6 +111,7 @@ const Page: React.FC = () => {
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
 
   const fetchData = async (selectedPartner: string, selectedSubPartner: string) => {
+    console.log("selectedpartner", selectedPartner)
     setLoading(true);
     try {
       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
@@ -120,7 +121,7 @@ const Page: React.FC = () => {
         path: "/get_superadmin_info",
         role_name: role,
         parent_module:"Super Admin",
-        sub_parent_module:"Partner Modules",
+        sub_module:"Partner Modules",
         flag: "withparameters",
         Selected_Partner: selectedPartner,
         sub_partner: selectedSubPartner,

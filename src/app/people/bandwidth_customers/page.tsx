@@ -93,7 +93,7 @@ const BandWidthCustomers: React.FC = () => {
           path: "/get_module_data",
           role_name: role,
           parent_module:"People",
-          sub_parent_module:"Bandwidth Customers",
+          module_name:"Bandwidth Customers",
           mod_pages: {
             start: 0,
             end: 500,
@@ -112,6 +112,7 @@ const BandWidthCustomers: React.FC = () => {
         } else {
           const tableData = parsedData.data.customers;
           const headerMap = parsedData.headers_map["Bandwidth Customers"]["header_map"]
+          const features = parsedData.headers_map["Bandwidth Customers"]["module_features"]
           const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
           const sortedheaderMap = sortHeaderMap(headerMap)
           const headers = Object.keys(sortedheaderMap)
@@ -283,111 +284,109 @@ const BandWidthCustomers: React.FC = () => {
 
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
-      
     <div className="container mx-auto">
-    <div className="flex justify-between">
-  <div className="p-4 flex justify-start">
-    <TableSearch
-      searchTerm={searchTerm}
-      setSearchTerm={setSearchTerm}
-      tableName={"bandwidth_customers"}
-      headerMap={headerMap}
-    />
-  </div>
-  <div className="p-4 flex justify-end">
-    <div className="flex space-x-2">
-      
-      <button className="save-btn" onClick={handleCreateModalOpen}>
-        <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-        Add Customer
-      </button>
-      <button className="save-btn" onClick={handleExportModalOpen}>
-        <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
-        <span>Export</span>
-      </button>
-      <ColumnFilter
-        headers={headers}
-        visibleColumns={visibleColumns}
-        setVisibleColumns={setVisibleColumns}
-        headerMap={headerMap}
-      />
-    </div>
-  </div>
-</div>
-
-
-
-
-
-      <div className=' mb-4 space-x-2'>
-        <AdvancedMultiFilter
-          onFilter={handleFilter}
-          onReset={handleReset}
-          headers={headers}
-          headerMap={headerMap}
-          tableName={"bandwidth_customers"} />
-      </div>
-
-      <TableComponent
-        headers={headers}
-        headerMap={headerMap}
-        initialData={tableData}
-        searchQuery={searchTerm}
-        visibleColumns={visibleColumns}
-        itemsPerPage={100}
-        allowedActions={["info", "edit"]}
-        popupHeading="Bandwidth Customer"
-        createModalData={createModalData}
-        pagination={pagination}
-        generalFields={generalFields}
-        advancedFilters={filteredData}
-      />
-
-
-      <CreateModal
-        isOpen={isCreateModalOpen}
-        onClose={handleCreateModalClose}
-        onSave={handleCreateRow}
-        columnNames={createModalData}
-        heading="Bandwidth Customer"
-        header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
-        generalFields={generalFields}
-        tableData={tableData}
-      />
-      <Modal
-        title="Export Output"
-        visible={isExportModalOpen}
-        onCancel={() => {
-          handleExportModalClose();
-          setDateRange([null, null]); // Reset date range here for good measure
-        }}
-        footer={null}
-        centered
-        afterClose={() => setDateRange([null, null])}
-      >
-        <div className="flex flex-col space-y-4">
-          <span>Select Date Range:</span>
-          <RangePicker
-            value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
-            onChange={(dates) => {
-              console.log("Selected dates:", dates); // Debug log
-              if (dates && dates.length === 2) {
-                setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
-              } else {
-                setDateRange([null, null]); // Reset to null if dates are not both available
-              }
-            }}
-            format="YYYY-MM-DD"
-            disabledDate={disableFutureDates}
-          />
-          <div className="flex justify-end space-x-2">
-            <Button onClick={handleExportModalClose}>Cancel</Button>
-            <Button type="primary" onClick={handleExport}>Export</Button>
-          </div>
+        <div className="flex justify-between">
+            <div className="p-4 flex justify-start">
+                <TableSearch
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    tableName={"bandwidth_customers"}
+                    headerMap={headerMap}
+                />
+            </div>
+            <div className="p-4 flex justify-end">
+                <div className="flex space-x-2">
+                    {features.includes("Add Customers-BandwithCustomers") && (
+                        <button className="save-btn" onClick={handleCreateModalOpen}>
+                            <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+                            Add Customer
+                        </button>
+                    )}
+                    {features.includes("Export-BandwithCustomers") && (
+                        <button className="save-btn" onClick={handleExportModalOpen}>
+                            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-1" />
+                            <span>Export</span>
+                        </button>
+                    )}
+                    <ColumnFilter
+                        headers={headers}
+                        visibleColumns={visibleColumns}
+                        setVisibleColumns={setVisibleColumns}
+                        headerMap={headerMap}
+                    />
+                </div>
+            </div>
         </div>
-      </Modal>
+
+        <div className=' mb-4 space-x-2'>
+            <AdvancedMultiFilter
+                onFilter={handleFilter}
+                onReset={handleReset}
+                headers={headers}
+                headerMap={headerMap}
+                tableName={"bandwidth_customers"} />
+        </div>
+
+        <TableComponent
+            headers={headers}
+            headerMap={headerMap}
+            initialData={tableData}
+            searchQuery={searchTerm}
+            visibleColumns={visibleColumns}
+            itemsPerPage={100}
+            allowedActions={["info", "edit"]}
+            popupHeading="Bandwidth Customer"
+            createModalData={createModalData}
+            pagination={pagination}
+            generalFields={generalFields}
+            advancedFilters={filteredData}
+        />
+
+        <CreateModal
+            isOpen={isCreateModalOpen}
+            onClose={handleCreateModalClose}
+            onSave={handleCreateRow}
+            columnNames={createModalData}
+            heading="Bandwidth Customer"
+            header={tableData && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+            generalFields={generalFields}
+            tableData={tableData}
+        />
+        <Modal
+            title="Export Output"
+            visible={isExportModalOpen}
+            onCancel={() => {
+                handleExportModalClose();
+                setDateRange([null, null]); // Reset date range here for good measure
+            }}
+            footer={null}
+            centered
+            afterClose={() => setDateRange([null, null])}
+        >
+            <div className="flex flex-col space-y-4">
+                <span>Select Date Range:</span>
+                <RangePicker
+                    value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+                    onChange={(dates) => {
+                        console.log("Selected dates:", dates); // Debug log
+                        if (dates && dates.length === 2) {
+                            setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
+                        } else {
+                            setDateRange([null, null]); // Reset to null if dates are not both available
+                        }
+                    }}
+                    format="YYYY-MM-DD"
+                    disabledDate={disableFutureDates}
+                />
+                <div className="flex justify-end space-x-2">
+                    <Button onClick={handleExportModalClose}>Cancel</Button>
+                    <Button type="primary" onClick={handleExport}>Export</Button>
+                </div>
+            </div>
+        </Modal>
     </div>
-    </Suspense>
+</Suspense>
+
   );
 
 }

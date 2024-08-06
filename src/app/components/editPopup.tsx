@@ -274,7 +274,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 tenant_name: partner || "default_value",
                 username: username,
                 parent_module:"Super Admin",
-                sub_parent_module: "Partner API", 
+                sub_module: "Partner API", 
                 path: "/get_superadmin_info",
                 role_name: role,
                
@@ -310,7 +310,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 path: "/get_superadmin_info",
                 role_name: role,
                 parent_module:"Super Admin",
-                sub_parent_module: "Partner API", 
+                sub_module: "Partner API", 
                
                 sub_tab: "Amop APIs",
                 Partner:partner,
@@ -461,7 +461,7 @@ const EditModal: React.FC<EditModalProps> = ({
                             "Partner users": { start: 0, end: 500 }
                         },
                         Partner:partner,
-              request_received_at: getCurrentDateTime(),
+                        request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
