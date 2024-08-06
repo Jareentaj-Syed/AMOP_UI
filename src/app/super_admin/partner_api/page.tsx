@@ -1,6 +1,6 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import dynamic from 'next/dynamic';
+import React, { useEffect, useState,lazy, Suspense } from 'react';
+// import dynamic from 'next/dynamic';
 import { useSidebarStore } from '@/app/stores/navBarStore';
 import { useAuth } from '@/app/components/auth_context';
 import axios from 'axios';
@@ -8,8 +8,8 @@ import { useLogoStore } from "@/app/stores/logoStore";
 import { Spin } from 'antd';
 
 
-const CarrierInfo = dynamic(() => import('./carrier_info'));
-const APIInfo = dynamic(() => import('./api_info'));
+const CarrierInfo = lazy(() => import('./carrier_info'));
+const APIInfo = lazy(() => import('./api_info'));
 
 
 
@@ -33,8 +33,9 @@ const PartnerInfoForm: React.FC = () => {
       </div>
     );
   }
-
     return (
+      <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
+      
       <div className="">
         <div className={`bg-white shadow-md mb-4 gap-4  tabs ${isExpanded ? 'left-[17%]' : 'left-[112px]'}`}>
 
@@ -59,6 +60,7 @@ const PartnerInfoForm: React.FC = () => {
           
         </div>
       </div>
+      </Suspense>
     );
   };
   

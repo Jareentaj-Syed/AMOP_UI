@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { useLogoStore } from '@/app/stores/logoStore';
 import EmailModal from '@/app/partner/EmailModal';
 import { Modal, Spin } from 'antd';
@@ -105,6 +105,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   }
 
   return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className="p-2">
       <div className="mb-6">
   
@@ -192,6 +193,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         <p>Do you want to submit this Partner Info Form?</p>
       </Modal>
     </div>
+    </Suspense>
   );
 };
 

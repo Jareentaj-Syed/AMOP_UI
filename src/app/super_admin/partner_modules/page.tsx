@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import ListView from './listView/page';
 import { useRouter } from 'next/navigation';
 import { DropdownStyles, NonEditableDropdownStyles } from '@/app/components/css/dropdown';
@@ -244,6 +244,7 @@ const Page: React.FC = () => {
     setSubPartnerMenuIsOpen(true);
   };
   return (
+    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
     <div className='bg-gray-50'>
       <div className='p-3 pl-2 pr-2'>
         <h3 className="tabs-sub-headings">Partner Modules</h3>
@@ -289,6 +290,7 @@ const Page: React.FC = () => {
 
       {showUserRole && <UserRole rolesData={rolesData} moduleData={moduleData} rolesHeaders={rolesDataHeaders} moduleHeaders={moduleDataHeaders} rolesHeadersMap={rolesDataHeadersMap} moduleHeadersMap={moduleDataHeadersMap}/>}
     </div>
+    </Suspense>
   );
 };
 
