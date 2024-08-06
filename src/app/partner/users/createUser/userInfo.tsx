@@ -236,8 +236,9 @@ let sub_partners;
             "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
       
           let changedData: any = {};
-          changedData[getFieldKey('Partner')] = partner;
-        changedData[getFieldKey('Sub Partner')] = subPartners;
+          const tenant_name=selectedSubPartner?selectedSubPartner:partner||[]
+        changedData[getFieldKey('Partner')] = partner;
+        changedData[getFieldKey('Sub Partner')] = selectedSubPartner;
         changedData[getFieldKey('First Name')] = firstName;
         changedData[getFieldKey('Last Name')] = lastName;
         changedData[getFieldKey('Username')] = username;
@@ -271,7 +272,6 @@ let sub_partners;
               changed_data: {
                   "user_info":changedData
               },
-             
               Partner:userPartner,
           };
           const response = await axios.post(url, { data });

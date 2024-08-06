@@ -98,6 +98,8 @@ const CreateModal: React.FC<CreateModalProps> = ({
           if (formData) {
             formData['created_by'] = username;
             formData["modified_date"]= getCurrentDateTime()
+            formData["is_deleted"] = false
+            formData["is_active"] = true
           }
           data = {
             tenant_name: partner || 'default_value',
