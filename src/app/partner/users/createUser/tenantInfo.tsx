@@ -54,7 +54,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData }) => {
             const general_fields = partnerData["Partner users"]?.headers_map?.["Partner users"]?.general_fields || {}
             const CustomerGroupOptions: any[] = usersData?.name || []
             const CustomerGroupOptions_ = CustomerGroupOptions.map((group: any) => ({ value: group, label: group }))
-            const ServiceProviderOptions: any[] = usersData?.rate_plan_name || []
+            const ServiceProviderOptions: any[] = usersData?.service_provider_name || []
             const ServiceProviderOptions_ = ServiceProviderOptions.map((service: any) => ({ value: service, label: service }))
             const customerOptions: any[] = usersData?.customer_name || []
             const customerOptions_ = customerOptions.map((customer: any) => ({ value: customer, label: customer }))
