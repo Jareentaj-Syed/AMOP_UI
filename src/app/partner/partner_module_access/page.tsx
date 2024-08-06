@@ -3,7 +3,6 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/16/solid';
 import React, { useEffect, useState } from 'react';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 import { DropdownStyles } from '@/app/components/css/dropdown';
-import { PartnerModuleData } from './partner_module_access_constants';
 import { usePartnerStore } from '../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
@@ -59,17 +58,15 @@ interface ExcelData {
 
 const UserRole: React.FC = () => {
 
-       const [partnerModuleData, setPartnerModuleData] = useState<any>(PartnerModuleData);
+    // const [partnerModuleData, setPartnerModuleData] = useState<any>(PartnerModuleData || {});
+    const setPartnerModuleAccess = usePartnerStore((state) => state.setPartnerModuleAccess);
 
-    useEffect(() => {
-        
-          setPartnerModuleData(PartnerModuleData || {});
+    // useEffect(() => {
+    //     console.log("partnerModuleData updated:", partnerModuleData);
+    // }, [partnerModuleData]);
 
-    
-      }, [PartnerModuleData]);
-    const { partnerData } = usePartnerStore.getState();
     const { username, partner, role } = useAuth();
-
+    const { partnerData } = usePartnerStore.getState();
 
     const [Selectedrole, setRole] = useState<SingleValue<OptionType>>(null);
     const [selectedModules, setSelectedModules] = useState<{ [key: string]: string[] }>({});
@@ -78,12 +75,13 @@ const UserRole: React.FC = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [map, setMap] = useState<ExcelData>({});
-    console.log("partner module data:", partnerModuleData)
   
+const PartnerModuleData=partnerData?.["Partner module access"] ||{}
+console.log("partner module data:", PartnerModuleData)
 
     const editableDrp = DropdownStyles;
 
-    const rawData = partnerModuleData?.data["Partner module access"]["role_module"];
+    const rawData = PartnerModuleData?.data["Partner module access"]["role_module"];
 
     const transformData = (data: typeof rawData): Data => {
         const transformedData: Data = {};
@@ -149,9 +147,9 @@ const UserRole: React.FC = () => {
 
             setSelectedModules(initialSelectedModules);
             setSelectedFeatures(initialSelectedFeatures);
-            console.log("Initial Selected Modules:", initialSelectedModules);
-            console.log("Initial Selected Features:", initialSelectedFeatures);
-            console.log("Selected Role Data:", selectedRoleData);
+            // console.log("Initial Selected Modules:", initialSelectedModules);
+            // console.log("Initial Selected Features:", initialSelectedFeatures);
+            // console.log("Selected Role Data:", selectedRoleData);
 
         }
 
@@ -161,9 +159,9 @@ const UserRole: React.FC = () => {
 
 
     const generateDefaultRoleData = (): CategoryData => {
-        const subModules = partnerModuleData.data["Partner module access"]["module"];
-        const parentModules = partnerModuleData.data["Partner module access"]["tenant_module"];
-        const moduleFeatures = partnerModuleData.data["Partner module access"]["module_features"];
+        const subModules = PartnerModuleData?.data["Partner module access"]["module"];
+        const parentModules = PartnerModuleData?.data["Partner module access"]["tenant_module"];
+        const moduleFeatures = PartnerModuleData?.data["Partner module access"]["module_features"];
 
         const defaultRoleData: CategoryData = {};
 
@@ -185,7 +183,7 @@ const UserRole: React.FC = () => {
             });
         });
 
-        console.log(defaultRoleData)
+        // console.log(defaultRoleData)
         return defaultRoleData;
     };
 
@@ -194,27 +192,27 @@ const UserRole: React.FC = () => {
         selectedRoleData: CategoryData
     ): CategoryData => {
         for (const [moduleKey, moduleValue] of Object.entries(defaultData)) {
-            console.log(`Processing module: ${moduleKey}`);
+            // console.log(`Processing module: ${moduleKey}`);
 
             // Check if the module exists in the selected role data
             if (selectedRoleData[moduleKey]) {
-                console.log(`Module ${moduleKey} found in selectedRoleData`);
+                // console.log(`Module ${moduleKey} found in selectedRoleData`);
 
                 // Mark the module as active if it exists in selectedRoleData
                 moduleValue.Module = moduleValue.Module.map((module: string) => {
                     const isActive = selectedRoleData[moduleKey].Module.includes(module.replace('-active', ''));
                     const newModuleName = isActive ? `${module.replace('-active', '')}-active` : module.replace('-active', '');
-                    console.log(`Module: ${module} => New Module: ${newModuleName}`);
+                    // console.log(`Module: ${module} => New Module: ${newModuleName}`);
                     return newModuleName;
                 });
 
                 // Get the selected features for the current module
                 const selectedFeatures = selectedRoleData[moduleKey].Feature || {};
-                console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
+                // console.log(`Selected features for ${moduleKey}:`, selectedFeatures);
 
                 // Process features for the current module
                 for (const featureKey of Object.keys(moduleValue.Feature)) {
-                    console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
+                    // console.log(`Processing feature: ${featureKey} in module: ${moduleKey}`);
 
                     // Check if features exist in selected role data
                     for (const featureKey of Object.keys(moduleValue.Feature)) {
@@ -227,7 +225,7 @@ const UserRole: React.FC = () => {
                     }
                 }
             } else {
-                console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
+                // console.log(`Module ${moduleKey} not found in selectedRoleData, retaining original state`);
 
                 // If the module doesn't exist in selectedRoleData, retain its original state
                 moduleValue.Module = moduleValue.Module.map(module => module.replace('-active', ''));
@@ -241,7 +239,7 @@ const UserRole: React.FC = () => {
             }
         }
 
-        console.log("Combined data:", defaultData);
+        // console.log("Combined data:", defaultData);
         return defaultData; // Returns modified defaultData
     };
 
@@ -308,7 +306,7 @@ const UserRole: React.FC = () => {
 
     //   console.log(partnerModuleData.data["Partner module access"]["role_name"])
 
-    const Roleoptions = partnerModuleData.data["Partner module access"]["role_name"].map((role: any) => ({
+    const Roleoptions = PartnerModuleData?.data["Partner module access"]["role_name"].map((role: any) => ({
         value: role,
         label: role,
     }));
@@ -328,8 +326,8 @@ const UserRole: React.FC = () => {
                 [Selectedrole!.value]: {}
             };
 
-            console.log("Selected Modules:", selectedModules);
-            console.log("Selected Features:", selectedFeatures);
+            // console.log("Selected Modules:", selectedModules);
+            // console.log("Selected Features:", selectedFeatures);
 
             // Loop through selectedModules and selectedFeatures
             Object.keys(selectedModules).forEach(category => {
@@ -344,7 +342,7 @@ const UserRole: React.FC = () => {
                 selectedModulesForCategory.forEach(module => {
                     // Retrieve related features from the map
                     const relatedFeatures = map[category]?.Feature[module.replace('-active', '')];
-                    console.log(`Related features for ${module} in ${category}:`, relatedFeatures);
+                    // console.log(`Related features for ${module} in ${category}:`, relatedFeatures);
 
                     if (relatedFeatures) {
                         // Normalize the selected features by removing the '-active' suffix
@@ -352,7 +350,7 @@ const UserRole: React.FC = () => {
                             feature.replace('-active', '')
                         );
 
-                        console.log("Normalized Selected Features:", normalizedSelectedFeatures);
+                        // console.log("Normalized Selected Features:", normalizedSelectedFeatures);
 
                         // Filter normalized features against related features
                         const filteredFeatures = normalizedSelectedFeatures.filter(feature => {
@@ -364,14 +362,14 @@ const UserRole: React.FC = () => {
                         formattedData[Selectedrole!.value][category].Feature[module] = filteredFeatures;
 
                         // Log the filtered features for debugging
-                        console.log(`Filtered features for ${module}:`, filteredFeatures);
+                        // console.log(`Filtered features for ${module}:`, filteredFeatures);
                     } else {
-                        console.log(`No features found for module: ${module} in category: ${category}`);
+                        // console.log(`No features found for module: ${module} in category: ${category}`);
                     }
                 });
             });
 
-            console.log("Formatted Data:", formattedData);
+            // console.log("Formatted Data:", formattedData);
 
             try {
                 const url =
@@ -421,16 +419,12 @@ const UserRole: React.FC = () => {
                         if (response && response.status === 200) {
                             const parseddata = JSON.parse(response.data.body);
                             if (parseddata.flag) {
-
-                                console.log(parseddata)
-                                // setPartnerModuleData
-
-                                // console.log(partnerModuleData.data["Partner module access"])
-                                setPartnerModuleData(parseddata)
-                                // partnerModuleData=partnerModuleData.data["Partner module access"]
-
-
-                            } else {
+                                console.log(parseddata);
+                                // setPartnerModuleData(parseddata);
+                                setPartnerModuleAccess(parseddata);
+                                console.log("Updated partnerModuleData:", parseddata);
+                            }
+                        else {
 
                                 Modal.error({
                                     title: 'Error',
