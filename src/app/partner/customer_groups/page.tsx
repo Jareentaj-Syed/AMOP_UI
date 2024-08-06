@@ -44,9 +44,13 @@ const CustomerGroups: React.FC = () => {
 
   const sortHeaderMap = (headerMap: HeaderMap): HeaderMap => {
     const entries = Object.entries(headerMap) as [string, [string, number]][];
-    entries.sort((a, b) => a[1][1] - b[1][1]);
+    entries.sort((a, b) => a?.[1][1] - b?.[1][1]);
     return Object.fromEntries(entries) as HeaderMap;
   };
+
+const sortPopup = (fields: any[]): any[] => {
+  return fields.sort((a:any, b:any) => a?.id - b?.id);
+};
   const handleFilter = (advancedFilters: any) => {
     setFilteredData(advancedFilters);
   };
@@ -69,7 +73,7 @@ const CustomerGroups: React.FC = () => {
       setHeadersMap(header_Map);
       setVisibleColumns(headers_);
       setGeneralFields(generalFields_);
-      setCreateModalData(createModalData_)
+      setCreateModalData(sortPopup(createModalData_))
     };
 
     initializeData();

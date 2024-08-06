@@ -41,7 +41,9 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
     );
     setActiveFilters(advancedFilters);
     onFilter(advancedFilters);
-    handleButtonClick(advancedFilters)
+    if(Object.keys(advancedFilters).length>0){
+      handleButtonClick(advancedFilters)
+    }
   };
 
   const handleClear = () => {
@@ -96,7 +98,6 @@ const AdvancedMultiFilter: React.FC<AdvancedFilterProps> = ({ onFilter, onReset,
     }
 
     // Log selected header keys instead of values
-    console.log('advanced:', activeFilters); // Log colsList
   };
   const countActiveFilters = useMemo(() => {
     return Object.values(activeFilters).filter(value => value.length > 0).length;

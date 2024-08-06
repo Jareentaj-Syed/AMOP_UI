@@ -167,18 +167,29 @@ let sub_partners;
   const handleSetSubPartner = (selectedOptions: MultiValue<OptionType>) => {
     const selectedSubPartners = selectedOptions.map(option => option.value);
     setSelectedSubPartner(selectedSubPartners);
+    if (rowData) {
+      // formData[getFieldKey('Partner')]=partner
+      setFormData((prevState: any) => ({ ...prevState, [getFieldKey('Sub Partner')]: selectedSubPartners }));
+    }
   };
   const handlesetRole = (selectedOption: SingleValue<OptionType>) => {
     if (selectedOption) {
       const role = selectedOption.value
       setRole(selectedOption);
       setRoleName(role)
+      if (rowData) {
+        // formData[getFieldKey('Partner')]=partner
+        setFormData((prevState: any) => ({ ...prevState, [getFieldKey('Role')]: role }));
+      }
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Role is required.'));
     }
   };
   const handleNotification = (selectedOption: SingleValue<OptionType>) => {
-    console.log('wsdf', selectedOption)
     setNotification(selectedOption);
+    if (rowData) {
+      // formData[getFieldKey('Partner')]=partner
+      setFormData((prevState: any) => ({ ...prevState, [getFieldKey('Notification Enable')]: partner }));
+    }
     if (selectedOption) {
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Notification is required.'));
     }
@@ -259,8 +270,9 @@ let sub_partners;
         changedData[getFieldKey('Zip')] = zip;
         changedData["is_active"] = true;
         changedData["is_deleted"] = false;
+        changedData["created_by"] = user;
+        changedData["modified_date"] = getCurrentDateTime();
 
-      
           const data = {
               tenant_name: userPartner || "default_value",
               username: user,
@@ -337,7 +349,7 @@ let sub_partners;
   const getFieldValue = (label: any) => {
     if (rowData) {
       const field = generalFields ? generalFields.find((f: any) => f.display_name === label) : null;
-      return field ? rowData[field.db_column_name] || '' : '';
+      return field ? formData[field.db_column_name] || '' : '';
     }
     else {
       return ""

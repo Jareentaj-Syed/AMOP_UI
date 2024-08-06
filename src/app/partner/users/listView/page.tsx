@@ -71,7 +71,7 @@ const ListView: React.FC = () => {
       setHeadersMap(header_Map);
       setVisibleColumns(headers_);
       setGeneralFields(generalFields_);
-      setCreateModalData(createModalData_)
+      setCreateModalData(sortPopup(createModalData_))
     };
 
     initializeData();
@@ -97,7 +97,9 @@ const ListView: React.FC = () => {
     setExportModalOpen(false);
     setDateRange([null, null]); // Reset date range
   };
-
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
   const handleExport = async () => {
     if (!dateRange || dateRange[0] === null || dateRange[1] === null) {
       Modal.error({ title: 'Error', content: 'Please select a date range.' });

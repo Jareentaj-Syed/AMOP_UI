@@ -116,7 +116,7 @@ const BandWidthCustomers: React.FC = () => {
           setgeneralFields(generalFields)
           setHeaders(headers)
           setHeaderMap(headerMap)
-          setcreateModalData(createModalData)
+          setcreateModalData(sortPopup(createModalData))
           setTable(tableData);
           setTableData(tableData);
           settabledata(tableData)
@@ -253,7 +253,9 @@ const BandWidthCustomers: React.FC = () => {
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
-  
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
   
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string

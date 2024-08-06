@@ -114,7 +114,7 @@ useEffect(() => {
       setgeneralFields(generalFields)
       setHeaders(headers)
       setHeaderMap(sortedheaderMap)
-      setcreateModalData(createModalData)
+      setcreateModalData(sortPopup(createModalData))
       // setTable(tableData);
       setVisibleColumns(headers)
       setTableData(tableData);
@@ -247,7 +247,9 @@ useEffect(() => {
       Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
   };
- 
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
+  };
   const downloadBlob = (base64Blob: string) => {
     // Decode the Base64 string
     const byteCharacters = atob(base64Blob);

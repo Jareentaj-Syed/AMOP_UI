@@ -98,7 +98,7 @@ const E911Customers: React.FC = () => {
           const headers = Object.keys(headerMap);
           setHeaders(headers);
           setHeaderMap(headerMap);
-          setCreateModalData(createModalData);
+          setCreateModalData(sortPopup(createModalData));
           setVisibleColumns(headers);
         }
       } catch (error) {
@@ -218,6 +218,9 @@ const E911Customers: React.FC = () => {
       // console.error("Error downloading the file:", error);
       // Modal.error({ title: 'Export Error', content: 'An error occurred while exporting the file. Please try again.' });
     }
+  };
+  const sortPopup = (fields: any[]): any[] => {
+    return fields.sort((a:any, b:any) => a?.id - b?.id);
   };
 
   const downloadBlob = (base64Blob: string) => {

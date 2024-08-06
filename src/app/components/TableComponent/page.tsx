@@ -506,7 +506,7 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
             role_name: role,
             module_name: "Partner users",
             action: "delete",
-            updated_data: row,
+            changed_data: row,
             Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
