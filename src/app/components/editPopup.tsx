@@ -67,15 +67,12 @@ const EditModal: React.FC<EditModalProps> = ({
 
 
   const handleChange = (name: string, value: any) => {
-    console.log("values",value)
     setFormData((prevState: any) => ({
       ...prevState,
       [name]: value,
     }));
   };
   const handleSelectChange = (name: string, value: any) => {
-    console.log("values",value)
-    console.log("values",JSON.stringify(value))
     setFormData((prevState: any) => ({
       ...prevState,
       [name]: JSON.stringify(value),
@@ -706,7 +703,7 @@ const EditModal: React.FC<EditModalProps> = ({
                         <DatePicker
                           value={formData[column.db_column_name] && dayjs(formData[column.db_column_name]).isValid() ? dayjs(formData[column.db_column_name]) : null}
                           onChange={(date) => handleChange(column.db_column_name, date ? date.format('YYYY-MM-DD') : null)}
-                          className="input"
+                          className="input min-h-[40px]"
                           format="YYYY-MM-DD"
                           placeholder="Select a date"
                           disabled={!isEditable}

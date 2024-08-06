@@ -577,7 +577,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
                     onChange={(date, dateString) =>
                       handleChange(column.db_column_name, dateString)
                     }
-                    className="date-picker"
+                    className="input"
                   />
                 )}
               </div>

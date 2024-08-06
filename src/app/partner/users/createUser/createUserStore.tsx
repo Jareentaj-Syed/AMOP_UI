@@ -6,7 +6,7 @@ interface UserState {
     sub_tenant: string[];
     user_name:string;
     setTenant: (partner: string) => void;
-    setRoleName: (role: string) => void;
+    setRoleName: (role_name: string) => void;
     setSubTenant: (subPartners: string[]) => void;
     setUser_Name:(user_name: string) => void;
 }

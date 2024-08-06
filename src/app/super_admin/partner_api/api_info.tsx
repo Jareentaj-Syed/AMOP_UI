@@ -233,7 +233,7 @@ const CarrierInfo: React.FC = () => {
             <TableSearch
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
-              tableName={"carrier_apis"}
+              tableName={"amop_apis"}
               headerMap={headerMap}
             />
           </div>
@@ -244,7 +244,7 @@ const CarrierInfo: React.FC = () => {
             onReset={handleReset}
             headers={headers}
             headerMap={headerMap}
-            tableName={"carrier_apis"}
+            tableName={"amop_apis"}
           />
         </div>
       

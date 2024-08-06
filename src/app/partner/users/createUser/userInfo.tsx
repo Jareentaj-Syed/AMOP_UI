@@ -7,7 +7,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
-import { Modal } from 'antd';
+import { Modal, notification} from 'antd';
 
 
 type OptionType = {
@@ -56,7 +56,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData,isPopup }) => {
   const [partner, setPartner] = useState<SingleValue<OptionType>>(null);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<SingleValue<OptionType>>(null);
-  const [notification, setNotification] = useState<SingleValue<OptionType>>(null);
+  const [Notification, setNotification] = useState<SingleValue<OptionType>>(null);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [selectedSubPartner, setSelectedSubPartner] = useState<string[]>([]);
   const [subPartners, setSubPartners] = useState<string[]>([]);
@@ -181,6 +181,12 @@ let sub_partners;
       setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Notification is required.'));
     }
   };
+  const messageStyle = {
+    fontSize: '14px',  // Adjust font size
+    fontWeight: 'bold', // Make the text bold
+    padding: '16px',
+    // Add padding
+  };
 
   const handleSave = async() => {
     const errors: string[] = [];
@@ -189,7 +195,7 @@ let sub_partners;
     if (!emailId) errors.push('Email id is required.');
     if (!role) errors.push('Role is required.');
     if (!password) errors.push('Password is required.');
-    if (!notification) errors.push('Notification is required.')
+    if (!Notification) errors.push('Notification is required.')
     setErrorMessages(errors);
       if (errors.length === 0) {
         setUser_Name(username)
@@ -234,6 +240,15 @@ let sub_partners;
               Partner:partner,
           };
           const response = await axios.post(url, { data });
+          if (response && response.data.statusCode===200) {
+            // Show success message
+            notification.success({
+              message: 'Success',
+              description: 'Successfully saved the form',
+              style: messageStyle,
+              placement: 'top', // Apply custom styles here
+            });
+          }
       }
       catch(error){
           console.log(
@@ -398,7 +413,7 @@ let sub_partners;
             <label className="field-label">Notification Enable<span className="text-red-500">*</span></label>
             <Select
               styles={editableDrp}
-              value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : notification}
+              value={rowData ? { value: getFieldValue('Notification Enable'), label: getFieldValue('Notification Enable') } : Notification}
               options={Notificationoptions}
               onChange={handleNotification}
             />
