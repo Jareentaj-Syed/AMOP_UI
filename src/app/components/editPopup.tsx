@@ -355,7 +355,7 @@ const EditModal: React.FC<EditModalProps> = ({
               username: username,
               path: "/get_module_data",
               role_name: role,
-              parent_module_name: "people",
+              parent_module: "people",
               module_name: "E911 Customers",
               mod_pages: {
                 start: 0,
@@ -390,7 +390,7 @@ const EditModal: React.FC<EditModalProps> = ({
               username: username,
               path: "/get_module_data",
               role_name: role,
-              parent_module_name: "people", // Corrected spelling from 'poeple'
+              parent_module: "people", // Corrected spelling from 'poeple'
               module_name: "NetSapiens Customers",
               mod_pages: {
                 start: 0,
@@ -429,7 +429,7 @@ const EditModal: React.FC<EditModalProps> = ({
               username: username,
               path: "/get_module_data",
               role_name: role,
-              parent_module_name: "people",
+              parent_module: "people",
               module_name: "Bandwidth Customers",
               mod_pages: {
                 start: 0,
