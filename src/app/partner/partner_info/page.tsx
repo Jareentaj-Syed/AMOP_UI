@@ -35,8 +35,12 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   useEffect(() => {
     let email_list = Array.isArray(partnerInfo?.email_id) ? partnerInfo.email_id : [];
 
-    setEmailList(email_list); 
-    setEmailsList(email_list);
+    // setEmailList(email_list); 
+    // setEmailsList(email_list);
+    if (JSON.stringify(emailList) !== JSON.stringify(email_list)) {
+      setEmailList(email_list); 
+      setEmailsList(email_list);
+    }
   }, [partnerInfo])
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
