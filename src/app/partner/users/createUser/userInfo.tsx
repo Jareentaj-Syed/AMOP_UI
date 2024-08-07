@@ -7,7 +7,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
-import { Modal, notification } from 'antd';
+import { Modal, notification, Spin } from 'antd';
 import { isString } from 'antd/es/button';
 
 
@@ -67,6 +67,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
   const [subPartnersData, setsubPartnersData] = useState<any>({});
   const [subPartnersoptions, setsubPartnersoptions] = useState<any[]>([]);
   const [formData, setFormData] = useState<any>(rowData || {});
+  const [loading, setLoading] = useState(false);
   //Show Modal
   const [showModal, setShowModal] = useState(false);
   console.log("info", editable)
@@ -284,6 +285,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
     if (errors.length === 0) {
       setUser_Name(username)
       try {
+        setLoading(true)
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
@@ -354,6 +356,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
                 centered: true,
               });
+              setLoading(false)
+
             } else {
               setPartnerUsers(parsedData)
               const tableData = parsedData?.data?.["Partner users"]?.users || [];
@@ -364,6 +368,8 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
                 style: messageStyle,
                 placement: 'top', // Apply custom styles here
               });
+              setLoading(false)
+
             }
           }
           catch (error) {
@@ -372,6 +378,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
               content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
               centered: true,
             });
+            setLoading(false)
           }
           handleClearFields();
         }
@@ -423,6 +430,13 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
       return ""
     }
   };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
   return (
     <div className='bg-gray-50'>
       <h3 className="text-lg font-semibold mb-2 text-blue-500 bg-gray-200 pl-2 py-2">Basic Information</h3>

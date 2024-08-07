@@ -21,7 +21,7 @@ interface Column {
 interface CreateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (newData: any,tableData:any) => void;
+  onSave: (newData: any, tableData: any) => void;
   columnNames: Column[];
   heading: string;
   generalFields?: Record<string, any>;
@@ -43,9 +43,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const [formData, setFormData] = useState<any>({});
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
-  const { username, tenantNames, role, partner, settabledata,setStoredPagination } = useAuth();
+  const { username, tenantNames, role, partner, settabledata, setStoredPagination } = useAuth();
   const [loading, setLoading] = useState(false);
-  const { partnerData,setCustomerGroups } = usePartnerStore.getState();
+  const { partnerData, setCustomerGroups } = usePartnerStore.getState();
 
   useEffect(() => {
     const initialFormData = header?.reduce((acc, column) => {
@@ -64,7 +64,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
   };
 
   const handleCreate = () => {
-    onSave(formData,tableData);
+    onSave(formData, tableData);
     onClose();
   };
 
@@ -88,6 +88,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
 
     setFormData(initialFormData);
     if (formData) {
+      setLoading(true)
       try {
         const url =
           'https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management';
@@ -108,7 +109,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             module_name: 'Customer groups',
             action: 'create',
             changed_data: formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
           };
@@ -116,7 +117,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'Carrier') {
           if (formData) {
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -127,7 +128,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_tab: 'Carrier APIs',
             table_name: 'carrier_apis',
             changed_data: formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
           };
@@ -136,7 +137,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
         if (heading === 'API') {
           if (formData) {
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -147,7 +148,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             sub_tab: 'Amop APIs',
             table_name: 'amop_apis',
             changed_data: formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
           };
@@ -158,7 +159,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             formData["is_deleted"] = false
             formData["is_active"] = true
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -170,7 +171,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             table_name: 'e911_customers',
             action: 'create',
             changed_data: formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
           };
@@ -180,7 +181,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             formData["is_deleted"] = false
             formData["is_active"] = true
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -192,7 +193,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             table_name: 'customers',
             action: 'create',
             changed_data: formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
           };
@@ -202,7 +203,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             formData["is_deleted"] = false
             formData["is_active"] = true
             formData['created_by'] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || 'default_value',
@@ -214,7 +215,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             table_name: 'customers',
             changed_data: formData,
             action: 'create',
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime()
 
 
@@ -252,9 +253,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
               "sub_tab": "Carrier APIs",
               "table_name": "carrier_apis",
               "changed_data": formData,
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime()
-  
+
             };
           }
 
@@ -271,9 +272,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
               "sub_tab": "Amop APIs",
               "table_name": "amop_apis",
               "changed_data": formData,
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime()
-  
+
             };
           }
 
@@ -290,9 +291,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime()
-  
+
             };
 
             const response = await axios.post(url, { data });
@@ -303,11 +304,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
                 centered: true,
               });
+              setLoading(false)
             } else {
               const headerMap = parsedData.headers_map["E911 Customers"]["header_map"];
               const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
               const customertableData = parsedData.data.e911_customers;
               settabledata(customertableData);
+              setLoading(false)
+
             }
           }
           if (heading === "NetSapien Customer") {
@@ -323,20 +327,30 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime()
-  
+
             };
 
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
-            console.log(parsedData)
-            // Check if the flag is false in the parsed data
-            const tableData = parsedData.data.customers;
-            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
-            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
-            const generalFields = parsedData.data
-            settabledata(tableData);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+              setLoading(false)
+            } else {
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              settabledata(tableData);
+              setLoading(false)
+            }
+
+
           }
           if (heading === "Bandwidth Customer") {
             const url =
@@ -352,13 +366,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime()
-  
+
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
             if (parsedData.flag === false) {
+              setLoading(false)
               Modal.error({
                 title: 'Data Fetch Error',
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
@@ -370,6 +385,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
               const createModalData = parsedData.headers_map["Bandwidth Customers"]["pop_up"]
               const generalFields = parsedData.data
               settabledata(tableData);
+              setLoading(false)
             }
           }
           if (heading === "Customer Group") {
@@ -377,17 +393,17 @@ const CreateModal: React.FC<CreateModalProps> = ({
               "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
             const data = {
               tenant_name: partner || "default_value",
-                        username: username,
-                        path: "/get_partner_info",
-                        role_name: role,
-                        parent_module:"Partner",
-                        modules_list: ["Customer groups"],
-                        pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                        },
-                        Partner:partner,
-                        request_received_at: getCurrentDateTime(),
+              username: username,
+              path: "/get_partner_info",
+              role_name: role,
+              parent_module: "Partner",
+              modules_list: ["Customer groups"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
+              Partner: partner,
+              request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
@@ -399,14 +415,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 centered: true,
               });
             } else {
-              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
+              const tableData = parsedData?.data?.["Customer groups"]?.customergroups || [];
               setCustomerGroups(parsedData)
-              console.log("tableData",tableData)
+              console.log("tableData", tableData)
               settabledata(tableData);
               setLoading(false)
             }
           }
-        
+
           // if (heading === "RevIO Customer") {
           //   if (formData) {
           //     formData["modified_by"] = username;
@@ -431,8 +447,10 @@ const CreateModal: React.FC<CreateModalProps> = ({
             content: errorMsg,
             centered: true,
           });
+          setLoading(false)
+
         }
-        if (response && response.data.statusCode===200) {
+        if (response && response.data.statusCode === 200) {
           // Show success message
           notification.success({
             message: 'Success',
@@ -440,8 +458,9 @@ const CreateModal: React.FC<CreateModalProps> = ({
             style: messageStyle,
             placement: 'top', // Apply custom styles here
           });
+          setLoading(false)
         }
-        else{
+        else {
           const errorMsg = JSON.parse(response.data.body).message
           Modal.error({
             title: 'Saving Error',
@@ -449,7 +468,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
             centered: true,
           });
         }
-          
+
 
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -473,14 +492,14 @@ const CreateModal: React.FC<CreateModalProps> = ({
     typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight =
     typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center h-screen">
-          <Spin size="large" />
-        </div>
-      );
-    }
-  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Spin size="large" />
+      </div>
+    );
+  }
+
 
   return (
     <div>
@@ -525,45 +544,45 @@ const CreateModal: React.FC<CreateModalProps> = ({
                 )}
                 {column.type === 'dropdown' && (
                   <Select
-                  isMulti={column.db_column_name === "customer_names"||column.db_column_name === "rate_plan_name"}
-                  styles={editableDrp}
-                  classNamePrefix="select"
-                  placeholder="Select..."
-                  value={
-                    formData[column.db_column_name]
-                      ? Array.isArray(formData[column.db_column_name])
-                        ? formData[column.db_column_name].map((item: string) => ({
+                    isMulti={column.db_column_name === "customer_names" || column.db_column_name === "rate_plan_name"}
+                    styles={editableDrp}
+                    classNamePrefix="select"
+                    placeholder="Select..."
+                    value={
+                      formData[column.db_column_name]
+                        ? Array.isArray(formData[column.db_column_name])
+                          ? formData[column.db_column_name].map((item: string) => ({
                             label: item,
                             value: item,
                           }))
-                        : {
+                          : {
                             label: formData[column.db_column_name],
                             value: formData[column.db_column_name],
                           }
-                      : null
-                  }
-                  onChange={(selectedOption) =>
-                    handleChange(
-                      column.db_column_name,
-                      selectedOption
-                        ? Array.isArray(selectedOption)
-                          ? selectedOption.map((option) => option.value)
-                          : selectedOption.value
-                        : ''
-                    )
-                  }
-                  options={
-                    column.db_column_name!==null?(generalFields &&
-                    generalFields[column.db_column_name] &&
-                    Array.isArray(generalFields[column.db_column_name])
-                      ? generalFields[column.db_column_name].map((option: string) => ({
+                        : null
+                    }
+                    onChange={(selectedOption) =>
+                      handleChange(
+                        column.db_column_name,
+                        selectedOption
+                          ? Array.isArray(selectedOption)
+                            ? selectedOption.map((option) => option.value)
+                            : selectedOption.value
+                          : ''
+                      )
+                    }
+                    options={
+                      column.db_column_name !== null ? (generalFields &&
+                        generalFields[column.db_column_name] &&
+                        Array.isArray(generalFields[column.db_column_name])
+                        ? generalFields[column.db_column_name].map((option: string) => ({
                           label: option,
                           value: option,
                         }))
-                      : [{ label: 'No options', value: '' }]):[{ label: 'No options', value: '' }]
-                  }
-                />
-                
+                        : [{ label: 'No options', value: '' }]) : [{ label: 'No options', value: '' }]
+                    }
+                  />
+
                 )}
 
                 {column.type === 'checkbox' && (

@@ -8,7 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import axios from 'axios';
-import { Modal, notification } from 'antd';
+import { Modal, notification, Spin } from 'antd';
 type OptionType = {
     value: string;
     label: string;
@@ -39,6 +39,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
     //Show Modal
     const [showModal, setShowModal] = useState(false);
+    const [loading, setLoading] = useState(false); 
 
     const {
         tenant,
@@ -122,6 +123,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
 
         if (errors.length === 0) {
             try {
+                setLoading(true)
                 const url =
                     "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
@@ -192,8 +194,10 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                                 placement: 'top', // Apply custom styles here
                             });
                         }
+                        setLoading(false)
                     }
                     catch (error) {
+                        setLoading(false)
                         Modal.error({
                             title: 'Submit Error',
                             content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
@@ -208,9 +212,11 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                         content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
                         centered: true,
                     });
+                    setLoading(false)
                 }
             }
             catch (error) {
+                setLoading(false)
                 console.log(
                     error
                 )
@@ -275,6 +281,13 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
             return ""
         }
     };
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
     return (
         <div className=''>
             <div>

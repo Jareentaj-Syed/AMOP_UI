@@ -36,7 +36,7 @@ const Partner: React.FC = () => {
     const router = useRouter();
     const setTitle = useLogoStore((state) => state.setTitle);
     const { username, partner, role } = useAuth();
-    const [loading, setLoading] = useState(true); // State to manage loading
+    const [loading, setLoading] = useState(true); 
     const [activeTab, setActiveTab] = useState('partnerInfo');
     const [partnerInfoLoaded, setPartnerInfoLoaded] = useState(false);
     const [partnerAuthenticationLoaded, setPartnerAuthenticationLoaded] = useState(false);

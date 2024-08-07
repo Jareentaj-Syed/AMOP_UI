@@ -135,6 +135,7 @@ const EditModal: React.FC<EditModalProps> = ({
   const handleConfirmSave = async () => {
     if (formData) {
       try {
+        setLoading(true)
         const url =
           "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
 
@@ -272,15 +273,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
         const response = await axios.post(url, { data });
         const resp = JSON.parse(response.data.body);
-        console.log(resp)
         if (response.data.statusCode === 200 && resp.flag === true) {
-        setLoading(true)
-          notification.success({
-            message: 'Success',
-            description: 'Successfully Edit the record!',
-            style: messageStyle,
-            placement: 'top', // Apply custom styles here
-          });
           if (heading === "Carrier") {
           
             try {
@@ -299,12 +292,12 @@ const EditModal: React.FC<EditModalProps> = ({
               };
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
-              console.log(resp)
               const carrierApis = resp.data.Carrier_apis_data.carrier_apis;
-              console.log(carrierApis);
               settabledata(carrierApis)
+              setLoading(false)
             }
               catch (err) {
+              setLoading(false)
                 console.error("Error fetching data:", err);
                 // Modal.error({
                 //   title: 'Data Fetch Error',
@@ -318,6 +311,7 @@ const EditModal: React.FC<EditModalProps> = ({
           if (heading === "API") {
           
             try {
+              setLoading(false)
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
                 tenant_name: partner || "default_value",
@@ -338,6 +332,7 @@ const EditModal: React.FC<EditModalProps> = ({
               const carrierApis = resp.data.amop_apis_data.amop_apis;
               console.log(carrierApis);
               settabledata(carrierApis)
+              setLoading(false)
            
             }
               catch (err) {

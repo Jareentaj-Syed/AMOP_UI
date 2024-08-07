@@ -8,7 +8,7 @@ import { usePartnerStore } from '../../partnerStore';
 import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
-import { Modal, notification } from 'antd';
+import { Modal, notification, Spin } from 'antd';
 // import { OptionType } from 'dayjs';
 
 interface ExcelData {
@@ -71,9 +71,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
     //Show Modal
     const [showModal, setShowModal] = useState(false);
 
-
-
-
+    const [loading, setLoading] = useState(false);
 
 
     const { partnerData } = usePartnerStore.getState();
@@ -518,6 +516,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
             }
 
             try {
+                setLoading(true)
                 const url =
                     "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
                 const data = {
@@ -542,12 +541,6 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                     console.log(resp)
                     if (response.data.statusCode === 200 && resp.flag === true) {
 
-                        notification.success({
-                            message: 'Success',
-                            description: 'Successfully saved the form',
-                            style: messageStyle,
-                            placement: 'top', // Apply custom styles here
-                        });
 
                         // setLoading(true)
 
@@ -574,6 +567,12 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                                     console.log(parseddata);
                                     // setPartnerModuleData(parseddata);
                                     setPartnerModuleAccess(parseddata);
+                                    notification.success({
+                                        message: 'Success',
+                                        description: 'Successfully saved the form',
+                                        style: messageStyle,
+                                        placement: 'top', // Apply custom styles here
+                                    });
                                 }
                                 else {
 
@@ -582,16 +581,20 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                                         content: parseddata.message,
                                         centered: true,
                                     });
-
                                 }
+                                setLoading(false)
                             } else {
                                 Modal.error({
                                     title: 'Error',
                                     content: 'An error occurred during fetching data.',
                                     centered: true,
                                 });
+                            setLoading(false)
                             }
+
                         } catch (error) {
+                            setLoading(false)
+
                             console.error('Error fetching');
                         }
 
@@ -629,7 +632,13 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
             behavior: 'auto' // Optional: Smooth scroll animation
         });
     };
-
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
     return (
         <div>
             <div className="grid grid-cols-2 gap-4 mb-4">
