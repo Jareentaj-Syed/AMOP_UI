@@ -14,6 +14,7 @@ import error from 'next/error';
 import{ MultiValue, SingleValue } from 'react-select';
 import { useUserStore } from '../partner/users/createUser/createUserStore';
 import { getCurrentDateTime } from './header_constants';
+import { usePartnerStore } from '../partner/partnerStore';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -54,6 +55,8 @@ const EditModal: React.FC<EditModalProps> = ({
   const { username, tenantNames, role, partner, settabledata} = useAuth();
   const rate_plan_name_drp = generalFields && generalFields.rate_plan_name && Array.isArray(generalFields.rate_plan_name) ? generalFields.rate_plan_name : []
   const [loading, setLoading] = useState(false);
+  const { partnerData,setCustomerGroups } = usePartnerStore.getState();
+
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
   const [initialData, setTableData] = useState<any>(tableData)
@@ -485,6 +488,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 centered: true,
               });
             } else {
+              setCustomerGroups(parsedData)
               const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
               console.log("tableData",tableData)
               settabledata(tableData);

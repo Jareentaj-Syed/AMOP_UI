@@ -35,7 +35,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     const [generalFields, setGeneralFields] = useState<any[]>([]);
 
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
-    const { partnerData } = usePartnerStore.getState();
+    const { partnerData,setPartnerUsers } = usePartnerStore.getState();
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
     //Show Modal
     const [showModal, setShowModal] = useState(false);
@@ -59,7 +59,6 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
             const ServiceProviderOptions_ = ServiceProviderOptions.map((service: any) => ({ value: service, label: service }))
             const customerOptions: any[] = usersData?.customer_name || []
             const customerOptions_ = customerOptions.map((customer: any) => ({ value: customer, label: customer }))
-            console.log("general_fields", general_fields)
             setcustomerOptions(customerOptions_)
             setCustomerGroupOptions(CustomerGroupOptions_)
             setServiceProviderOptions(ServiceProviderOptions_)
@@ -83,7 +82,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                 }
             }
             setServiceProvider(selected_provider)
-            const customersFieldValue = rowData?.["Customer Group"] || ""
+            const customersFieldValue = rowData?.["Customers"] || ""
             let selected_customer: string[] = [];
             try {
                 selected_customer = JSON.parse(customersFieldValue);
@@ -114,7 +113,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     };
     const handleSubmit = async () => {
         const errors: string[] = [];
-        if (CarrierNotification.length === 0) errors.push('Carrier is required.');
+        // if (CarrierNotification.length === 0) errors.push('Carrier is required.');
         if (ServiceProvider.length === 0) errors.push('Service Provider is required.');
 
         setErrorMessages(errors);
@@ -156,13 +155,49 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                 const response = await axios.post(url, { data });
                 const parsedData = JSON.parse(response.data.body);
                 if (response && response.data.statusCode === 200) {
-                    // Show success message
-                    notification.success({
-                        message: 'Success',
-                        description: 'Successfully saved the form',
-                        style: messageStyle,
-                        placement: 'top', // Apply custom styles here
-                    });
+                    try{
+                        const url =
+                          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+                        const data = {
+                          tenant_name: userPartner || "default_value",
+                          username: username,
+                          path: "/get_partner_info",
+                          role_name: role,
+                          parent_module:"Partner",
+                          modules_list: ["Partner users"],
+                          pages: {
+                            "Customer groups": { start: 0, end: 500 },
+                            "Partner users": { start: 0, end: 500 }
+                          },
+                          request_received_at: getCurrentDateTime(),
+                        };
+                        const response = await axios.post(url, { data });
+                        const parsedData = JSON.parse(response.data.body);
+                        if (parsedData.flag === false) {
+                          Modal.error({
+                            title: 'Data Fetch Error',
+                            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                            centered: true,
+                          });
+                        } else {
+                          setPartnerUsers(parsedData)
+                          const tableData = parsedData?.data?.["Partner users"]?.users || [];
+                          settabledata(tableData);
+                          notification.success({
+                            message: 'Success',
+                            description: 'Successfully saved the form',
+                            style: messageStyle,
+                            placement: 'top', // Apply custom styles here
+                          });
+                        }
+                      }
+                      catch(error){
+                        Modal.error({
+                          title: 'Submit Error',
+                          content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+                          centered: true,
+                        });
+                      }
                     handleClearFields(); // Clear all fields
                 }
                 else {
@@ -204,9 +239,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
         const selectedCarriers = selectedOptions.map(option => option.value);
 
         setCarrierNotification(selectedCarriers);
-        if (selectedCarriers.length > 0) {
-            setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
-        }
+        // if (selectedCarriers.length > 0) {
+        //     setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Carrier is required.'));
+        // }
     };
     const serviceProviderChange = (selectedOptions: MultiValue<OptionType>) => {
         const selectedProviders = selectedOptions.map(option => option.value);
@@ -215,6 +250,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
         }
     };
+
     const customerGroupChange = (selectedOption: SingleValue<OptionType>) => {
 
         if (selectedOption) {
@@ -258,7 +294,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                         />
                     </div>
                     <div>
-                        <label className="field-label">Carrier <span className="text-red-500">*</span></label>
+                        <label className="field-label">Carrier</label>
                         <Select
                             isMulti
                             value={CarrierNotification}
@@ -268,9 +304,9 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                             isDisabled={!tenant || !editable}
 
                         />
-                        {errorMessages.includes('Carrier is required.') && (
+                        {/* {errorMessages.includes('Carrier is required.') && (
                             <span className="text-red-600 ml-1">Carrier is required.</span>
-                        )}
+                        )} */}
                     </div>
                     <div>
                         <label className="field-label">Service Provider <span className="text-red-500">*</span></label>
@@ -308,7 +344,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                             isMulti
                             options={customerOptions}
                             styles={editable ? editableDrp : nonEditableDrp}
-                            value={customerOptions.filter(option => customer.includes(option.value))}
+                            value={customer.filter(option => customerOptions.includes(option.value))}
                             onChange={customerChange}
                             isDisabled={!editable}
 

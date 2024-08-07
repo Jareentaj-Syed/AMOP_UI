@@ -37,7 +37,7 @@ const CustomerGroups: React.FC = () => {
   const [headerMap, setHeadersMap] = useState<HeaderMap>({});
   const [createModalData, setCreateModalData] = useState<any[]>([]);
   const [generalFields, setGeneralFields] = useState<any>({});
-  const { partnerData } = usePartnerStore.getState();
+  const { partnerData,setCustomerGroups } = usePartnerStore.getState();
   const customerGroupsData = partnerData["Customer groups"] || {};
   const [filteredData, setFilteredData] = useState([]);
   const [pagination, setPagination] = useState<any>({});

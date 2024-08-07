@@ -15,7 +15,7 @@ type OptionType = {
   value: string;
   label: string;
 };
-const { partnerData } = usePartnerStore.getState();
+const { partnerData,setPartnerUsers } = usePartnerStore.getState();
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 const Notificationoptions = [
@@ -80,6 +80,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
     setSubTenant,
     setUser_Name
   } = useUserStore();
+
   const subPartnersnoOptions = [{ value: '', label: 'No sub-partners available' }];
   const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
   const getFieldValue = (label: any) => {
@@ -313,7 +314,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
         changedData["is_active"] = true;
         changedData["is_deleted"] = false;
         changedData["created_by"] = user;
-        changedData["modified_date"] = getCurrentDateTime();
+        // changedData["modified_date"] = getCurrentDateTime();
 
         const data = {
           tenant_name: userPartner || "default_value",
@@ -331,13 +332,49 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
         if (response && response.data.statusCode === 200) {
-          // Show success message
-          notification.success({
-            message: 'Success',
-            description: 'Successfully saved the form',
-            style: messageStyle,
-            placement: 'top', // Apply custom styles here
-          });
+          try{
+            const url =
+              "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+            const data = {
+              tenant_name: userPartner || "default_value",
+              username: user,
+              path: "/get_partner_info",
+              role_name: userRole,
+              parent_module:"Partner",
+              modules_list: ["Partner users"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
+              request_received_at: getCurrentDateTime(),
+            };
+            const response = await axios.post(url, { data });
+            const parsedData = JSON.parse(response.data.body);
+            if (parsedData.flag === false) {
+              Modal.error({
+                title: 'Data Fetch Error',
+                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                centered: true,
+              });
+            } else {
+              setPartnerUsers(parsedData)
+              const tableData = parsedData?.data?.["Partner users"]?.users || [];
+              setData(tableData);
+              notification.success({
+                message: 'Success',
+                description: 'Successfully saved the form',
+                style: messageStyle,
+                placement: 'top', // Apply custom styles here
+              });
+            }
+          }
+          catch(error){
+            Modal.error({
+              title: 'Submit Error',
+              content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+              centered: true,
+            });
+          }
           handleClearFields();
         }
         else {
@@ -416,7 +453,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             isDisabled={!editable}
             value={subPartnersoptions.filter(option => selectedSubPartner.includes(option.value))}
             onChange={handleSetSubPartner}
-            options={subPartnersoptions?.length > 0 ? subPartnersoptions : subPartnersnoOptions}
+            options={subPartnersoptions?.length > 0 ? subPartnersoptions : []}
             styles={editable ? editableDrp : nonEditableDrp}
           />
 

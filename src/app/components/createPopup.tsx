@@ -9,7 +9,7 @@ import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import { message } from 'antd';
 import { getCurrentDateTime } from './header_constants';
-
+import { usePartnerStore } from '../partner/partnerStore';
 interface Column {
   display_name: string;
   db_column_name: string;
@@ -45,6 +45,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
   const editableDrp = DropdownStyles;
   const { username, tenantNames, role, partner, settabledata,setStoredPagination } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { partnerData,setCustomerGroups } = usePartnerStore.getState();
 
   useEffect(() => {
     const initialFormData = header?.reduce((acc, column) => {
@@ -399,6 +400,7 @@ const CreateModal: React.FC<CreateModalProps> = ({
               });
             } else {
               const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
+              setCustomerGroups(parsedData)
               console.log("tableData",tableData)
               settabledata(tableData);
               setLoading(false)

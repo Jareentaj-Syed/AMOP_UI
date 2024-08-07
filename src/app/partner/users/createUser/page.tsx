@@ -80,9 +80,9 @@ useEffect(() => {
 
           </div>
           <div className={`shadow-md p-4 ${isPopup ? '' : 'mt-[-10px] pt-[70px]'}`}>
-            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup} editable={editable}/>}
-            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} editable={editable}/>}
-            {activeTab === 'userrole' && <UserRole rowData={rowData} editable={editable}/>}
+            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup} editable={editable||true}/>}
+            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} editable={editable||true}/>}
+            {activeTab === 'userrole' && <UserRole rowData={rowData} editable={editable||true}/>}
           </div>
         </div>
       )}</div>
