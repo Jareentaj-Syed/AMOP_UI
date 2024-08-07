@@ -716,7 +716,8 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                                         {map[category].Module.map((module) => {
                                             const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
                                             const isSelected = selectedModules[category]?.includes(cleanedModule);
-                                            const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+                                            const bgColor = isSelected ? '#e1eafc' : '#f3f3f2';
+                                        const textColor = isSelected ? '#235bfe' : '#292929';
 
 
                                             const relatedFeatures = map[category]?.Feature[cleanedModule] || [];
@@ -724,28 +725,29 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                                             return (
                                                 <div key={module} className="border border-gray-300 p-4 rounded-lg mb-4">
                                                     <div className="flex items-center">
-                                                        <span className="text-blue-600 text-sm font-medium mr-2">Module:</span>
+                                                        <span className="text-md font-b mr-2 text-black">Module:</span>
                                                         <button
                                                             className={`px-2 py-1 rounded-lg border`}
-                                                            style={{ backgroundColor: bgColor }}
+                                                            style={{ backgroundColor: bgColor ,  color: textColor}}
                                                             onClick={() => toggleModule(category, cleanedModule)}
                                                         >
                                                             {cleanedModule}
                                                         </button>
                                                     </div>
                                                     <div className="mt-2">
-                                                        <span className="text-blue-600 text-sm font-medium">Features:</span>
+                                                        <span className="text-md font-b mr-2 text-black">Features:</span>
                                                         <div className="flex flex-wrap gap-2 mt-2">
                                                             {relatedFeatures.map((feature) => {
                                                                 const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
                                                                 const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
-                                                                const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+                                                                const bgColor = isSelected ? '#e1eafc' : '#f3f3f2';
+                                                                const textColor = isSelected ? '#235bfe' : '#292929';
 
                                                                 return (
                                                                     <button
                                                                         key={feature}
                                                                         className={`px-2 py-1 rounded-lg border`}
-                                                                        style={{ backgroundColor: bgColor }}
+                                                                        style={{ backgroundColor: bgColor ,  color: textColor}}
                                                                         onClick={() => toggleFeature(category, cleanedFeature)}
                                                                     >
                                                                         {cleanedFeature}

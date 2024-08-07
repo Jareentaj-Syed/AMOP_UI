@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useAuth } from '@/app/components/auth_context';
 import { getCurrentDateTime } from '@/app/components/header_constants';
 import { Modal, notification, Spin } from 'antd';
- 
+
 
 interface FormattedData {
     role: string;
@@ -75,9 +75,9 @@ const UserRole: React.FC = () => {
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [map, setMap] = useState<ExcelData>({});
-  
-const PartnerModuleData=partnerData?.["Partner module access"] ||{}
-console.log("partner module data:", PartnerModuleData)
+
+    const PartnerModuleData = partnerData?.["Partner module access"] || {}
+    console.log("partner module data:", PartnerModuleData)
 
     const editableDrp = DropdownStyles;
 
@@ -243,7 +243,7 @@ console.log("partner module data:", PartnerModuleData)
         return defaultData; // Returns modified defaultData
     };
 
- 
+
 
 
     const messageStyle = {
@@ -285,32 +285,32 @@ console.log("partner module data:", PartnerModuleData)
             Object.keys(selectedModules).forEach(category => {
                 const selectedModulesForCategory = selectedModules[category];
                 const selectedFeaturesForCategory = selectedFeatures[category] || [];
-            
+
                 // Temporary object to hold features for the category
                 const categoryFeatures: any = {};
-            
+
                 selectedModulesForCategory.forEach(module => {
                     // Retrieve related features from the map
                     const relatedFeatures = map[category]?.Feature[module.replace('-active', '')];
-            
+
                     if (relatedFeatures) {
                         // Normalize the selected features by removing the '-active' suffix
                         const normalizedSelectedFeatures = selectedFeaturesForCategory.map(feature =>
                             feature.replace('-active', '')
                         );
-            
+
                         // Filter normalized features against related features
                         const filteredFeatures = normalizedSelectedFeatures.filter(feature =>
                             relatedFeatures.includes(feature) || relatedFeatures.includes(feature + '-active')
                         );
-            
+
                         // Only store the module if there are filtered features
                         if (filteredFeatures.length > 0) {
                             categoryFeatures[module] = filteredFeatures;
                         }
                     }
                 });
-            
+
                 // Only add the category to formattedData if it has both modules and features
                 if (selectedModulesForCategory.length > 0 && Object.keys(categoryFeatures).length > 0) {
                     if (!formattedData[Selectedrole!.value]) {
@@ -322,10 +322,10 @@ console.log("partner module data:", PartnerModuleData)
                     };
                 }
             });
-            
+
             // Console log the formatted data
             console.log('Formatted Data:', formattedData);
-            
+
 
             // console.log("Formatted Data:", formattedData);
 
@@ -365,7 +365,7 @@ console.log("partner module data:", PartnerModuleData)
                         username: username,
                         path: "/get_partner_info",
                         role_name: role,
-                        parent_module:"Partner",
+                        parent_module: "Partner",
                         modules_list: ["Partner module access"],
                         "pages": {
                             "Customer groups": { "start": 0, "end": 500 },
@@ -382,7 +382,7 @@ console.log("partner module data:", PartnerModuleData)
                                 // setPartnerModuleData(parseddata);
                                 setPartnerModuleAccess(parseddata);
                             }
-                        else {
+                            else {
 
                                 Modal.error({
                                     title: 'Error',
@@ -416,26 +416,26 @@ console.log("partner module data:", PartnerModuleData)
 
     const toggleModule = (category: string, module: string) => {
         console.log(`Toggling module: ${module} in category: ${category}`);
-    
+
         setSelectedModules((prev) => {
             const modules = prev[category] || [];
             const isSelected = modules.includes(module);
             const features = map[category]?.Feature[module] || [];
-    
+
             console.log(`Current selected modules for category ${category}:`, modules);
             console.log(`Module is currently selected:`, isSelected);
             console.log(`Features for module ${module}:`, features);
-    
+
             if (!isSelected) {
                 console.log(`Selecting module: ${module}`);
                 const activeFeatures = features.filter(feature => feature.endsWith('-active'));
-    
+
                 if (activeFeatures.length === 0) {
                     console.log(`Activating all features for module: ${module}`);
                     setSelectedFeatures((prevFeatures) => {
                         const currentFeatures = prevFeatures[category] || [];
                         const newFeatures = features.map(feature => feature.replace('-active', ''));
-    
+
                         return {
                             ...prevFeatures,
                             [category]: [
@@ -463,51 +463,51 @@ console.log("partner module data:", PartnerModuleData)
                 setSelectedFeatures((prevFeatures) => {
                     const currentFeatures = prevFeatures[category] || [];
                     const updatedFeatures = currentFeatures.filter(f => !features.map(feature => feature.replace('-active', '')).includes(f));
-    
+
                     return {
                         ...prevFeatures,
                         [category]: updatedFeatures
                     };
                 });
             }
-    
+
             const updatedModules = isSelected
                 ? modules.filter((m) => m !== module)
                 : [...modules, module];
-    
+
             console.log(`Updated selected modules for category ${category}:`, updatedModules);
-    
+
             return {
                 ...prev,
                 [category]: updatedModules
             };
         });
     };
-    
 
-      
+
+
     const toggleFeature = (category: string, feature: string) => {
         console.log(`Toggling feature: ${feature} in category: ${category}`);
-    
+
         setSelectedFeatures((prev) => {
             const features = prev[category] || [];
             const isSelected = features.includes(feature);
-    
+
             console.log(`Current selected features for category ${category}:`, features);
             console.log(`Feature is currently selected:`, isSelected);
-    
+
             const updatedFeatures = isSelected
                 ? features.filter((f) => f !== feature) // Deselect feature
                 : [...features, feature]; // Select feature
-    
+
             console.log(`Updated selected features for category ${category}:`, updatedFeatures);
-    
+
             // Update the selected features state
             const newFeaturesState = {
                 ...prev,
                 [category]: updatedFeatures
             };
-    
+
             // Check if all features of the module are selected or deselected
             setSelectedModules((prevModules) => {
                 const moduleNames = Object.keys(map[category]?.Feature || {});
@@ -516,7 +516,7 @@ console.log("partner module data:", PartnerModuleData)
                     const featureNames = moduleFeatures.map(f => f.replace('-active', ''));
                     const areAllSelected = featureNames.every(f => newFeaturesState[category]?.includes(f));
                     const areAllDeselected = featureNames.every(f => !newFeaturesState[category]?.includes(f));
-    
+
                     if (areAllSelected) {
                         console.log(`All features for module ${module} are selected. Enabling module.`);
                         if (!prevModules[category]?.includes(module)) {
@@ -527,10 +527,10 @@ console.log("partner module data:", PartnerModuleData)
                         prevModules[category] = prevModules[category]?.filter(m => m !== module) || [];
                     }
                 }
-    
+
                 return { ...prevModules };
             });
-    
+
             return newFeaturesState;
         });
     };
@@ -574,41 +574,44 @@ console.log("partner module data:", PartnerModuleData)
                     {Object.keys(map).map((category) => (
                         <div key={category} className="col-span-1 border border-gray-300 p-4 rounded-lg">
                             <h4 className="text-xl font-medium text-blue-600 ml-2 mb-2">{category}</h4>
+                            {/* <h4 className="text-xl font-medium ml-2 mb-2" style={{ color: '#235bfe' }}>{category}</h4> */}
+
                             <div className="mb-2">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {map[category].Module.map((module) => {
                                         const cleanedModule = module.replace('-active', ''); // Remove '-active' for display
                                         const isSelected = selectedModules[category]?.includes(cleanedModule);
-                                        const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
+                                        const bgColor = isSelected ? '#e1eafc' : '#f3f3f2';
+                                        const textColor = isSelected ? '#235bfe' : '#292929';
 
-                                    
                                         const relatedFeatures = map[category]?.Feature[cleanedModule] || [];
 
                                         return (
                                             <div key={module} className="border border-gray-300 p-4 rounded-lg mb-4">
                                                 <div className="flex items-center">
-                                                    <span className="text-blue-600 text-sm font-medium mr-2">Module:</span>
+                                                    <span className="text-md font-b mr-2 text-black" >Module:</span>
+
                                                     <button
-                                                        className={`px-2 py-1 rounded-lg border`}
-                                                        style={{ backgroundColor: bgColor }}
+                                                        className={`px-3 py-1 rounded-lg border`}
+                                                        style={{ backgroundColor: bgColor ,  color: textColor}}
                                                         onClick={() => toggleModule(category, cleanedModule)}
                                                     >
                                                         {cleanedModule}
                                                     </button>
                                                 </div>
                                                 <div className="mt-2">
-                                                    <span className="text-blue-600 text-sm font-medium">Features:</span>
+                                                    <span className="text-md font-b mr-2 text-black">Features:</span>
                                                     <div className="flex flex-wrap gap-2 mt-2">
                                                         {relatedFeatures.map((feature) => {
                                                             const cleanedFeature = feature.replace('-active', ''); // Remove '-active' for display
                                                             const isSelected = selectedFeatures[category]?.includes(cleanedFeature);
-                                                            const bgColor = isSelected ? '#BFDBFE' : '#D1D5DB';
-
+                                                            const bgColor = isSelected ? '#e1eafc' : '#f3f3f2';
+                                                            const textColor = isSelected ? '#235bfe' : '#292929';
                                                             return (
                                                                 <button
                                                                     key={feature}
-                                                                    className={`px-2 py-1 rounded-lg border`}
-                                                                    style={{ backgroundColor: bgColor }}
+                                                                    className={`px-3 py-1 rounded-lg border`}
+                                                                    style={{ backgroundColor: bgColor , color: textColor}}
                                                                     onClick={() => toggleFeature(category, cleanedFeature)}
                                                                 >
                                                                     {cleanedFeature}

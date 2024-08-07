@@ -16,80 +16,92 @@ const HomePage: React.FC = () => {
     setTitle("Dashboard")
 })
   const userImage = "https://www.w3schools.com/w3images/avatar2.png";
+  // <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} className="logo" />
  
 
   
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-
+    <div className="flex flex-col items-center justify-center min-h-screen mb-10 bg-white">
+{/* 
     <div className="border border-gray-300 p-4 mb-4 rounded-md flex space-x-2">
-      <button
-        style={{ backgroundColor: '#094bf2' }}
-        className="text-black font-semibold py-2 px-4 rounded"
-      >
-        Button 1
-      </button>
-      <button
-        style={{ backgroundColor: '#4480ec' }}
-        className="text-black font-semibold py-2 px-4 rounded"
-      >
-        Button 2
-      </button>
-      <button
-        className="text-black font-semibold py-2 px-4 rounded save-btn"
+     
+      <button 
+       className="text-black font-semibold py-2 px-4 rounded-lg"
+      style={{
+        backgroundColor: '#e1eafc',
+        color: '#013cfe',
        
-      >
-        Button 3
-      </button>
+      }}
+    >
+      Overview
+    </button>
+    <button 
+       className="text-black font-semibold py-2 px-4 rounded-lg"
+      style={{
+        backgroundColor: '#e1eafc',
+        color: ' #7da0fd',
+       
+      }}
+    >
+      Overview
+    </button>
+    <button 
+       className="text-black font-semibold py-2 px-4 rounded-lg"
+      style={{
+        backgroundColor: '#cad6ef',
+        color: ' #7da0fd',
+       
+      }}
+    >
+      Overview
+    </button>
+    <button 
+       className="text-black font-semibold py-2 px-4 rounded-lg"
+      style={{
+        backgroundColor: '#cad6ef',
+        color: '#1b4ffe',
+       
+      }}
+    >
+      Overview
+    </button>
+
+    
+   
+ 
     </div>
   
  
     <div className="border border-gray-300 p-4 mb-4 rounded-md flex space-x-2">
       <button
-        style={{ backgroundColor: '#f3f3f2', color: '#3c4656' }}
+        style={{ backgroundColor: '#f3f3f2', color: '#242424' }}
         className="font-semibold py-2 px-4 rounded"
       >
         Button 1
       </button>
-      <button
-        style={{ backgroundColor: '#4f4f4e' }}
-        className="font-semibold py-2 px-4 rounded"
-      >
-        Button 2
-      </button>
-      <button
-        style={{ backgroundColor: '#f6f6f6', color: '#aeaeae' }}
-        className="font-semibold py-2 px-4 rounded"
-      >
-        Button 3
-      </button>
-      <button
-      
-        className="font-semibold py-2 px-4 rounded cancel-btn"
-      >
-        Button 3
-      </button>
-    </div>
+    
+    </div> */}
  
-    <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-md space-y-4">
-      <div className="flex-shrink-0">
-        <img className="h-40 w-40 object-cover rounded-lg mx-auto" src={userImage} alt='user' />
-      </div>
-      <div className="flex flex-col items-center space-y-2">
-        <div className="">
-          <span className="text-gray-400">Username: </span>
-          {username}
-        </div>
-        <p className="text-gray-500">
-          <span className="text-sm text-gray-400">Partner: </span>
-          {partner}
-        </p>
-        <p className="text-gray-500">
-          <span className="text-sm text-gray-400">Role: </span>
-          {role}
-        </p>
-      </div>
+ <div className="p-6 w-[400px] bg-white rounded-xl shadow-md space-y-4 border ">
+  <div className="flex-shrink-0">
+    <img className="h-30 w-60 object-cover rounded-lg mx-auto" src="/amop-core.png" alt='user' />
+  </div>
+  <div className="flex flex-col items-center space-y-2">
+    <div className="text-gray-500">
+      <span className="text-gray-400">Username: </span>
+      {username}
     </div>
+    <p className="text-gray-500">
+      <span className="text-gray-400">Partner: </span>
+      {partner}
+    </p>
+    <p className="text-gray-500">
+      <span className="text-gray-400">Role: </span>
+      {role}
+    </p>
+  </div>
+</div>
+
   </div>
   
   
