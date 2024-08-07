@@ -127,7 +127,7 @@ const Page: React.FC = () => {
         sub_partner: selectedSubPartner,
         modules:["role partner module","partner module"],
         request_received_at: getCurrentDateTime(),
-        Partner:partner,
+        
          // Send selected sub-partner
       };
   

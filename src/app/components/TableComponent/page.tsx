@@ -943,7 +943,7 @@ console.log("newdata",newRowData)
                 parent_module:"Super Admin",
                 sub_module: "Partner Modules", 
                 flag: "withparameters",
-                Partner: selectedPartnerModule,
+                Selected_Partner: selectedPartnerModule,
                 sub_partner: Environment,
                 modules: ["role partner module", "partner module"],
                 request_received_at: getCurrentDateTime()
