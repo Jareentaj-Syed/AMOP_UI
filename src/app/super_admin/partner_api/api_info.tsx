@@ -133,60 +133,57 @@ const CarrierInfo: React.FC = () => {
   }
 
   useEffect(() => {
+    console.log("Environment or Selected Partner changed:", environment, selectedPartner);
+    
     const fetchData = async () => {
-      if (environment && selectedPartner) {
+      if (environment?.value || selectedPartner?.value) {
         try {
-          setLoading(true); // Set loading to true before the request
-          const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
-          const data = {
-            tenant_name: partner || "default_value",
-            username: username,
-            path: "/get_superadmin_info",
-            role_name: role,
-            parent_module:"Super Admin",
-            sub_module:"Partner API",
-            "sub_tab":"Amop APIs",
-            request_received_at: getCurrentDateTime(),
-            Partner: partner,
-            "Environment": environment.value,
-            Selected_Partner: selectedPartner.value
+            setLoading(true); // Set loading to true before the request
+            const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+            const data = {
+              tenant_name: partner || "default_value",
+              username: username,
+              path: "/get_superadmin_info",
+              role_name: role,
+              parent_module: "Super Admin",
+              sub_module: "Partner API",
+              sub_tab: "Amop APIs",
+              request_received_at: getCurrentDateTime(),
+              Partner: partner,
+              Environment: environment?.value ?? "", // Send "" if environment is null or undefined
+              Selected_Partner: selectedPartner?.value ?? "" // Send "" if selectedPartner is null or undefined
           };
-          const response = await axios.post(url, { data });
-          const resp = JSON.parse(response.data.body);
-          // console.log(resp)
-          // console.log("Environment:", resp.data.partners_and_subpartners);
-          // console.log("Partner:", resp.data.role_module_data);
-          // console.log("amop_apis_data:", resp.data.amop_apis_data);
-          const carrierApis = resp.data.amop_apis_data.amop_apis;
+                const response = await axios.post(url, { data });
+                const resp = JSON.parse(response.data.body);
+                
+                // Handle response data
+                const carrierApis = resp.data.amop_apis_data.amop_apis;
+                setTableData(carrierApis);
+                const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
+                setEnvironmentOptions(environments);
 
-          setTableData(carrierApis);
-          setLoading(false);
-          const environments = resp.data.Environment.map((env: string) => ({ value: env, label: env }));
-          setEnvironmentOptions(environments);
+                const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
+                setPartnerOptions(partners);
 
-          const partners = resp.data.Partner.map((partner: string) => ({ value: partner, label: partner }));
-          setPartnerOptions(partners);
-          const headerMap = resp.headers_map["amop api"]["header_map"]
-          const createModalData = resp.headers_map["amop api"]["pop_up"]
-          const sortedheaderMap = sortHeaderMap(headerMap)
-          const headers = Object.keys(sortedheaderMap)
-          // const generalFields=parsedData.data
-          // setgeneralFields(generalFields)
-          setHeaders(headers)
-          setHeaderMap(sortedheaderMap)
-          setcreateModalData(createModalData)
-          // setTable(tableData);
-          setVisibleColumns(headers)
-        } catch (err) {
-          console.error(err);
-        } finally {
-          setLoading(false); // Set loading to false after the request is done
+                const headerMap = resp.headers_map["amop api"]["header_map"];
+                const createModalData = resp.headers_map["amop api"]["pop_up"];
+                const sortedheaderMap = sortHeaderMap(headerMap);
+                const headers = Object.keys(sortedheaderMap);
+
+                setHeaders(headers);
+                setHeaderMap(sortedheaderMap);
+                setcreateModalData(createModalData);
+                setVisibleColumns(headers);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false); // Set loading to false after the request is done
+            }
         }
-      }
     };
 
     fetchData();
-  }, [environment, selectedPartner]); // Add dependencies if necessary
+}, [environment, selectedPartner]);
 
 
 
@@ -209,7 +206,7 @@ const CarrierInfo: React.FC = () => {
           <div className="flex space-x-4">
             <div className='w-[250px]'>
               <label className="block text-gray-700">
-                Environment<span className="text-red-500">*</span>
+                Environment
               </label>
               <Select
                 value={environment}
@@ -220,7 +217,7 @@ const CarrierInfo: React.FC = () => {
               />
             </div>
             <div className='w-[250px]'>
-              <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+              <label className="block text-gray-700">Partner</label>
               <Select
                 value={selectedPartner}
                 onChange={(selectedOption) => setSelectedPartner(selectedOption)}
@@ -238,6 +235,7 @@ const CarrierInfo: React.FC = () => {
             >
               Clear
             </button>
+         
           </div>
           <div className="ml-auto mt-4">
             {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}

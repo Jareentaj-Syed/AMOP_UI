@@ -58,7 +58,7 @@ const Page: React.FC = () => {
         sub_module:"Partner Modules",
         flag: "withoutparameters",
         request_received_at: getCurrentDateTime(),
-        Partner:partner,
+        
       };
   
       const response = await axios.post(url, { data });
@@ -128,6 +128,7 @@ const Page: React.FC = () => {
         modules:["role partner module","partner module"],
         request_received_at: getCurrentDateTime(),
         
+       
          // Send selected sub-partner
       };
   

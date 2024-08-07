@@ -68,6 +68,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
     const [selectedFeatures, setSelectedFeatures] = useState<{ [key: string]: string[] }>({});
     const [moduleColors, setModuleColors] = useState<{ [key: string]: string }>({});
     const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    const { partner} = useAuth(); 
     //Show Modal
     const [showModal, setShowModal] = useState(false);
 
@@ -93,6 +94,51 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
             setRole(rowData['role'] ? rowData['role'] : null);
         }
     }, [rowData]);
+
+
+    // useEffect(() => {
+    //     fetchData();
+    //   }, []); // Fetch initial data once on mount
+    //   const fetchData = async () => {
+       
+    //     setLoading(true);
+    //     // Set loading to true before the request
+    //     try {
+    //       const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
+    //       const data = {
+    //         path: "/get_user_module_map",
+    //         role: role_name,
+    //         username:user_name,
+    //         tenant_name:tenant
+    //       };
+    
+    //       const response = await axios.post(url, { data: data });
+    //       const resp = JSON.parse(response.data.body);
+
+    //       console.log(resp)
+    //       // Check if the flag is false
+    //       if (resp.flag === false) {
+    //         Modal.error({
+    //           title: 'Data Fetch Error',
+    //           content: resp.message || 'An error occurred while fetching Carrier APIs. Please try again.',
+    //           centered: true,
+    //         });
+    //         return; // Exit early if there's an error
+    //       }
+    
+       
+        
+    //     } catch (err) {
+    //       console.error("Error fetching data:", err);
+    //       Modal.error({
+    //         title: 'Data Fetch Error',
+    //         content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+    //         centered: true,
+    //       });
+    //     } finally {
+    //       setLoading(false); // Set loading to false after the request is done
+    //     }
+    //   };
 
 
     console.log("username", user_name)
@@ -505,7 +551,7 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
                 });
             });
 
-
+        
             const Changed_data = {
                 "Selected role": role_name,
                 "Selected Partner": tenant,
@@ -543,60 +589,58 @@ const UserRole: React.FC<UserRoleProps> = ({ rowData, editable }) => {
 
 
                         // setLoading(true)
+                        console.log("entered")
 
                         const data = {
-                            tenant_name: userPartner || "default_value",
-                            username: username,
-                            path: "/get_partner_info",
-                            role_name: role,
-                            parent_module: "Partner",
-                            modules_list: ["Partner module access"],
-                            "pages": {
-                                "Customer groups": { "start": 0, "end": 500 },
-                                "Partner users": { "start": 0, "end": 500 }
-                            },
+                           
+                            path: "/get_user_module_map",
+                            role: role_name,
+                            username:user_name,
+                            tenant_name:tenant
 
 
 
                         };
-                        try {
-                            const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
-                            if (response && response.status === 200) {
-                                const parseddata = JSON.parse(response.data.body);
-                                if (parseddata.flag) {
-                                    console.log(parseddata);
-                                    // setPartnerModuleData(parseddata);
-                                    setPartnerModuleAccess(parseddata);
-                                    notification.success({
-                                        message: 'Success',
-                                        description: 'Successfully saved the form',
-                                        style: messageStyle,
-                                        placement: 'top', // Apply custom styles here
-                                    });
-                                }
-                                else {
+                        // try {
+                        //     const response = await axios.post('https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management', { data });
+                        //     if (response && response.status === 200) {
+                        //         const parseddata = JSON.parse(response.data.body);
+                        //         if (parseddata.flag) {
+                        //             console.log("parsed data:",parseddata);
 
-                                    Modal.error({
-                                        title: 'Error',
-                                        content: parseddata.message,
-                                        centered: true,
-                                    });
-                                }
-                                setLoading(false)
-                            } else {
-                                Modal.error({
-                                    title: 'Error',
-                                    content: 'An error occurred during fetching data.',
-                                    centered: true,
-                                });
-                            setLoading(false)
-                            }
 
-                        } catch (error) {
-                            setLoading(false)
+                                    
+                                 
+                        //             notification.success({
+                        //                 message: 'Success',
+                        //                 description: 'Successfully saved the form',
+                        //                 style: messageStyle,
+                        //                 placement: 'top', // Apply custom styles here
+                        //             });
+                        //         }
+                        //         else {
 
-                            console.error('Error fetching');
-                        }
+                        //             Modal.error({
+                        //                 title: 'Error',
+                        //                 content: parseddata.message,
+                        //                 centered: true,
+                        //             });
+                        //         }
+                        //         setLoading(false)
+                        //     } else {
+                        //         Modal.error({
+                        //             title: 'Error',
+                        //             content: 'An error occurred during fetching data.',
+                        //             centered: true,
+                        //         });
+                        //     setLoading(false)
+                        //     }
+
+                        // } catch (error) {
+                        //     setLoading(false)
+
+                        //     console.error('Error fetching');
+                        // }
 
                     }
                 }

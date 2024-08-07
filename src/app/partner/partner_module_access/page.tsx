@@ -416,88 +416,64 @@ console.log("partner module data:", PartnerModuleData)
 
     const toggleModule = (category: string, module: string) => {
         console.log(`Toggling module: ${module} in category: ${category}`);
-        
+    
         setSelectedModules((prev) => {
             const modules = prev[category] || [];
             const isSelected = modules.includes(module);
             const features = map[category]?.Feature[module] || [];
-            
+    
             console.log(`Current selected modules for category ${category}:`, modules);
             console.log(`Module is currently selected:`, isSelected);
             console.log(`Features for module ${module}:`, features);
     
-            // If the module is being selected
             if (!isSelected) {
                 console.log(`Selecting module: ${module}`);
-                const activeFeatures = features.filter(feature => feature.endsWith('-active')); // Active features
-                
+                const activeFeatures = features.filter(feature => feature.endsWith('-active'));
+    
                 if (activeFeatures.length === 0) {
-                    // If no active features, activate all features
                     console.log(`Activating all features for module: ${module}`);
                     setSelectedFeatures((prevFeatures) => {
                         const currentFeatures = prevFeatures[category] || [];
-                        const newFeatures = features.map(feature => feature.replace('-active', '')); // Remove '-active' for display
+                        const newFeatures = features.map(feature => feature.replace('-active', ''));
     
                         return {
                             ...prevFeatures,
                             [category]: [
                                 ...currentFeatures,
-                                ...newFeatures // Add all features
+                                ...newFeatures
                             ],
                         };
                     });
                 } else {
-                    // If there are active features, enable only those active features
                     console.log(`Enabling active features for module: ${module}`);
-                    const newFeatures = activeFeatures.map(feature => feature.replace('-active', '')); // Remove '-active' for display
+                    const newFeatures = activeFeatures.map(feature => feature.replace('-active', ''));
                     setSelectedFeatures((prevFeatures) => {
                         const currentFeatures = prevFeatures[category] || [];
                         return {
                             ...prevFeatures,
                             [category]: [
                                 ...currentFeatures,
-                                ...newFeatures // Add active features
+                                ...newFeatures
                             ],
                         };
                     });
                 }
             } else {
                 console.log(`Deselecting module: ${module}`);
-                const activeFeatures = features.filter(feature => feature.endsWith('-active')); // Active features
-                
-                if (activeFeatures.length === features.length) {
-                    // If all features are active, deactivate all features
-                    console.log(`Deactivating all features for module: ${module}`);
-                    setSelectedFeatures((prevFeatures) => {
-                        const currentFeatures = prevFeatures[category] || [];
-                        const updatedFeatures = currentFeatures.filter(f => !features.map(feature => feature.replace('-active', '')).includes(f)); // Remove all features
+                setSelectedFeatures((prevFeatures) => {
+                    const currentFeatures = prevFeatures[category] || [];
+                    const updatedFeatures = currentFeatures.filter(f => !features.map(feature => feature.replace('-active', '')).includes(f));
     
-                        return {
-                            ...prevFeatures,
-                            [category]: updatedFeatures
-                        };
-                    });
-                } else {
-                    // If there are active features, disable only those active features
-                    console.log(`Disabling active features for module: ${module}`);
-                    activeFeatures.forEach((feature) => {
-                        const featureName = feature.replace('-active', '');
-                        setSelectedFeatures((prevFeatures) => {
-                            const currentFeatures = prevFeatures[category] || [];
-                            const updatedFeatures = currentFeatures.filter((f) => f !== featureName);
-    
-                            return {
-                                ...prevFeatures,
-                                [category]: updatedFeatures
-                            };
-                        });
-                    });
-                }
+                    return {
+                        ...prevFeatures,
+                        [category]: updatedFeatures
+                    };
+                });
             }
     
             const updatedModules = isSelected
-                ? modules.filter((m) => m !== module) // Deselect module
-                : [...modules, module]; // Select module
+                ? modules.filter((m) => m !== module)
+                : [...modules, module];
     
             console.log(`Updated selected modules for category ${category}:`, updatedModules);
     

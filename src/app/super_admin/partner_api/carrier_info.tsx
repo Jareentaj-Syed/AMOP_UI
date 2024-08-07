@@ -140,7 +140,7 @@ const sortPopup = (fields: any[]): any[] => {
   }
 
   useEffect(() => {
-    if (environment && selectedPartner) {
+    if (environment?.value || selectedPartner?.value) {
       const fetchData = async () => {
         try {
           setLoading(true);
@@ -153,8 +153,8 @@ const sortPopup = (fields: any[]): any[] => {
             parent_module:"Super Admin",
             sub_module:"Partner API",
             sub_tab:"Carrier APIs",
-            Environment: environment.value,
-            Selected_Partner: selectedPartner.value,
+            Environment: environment?.value ?? "", // Send "" if environment is null or undefined
+            Selected_Partner: selectedPartner?.value ?? "" ,
             request_received_at: getCurrentDateTime(),
             Partner: partner,
           };
@@ -247,7 +247,7 @@ const sortPopup = (fields: any[]): any[] => {
           <div className="flex space-x-4">
             <div className='w-[250px]'>
               <label className="block text-gray-700">
-                Environment<span className="text-red-500">*</span>
+                Environment
               </label>
               <Select
                 value={environment}
@@ -258,7 +258,7 @@ const sortPopup = (fields: any[]): any[] => {
               />
             </div>
             <div className='w-[250px]'>
-              <label className="block text-gray-700">Partner<span className="text-red-500">*</span></label>
+              <label className="block text-gray-700">Partner</label>
               <Select
                 value={selectedPartner}
                 onChange={(selectedOption) => setSelectedPartner(selectedOption)}
