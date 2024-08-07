@@ -17,7 +17,7 @@ const ChooseTenant: React.FC = () => {
   const { setSelectedPartner, setPartner,setModules } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // State to manage loading
-
+  const { setLogoUrl } = useLogoStore();
   const router = useRouter();
   const {username, tenantNames, role, setShowPassword, setShowPasswordUpdate, showPasswordUpdate}=useAuth()
   const partners=tenantNames
@@ -72,7 +72,7 @@ const ChooseTenant: React.FC = () => {
           setSelectedPartner(true);
           setModules(parsedData.Modules); // Set the modules state
           setPartner(partnerName);
-          
+          setLogoUrl(parsedData?.logo || "")
           router.push('/dashboard');
         }
       } else {
@@ -111,45 +111,97 @@ const ChooseTenant: React.FC = () => {
   }
 
   return (
-    <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
-      <div className="w-[300px] h-[55px] mb-1">
-        <Image
-          src="/amop_logo_header.png"
-          alt="AMOP Core Logo"
-          width={300}
-          height={55}
-        />
-      </div>
-      <h1 className="text-[28px] text-[#00C1F1] font-medium mb-2">Choose Partner</h1>
-      <div className={`grid ${partners.length > 11 ? 'grid-cols-2' : 'grid-cols-1'} gap-1 mb-2`}>
-  {partners.map((partner) => (
-    <Button
-      key={partner}
-      onClick={() => handleSelectedPartner(partner)}
-      className="rounded-full"
-      style={{
-        width: '200px',
-        height: '35px',
-        borderColor: selectedPartnerName === partner ? '#00C1F1' : '#00C1F1',
-        borderWidth: selectedPartnerName === partner ? '3px' : '1px',
-        color: '#00C1F1',
-        margin: '0', // Remove margin to avoid spacing between buttons
-      }}
-    >
-      {partner}
-    </Button>
-  ))}
-</div>
 
 
-
-
-
-
-      {/* <Footer /> */}
+  <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
+  <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+    <div className="w-[300px] h-[55px] mb-1">
+      <Image
+        src="/amop_logo_header.png"
+        alt="AMOP Core Logo"
+        width={300}
+        height={55}
+      />
     </div>
-    </Suspense>
+    <h1 className="text-[28px] text-[#00C1F1] font-medium mb-2">Choose Partner</h1>
+    <div className={`grid mb-2 ${partners.length > 10 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+      {partners.map((partner) => (
+    <Button
+    key={partner}
+    onClick={() => handleSelectedPartner(partner)}
+    className={`flex items-center rounded-l-lg text-md border ${selectedPartnerName === partner ? 'bg-[#E6F7FF] text-[#00C1F1]' : 'bg-transparent text-[#00C1F1]'}`}
+    style={{
+      width: '160px',
+      height: '40px',
+      margin: '2px',
+      marginRight:'25px',
+      marginBottom:'10px',
+      transition: 'background-color 0.3s, border-color 0.3s, color 0.3s', // Add color transition
+      borderColor: '#00C1F1', // Always #00C1F1
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.backgroundColor = '#e1eafc';
+      e.currentTarget.style.borderColor = '#00C1F1'; // Set border color to #00C1F1 on hover
+      e.currentTarget.style.color = '#00C1F1'; // Set text color to #00C1F1 on hover
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.backgroundColor = selectedPartnerName === partner ? '#E6F7FF' : 'transparent';
+      e.currentTarget.style.borderColor = '#00C1F1'; // Keep border color as #00C1F1
+      e.currentTarget.style.color = selectedPartnerName === partner ? '#00C1F1' : '#00C1F1'; // Keep text color as #00C1F1
+    }}
+  >
+    <div className="flex items-center">
+      {partner}
+    </div>
+  </Button>
+  
+   
+   
+
+      ))}
+    </div>
+  </div>
+</Suspense>
+
+
+
+// {/* <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
+//   <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+//     <div className="w-[300px] h-[55px] mb-1">
+//       <Image
+//         src="/amop_logo_header.png"
+//         alt="AMOP Core Logo"
+//         width={300}
+//         height={55}
+//       />
+//     </div>
+//     <h1 className="text-[28px] text-[#00C1F1] font-medium mb-2">Choose Partner</h1>
+//     <div className="flex flex-wrap justify-center space-y-4 mb-2">
+//       {partners.map((partner) => (
+//         <Button
+//           key={partner}
+//           onClick={() => handleSelectedPartner(partner)}
+//           className={`flex items-center rounded-l-lg  mb-1 text-md  ${selectedPartnerName === partner ? 'bg-[#E6F7FF] border-l-4 border-[#00C1F1] text-[#00C1F1]' : 'bg-transparent border-l-4 border-transparent text-[#00C1F1]'}`}
+//           style={{
+//             width: '150px',
+//             height: '45px',
+           
+//           }}
+//         >
+//           <div className="flex items-center">
+          
+//             {partner}
+//           </div>
+//         </Button>
+//       ))}
+//     </div>
+//   </div>
+// </Suspense>  */}
+
+
+
+
+
   );
 };
 
