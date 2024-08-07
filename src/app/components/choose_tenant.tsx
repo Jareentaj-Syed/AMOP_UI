@@ -72,7 +72,7 @@ const ChooseTenant: React.FC = () => {
           setSelectedPartner(true);
           setModules(parsedData.Modules); // Set the modules state
           setPartner(partnerName);
-          setLogoUrl(parsedData?.logo || "")
+          // setLogoUrl(parsedData?.logo || "")
           router.push('/dashboard');
         }
       } else {
