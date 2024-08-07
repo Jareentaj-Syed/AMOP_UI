@@ -492,14 +492,34 @@ const CreateModal: React.FC<CreateModalProps> = ({
     typeof window !== 'undefined' ? (window.innerWidth * 2.5) / 4 : 0;
   const modalHeight =
     typeof window !== 'undefined' ? (window.innerHeight * 2.5) / 4 : 0;
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
-
+    if (loading) {
+      return (
+        <>
+          <Modal
+            title="Edit User"
+            open={isOpen}
+            onCancel={onClose}
+            width={modalWidth}
+            bodyStyle={{
+              height: modalHeight,
+              padding: '4px',
+              overflow: 'hidden',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            footer={null}
+          >
+            <div className="popup flex justify-center items-center w-full h-full">
+              <Spin size="large" />
+            </div>
+          </Modal>
+  
+        </>
+  
+      );
+    }
+  
 
   return (
     <div>

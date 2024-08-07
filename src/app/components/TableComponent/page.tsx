@@ -22,7 +22,7 @@ import { useAuth } from '../auth_context';
 import axios from 'axios';
 import { getCurrentDateTime } from '../header_constants';
 import { table } from 'console';
-
+import { usePartnerStore } from '@/app/partner/partnerStore';
 
 
 interface TableComponentProps {
@@ -65,6 +65,8 @@ const TableComponent: React.FC<TableComponentProps> = ({ headers, initialData, s
   const [totalPages, setTotalPages] = useState(1);
   const [lastPageWithData, setLastPageWithData] = useState(1);
   const hasMounted = useRef(false);
+  const { partnerData, setCustomerGroups ,setPartnerUsers} = usePartnerStore.getState();
+
   // const [paginatedData, setPaginatedData] = useState<{ [key: string]: any }[]>(initialData)
   useEffect(() => {
     if (!router) {
@@ -596,6 +598,7 @@ console.log("newdata",newRowData)
                 centered: true,
               });
             } else {
+            setCustomerGroups(parsedData)
               const tableData = parsedData?.data?.["Customer groups"]?.customergroups || [];
               setRowData(tableData);
             }
@@ -684,6 +687,7 @@ console.log("newdata",newRowData)
                 centered: true,
               });
             } else {
+            setPartnerUsers(parsedData)
               const tableData = parsedData?.data?.["Partner users"]?.users || [];
               setRowData(tableData);
             }

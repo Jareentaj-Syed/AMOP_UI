@@ -11,7 +11,7 @@ import moment from 'moment';
 import dayjs from 'dayjs';
 import InfoPopup from '../people/info_popup';
 import error from 'next/error';
-import{ MultiValue, SingleValue } from 'react-select';
+import { MultiValue, SingleValue } from 'react-select';
 import { useUserStore } from '../partner/users/createUser/createUserStore';
 import { getCurrentDateTime } from './header_constants';
 import { usePartnerStore } from '../partner/partnerStore';
@@ -52,10 +52,10 @@ const EditModal: React.FC<EditModalProps> = ({
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const editableDrp = DropdownStyles;
   const [isCreateUserOpen, setIsCreateUserOpen] = useState(isTabEdit);
-  const { username, tenantNames, role, partner, settabledata} = useAuth();
+  const { username, tenantNames, role, partner, settabledata } = useAuth();
   const rate_plan_name_drp = generalFields && generalFields.rate_plan_name && Array.isArray(generalFields.rate_plan_name) ? generalFields.rate_plan_name : []
   const [loading, setLoading] = useState(false);
-  const { partnerData,setCustomerGroups } = usePartnerStore.getState();
+  const { partnerData, setCustomerGroups } = usePartnerStore.getState();
 
   // console.log("createModalData",createModalData)
   // console.log("formData",createModalData)
@@ -68,7 +68,7 @@ const EditModal: React.FC<EditModalProps> = ({
     setTenant,
     setRoleName,
     setSubTenant
-} = useUserStore();
+  } = useUserStore();
 
   useEffect(() => {
     if (isOpen) {
@@ -152,15 +152,15 @@ const EditModal: React.FC<EditModalProps> = ({
             module_name: "Customer Groups",
             action: "update",
             changed_data: formData,
-            Partner:partner,
-         
+            Partner: partner,
+
             request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "Carrier") {
           if (formData) {
             formData["last_modified_by"] = username;
-            formData["last_modified_date_time"]=getCurrentDateTime()
+            formData["last_modified_date_time"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -171,7 +171,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_tab": "Carrier APIs",
             "table_name": "carrier_apis",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -179,7 +179,7 @@ const EditModal: React.FC<EditModalProps> = ({
         if (heading === "API") {
           if (formData) {
             formData["last_modified_by"] = username;
-            formData["last_modified_date_time"]=getCurrentDateTime()
+            formData["last_modified_date_time"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -190,7 +190,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "sub_tab": "Amop APIs",
             "table_name": "amop_apis",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -198,7 +198,7 @@ const EditModal: React.FC<EditModalProps> = ({
         if (heading === "E911 Customer") {
           if (formData) {
             formData["modified_by"] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -210,14 +210,14 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "e911_customers",
             action: "update",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "NetSapien Customer") {
           if (formData) {
             formData["modified_by"] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -229,14 +229,14 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
         if (heading === "Bandwidth Customer") {
           if (formData) {
             formData["modified_by"] = username;
-            formData["modified_date"]= getCurrentDateTime()
+            formData["modified_date"] = getCurrentDateTime()
           }
           data = {
             tenant_name: partner || "default_value",
@@ -248,7 +248,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -266,7 +266,7 @@ const EditModal: React.FC<EditModalProps> = ({
             "table_name": "customers",
             action: "update",
             "changed_data": formData,
-            Partner:partner,
+            Partner: partner,
             request_received_at: getCurrentDateTime(),
           };
         }
@@ -275,19 +275,19 @@ const EditModal: React.FC<EditModalProps> = ({
         const resp = JSON.parse(response.data.body);
         if (response.data.statusCode === 200 && resp.flag === true) {
           if (heading === "Carrier") {
-          
+
             try {
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
               const data = {
                 tenant_name: partner || "default_value",
                 username: username,
-                parent_module:"Super Admin",
-                sub_module: "Partner API", 
+                parent_module: "Super Admin",
+                sub_module: "Partner API",
                 path: "/get_superadmin_info",
                 role_name: role,
-               
+
                 sub_tab: "Carrier APIs",
-                Partner:partner,
+                Partner: partner,
                 request_received_at: getCurrentDateTime(),
               };
               const response = await axios.post(url, { data: data });
@@ -296,20 +296,20 @@ const EditModal: React.FC<EditModalProps> = ({
               settabledata(carrierApis)
               setLoading(false)
             }
-              catch (err) {
+            catch (err) {
               setLoading(false)
-                console.error("Error fetching data:", err);
-                // Modal.error({
-                //   title: 'Data Fetch Error',
-                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                //   centered: true,
-                // });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
           if (heading === "API") {
-          
+
             try {
               setLoading(false)
               const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
@@ -318,14 +318,14 @@ const EditModal: React.FC<EditModalProps> = ({
                 username: username,
                 path: "/get_superadmin_info",
                 role_name: role,
-                parent_module:"Super Admin",
-                sub_module: "Partner API", 
-               
+                parent_module: "Super Admin",
+                sub_module: "Partner API",
+
                 sub_tab: "Amop APIs",
-                Partner:partner,
+                Partner: partner,
                 request_received_at: getCurrentDateTime(),
               };
-              
+
               const response = await axios.post(url, { data: data });
               const resp = JSON.parse(response.data.body);
               console.log(resp)
@@ -333,18 +333,18 @@ const EditModal: React.FC<EditModalProps> = ({
               console.log(carrierApis);
               settabledata(carrierApis)
               setLoading(false)
-           
+
             }
-              catch (err) {
-                console.error("Error fetching data:", err);
-                // Modal.error({
-                //   title: 'Data Fetch Error',
-                //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
-                //   centered: true,
-                // });
-              } finally {
-                // setLoading(false); // Set loading to false after the request is done
-              }
+            catch (err) {
+              console.error("Error fetching data:", err);
+              // Modal.error({
+              //   title: 'Data Fetch Error',
+              //   content: err instanceof Error ? err.message : 'An unexpected error occurred while fetching data. Please try again.',
+              //   centered: true,
+              // });
+            } finally {
+              // setLoading(false); // Set loading to false after the request is done
+            }
           }
           if (heading === "E911 Customer") {
             const url = `https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management`;
@@ -359,7 +359,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -394,7 +394,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
 
@@ -407,17 +407,17 @@ const EditModal: React.FC<EditModalProps> = ({
                 content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
                 centered: true,
               });
-            }else{
+            } else {
               console.log(parsedData)
-            // Check if the flag is false in the parsed data
-            const tableData = parsedData.data.customers;
-            const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
-            const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
-            const generalFields = parsedData.data
-            settabledata(tableData);
-            setLoading(false)
+              // Check if the flag is false in the parsed data
+              const tableData = parsedData.data.customers;
+              const headerMap = parsedData.headers_map["NetSapiens Customers"]["header_map"]
+              const createModalData = parsedData.headers_map["NetSapiens Customers"]["pop_up"]
+              const generalFields = parsedData.data
+              settabledata(tableData);
+              setLoading(false)
             }
-            
+
           }
           if (heading === "Bandwidth Customer") {
             const url =
@@ -433,7 +433,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 start: 0,
                 end: 500,
               },
-              Partner:partner,
+              Partner: partner,
               request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
@@ -461,17 +461,17 @@ const EditModal: React.FC<EditModalProps> = ({
               "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
             const data = {
               tenant_name: partner || "default_value",
-                        username: username,
-                        path: "/get_partner_info",
-                        role_name: role,
-                        parent_module:"Partner",
-                        modules_list: ["Customer groups"],
-                        pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                        },
-                        Partner:partner,
-                        request_received_at: getCurrentDateTime(),
+              username: username,
+              path: "/get_partner_info",
+              role_name: role,
+              parent_module: "Partner",
+              modules_list: ["Customer groups"],
+              pages: {
+                "Customer groups": { start: 0, end: 500 },
+                "Partner users": { start: 0, end: 500 }
+              },
+              Partner: partner,
+              request_received_at: getCurrentDateTime(),
             };
             const response = await axios.post(url, { data });
             const parsedData = JSON.parse(response.data.body);
@@ -484,23 +484,23 @@ const EditModal: React.FC<EditModalProps> = ({
               });
             } else {
               setCustomerGroups(parsedData)
-              const tableData =parsedData?.data?.["Customer groups"]?.customergroups || [];
-              console.log("tableData",tableData)
+              const tableData = parsedData?.data?.["Customer groups"]?.customergroups || [];
+              console.log("tableData", tableData)
               settabledata(tableData);
               setLoading(false)
             }
           }
-        
+
 
         }
-        else{
+        else {
           Modal.error({
             title: 'Saving Error',
             content: resp.message,
             centered: true,
           });
         }
-          
+
       } catch (error) {
         if (error instanceof Error) {
           Modal.error({
@@ -557,9 +557,29 @@ const EditModal: React.FC<EditModalProps> = ({
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
+      <>
+        <Modal
+          title="Edit User"
+          open={isOpen}
+          onCancel={handleCancel}
+          width={modalWidth}
+          bodyStyle={{
+            height: modalHeight,
+            padding: '4px',
+            overflow: 'hidden',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+          footer={null}
+        >
+          <div className="popup flex justify-center items-center w-full h-full">
+            <Spin size="large" />
+          </div>
+        </Modal>
+
+      </>
+
     );
   }
 
@@ -611,10 +631,10 @@ const EditModal: React.FC<EditModalProps> = ({
               ) : null
               }
               styles={{ body: { height: infoModalHeight, padding: '4px' } }}
-              
+
             >
               <div className='popup'>
-                <InfoPopup rate_plan={rate_plan_name_drp}  />
+                <InfoPopup rate_plan={rate_plan_name_drp} />
 
               </div>
 
@@ -660,50 +680,50 @@ const EditModal: React.FC<EditModalProps> = ({
                         />
                       )}
                       {column.type === 'dropdown' && (
-                      <Select
-                      isMulti={
-                        column.db_column_name === "customer_names" ||
-                        column.db_column_name === "rate_plan_name"
-                      }
-                      styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
-                      isDisabled={!isEditable}
-                      classNamePrefix="select"
-                      placeholder="Select..."
-                      value={
-                        // Ensure formData[column.db_column_name] is not "None" or empty
-                        formData[column.db_column_name] && formData[column.db_column_name] !== "None"
-                          ? (() => {
-                              try {
-                                const parsedData = JSON.parse(formData[column.db_column_name]);
-                                if (Array.isArray(parsedData)) {
-                                  return parsedData.map((item) => ({ label: item, value: item }));
-                                } else {
-                                  return { label: parsedData, value: parsedData };
+                        <Select
+                          isMulti={
+                            column.db_column_name === "customer_names" ||
+                            column.db_column_name === "rate_plan_name"
+                          }
+                          styles={!isEditable ? NonEditableDropdownStyles : editableDrp}
+                          isDisabled={!isEditable}
+                          classNamePrefix="select"
+                          placeholder="Select..."
+                          value={
+                            // Ensure formData[column.db_column_name] is not "None" or empty
+                            formData[column.db_column_name] && formData[column.db_column_name] !== "None"
+                              ? (() => {
+                                try {
+                                  const parsedData = JSON.parse(formData[column.db_column_name]);
+                                  if (Array.isArray(parsedData)) {
+                                    return parsedData.map((item) => ({ label: item, value: item }));
+                                  } else {
+                                    return { label: parsedData, value: parsedData };
+                                  }
+                                } catch (e) {
+                                  return { label: formData[column.db_column_name], value: formData[column.db_column_name] };
                                 }
-                              } catch (e) {
-                                return { label: formData[column.db_column_name], value: formData[column.db_column_name] };
-                              }
-                            })()
-                          : null
-                      }
-                      onChange={(selectedOption) => {
-                        if (Array.isArray(selectedOption)) {
-                          const values = selectedOption.map((option) => option.value);
-                          handleSelectChange(column.db_column_name, values);
-                        } else if (selectedOption && 'value' in selectedOption) {
-                          handleChange(column.db_column_name, selectedOption.value);
-                        }
-                      }}
-                      options={
-                        column.db_column_name !== null && generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
-                          ? generalFields[column.db_column_name].map((option:any) => ({
-                              label: option,
-                              value: option
-                            }))
-                          : [{ label: "No options", value: "No options" }]
-                      }
-                    />
-                              
+                              })()
+                              : null
+                          }
+                          onChange={(selectedOption) => {
+                            if (Array.isArray(selectedOption)) {
+                              const values = selectedOption.map((option) => option.value);
+                              handleSelectChange(column.db_column_name, values);
+                            } else if (selectedOption && 'value' in selectedOption) {
+                              handleChange(column.db_column_name, selectedOption.value);
+                            }
+                          }}
+                          options={
+                            column.db_column_name !== null && generalFields && generalFields[column.db_column_name] && Array.isArray(generalFields[column.db_column_name])
+                              ? generalFields[column.db_column_name].map((option: any) => ({
+                                label: option,
+                                value: option
+                              }))
+                              : [{ label: "No options", value: "No options" }]
+                          }
+                        />
+
                       )}
 
                       {column.type === 'checkbox' && (
