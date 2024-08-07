@@ -32,11 +32,19 @@ const CreateUser: React.FC<CreateUserProps> = ({ isPopup, rowData,editable }) =>
     setRoleName,
     setSubTenant
 } = useUserStore();
-
+console.log("create",editable)
 useEffect(() => {
   setActiveTab('userInfo')
 }, [rowData]);
 
+const getIsEditable = () => {
+  if(editable===undefined||editable===true){
+    return true
+  }
+  else{
+    return false
+  }
+};
 
   const handleCloseClick = () => {
     setTenant('')
@@ -80,9 +88,9 @@ useEffect(() => {
 
           </div>
           <div className={`shadow-md p-4 ${isPopup ? '' : 'mt-[-10px] pt-[70px]'}`}>
-            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup} editable={editable||true}/>}
-            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} editable={editable||true}/>}
-            {activeTab === 'userrole' && <UserRole rowData={rowData} editable={editable||true}/>}
+            {activeTab === 'userInfo' && <UserInfo rowData={rowData} isPopup={isPopup} editable={getIsEditable()}/>}
+            {activeTab === 'tenantInfo' && <TenantInfo rowData={rowData} editable={getIsEditable()}/>}
+            {activeTab === 'userrole' && <UserRole rowData={rowData} editable={getIsEditable()}/>}
           </div>
         </div>
       )}</div>

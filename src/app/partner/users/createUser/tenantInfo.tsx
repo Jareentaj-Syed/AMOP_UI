@@ -35,7 +35,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     const [generalFields, setGeneralFields] = useState<any[]>([]);
 
     const Carrieroptions = carriers.map(carrier => ({ value: carrier, label: carrier }));
-    const { partnerData,setPartnerUsers } = usePartnerStore.getState();
+    const { partnerData, setPartnerUsers } = usePartnerStore.getState();
     const usersData = partnerData["Partner users"]?.data?.["Partner users"] || {};
     //Show Modal
     const [showModal, setShowModal] = useState(false);
@@ -92,10 +92,12 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                 }
             }
             setCustomer(selected_customer)
+            const customersGroupFieldValue = rowData?.["Customer Group"] || ""
+            const selected_group = { label: customersGroupFieldValue, value: customersGroupFieldValue }
+            setCustomerGroup(selected_group)
 
         }
     }, [rowData]);
-
     const messageStyle = {
         fontSize: '14px',  // Adjust font size
         fontWeight: 'bold', // Make the text bold
@@ -155,49 +157,49 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                 const response = await axios.post(url, { data });
                 const parsedData = JSON.parse(response.data.body);
                 if (response && response.data.statusCode === 200) {
-                    try{
+                    try {
                         const url =
-                          "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
+                            "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
                         const data = {
-                          tenant_name: userPartner || "default_value",
-                          username: username,
-                          path: "/get_partner_info",
-                          role_name: role,
-                          parent_module:"Partner",
-                          modules_list: ["Partner users"],
-                          pages: {
-                            "Customer groups": { start: 0, end: 500 },
-                            "Partner users": { start: 0, end: 500 }
-                          },
-                          request_received_at: getCurrentDateTime(),
+                            tenant_name: userPartner || "default_value",
+                            username: username,
+                            path: "/get_partner_info",
+                            role_name: role,
+                            parent_module: "Partner",
+                            modules_list: ["Partner users"],
+                            pages: {
+                                "Customer groups": { start: 0, end: 500 },
+                                "Partner users": { start: 0, end: 500 }
+                            },
+                            request_received_at: getCurrentDateTime(),
                         };
                         const response = await axios.post(url, { data });
                         const parsedData = JSON.parse(response.data.body);
                         if (parsedData.flag === false) {
-                          Modal.error({
-                            title: 'Data Fetch Error',
-                            content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
-                            centered: true,
-                          });
+                            Modal.error({
+                                title: 'Data Fetch Error',
+                                content: parsedData.message || 'An error occurred while fetching E911 Customers data. Please try again.',
+                                centered: true,
+                            });
                         } else {
-                          setPartnerUsers(parsedData)
-                          const tableData = parsedData?.data?.["Partner users"]?.users || [];
-                          settabledata(tableData);
-                          notification.success({
-                            message: 'Success',
-                            description: 'Successfully saved the form',
-                            style: messageStyle,
-                            placement: 'top', // Apply custom styles here
-                          });
+                            setPartnerUsers(parsedData)
+                            const tableData = parsedData?.data?.["Partner users"]?.users || [];
+                            settabledata(tableData);
+                            notification.success({
+                                message: 'Success',
+                                description: 'Successfully saved the form',
+                                style: messageStyle,
+                                placement: 'top', // Apply custom styles here
+                            });
                         }
-                      }
-                      catch(error){
+                    }
+                    catch (error) {
                         Modal.error({
-                          title: 'Submit Error',
-                          content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
-                          centered: true,
+                            title: 'Submit Error',
+                            content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
+                            centered: true,
                         });
-                      }
+                    }
                     handleClearFields(); // Clear all fields
                 }
                 else {
@@ -245,6 +247,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     };
     const serviceProviderChange = (selectedOptions: MultiValue<OptionType>) => {
         const selectedProviders = selectedOptions.map(option => option.value);
+        console.log("selectedProviders", selectedProviders)
         setServiceProvider(selectedProviders);
         if (selectedProviders.length > 0) {
             setErrorMessages(prevErrors => prevErrors.filter(error => error !== 'Service Provider is required.'));
@@ -259,6 +262,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
     }
     const customerChange = (selectedOptions: MultiValue<OptionType>) => {
         const selectedCustomers = selectedOptions.map(option => option.value)
+        console.log("selectedCustomers", selectedCustomers)
         setCustomer(selectedCustomers);
     };
     const getFieldValue = (label: any) => {
@@ -327,10 +331,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                     <div>
                         <label className="field-label">Customer Group</label>
                         <Select
-                            value={rowData && ServiceProviderOptions.some(option => option.value === getFieldValue('Customer Group'))
-                                ? { value: getFieldValue('Customer Group'), label: getFieldValue('Customer Group') }
-                                : customerGroup
-                            }
+                            value={customerGroup}
                             styles={editable ? editableDrp : nonEditableDrp}
                             options={CustomerGroupOptions}
                             onChange={customerGroupChange}
@@ -344,7 +345,7 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                             isMulti
                             options={customerOptions}
                             styles={editable ? editableDrp : nonEditableDrp}
-                            value={customer.filter(option => customerOptions.includes(option.value))}
+                            value={customerOptions.filter(option => customer.includes(option.value))}
                             onChange={customerChange}
                             isDisabled={!editable}
 
@@ -352,17 +353,18 @@ const TenantInfo: React.FC<TenantInfoProps> = ({ rowData, editable = false }) =>
                     </div>
                 </div>
             </div>
-            <div className="flex justify-end space-x-4">
-                {/* <button className="cancel-btn">
+            {editable && (
+                <div className="flex justify-end space-x-4">
+                    {/* <button className="cancel-btn">
                     <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
                     <span>Cancel</span>
                 </button> */}
-                <button className="save-btn" onClick={() => setShowModal(true)}
-                >
-                    <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-                    <span>Submit</span>
-                </button>
-            </div>
+                    <button className="save-btn" onClick={() => setShowModal(true)}
+                    >
+                        <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+                        <span>Submit</span>
+                    </button>
+                </div>)}
             {showModal && (
                 <Modal
                     title="Confirmation"

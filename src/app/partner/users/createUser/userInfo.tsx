@@ -15,7 +15,7 @@ type OptionType = {
   value: string;
   label: string;
 };
-const { partnerData,setPartnerUsers } = usePartnerStore.getState();
+const { partnerData, setPartnerUsers } = usePartnerStore.getState();
 const editableDrp = DropdownStyles;
 const nonEditableDrp = NonEditableDropdownStyles;
 const Notificationoptions = [
@@ -37,7 +37,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
     partner: userPartner,
     settabledata: setData
   } = useAuth();
-  console.log("editable", editable)
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [username, setUsername] = useState('');
@@ -70,7 +69,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
   const [formData, setFormData] = useState<any>(rowData || {});
   //Show Modal
   const [showModal, setShowModal] = useState(false);
-
+  console.log("info", editable)
   const {
     tenant,
     role_name,
@@ -110,7 +109,6 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
       setPartneroptions(partner_options)
       setGeneralFields(general_fields)
       setTenant('')
-
     };
 
     initializeData();
@@ -332,7 +330,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
         const response = await axios.post(url, { data });
         const parsedData = JSON.parse(response.data.body);
         if (response && response.data.statusCode === 200) {
-          try{
+          try {
             const url =
               "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
             const data = {
@@ -340,7 +338,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
               username: user,
               path: "/get_partner_info",
               role_name: userRole,
-              parent_module:"Partner",
+              parent_module: "Partner",
               modules_list: ["Partner users"],
               pages: {
                 "Customer groups": { start: 0, end: 500 },
@@ -368,7 +366,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
               });
             }
           }
-          catch(error){
+          catch (error) {
             Modal.error({
               title: 'Submit Error',
               content: parsedData.message || 'An error occurred while submitting the form. Please try again.',
@@ -505,7 +503,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             value={mobileNo}
             onChange={(e) => setMobileNo(e.target.value)}
             disabled={!editable} />
-          
+
         </div>
         <div>
           <label className="field-label">Role<span className="text-red-500">*</span></label>
@@ -543,7 +541,7 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             disabled={!editable} />
-        
+
         </div>
       </div>
 
@@ -656,21 +654,23 @@ const UserInfo: React.FC<UserInfoProps> = ({ rowData, isPopup, editable }) => {
           </div>
         </div>
       </div>
+      {editable && (
+        <div className="flex justify-end space-x-4 mt-3">
+          {/* <button className="cancel-btn">
+    <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
+    <span>Cancel</span>
+  </button> */}
+          <button
+            className="save-btn"
+            onClick={() => setShowModal(true)}
+          >
+            <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
+            <span>Save</span>
 
-      <div className="flex justify-end space-x-4 mt-3">
-        {/* <button className="cancel-btn">
-          <XMarkIcon className="h-5 w-5 text-black-500 mr-2" />
-          <span>Cancel</span>
-        </button> */}
-        <button
-          className="save-btn"
-          onClick={() => setShowModal(true)}
-        >
-          <CheckIcon className="h-5 w-5 text-black-500 mr-2" />
-          <span>Save</span>
+          </button>
+        </div>
+      )}
 
-        </button>
-      </div>
       {showModal && (
         <Modal
           title="Confirmation"
