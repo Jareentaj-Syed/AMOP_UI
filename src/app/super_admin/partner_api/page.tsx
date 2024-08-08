@@ -20,7 +20,7 @@ const PartnerInfoForm: React.FC = () => {
  
  
   useEffect(() => {
-    setTitle("Super Admin")
+    // setTitle("Super Admin")
     if(title!="Super Admin"){
         setLoading(true)
     }

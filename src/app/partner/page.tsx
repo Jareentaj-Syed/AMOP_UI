@@ -71,9 +71,9 @@ const Partner: React.FC = () => {
         // setEmailsList([])
     }, [title])
 
-    useEffect(() => {
-        setTitle("Partner")
-    })
+    // useEffect(() => {
+    //     setTitle("Partner")
+    // })
 
     const hasFetchedData = useRef(false); // Ref to track if data has been fetched
 

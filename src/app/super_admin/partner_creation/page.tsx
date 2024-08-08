@@ -23,7 +23,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const { setLogoUrl } = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    setTitle("Super Admin")
+    // setTitle("Super Admin")
     if(title!="Super Admin"){
         setLoading(true)
     }
