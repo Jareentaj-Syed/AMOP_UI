@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { moduleIconMap } from '../constants/moduleiconmap';
@@ -46,6 +46,7 @@ const generateNavItems = (modules: any[]): NavItem[] => {
 
 const SideNav: React.FC = () => {
   const currentPath = usePathname();
+  const router = useRouter(); // Initialize useRouter
   const { modules } = useAuth();
   const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const [navItems, setNavItems] = useState<NavItem[]>([]);
@@ -55,22 +56,33 @@ const SideNav: React.FC = () => {
   useEffect(() => {
     setNavItems(generateNavItems(modules));
     const title = getHeaderTitleByPathName(currentPath);
+    // Optionally set the title based on the current path
     // setTitle(title);
   }, [modules, currentPath, setTitle]);
 
-  const handleDropdownClick = useCallback((label: string) => {
+  
+
+  const handleDropdownClick = useCallback((label: string, href?: string) => {
     setOpenDropdowns((prev) => ({
       ...prev,
       [label]: !prev[label],
     }));
-    // setTitle(label);
-  }, []);
+    if (href) {
+      // Use router.replace for faster updates
+      router.replace(href);
+      setTitle(label);
+    }
+  }, [router, setTitle]);
 
   const isActive = useCallback((href?: string) => (href ? currentPath.startsWith(href) : false), [currentPath]);
 
-  const getTitle = useCallback((title: string) => {
-    setTitle(title);
-  }, [setTitle]);
+  const getTitle = useCallback((title: string, href?: string) => {
+    if (href) {
+      // Use router.replace for faster updates
+      router.replace(href);
+      setTitle(title);
+    }
+  }, [ router,setTitle]);
 
   const memoizedNavItems = useMemo(() => {
     return navItems.map((item) => (
@@ -78,7 +90,7 @@ const SideNav: React.FC = () => {
         {item.subNav && item.subNav.length > 0 ? (
           <>
             <button
-              onClick={() => handleDropdownClick(item.label)}
+              onClick={() => handleDropdownClick(item.label, item.href)}
               className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
                 isActive(item.href) ? 'nav-active-link' : ''
               }`}
@@ -98,7 +110,7 @@ const SideNav: React.FC = () => {
                     {subItem.subNav && subItem.subNav.length > 0 ? (
                       <>
                         <button
-                          onClick={() => handleDropdownClick(subItem.label)}
+                          onClick={() => handleDropdownClick(subItem.label, subItem.href)}
                           className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
                             isActive(subItem.href) ? 'nav-active-link' : ''
                           }`}
@@ -119,7 +131,7 @@ const SideNav: React.FC = () => {
                                   className={`flex items-center space-x-2 p-2 nav-link ${
                                     currentPath === subSubItem.href ? 'nav-active-link' : ''
                                   }`}
-                                  onClick={() => getTitle(subSubItem.label)}
+                                  onClick={() => getTitle(subSubItem.label, subSubItem.href)}
                                 >
                                   <span>{subSubItem.label}</span>
                                 </Link>
@@ -134,7 +146,7 @@ const SideNav: React.FC = () => {
                         className={`flex items-center space-x-2 p-2 nav-link ${
                           isActive(subItem.href) ? 'nav-active-link' : ''
                         }`}
-                        onClick={() => getTitle(subItem.label)}
+                        onClick={() => getTitle(subItem.label, subItem.href)}
                       >
                         <span>{subItem.label}</span>
                       </Link>
@@ -149,7 +161,7 @@ const SideNav: React.FC = () => {
             href={item.href || '/'}
             passHref
             className={`flex items-center space-x-2 p-2 nav-link ${isActive(item.href) ? 'nav-active-link' : ''}`}
-            onClick={() => getTitle(item.label)}
+            onClick={() => getTitle(item.label, item.href)}
           >
             {item.icon}
             <span>{item.label}</span>
