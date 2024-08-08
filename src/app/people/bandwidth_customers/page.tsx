@@ -124,6 +124,8 @@ const BandWidthCustomers: React.FC = () => {
           const sortedheaderMap = sortHeaderMap(headerMap)
           const headers = Object.keys(sortedheaderMap)
           const generalFields = parsedData.data
+          const pagination_ = parsedData.pages
+          setpagination(pagination_)
           setgeneralFields(generalFields)
           setHeaders(headers)
           setHeaderMap(headerMap)

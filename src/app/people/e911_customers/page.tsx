@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, lazy, Suspense, useRef  } from "react";
+import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import {
   PlusIcon,
   ArrowDownTrayIcon,
@@ -22,11 +22,11 @@ import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 //Lazy loading components
-const TableComponent = lazy(()=>import("@/app/components/TableComponent/page"));
-const CreateModal = lazy(()=>import("@/app/components/createPopup"));
-const ColumnFilter = lazy(()=>import("@/app/components/columnfilter"));
-const TableSearch = lazy(()=>import("@/app/components/entire_table_search"));
-const AdvancedMultiFilter = lazy(()=>import("@/app/components/advanced_search"));
+const TableComponent = lazy(() => import("@/app/components/TableComponent/page"));
+const CreateModal = lazy(() => import("@/app/components/createPopup"));
+const ColumnFilter = lazy(() => import("@/app/components/columnfilter"));
+const TableSearch = lazy(() => import("@/app/components/entire_table_search"));
+const AdvancedMultiFilter = lazy(() => import("@/app/components/advanced_search"));
 
 
 const E911Customers: React.FC = () => {
@@ -35,10 +35,11 @@ const E911Customers: React.FC = () => {
   const [newRowData, setNewRowData] = useState<any>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
-  const { username, partner, role,settabledata } = useAuth();
+  const { username, partner, role, settabledata } = useAuth();
   const [loading, setLoading] = useState(true);
   const title = useLogoStore((state) => state.title);
-  
+  const [pagination, setpagination] = useState<any>({});
+
   const [tableData, setTableData] = useState<any>([]);
   const { setTable } = useE911CustomersStore();
   const [features, setFeatures] = useState<string[]>([]);
@@ -62,7 +63,7 @@ const E911Customers: React.FC = () => {
   //   }
   // }, [title]);
   const sortPopup = (fields: any[]): any[] => {
-    return fields.sort((a:any, b:any) => a?.id - b?.id);
+    return fields.sort((a: any, b: any) => a?.id - b?.id);
   };
 
   const hasFetchedData = useRef(false); // Ref to track if data has been fetched
@@ -77,8 +78,8 @@ const E911Customers: React.FC = () => {
           username: username,
           path: "/get_module_data",
           role_name: role,
-          parent_module:"People",
-          module_name:"E911 Customers",
+          parent_module: "People",
+          module_name: "E911 Customers",
           mod_pages: {
             start: 0,
             end: 500,
@@ -104,6 +105,8 @@ const E911Customers: React.FC = () => {
           setFeatures(features)
           const createModalData = parsedData.headers_map["E911 Customers"]["pop_up"];
           const customertableData = parsedData.data.e911_customers;
+          const pagination_ = parsedData.pages
+          setpagination(pagination_)
           setTableData(customertableData);
           settabledata(customertableData)
           const headers = Object.keys(headerMap);
@@ -128,7 +131,7 @@ const E911Customers: React.FC = () => {
     if (!hasFetchedData.current) { // Check if data has already been fetched
       fetchData();
       hasFetchedData.current = true; // Set to true after fetching
-  }
+    }
   }, [username, partner, role]);
 
   const handleCreateModalOpen = () => {
@@ -148,7 +151,7 @@ const E911Customers: React.FC = () => {
   };
 
 
-  
+
   const messageStyle = {
     fontSize: '14px',  // Adjust font size
     fontWeight: 'bold', // Make the text bold
@@ -204,7 +207,7 @@ const E911Customers: React.FC = () => {
             style: messageStyle,
             placement: 'top',
           });
-  
+
           // Trigger the download after a successful export
           downloadBlob(blob);
         } else {
@@ -215,7 +218,7 @@ const E911Customers: React.FC = () => {
             content: resp.message,
             centered: true,
           });
-      
+
         }
       } else {
         // Handle unexpected status codes
@@ -270,108 +273,108 @@ const E911Customers: React.FC = () => {
 
   return (
     <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
-    <div className="container mx-auto">
-      <div className="p-4 flex items-center justify-between mt-1 mb-4">
-        <div className="flex space-x-2">
-          {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
-          {features.includes("Search-E911 Customers") && (
+      <div className="container mx-auto">
+        <div className="p-4 flex items-center justify-between mt-1 mb-4">
+          <div className="flex space-x-2">
+            {/* <SearchInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} /> */}
+            {features.includes("Search-E911 Customers") && (
 
-          <TableSearch
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            tableName={"e911customers"}
-            headerMap={headerMap}
-          />
-          )}
-        </div>
+              <TableSearch
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
+                tableName={"e911customers"}
+                headerMap={headerMap}
+              />
+            )}
+          </div>
 
-        <div className="flex space-x-2">
-        {features.includes("Add Customers-E911 Customers") && (
-          <button className="save-btn" onClick={handleCreateModalOpen}>
-            <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
-            Add Customer
-          </button>)}
-          {features.includes("Export-E911 Customers") && (
-          <button className="save-btn" onClick={handleExportModalOpen}>
-            <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
-            <span>Export</span>
-          </button>)}
-          <ColumnFilter
-            headers={headers}
-            visibleColumns={visibleColumns}
-            setVisibleColumns={setVisibleColumns}
-            headerMap={headerMap}
-          />
-        </div>
-      </div>
-      <div className=' mb-4 space-x-2'>
-      {features.includes("Advance Filter-E911 Customers") && (
-
-        <AdvancedMultiFilter
-          onFilter={handleFilter}
-          onReset={handleReset}
-          headers={headers}
-          headerMap={headerMap}
-          tableName={"e911customers"} />)}
-      </div>
-      <TableComponent
-        headers={headers}
-        headerMap={headerMap}
-        initialData={tableData}
-        searchQuery={searchTerm}
-        visibleColumns={visibleColumns}
-        itemsPerPage={100}
-        allowedActions={["edit", "delete"]}
-        popupHeading="E911 Customer"
-        createModalData={createModalData} 
-        pagination={undefined} 
-        advancedFilters={filteredData}
-        />
-
-      <CreateModal
-        isOpen={isCreateModalOpen}
-        onClose={handleCreateModalClose}
-        onSave={handleCreateRow}
-        columnNames={createModalData}
-        heading="E911 Customer"
-        header={Array.isArray(tableData) && tableData.length > 0 ? Object.keys(tableData[0]) : []}
-        tableData={tableData}
-      />
-
-      {/* Export Modal */}
-      <Modal
-        title="Export Output"
-        visible={isExportModalOpen}
-        onCancel={() => {
-          handleExportModalClose();
-          setDateRange([null, null]); // Reset date range here for good measure
-        }}
-        footer={null}
-        centered
-        afterClose={() => setDateRange([null, null])}
-      >
-        <div className="flex flex-col space-y-4">
-          <span>Select Date Range:</span>
-          <RangePicker
-            value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
-            onChange={(dates) => {
-              console.log("Selected dates:", dates); // Debug log
-              if (dates && dates.length === 2) {
-                setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
-              } else {
-                setDateRange([null, null]); // Reset to null if dates are not both available
-              }
-            }}
-            format="YYYY-MM-DD"
-            disabledDate={disableFutureDates}
-          />
-          <div className="flex justify-end space-x-2">
-            <Button onClick={handleExportModalClose}>Cancel</Button>
-            <Button type="primary" onClick={handleExport}>Export</Button>
+          <div className="flex space-x-2">
+            {features.includes("Add Customers-E911 Customers") && (
+              <button className="save-btn" onClick={handleCreateModalOpen}>
+                <PlusIcon className="h-5 w-5 text-black-500 mr-1" />
+                Add Customer
+              </button>)}
+            {features.includes("Export-E911 Customers") && (
+              <button className="save-btn" onClick={handleExportModalOpen}>
+                <ArrowDownTrayIcon className="h-5 w-5 text-black-500 mr-2" />
+                <span>Export</span>
+              </button>)}
+            <ColumnFilter
+              headers={headers}
+              visibleColumns={visibleColumns}
+              setVisibleColumns={setVisibleColumns}
+              headerMap={headerMap}
+            />
           </div>
         </div>
-      </Modal>
-    </div>
+        <div className=' mb-4 space-x-2'>
+          {features.includes("Advance Filter-E911 Customers") && (
+
+            <AdvancedMultiFilter
+              onFilter={handleFilter}
+              onReset={handleReset}
+              headers={headers}
+              headerMap={headerMap}
+              tableName={"e911customers"} />)}
+        </div>
+        <TableComponent
+          headers={headers}
+          headerMap={headerMap}
+          initialData={tableData}
+          searchQuery={searchTerm}
+          visibleColumns={visibleColumns}
+          itemsPerPage={100}
+          allowedActions={["edit", "delete"]}
+          popupHeading="E911 Customer"
+          createModalData={createModalData}
+          pagination={pagination}
+          advancedFilters={filteredData}
+        />
+
+        <CreateModal
+          isOpen={isCreateModalOpen}
+          onClose={handleCreateModalClose}
+          onSave={handleCreateRow}
+          columnNames={createModalData}
+          heading="E911 Customer"
+          header={Array.isArray(tableData) && tableData.length > 0 ? Object.keys(tableData[0]) : []}
+          tableData={tableData}
+        />
+
+        {/* Export Modal */}
+        <Modal
+          title="Export Output"
+          visible={isExportModalOpen}
+          onCancel={() => {
+            handleExportModalClose();
+            setDateRange([null, null]); // Reset date range here for good measure
+          }}
+          footer={null}
+          centered
+          afterClose={() => setDateRange([null, null])}
+        >
+          <div className="flex flex-col space-y-4">
+            <span>Select Date Range:</span>
+            <RangePicker
+              value={dateRange[0] && dateRange[1] ? [dateRange[0], dateRange[1]] : null} // Bind the date range
+              onChange={(dates) => {
+                console.log("Selected dates:", dates); // Debug log
+                if (dates && dates.length === 2) {
+                  setDateRange([dates[0], dates[1]] as [Dayjs, Dayjs]);
+                } else {
+                  setDateRange([null, null]); // Reset to null if dates are not both available
+                }
+              }}
+              format="YYYY-MM-DD"
+              disabledDate={disableFutureDates}
+            />
+            <div className="flex justify-end space-x-2">
+              <Button onClick={handleExportModalClose}>Cancel</Button>
+              <Button type="primary" onClick={handleExport}>Export</Button>
+            </div>
+          </div>
+        </Modal>
+      </div>
     </Suspense>
   );
 };
