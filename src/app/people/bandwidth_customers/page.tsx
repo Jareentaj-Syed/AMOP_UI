@@ -64,11 +64,11 @@ const BandWidthCustomers: React.FC = () => {
     console.log(EmptyFilters)
     setFilteredData(EmptyFilters);
   };
-  useEffect(() => {
-    if (title != "People") {
-      setLoading(true)
-    }
-  }, [title])
+  // useEffect(() => {
+  //   if (title != "People") {
+  //     setLoading(true)
+  //   }
+  // }, [title])
 
   
 

@@ -3,10 +3,7 @@ import React, { useEffect, useState, lazy, Suspense, useRef } from "react";
 import * as XLSX from "xlsx";
 import { PlusIcon, ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Button, Modal ,Spin ,DatePicker, notification} from "antd";
-// import TableComponent from "@/app/components/TableComponent/page";
-// import CreateModal from "@/app/components/createPopup";
-// import SearchInput from "@/app/components/Search-Input";
-// import ColumnFilter from "@/app/components/columnfilter";
+
 import { createModalData, headerMap, headers } from "./netsapiens_customers_constants";
 import axios from "axios";
 import { useAuth } from "@/app/components/auth_context";
@@ -14,8 +11,7 @@ import { useNetSapiensStore } from "./netsapiens_customers_constants";
 import { useLogoStore } from "@/app/stores/logoStore";
 import { getCurrentDateTime } from "@/app/components/header_constants";
 import dayjs, { Dayjs } from "dayjs";
-// import TableSearch from "@/app/components/entire_table_search";
-// import AdvancedMultiFilter from "@/app/components/advanced_search";
+
 const { RangePicker } = DatePicker;
 
 //Lazy Loading Components
@@ -56,11 +52,11 @@ const NetSapiensCustomers: React.FC = () => {
     console.log(EmptyFilters)
     setFilteredData(EmptyFilters);
   };
-  useEffect(() => {
-    if(title!="People"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     if(title!="People"){
+//         setLoading(true)
+//     }
+// },[title])
 
 
 type HeaderMap = Record<string, [string, number]>;

@@ -46,11 +46,11 @@ const CarrierInfo: React.FC = () => {
   const title = useLogoStore((state) => state.title);
 
   
-  useEffect(() => {
-    if(title!="Super Admin"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     if(title!="Super Admin"){
+//         setLoading(true)
+//     }
+// },[title])
  
 const sortPopup = (fields: any[]): any[] => {
   return fields.sort((a:any, b:any) => a?.id - b?.id);

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useSidebarStore } from '../stores/navBarStore';
 import { useRouter } from 'next/navigation';
@@ -203,6 +203,7 @@ const Partner: React.FC = () => {
                     Notifications
                 </button>
             </div>
+            <Suspense fallback={<div className="flex justify-center items-center h-screen"><Spin size="large" /></div>}>
             <div className="container pt-[70px]">
                 {activeTab === 'partnerInfo' && <PartnerInfo onSubmit={switchToCarrierInfoTab} />}
                 {activeTab === 'partnerRegistration' && <PartnerAuthentication onSubmit={switchToCarrierInfoTab} />}
@@ -211,6 +212,7 @@ const Partner: React.FC = () => {
                 {activeTab === 'partnerusers' && <PartnerUsers />}
                 {activeTab === 'notification' && <Notification />}
             </div>
+            </Suspense>
         </div>
     );
 };

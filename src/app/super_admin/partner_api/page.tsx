@@ -19,12 +19,12 @@ const PartnerInfoForm: React.FC = () => {
 
  
  
-  useEffect(() => {
-    // setTitle("Super Admin")
-    if(title!="Super Admin"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     // setTitle("Super Admin")
+//     if(title!="Super Admin"){
+//         setLoading(true)
+//     }
+// },[title])
     const [activeTab, setActiveTab] = useState('carrierInfo');
     const isExpanded = useSidebarStore((state:any) => state.isExpanded);
 

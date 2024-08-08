@@ -34,12 +34,12 @@ const Page: React.FC = () => {
   const [subPartnerMenuIsOpen, setSubPartnerMenuIsOpen] = useState(false);
   const setTitle = useLogoStore((state) => state.setTitle);
   const title = useLogoStore((state) => state.title);
-  useEffect(() => {
-    // setTitle("Super Admin")
-    if(title!="Super Admin"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     // setTitle("Super Admin")
+//     if(title!="Super Admin"){
+//         setLoading(true)
+//     }
+// },[title])
 
   useEffect(() => {
 
