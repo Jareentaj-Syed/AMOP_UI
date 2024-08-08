@@ -171,36 +171,6 @@ const getTitle =(title:string)=>{
             )}
           </li>
         ))}
-        {/* <li>
-          <Link
-            target="_blank"
-            href="https://sandbox-device.amop.services/en/device-management/dashboard"
-            className="flex items-center space-x-2 p-2 nav-link w-[100%]"
-          >
-            <DevicePhoneMobileIcon className="w-4 h-4" />
-            <span>Device Management</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            target="_blank"
-            href="https://sandbox.amop.services/Optimization/OptimizationGroup"
-            className="flex items-center space-x-2 p-2 nav-link w-[100%]"
-          >
-            <ChartBarIcon className="w-4 h-4" />
-            <span>Optimization</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            target="_blank"
-            href="https://sandbox.amop.services/Settings/ServiceProviderTenantConfiguration"
-            className="flex items-center space-x-2 p-2 nav-link w-[100%]"
-          >
-            <CogIcon className="w-4 h-4" />
-            <span>Settings</span>
-          </Link>
-        </li> */}
       </ul>
     </div>
   );
