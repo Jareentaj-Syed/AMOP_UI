@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { usePathname, useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { usePathname, useRouter } from 'next/navigation';
 import { ChevronDownIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { moduleIconMap } from '../constants/moduleiconmap';
@@ -46,7 +46,7 @@ const generateNavItems = (modules: any[]): NavItem[] => {
 
 const SideNav: React.FC = () => {
   const currentPath = usePathname();
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
   const { modules } = useAuth();
   const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const [navItems, setNavItems] = useState<NavItem[]>([]);
@@ -56,11 +56,8 @@ const SideNav: React.FC = () => {
   useEffect(() => {
     setNavItems(generateNavItems(modules));
     const title = getHeaderTitleByPathName(currentPath);
-    // Optionally set the title based on the current path
     // setTitle(title);
   }, [modules, currentPath, setTitle]);
-
-  
 
   const handleDropdownClick = useCallback((label: string, href?: string) => {
     setOpenDropdowns((prev) => ({
@@ -68,8 +65,7 @@ const SideNav: React.FC = () => {
       [label]: !prev[label],
     }));
     if (href) {
-      // Use router.replace for faster updates
-      router.replace(href);
+      router.replace(href); // Use replace for faster updates
       setTitle(label);
     }
   }, [router, setTitle]);
@@ -78,11 +74,10 @@ const SideNav: React.FC = () => {
 
   const getTitle = useCallback((title: string, href?: string) => {
     if (href) {
-      // Use router.replace for faster updates
-      router.replace(href);
+      router.replace(href); // Use replace for faster updates
       setTitle(title);
     }
-  }, [ router,setTitle]);
+  }, [router, setTitle]);
 
   const memoizedNavItems = useMemo(() => {
     return navItems.map((item) => (
@@ -91,9 +86,7 @@ const SideNav: React.FC = () => {
           <>
             <button
               onClick={() => handleDropdownClick(item.label, item.href)}
-              className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
-                isActive(item.href) ? 'nav-active-link' : ''
-              }`}
+              className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(item.href) ? 'nav-active-link' : ''}`}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -111,9 +104,7 @@ const SideNav: React.FC = () => {
                       <>
                         <button
                           onClick={() => handleDropdownClick(subItem.label, subItem.href)}
-                          className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${
-                            isActive(subItem.href) ? 'nav-active-link' : ''
-                          }`}
+                          className={`flex items-center space-x-2 p-2 nav-link w-[100%] ${isActive(subItem.href) ? 'nav-active-link' : ''}`}
                         >
                           <span>{subItem.label}</span>
                           {openDropdowns[subItem.label] ? (
@@ -128,9 +119,9 @@ const SideNav: React.FC = () => {
                               <li key={subSubItem.label}>
                                 <Link
                                   href={subSubItem.href || '/'}
-                                  className={`flex items-center space-x-2 p-2 nav-link ${
-                                    currentPath === subSubItem.href ? 'nav-active-link' : ''
-                                  }`}
+                                  passHref
+                                  prefetch={true} // Enable route prefetching
+                                  className={`flex items-center space-x-2 p-2 nav-link ${currentPath === subSubItem.href ? 'nav-active-link' : ''}`}
                                   onClick={() => getTitle(subSubItem.label, subSubItem.href)}
                                 >
                                   <span>{subSubItem.label}</span>
@@ -143,9 +134,9 @@ const SideNav: React.FC = () => {
                     ) : (
                       <Link
                         href={subItem.href || '/'}
-                        className={`flex items-center space-x-2 p-2 nav-link ${
-                          isActive(subItem.href) ? 'nav-active-link' : ''
-                        }`}
+                        passHref
+                        prefetch={true} // Enable route prefetching
+                        className={`flex items-center space-x-2 p-2 nav-link ${isActive(subItem.href) ? 'nav-active-link' : ''}`}
                         onClick={() => getTitle(subItem.label, subItem.href)}
                       >
                         <span>{subItem.label}</span>
@@ -160,6 +151,7 @@ const SideNav: React.FC = () => {
           <Link
             href={item.href || '/'}
             passHref
+            prefetch={true} // Enable route prefetching
             className={`flex items-center space-x-2 p-2 nav-link ${isActive(item.href) ? 'nav-active-link' : ''}`}
             onClick={() => getTitle(item.label, item.href)}
           >
@@ -177,7 +169,7 @@ const SideNav: React.FC = () => {
         {logoUrl && logoUrl!=="" ? (
           <img src={logoUrl} alt="Uploaded Logo" width={150} height={40} className="logo" />
         ) : (
-          <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} className="logo" />
+          <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} layout="intrinsic" />
         )}
       </div>
       <ul className="space-y-4 mt-4">
