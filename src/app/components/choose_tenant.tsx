@@ -17,7 +17,7 @@ const ChooseTenant: React.FC = () => {
   const { setSelectedPartner, setPartner,setModules } = useAuth(); // Extract both setters from context
   const [selectedPartnerName, setSelectedPartnerName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false); // State to manage loading
-  const { setLogoUrl } = useLogoStore();
+  const { setLogoUrl,logoUrl } = useLogoStore();
   const router = useRouter();
   const {username, tenantNames, role, setShowPassword, setShowPasswordUpdate, showPasswordUpdate}=useAuth()
   const partners=tenantNames
@@ -69,10 +69,11 @@ const ChooseTenant: React.FC = () => {
             content: parsedData.message || 'An error occurred while fetching modules. Please try again.',
           });
         } else {
+          const logoUrl_=logoUrl
+          setLogoUrl(parsedData?.logo || logoUrl_)
           setSelectedPartner(true);
-          setModules(parsedData.Modules); // Set the modules state
+          setModules(parsedData?.Modules || []); // Set the modules state
           setPartner(partnerName);
-          // setLogoUrl(parsedData?.logo || "")
           router.push('/dashboard');
         }
       } else {

@@ -70,7 +70,6 @@ const Partner: React.FC = () => {
             setLoading(true)
         }
         setEmailsList([])
-        setLogoUrl("")
         // setEmailsList([])
     }, [title])
 

@@ -76,7 +76,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         const reader = new FileReader();
         reader.onload = () => {
           const logoUrl = reader.result as string;
-          setLogoUrl(logoUrl);
           resetForm();
           setSubmitModalOpen(false);
         };

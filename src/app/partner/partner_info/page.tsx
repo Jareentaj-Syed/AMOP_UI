@@ -73,34 +73,34 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     setEmailsList(newEmailList)
   };
 
- const handleFormSubmit = () => {
-  const file = logoFileRef.current?.files?.[0];
-  if(file){
-    const validTypes = ['image/png', 'image/jpeg'];
-    if (!validTypes.includes(file.type)) {
-      setLogoError('Only .png and .jpg files are allowed.');
-      return;
+  const handleFormSubmit = () => {
+    const file = logoFileRef.current?.files?.[0];
+    if (file) {
+      const validTypes = ['image/png', 'image/jpeg'];
+      if (!validTypes.includes(file.type)) {
+        setLogoError('Only .png and .jpg files are allowed.');
+        return;
+      } else {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const logoUrl_ = reader.result as string;
+          console.log("logoUrl_", logoUrl_);
+          setLogoUrl(logoUrl_);
+          console.log("logoUrl", logoUrl_);
+          setSubmitModalOpen(false);
+  
+          // Call confirmSubmit after the file is read
+          confirmSubmit();
+          console.log("After confirmSubmit");
+          console.log("logo", logoUrl_);
+        };
+        reader.readAsDataURL(file);
+      }
     } else {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const logoUrl_ = reader.result as string;
-        console.log("logoUrl_",logoUrl_)
-        setLogoUrl(logoUrl_);
-        // resetForm();
-        setSubmitModalOpen(false);
-      };
-      reader.readAsDataURL(file);
+      confirmSubmit();
     }
-    console.log("first")
-    console.log("logo",logoUrl)
-
-  }
-    confirmSubmit()
-    console.log("second")
-    console.log("logo",logoUrl)
-
- }
-
+  };
+  
   const confirmSubmit = async () => {
     try {
       const url =
