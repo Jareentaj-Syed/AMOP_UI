@@ -174,7 +174,7 @@ const SideNav: React.FC = () => {
   return (
     <div className="navbar p-2 shadow-lg">
       <div className="flex items-center space-x-2">
-        {logoUrl ? (
+        {logoUrl && logoUrl!=="" ? (
           <img src={logoUrl} alt="Uploaded Logo" width={150} height={40} className="logo" />
         ) : (
           <Image src="/amop-core.png" alt="AMOP Core Logo" width={150} height={40} className="logo" />

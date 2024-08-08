@@ -16,11 +16,11 @@ const SimOrderForm: React.FC = () => {
     const [blocks, setBlocks] = useState<number[]>([0]);
     const [loading, setLoading] = useState(false); // State to manage loading
     const title = useLogoStore((state) => state.title);
-    useEffect(() => {
-        if(title!="Sim Management"){
-            setLoading(true)
-        }
-    },[title])
+    // useEffect(() => {
+    //     if(title!="Sim Management"){
+    //         setLoading(true)
+    //     }
+    // },[title])
     const handleAddMore = () => {
         setBlocks([...blocks, blocks.length]);
         setCount(count + 1);

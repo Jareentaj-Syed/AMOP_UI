@@ -53,6 +53,7 @@ const Partner: React.FC = () => {
     const setCustomerGroups = usePartnerStore((state) => state.setCustomerGroups);
     const setPartnerUsers = usePartnerStore((state) => state.setPartnerUsers);
     const setNotifications = usePartnerStore((state) => state.setNotifications);
+  const { setLogoUrl ,logoUrl} = useLogoStore();
     const {
         tenant,
         role_name,
@@ -68,6 +69,8 @@ const Partner: React.FC = () => {
         if (title !== "Partner") {
             setLoading(true)
         }
+        setEmailsList([])
+        setLogoUrl("")
         // setEmailsList([])
     }, [title])
 

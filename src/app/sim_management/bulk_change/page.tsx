@@ -28,11 +28,11 @@ const BulkChange: React.FC = () => {
     const [pagination,setpagination]=useState<any>({});
 
 
-    useEffect(() => {
-      if(title!="Sim Management"){
-          setLoading(true)
-      }
-  },[title])
+  //   useEffect(() => {
+  //     if(title!="Sim Management"){
+  //         setLoading(true)
+  //     }
+  // },[title])
 
     useEffect(() => {
         const fetchData = async () => {

@@ -20,11 +20,11 @@ const sim_management: React.FC = () => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>([]);
   const [loading, setLoading] = useState(false); // State to manage loading
   const title = useLogoStore((state) => state.title);
-  useEffect(() => {
-    if(title!="Sim Management"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     if(title!="Sim Management"){
+//         setLoading(true)
+//     }
+// },[title])
 
   useEffect(() => {
     const fetchData = async () => {

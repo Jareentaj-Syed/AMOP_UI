@@ -14,6 +14,7 @@ interface PartnerInfo {
 
 const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const [logoError, setLogoError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const [emailList, setEmailList] = useState<string[]>([]);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
@@ -34,7 +35,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   } = useUserStore();
   useEffect(() => {
     let email_list = Array.isArray(partnerInfo?.email_id) ? partnerInfo.email_id : [];
-
     // setEmailList(email_list); 
     // setEmailsList(email_list);
     if (JSON.stringify(emailList) !== JSON.stringify(email_list)) {
@@ -42,12 +42,18 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       setEmailsList(email_list);
     }
   }, [partnerInfo])
-  const { setLogoUrl } = useLogoStore();
+  const { setLogoUrl ,logoUrl} = useLogoStore();
   const logoFileRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setSubmitModalOpen(true);
+    if(emailsList.length<1){
+      setEmailError("Emails are required")
+    }
+    else{
+     setSubmitModalOpen(true);
+
+    }
   };
   const messageStyle = {
     fontSize: '14px',  // Adjust font size
@@ -67,28 +73,35 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
     setEmailsList(newEmailList)
   };
 
-  const confirmSubmit = async () => {
-    const file = logoFileRef.current?.files?.[0];
-    if (file) {
-      const validTypes = ['image/png', 'image/jpeg'];
-      if (!validTypes.includes(file.type)) {
-        setLogoError('Only .png and .jpg files are allowed.');
-        setSubmitModalOpen(false);
-        return;
-      } else {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const logoUrl = reader.result as string;
-          setLogoUrl(logoUrl);
-          // resetForm();
-          setSubmitModalOpen(false);
-        };
-        reader.readAsDataURL(file);
-      }
+ const handleFormSubmit = () => {
+  const file = logoFileRef.current?.files?.[0];
+  if(file){
+    const validTypes = ['image/png', 'image/jpeg'];
+    if (!validTypes.includes(file.type)) {
+      setLogoError('Only .png and .jpg files are allowed.');
+      return;
     } else {
-      // resetForm();
-      setSubmitModalOpen(false);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const logoUrl_ = reader.result as string;
+        console.log("logoUrl_",logoUrl_)
+        setLogoUrl(logoUrl_);
+        // resetForm();
+        setSubmitModalOpen(false);
+      };
+      reader.readAsDataURL(file);
     }
+    console.log("first")
+    console.log("logo",logoUrl)
+
+  }
+    confirmSubmit()
+    console.log("second")
+    console.log("logo",logoUrl)
+
+ }
+
+  const confirmSubmit = async () => {
     try {
       const url =
         "https://v1djztyfcg.execute-api.us-east-1.amazonaws.com/dev/module_management";
@@ -102,7 +115,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
         action: "update",
         changed_data: {
           email_ids: emailList,
-          logo: "Logo-design-illustration-on-transparent-background-PNG"
+          logo: logoUrl|| ""
 
         },
         request_received_at: getCurrentDateTime(),
@@ -160,7 +173,6 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
           centered: true,
         });
       }
-      console.log(response);
     } catch (err) {
       console.error("Error fetching data:", err);
     }
@@ -171,6 +183,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
   const resetForm = () => {
     setEmailList([]);
     setLogoError(null);
+    setEmailError(null)
     if (logoFileRef.current) {
       logoFileRef.current.value = '';
     }
@@ -239,7 +252,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
                 accept=".png, .jpg"
                 ref={logoFileRef}
               />
-              {logoError && <p className="text-red-500 text-sm">{logoError}</p>}
+            {logoError && <p className="text-red-500 text-sm">{logoError}</p>}
             </div>
           </div>
           <div className="flex justify-end space-x-4">
@@ -262,7 +275,7 @@ const PartnerInfo: React.FC<PartnerInfo> = ({ onSubmit }) => {
       <Modal
         title={<span style={{ fontWeight: 'bold', fontSize: '16px' }}>Confirm Submission</span>}
         open={submitModalOpen}
-        onOk={confirmSubmit}
+        onOk={handleFormSubmit}
         onCancel={() => {
           resetForm();
           setSubmitModalOpen(false);

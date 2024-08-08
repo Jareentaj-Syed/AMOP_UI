@@ -34,11 +34,11 @@ const RevenueAssurance: React.FC = () => {
   const handleOk = () => setIsModalVisible(false);
   const handleCancel = () => setIsModalVisible(false);
   const title = useLogoStore((state) => state.title);
-  useEffect(() => {
-    if(title!="Sim Management"){
-        setLoading(true)
-    }
-},[title])
+//   useEffect(() => {
+//     if(title!="Sim Management"){
+//         setLoading(true)
+//     }
+// },[title])
   const FilterOptions = [
     { value: 'All', label: 'All' },
     { value: 'Assigned', label: 'Assigned' },

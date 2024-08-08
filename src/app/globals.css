@@ -12,7 +12,19 @@
   display: flex;
   align-items: center;
 }
-
+.active{
+  color:#235bfe ;
+  background-color: #e1eafc;
+}
+.deactive{
+  color: #292929;
+  background-color:#f3f3f2 ;
+}
+.active,.deactive{
+  border:1px solid #D1D5DB;
+  border-radius: 8px;
+  padding: 2px 8px;
+}
 .chart-heading {
   width: 100%;
   border-bottom: 1px solid #aea6a66e;

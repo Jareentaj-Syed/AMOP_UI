@@ -1019,7 +1019,7 @@ console.log("newdata",newRowData)
     return (
       <div className="flex items-center space-x-2">
         <button
-          className={`${apiState === true ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === true ? 'active' : 'deactive'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index, col, false)}
@@ -1031,7 +1031,7 @@ console.log("newdata",newRowData)
 
         </button>
         <button
-          className={`${apiState === false ? 'active-btn' : 'inactive-btn'
+          className={`${apiState === false ? 'active' : 'deactive'
             }`}
           style={{ width: '100%' }}
           onClick={() => handleToggle(index, col, true)}
